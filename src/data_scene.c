@@ -2,7 +2,7 @@
 #include "global.h"
 
 #include "proc.h"
-#include "ctc.h"
+#include "oam.h"
 
 struct SceneState
 {

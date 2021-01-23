@@ -29,7 +29,7 @@ _08021E32:
 	adds r1, r0, #1
 	mov r8, r1
 	lsls r0, r0, #6
-	ldr r2, _08021EC8  @ gBG0TilemapBuffer
+	ldr r2, _08021EC8  @ gBg0Tm
 	adds r4, r0, r2
 _08021E40:
 	lsls r2, r6, #3
@@ -83,7 +83,7 @@ _08021E86:
 	cmp r0, #0x13
 	ble _08021E32
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	mov r2, sl
 	ldrh r0, [r2]
 	adds r0, #1
@@ -103,7 +103,7 @@ _08021EB8:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08021EC8: .4byte gBG0TilemapBuffer
+_08021EC8: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8021E10
 
@@ -115,20 +115,20 @@ sub_8021ECC: @ 0x08021ECC
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0x10
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	movs r4, #1
 	str r4, [sp]
 	movs r0, #1
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	str r4, [sp]
 	movs r0, #1
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	bl ClearBg0Bg1
 	add sp, #4
 	pop {r4}
@@ -160,7 +160,7 @@ _08021F1C:
 	cmp r3, #0
 	bge _08021F1A
 	movs r3, #0
-	ldr r0, _08021FB0  @ gPaletteBuffer
+	ldr r0, _08021FB0  @ gPal
 	adds r4, r0, #0
 	adds r4, #0x40
 _08021F34:
@@ -175,33 +175,33 @@ _08021F34:
 	cmp r3, #0xf
 	ble _08021F34
 	movs r4, #0
-	bl EnablePaletteSync
+	bl EnablePalSync
 	movs r0, #1
 	movs r1, #0x10
 	movs r2, #0x10
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	str r4, [sp]
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	bl ClearBg0Bg1
 	movs r0, #0
 	movs r1, #0
-	bl SetBackgroundTileDataOffset
+	bl SetBgChrOffset
 	ldr r0, _08021FB4  @ gUnknown_0859B4F8
 	adds r1, r5, #0
 	bl Proc_Start
@@ -216,7 +216,7 @@ _08021F34:
 	.align 2, 0
 _08021FA8: .4byte 0x06002000
 _08021FAC: .4byte 0x11111111
-_08021FB0: .4byte gPaletteBuffer
+_08021FB0: .4byte gPal
 _08021FB4: .4byte gUnknown_0859B4F8
 
 	THUMB_FUNC_END sub_8021F08

@@ -47,7 +47,7 @@ sub_803650C: @ 0x0803650C
 	movs r1, #3
 	bl LoadIconPalette
 	movs r1, #1
-	ldr r0, _0803658C  @ gPaletteBuffer
+	ldr r0, _0803658C  @ gPal
 	mov r9, r0
 	movs r2, #0x1f
 	mov ip, r2
@@ -107,7 +107,7 @@ _08036570:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803658C: .4byte gPaletteBuffer
+_0803658C: .4byte gPal
 _08036590: .4byte gUnknown_0200300C
 
 	THUMB_FUNC_END sub_803650C
@@ -1072,7 +1072,7 @@ sub_8036D4C: @ 0x08036D4C
 	bl sub_8036D0C
 	movs r1, #0x20
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r1, _08036D84  @ gBattleTarget
 	movs r0, #0xb
 	ldrsb r0, [r1, r0]
@@ -1082,7 +1082,7 @@ sub_8036D4C: @ 0x08036D4C
 	bl sub_8036D0C
 	movs r1, #0x40
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _08036D96
 	.align 2, 0
 _08036D80: .4byte gBattleActor
@@ -1092,7 +1092,7 @@ _08036D88:
 	bl sub_8036D0C
 	movs r1, #0x40
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08036D96:
 	pop {r4}
 	pop {r0}
@@ -1105,7 +1105,7 @@ BKSEL_InitGfx: @ 0x08036D9C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r0, _08036E08  @ gUnknown_085A0C80
-	ldr r4, _08036E0C  @ gUnknown_02020188
+	ldr r4, _08036E0C  @ gBuf
 	adds r1, r4, #0
 	bl CopyDataWithPossibleUncomp
 	ldr r1, _08036E10  @ 0x06015D00
@@ -1117,7 +1117,7 @@ BKSEL_InitGfx: @ 0x08036D9C
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	bl sub_8003D20
 	bl ResetIconGraphics_
 	bl sub_803650C
@@ -1137,7 +1137,7 @@ BKSEL_InitGfx: @ 0x08036D9C
 	ldr r2, _08036E18  @ 0x0000FFFF
 	movs r0, #1
 	movs r1, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	adds r1, r5, #0
 	adds r1, #0x33
 	movs r0, #1
@@ -1147,7 +1147,7 @@ BKSEL_InitGfx: @ 0x08036D9C
 	bx r0
 	.align 2, 0
 _08036E08: .4byte gUnknown_085A0C80
-_08036E0C: .4byte gUnknown_02020188
+_08036E0C: .4byte gBuf
 _08036E10: .4byte 0x06015D00
 _08036E14: .4byte gUnknown_085A0D2C
 _08036E18: .4byte 0x0000FFFF
@@ -1184,43 +1184,43 @@ _08036E3C:
 	cmp r0, #0
 	bge _08036E74
 	ldr r0, _08036E64  @ gBmFrameTmap0
-	ldr r1, _08036E68  @ gBG0TilemapBuffer
+	ldr r1, _08036E68  @ gBg0Tm
 	movs r2, #0xa
 	adds r3, r4, #0
 	bl TileMap_CopyRect
 	ldr r0, _08036E6C  @ gUnknown_0200422C
-	ldr r1, _08036E70  @ gBG1TilemapBuffer
+	ldr r1, _08036E70  @ gBg1Tm
 	movs r2, #0xa
 	adds r3, r4, #0
 	bl TileMap_CopyRect
 	b _08036E8C
 	.align 2, 0
 _08036E64: .4byte gBmFrameTmap0
-_08036E68: .4byte gBG0TilemapBuffer
+_08036E68: .4byte gBg0Tm
 _08036E6C: .4byte gUnknown_0200422C
-_08036E70: .4byte gBG1TilemapBuffer
+_08036E70: .4byte gBg1Tm
 _08036E74:
 	ldr r0, _08036E98  @ gBmFrameTmap0
-	ldr r1, _08036E9C  @ gUnknown_02022CD0
+	ldr r1, _08036E9C  @ gBg0Tm+0x28
 	movs r2, #0xa
 	adds r3, r4, #0
 	bl TileMap_CopyRect
 	ldr r0, _08036EA0  @ gUnknown_0200422C
-	ldr r1, _08036EA4  @ gUnknown_020234D0
+	ldr r1, _08036EA4  @ gBg1Tm+0x28
 	movs r2, #0xa
 	adds r3, r4, #0
 	bl TileMap_CopyRect
 _08036E8C:
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08036E98: .4byte gBmFrameTmap0
-_08036E9C: .4byte gUnknown_02022CD0
+_08036E9C: .4byte gBg0Tm+0x28
 _08036EA0: .4byte gUnknown_0200422C
-_08036EA4: .4byte gUnknown_020234D0
+_08036EA4: .4byte gBg1Tm+0x28
 
 	THUMB_FUNC_END sub_8036E2C
 
@@ -1323,7 +1323,7 @@ sub_8036F4C: @ 0x08036F4C
 	ldr r1, [r7, #0x2c]
 	lsls r1, r1, #2
 	movs r0, #0xff
-	ldr r2, _08036FDC  @ gSinLookup
+	ldr r2, _08036FDC  @ gSinLut
 	ands r1, r0
 	lsls r0, r1, #1
 	adds r0, r0, r2
@@ -1390,7 +1390,7 @@ _08036FD4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08036FDC: .4byte gSinLookup
+_08036FDC: .4byte gSinLut
 _08036FE0: .4byte gObject_16x16
 _08036FE4: .4byte 0x000022E6
 
@@ -1423,7 +1423,7 @@ _0803700E:
 	adds r0, r0, r1
 	movs r1, #0x60
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	adds r0, r4, #0
 	adds r0, #0x53
 	ldrb r0, [r0]
@@ -1449,7 +1449,7 @@ _08037042:
 	adds r0, r0, r1
 	movs r1, #0x80
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -1566,17 +1566,17 @@ sub_803710C: @ 0x0803710C
 	movs r2, #0x10
 	mov r9, r2
 _08037128:
-	ldr r0, _0803718C  @ gBG0TilemapBuffer
+	ldr r0, _0803718C  @ gBg0Tm
 	mov r8, r0
 	movs r1, #0
-	bl BG_Fill
-	ldr r1, _08037190  @ gBG1TilemapBuffer
+	bl TmFill
+	ldr r1, _08037190  @ gBg1Tm
 	mov sl, r1
 	mov r0, sl
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r1, _08037194  @ gUnknown_0859E518
 	adds r2, r7, #0
 	adds r2, #0x36
@@ -1611,8 +1611,8 @@ _08037128:
 	bl TileMap_CopyRect
 	b _080371C2
 	.align 2, 0
-_0803718C: .4byte gBG0TilemapBuffer
-_08037190: .4byte gBG1TilemapBuffer
+_0803718C: .4byte gBg0Tm
+_08037190: .4byte gBg1Tm
 _08037194: .4byte gUnknown_0859E518
 _08037198: .4byte gBmFrameTmap0
 _0803719C: .4byte gUnknown_0200422C
@@ -1675,17 +1675,17 @@ sub_80371F0: @ 0x080371F0
 	movs r2, #0x10
 	mov r9, r2
 _0803720C:
-	ldr r0, _08037270  @ gBG0TilemapBuffer
+	ldr r0, _08037270  @ gBg0Tm
 	mov r8, r0
 	movs r1, #0
-	bl BG_Fill
-	ldr r1, _08037274  @ gBG1TilemapBuffer
+	bl TmFill
+	ldr r1, _08037274  @ gBg1Tm
 	mov sl, r1
 	mov r0, sl
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r1, _08037278  @ gUnknown_0859E51C
 	adds r2, r7, #0
 	adds r2, #0x36
@@ -1720,8 +1720,8 @@ _0803720C:
 	bl TileMap_CopyRect
 	b _080372A6
 	.align 2, 0
-_08037270: .4byte gBG0TilemapBuffer
-_08037274: .4byte gBG1TilemapBuffer
+_08037270: .4byte gBg0Tm
+_08037274: .4byte gBg1Tm
 _08037278: .4byte gUnknown_0859E51C
 _0803727C: .4byte gBmFrameTmap0
 _08037280: .4byte gUnknown_0200422C
@@ -1786,12 +1786,12 @@ sub_80372E4: @ 0x080372E4
 	asrs r0, r0, #0x18
 	cmp r0, #1
 	bne _08037306
-	bl GetKeyStatus_IgnoreMask
+	bl GetKeyIgnore
 	adds r1, r0, #0
 	movs r0, #2
 	negs r0, r0
 	ands r0, r1
-	bl SetKeyStatus_IgnoreMask
+	bl SetKeyIgnore
 	bl sub_808457C
 _08037306:
 	pop {r0}
@@ -1828,9 +1828,9 @@ _08037328:
 	asrs r4, r0, #0x18
 	cmp r4, #1
 	bne _08037350
-	bl GetKeyStatus_IgnoreMask
+	bl GetKeyIgnore
 	orrs r0, r4
-	bl SetKeyStatus_IgnoreMask
+	bl SetKeyIgnore
 _08037350:
 	ldrb r0, [r6]
 	lsls r0, r0, #0x1b

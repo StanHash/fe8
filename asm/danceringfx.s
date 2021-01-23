@@ -15,7 +15,7 @@ sub_80219F8: @ 0x080219F8
 	ldr r0, _08021A84  @ gUnknown_085A7CA0
 	movs r1, #0x40
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08021A88  @ gUnknown_085A7A64
 	ldr r4, _08021A8C  @ gBmFrameTmap0
 	adds r1, r4, #0
@@ -33,30 +33,30 @@ _08021A24:
 	subs r5, #1
 	cmp r5, #0
 	bne _08021A24
-	ldr r0, _08021A90  @ gBG0TilemapBuffer
+	ldr r0, _08021A90  @ gBg0Tm
 	movs r1, #0x80
 	lsls r1, r1, #1
-	bl BG_Fill
+	bl TmFill
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	movs r0, #1
 	movs r1, #0x10
 	movs r2, #0x10
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	str r5, [sp]
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	adds r0, r6, #0
 	adds r0, #0x4c
 	strh r5, [r0]
@@ -70,7 +70,7 @@ _08021A80: .4byte 0x06002000
 _08021A84: .4byte gUnknown_085A7CA0
 _08021A88: .4byte gUnknown_085A7A64
 _08021A8C: .4byte gBmFrameTmap0
-_08021A90: .4byte gBG0TilemapBuffer
+_08021A90: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_80219F8
 
@@ -110,12 +110,12 @@ _08021AD0:
 	lsls r0, r0, #1
 	ldr r1, _08021AF4  @ gBmFrameTmap0
 	adds r0, r0, r1
-	ldr r1, _08021AF8  @ gBG0TilemapBuffer
+	ldr r1, _08021AF8  @ gBg0Tm
 	movs r2, #6
 	movs r3, #6
 	bl TileMap_CopyRect
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 _08021AEA:
 	add sp, #0x38
 	pop {r4}
@@ -123,7 +123,7 @@ _08021AEA:
 	bx r0
 	.align 2, 0
 _08021AF4: .4byte gBmFrameTmap0
-_08021AF8: .4byte gBG0TilemapBuffer
+_08021AF8: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8021A94
 
@@ -146,7 +146,7 @@ sub_8021B04: @ 0x08021B04
 	movs r0, #1
 	movs r2, #0x10
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	ldrh r0, [r4]
 	subs r0, #1
 	strh r0, [r4]
@@ -203,7 +203,7 @@ sub_8021B30: @ 0x08021B30
 	lsls r2, r2, #0x10
 	lsrs r2, r2, #0x10
 	movs r0, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 _08021B86:
 	pop {r4, r5, r6}
 	pop {r0}

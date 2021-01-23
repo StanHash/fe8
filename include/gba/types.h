@@ -24,9 +24,9 @@ typedef volatile s64 vs64;
 typedef float  f32;
 typedef double f64;
 
-typedef u8  bool8;
-typedef u16 bool16;
-typedef u32 bool32;
+#if !defined(__cplusplus) && !defined(bool)
+typedef s8 bool;
+#endif
 
 struct DispCnt
 {

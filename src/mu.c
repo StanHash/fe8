@@ -3,6 +3,8 @@
 #include "constants/items.h"
 #include "constants/classes.h"
 
+#include "dma.h"
+#include "oam.h"
 #include "proc.h"
 #include "ap.h"
 #include "m4a.h"
@@ -1010,13 +1012,13 @@ static void MU_FogBumpFx_FirstFrame(struct MUFogBumpFxProc* proc) {
 
     // TODO: maybe a macro that takes angle/xScale/yScale?
 
-    WriteOAMRotScaleData(
+    SetObjAffine(
         0,  // oam rotscale index
 
-        Div(+COS(0) * 16, 0x200), // pa
-        Div(-SIN(0) * 16, 0x200), // pb
-        Div(+SIN(0) * 16, 0x200), // pc
-        Div(+COS(0) * 16, 0x200)  // pd
+        Div(+COS_Q12(0) * 16, 0x200), // pa
+        Div(-SIN_Q12(0) * 16, 0x200), // pb
+        Div(+SIN_Q12(0) * 16, 0x200), // pc
+        Div(+COS_Q12(0) * 16, 0x200)  // pd
     );
 }
 
@@ -1028,13 +1030,13 @@ static void MU_FogBumpFx_TransitionInLoop(struct MUFogBumpFxProc* proc) {
 
     scale = sub_8012DCC(5, 0x200, 0x100, proc->timer, 8);
 
-    WriteOAMRotScaleData(
+    SetObjAffine(
         0,  // oam rotscale index
 
-        Div(+COS(0) * 16, scale), // pa
-        Div(-SIN(0) * 16, scale), // pb
-        Div(+SIN(0) * 16, scale), // pc
-        Div(+COS(0) * 16, scale)  // pd
+        Div(+COS_Q12(0) * 16, scale), // pa
+        Div(-SIN_Q12(0) * 16, scale), // pb
+        Div(+SIN_Q12(0) * 16, scale), // pc
+        Div(+COS_Q12(0) * 16, scale)  // pd
     );
 
     AP_Update(
@@ -1469,7 +1471,7 @@ static u16 MU_GetMovementSpeed(struct MUProc* proc) {
 
             if (speed & 0x40)
                 speed ^= 0x40;
-            else if (gRAMChapterData.unk40_8 || (gKeyStatusPtr->heldKeys & A_BUTTON))
+            else if (gRAMChapterData.unk40_8 || (gKeySt->held & A_BUTTON))
                 speed *= 4;
 
             if (speed > 0x80)
@@ -1478,7 +1480,7 @@ static u16 MU_GetMovementSpeed(struct MUProc* proc) {
             return speed;
         }
 
-        if (!IsFirstPlaythrough() && (gKeyStatusPtr->heldKeys & A_BUTTON))
+        if (!IsFirstPlaythrough() && (gKeySt->held & A_BUTTON))
             return 0x80;
 
         if (gRAMChapterData.unk40_8)
@@ -1517,7 +1519,7 @@ void MU_StartDeathFade(struct MUProc* muProc) {
     proc->pMUProc = muProc;
     proc->timeLeft = 0x20;
 
-    SetSpecialColorEffectsParameters(0, 0x10, 0x10, 0);
+    SetBlendConfig(0, 0x10, 0x10, 0);
 
     muProc->pAPHandle->frameTimer = 0;
     muProc->pAPHandle->frameInterval = 0;
@@ -1537,7 +1539,7 @@ void MU_StartDeathFade(struct MUProc* muProc) {
 static void MU_DeathFade_OnLoop(struct MUEffectProc* proc) {
     short time = (proc->timeLeft--) >> 1;
 
-    SetSpecialColorEffectsParameters(0, (u8) time, 0x10, 0);
+    SetBlendConfig(0, (u8) time, 0x10, 0);
 
     if (proc->timeLeft == 0) {
         MU_End(proc->pMUProc);
@@ -1607,7 +1609,7 @@ static void MU_PixelEffect_OnLoop(struct MUEffectProc* proc) {
     proc->frameIndex++;
 
     // TODO: FIXME: This may be bugged?
-    RegisterTileGraphics(
+    RegisterDataMove(
         gMUGfxBuffer,
         OBJ_VRAM0 + (MU_BASE_OBJ_TILE * 0x20),
         (0x80 * 0x20)
@@ -1659,8 +1661,8 @@ void MU_StartFlashFade(struct MUProc* proc, int flashType) {
     proc->pAPHandle->tileBase =
         proc->pMUConfig->objTileIndex + (MU_FADE_OBJ_PAL << 12) + proc->objPriorityBits;
 
-    CopyToPaletteBuffer(
-        gPaletteBuffer + (0x10 * (0x10 + proc->pMUConfig->paletteIndex)),
+    ApplyPaletteExt(
+        gPal + (0x10 * (0x10 + proc->pMUConfig->paletteIndex)),
         (0x10 + MU_FADE_OBJ_PAL) * 0x20, 0x20
     );
 
@@ -1674,7 +1676,7 @@ void MU_8079858(struct MUProc* muProc) {
     struct MUEffectProc* proc;
 
     sub_8013928(
-        gPaletteBuffer + (0x10 * (0x10 + muProc->pMUConfig->paletteIndex)),
+        gPal + (0x10 * (0x10 + muProc->pMUConfig->paletteIndex)),
         0x15, 8, (struct Proc*) muProc
     );
 
@@ -1745,7 +1747,7 @@ static void MU_EndFasterApAnim(int argAp) {
 void MU_StartCritFlash(struct MUProc* muProc, int flashType) {
     struct MUFlashEffectProc* proc;
 
-    CopyToPaletteBuffer(
+    ApplyPaletteExt(
         sMUFlashColorLookup[flashType],
         (0x10 + MU_FADE_OBJ_PAL) * 0x20, 0x20
     );
@@ -1775,7 +1777,7 @@ static void MU_CritFlash_SetRegularPalette(struct MUFlashEffectProc* proc) {
 
 static void MU_CritFlash_StartFadeBack_maybe(struct MUFlashEffectProc* proc) {
     sub_8013928(
-        gPaletteBuffer + 0x10 * (0x10 + proc->pMUProc->pMUConfig->paletteIndex),
+        gPal + 0x10 * (0x10 + proc->pMUProc->pMUConfig->paletteIndex),
         0x15, 0x14, (struct Proc*) proc
     );
 }
@@ -1801,7 +1803,7 @@ static void MU_CritFlash_RestorePalette(struct MUFlashEffectProc* proc) {
 void MU_StartHitFlash(struct MUProc* muProc, int flashType) {
     struct MUFlashEffectProc* proc;
 
-    CopyToPaletteBuffer(
+    ApplyPaletteExt(
         sMUFlashColorLookup[flashType],
         (0x10 + MU_FADE_OBJ_PAL) * 0x20, 0x20
     );
@@ -1810,7 +1812,7 @@ void MU_StartHitFlash(struct MUProc* muProc, int flashType) {
         (MU_FADE_OBJ_PAL << 12) + muProc->pMUConfig->objTileIndex + muProc->objPriorityBits;
 
     sub_8013928(
-        gPaletteBuffer + 0x10 * (0x10 + muProc->pMUConfig->paletteIndex),
+        gPal + 0x10 * (0x10 + muProc->pMUConfig->paletteIndex),
         0x15, 0x14, (struct Proc*) muProc
     );
 
@@ -1850,7 +1852,7 @@ void MU_SetSpecialSprite(struct MUProc* proc, int displayedClassId, const u16* p
         MU_GetGfxBufferById(proc->pMUConfig->muIndex)
     );
 
-    CopyToPaletteBuffer(palette, (0x20 * (0x10 + proc->pMUConfig->paletteIndex)), 0x20);
+    ApplyPaletteExt(palette, (0x20 * (0x10 + proc->pMUConfig->paletteIndex)), 0x20);
 }
 
 void MU_SetPaletteId(struct MUProc* proc, unsigned paletteId) {

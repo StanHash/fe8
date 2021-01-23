@@ -371,23 +371,23 @@ sub_8011A48: @ 0x08011A48
 	movs r1, #0
 	movs r2, #0x10
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
 	str r0, [sp]
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	movs r0, #1
-	bl sub_8001F48
+	bl SetBlendBackdropA
 	movs r0, #1
-	bl sub_8001F64
+	bl SetBlendBackdropB
 	ldr r0, _08011A9C  @ gUnknown_085924D8
 	bl Proc_Find
 	movs r1, #1
@@ -420,7 +420,7 @@ sub_8011AA0: @ 0x08011AA0
 	lsrs r2, r2, #0x18
 	movs r0, #1
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	cmp r4, #0x10
 	bne _08011AE8
 	adds r0, r5, #0
@@ -429,7 +429,7 @@ sub_8011AA0: @ 0x08011AA0
 	movs r1, #0x10
 	movs r2, #0
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	ldr r0, _08011AF0  @ gUnknown_085924D8
 	bl Proc_Find
 	movs r1, #0
@@ -454,23 +454,23 @@ sub_8011AF4: @ 0x08011AF4
 	movs r1, #0x10
 	movs r2, #0
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
 	str r0, [sp]
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	movs r0, #1
-	bl sub_8001F48
+	bl SetBlendBackdropA
 	movs r0, #1
-	bl sub_8001F64
+	bl SetBlendBackdropB
 	ldr r0, _08011B48  @ gUnknown_085924D8
 	bl Proc_Find
 	movs r1, #1
@@ -503,7 +503,7 @@ sub_8011B4C: @ 0x08011B4C
 	lsrs r2, r2, #0x18
 	movs r0, #1
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	cmp r4, #0x10
 	bne _08011B86
 	ldr r0, _08011B8C  @ gUnknown_085924D8
@@ -527,7 +527,7 @@ sub_8011B90: @ 0x08011B90
 	movs r1, #0x10
 	movs r2, #0
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	pop {r0}
 	bx r0
 
@@ -569,13 +569,13 @@ sub_8011BA4: @ 0x08011BA4
 	adds r1, #0x10
 	lsls r1, r1, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08011C84  @ gUnknown_0859EF00
 	ldr r1, [r7, #0x3c]
 	adds r1, #0x11
 	lsls r1, r1, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08011C88  @ gUnknown_08A4CF2C
 	ldr r1, [r7, #0x38]
 	ldr r2, _08011C8C  @ 0x06010000
@@ -965,15 +965,15 @@ sub_8011EF0: @ 0x08011EF0
 	adds r4, r0, #0
 	lsls r4, r4, #0x18
 	lsrs r4, r4, #0x18
-	ldr r0, _08011F34  @ gBG2TilemapBuffer
+	ldr r0, _08011F34  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
-	ldr r1, _08011F38  @ gPaletteBuffer
+	bl EnableBgSync
+	ldr r1, _08011F38  @ gPal
 	movs r0, #0
 	strh r0, [r1]
-	bl EnablePaletteSync
+	bl EnablePalSync
 	bl RenderBmMap
 	bl sub_8055BC4
 	lsls r0, r0, #0x18
@@ -989,8 +989,8 @@ _08011F22:
 	bl BeginAnimsOnBattleAnimations
 	b _08011F52
 	.align 2, 0
-_08011F34: .4byte gBG2TilemapBuffer
-_08011F38: .4byte gPaletteBuffer
+_08011F34: .4byte gBg2Tm
+_08011F38: .4byte gPal
 _08011F3C:
 	bl MU_EndAll
 	bl RenderBmMap
@@ -1401,7 +1401,7 @@ sub_8012270: @ 0x08012270
 	lsrs r6, r6, #0x18
 	lsls r5, r5, #0x18
 	lsrs r5, r5, #0x18
-	ldr r4, _08012314  @ gLCDControlBuffer
+	ldr r4, _08012314  @ gDispIo
 	ldrb r2, [r4, #0xc]
 	movs r1, #4
 	negs r1, r1
@@ -1427,13 +1427,13 @@ sub_8012270: @ 0x08012270
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0x10
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	movs r0, #1
 	str r0, [sp]
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	ldrb r1, [r4, #1]
 	movs r0, #0x21
 	negs r0, r0
@@ -1468,7 +1468,7 @@ sub_8012270: @ 0x08012270
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08012314: .4byte gLCDControlBuffer
+_08012314: .4byte gDispIo
 _08012318: .4byte gBattleActor
 _0801231C: .4byte gBattleTarget
 _08012320: .4byte gBattleStats

@@ -591,7 +591,7 @@ _0807A10A:
 	asrs r2, r0, #0x18
 	cmp r2, #1
 	bne _0807A14C
-	ldr r0, _0807A130  @ gKeyStatusPtr
+	ldr r0, _0807A130  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #4]
 	adds r0, r2, #0
@@ -602,7 +602,7 @@ _0807A10A:
 	subs r0, #4
 	b _0807A138
 	.align 2, 0
-_0807A130: .4byte gKeyStatusPtr
+_0807A130: .4byte gKeySt
 _0807A134:
 	ldrh r0, [r5, #0x3c]
 	subs r0, #1

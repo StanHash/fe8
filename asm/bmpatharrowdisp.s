@@ -606,7 +606,7 @@ sub_8032E28: @ 0x08032E28
 	movs r1, #0x98
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	cmp r4, #0
 	bne _08032E90
 	ldr r5, _08032EA4  @ gUnknown_0859DBA0

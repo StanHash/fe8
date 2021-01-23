@@ -29,38 +29,38 @@ _08022398:
 _080223A4: .4byte gRAMChapterData
 _080223A8: .4byte 0x000003E7
 _080223AC:
-	bl SetupBackgroundForWeatherMaybe
+	bl InitBmBgLayers
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #2
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #3
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
-	ldr r2, _080224D0  @ gBG0TilemapBuffer
+	bl SetBgOffset
+	ldr r2, _080224D0  @ gBg0Tm
 	mov r8, r2
 	mov r0, r8
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _080224D4  @ gBG1TilemapBuffer
+	bl TmFill
+	ldr r0, _080224D4  @ gBg1Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _080224D8  @ gBG2TilemapBuffer
+	bl TmFill
+	ldr r0, _080224D8  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _080224DC  @ gBG3TilemapBuffer
+	bl TmFill
+	ldr r0, _080224DC  @ gBg3Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r7, _080224E0  @ gLCDControlBuffer
+	bl TmFill
+	ldr r7, _080224E0  @ gDispIo
 	ldrb r0, [r7, #1]
 	movs r5, #0x20
 	orrs r0, r5
@@ -133,9 +133,9 @@ _080223AC:
 	mov r0, r8
 	movs r1, #1
 	bl sub_80896D8
-	bl EnablePaletteSync
+	bl EnablePalSync
 	movs r0, #0xf
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldrb r0, [r7, #1]
 	movs r1, #1
 	orrs r0, r1
@@ -161,11 +161,11 @@ _080224BE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080224D0: .4byte gBG0TilemapBuffer
-_080224D4: .4byte gBG1TilemapBuffer
-_080224D8: .4byte gBG2TilemapBuffer
-_080224DC: .4byte gBG3TilemapBuffer
-_080224E0: .4byte gLCDControlBuffer
+_080224D0: .4byte gBg0Tm
+_080224D4: .4byte gBg1Tm
+_080224D8: .4byte gBg2Tm
+_080224DC: .4byte gBg3Tm
+_080224E0: .4byte gDispIo
 _080224E4: .4byte gRAMChapterData
 _080224E8: .4byte 0x00000246
 
@@ -174,12 +174,12 @@ _080224E8: .4byte 0x00000246
 	THUMB_FUNC_START sub_80224EC
 sub_80224EC: @ 0x080224EC
 	push {lr}
-	ldr r0, _08022520  @ gBG0TilemapBuffer
+	ldr r0, _08022520  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #1
-	bl BG_EnableSyncByMask
-	ldr r2, _08022524  @ gLCDControlBuffer
+	bl EnableBgSync
+	ldr r2, _08022524  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #2
 	negs r0, r0
@@ -197,8 +197,8 @@ sub_80224EC: @ 0x080224EC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08022520: .4byte gBG0TilemapBuffer
-_08022524: .4byte gLCDControlBuffer
+_08022520: .4byte gBg0Tm
+_08022524: .4byte gDispIo
 
 	THUMB_FUNC_END sub_80224EC
 
@@ -207,11 +207,11 @@ sub_8022528: @ 0x08022528
 	push {r4, r5, lr}
 	movs r0, #0
 	bl SetupBackgrounds
-	ldr r0, _080225A0  @ gBG2TilemapBuffer
+	ldr r0, _080225A0  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	bl DisableMapPaletteAnimations
 	ldr r4, _080225A4  @ gRAMChapterData
 	movs r0, #0xe
@@ -252,7 +252,7 @@ sub_8022528: @ 0x08022528
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080225A0: .4byte gBG2TilemapBuffer
+_080225A0: .4byte gBg2Tm
 _080225A4: .4byte gRAMChapterData
 _080225A8: .4byte gUnknown_0202BCB0
 

@@ -224,17 +224,17 @@ _08005664:
 	adds r0, r0, r1
 	ldrh r1, [r0, #4]
 	lsls r1, r1, #5
-	ldr r0, _080056AC  @ gUnknown_02022AA8
+	ldr r0, _080056AC  @ gPal+0x200
 	adds r1, r1, r0
 	ldr r2, _080056B0  @ 0x01000008
 	mov r0, sp
 	bl CpuFastSet
-	bl EnablePaletteSync
+	bl EnablePalSync
 	b _080056C8
 	.align 2, 0
 _080056A4: .4byte gUnknown_08591154
 _080056A8: .4byte gUnknown_0202A68C
-_080056AC: .4byte gUnknown_02022AA8
+_080056AC: .4byte gPal+0x200
 _080056B0: .4byte 0x01000008
 _080056B4:
 	ldr r0, [r5, #8]
@@ -245,7 +245,7 @@ _080056B4:
 	adds r1, #0x10
 	lsls r1, r1, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _080056C8:
 	str r5, [r4, #0x2c]
 	adds r0, r4, #0
@@ -626,7 +626,7 @@ sub_8005924: @ 0x08005924
 	adds r1, r1, r3
 	movs r2, #0x80
 	lsls r2, r2, #2
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	adds r0, r4, #0
 	adds r1, r6, #0
 	bl sub_8005F9C
@@ -647,7 +647,7 @@ _08005960:
 	ldr r0, [r4, #8]
 	lsls r1, r6, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08005980:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -715,7 +715,7 @@ sub_80059CC: @ 0x080059CC
 	lsls r4, r4, #0x13
 	adds r1, r1, r4
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	adds r0, r6, #0
 	bl sub_8005F6C
 	adds r0, #0x80
@@ -725,7 +725,7 @@ sub_80059CC: @ 0x080059CC
 	ands r1, r5
 	adds r1, r1, r4
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	adds r0, r6, #0
 	bl sub_8005F6C
 	movs r1, #0x80
@@ -736,7 +736,7 @@ sub_80059CC: @ 0x080059CC
 	ands r1, r5
 	adds r1, r1, r4
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	adds r0, r6, #0
 	bl sub_8005F6C
 	movs r1, #0xc0
@@ -748,7 +748,7 @@ sub_80059CC: @ 0x080059CC
 	ands r1, r5
 	adds r1, r1, r4
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	mov r1, r8
 	adds r1, #0x10
 	adds r0, r6, #0
@@ -797,7 +797,7 @@ _08005A68:
 	adds r1, #0x10
 	lsls r1, r1, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08005AC4:
 	movs r3, #0x80
 	lsls r3, r3, #2
@@ -816,7 +816,7 @@ sub_8005AD4: @ 0x08005AD4
 	sub sp, #4
 	movs r2, #0x34
 	ldrsh r1, [r0, r2]
-	ldr r3, _08005B00  @ gLCDControlBuffer
+	ldr r3, _08005B00  @ gDispIo
 	ldrh r2, [r3, #0x1c]
 	subs r1, r1, r2
 	movs r4, #0x36
@@ -833,7 +833,7 @@ sub_8005AD4: @ 0x08005AD4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08005B00: .4byte gLCDControlBuffer
+_08005B00: .4byte gDispIo
 
 	THUMB_FUNC_END sub_8005AD4
 
@@ -1062,7 +1062,7 @@ sub_8005CA4: @ 0x08005CA4
 	lsls r1, r7, #5
 	mov r8, r1
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, [r4]
 	cmp r0, #0
 	beq _08005D34
@@ -1074,7 +1074,7 @@ sub_8005CA4: @ 0x08005CA4
 	ldr r0, [r4, #8]
 	mov r1, r8
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	adds r0, r5, #0
 	bl ShouldPortraitBeSmol
 	lsls r0, r0, #0x18
@@ -1235,8 +1235,8 @@ _08005E04:
 	adds r2, r5, #0
 	bl sub_8005B78
 	ldr r0, [r4, #0x3c]
-	bl GetBackgroundFromBufferPointer
-	bl BG_EnableSync
+	bl GetBgFromTm
+	bl EnableBgSyncById
 	adds r0, r4, #0
 	bl Proc_Break
 	b _08005E90
@@ -1279,8 +1279,8 @@ _08005E38:
 	adds r1, #0x44
 	adds r2, #0x23
 	strh r2, [r1]
-	bl GetBackgroundFromBufferPointer
-	bl BG_EnableSync
+	bl GetBgFromTm
+	bl EnableBgSyncById
 _08005E8A:
 	ldrh r0, [r4, #0x34]
 	adds r0, #1
@@ -1457,7 +1457,7 @@ sub_8005F9C: @ 0x08005F9C
 	ldr r0, [r0]
 	lsls r1, r1, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	add sp, #0x20
 	pop {r4, r5, r6}
 	pop {r0}
@@ -2213,17 +2213,17 @@ _0800651C:
 	adds r0, r4, r0
 	ldrh r1, [r0, #4]
 	lsls r1, r1, #5
-	ldr r0, _08006564  @ gUnknown_02022AA8
+	ldr r0, _08006564  @ gPal+0x200
 	adds r1, r1, r0
 	ldr r2, _08006568  @ 0x01000008
 	mov r0, sp
 	bl CpuFastSet
-	bl EnablePaletteSync
+	bl EnablePalSync
 	b _08006582
 	.align 2, 0
 _0800655C: .4byte gUnknown_0859118C
 _08006560: .4byte gUnknown_0202A68C
-_08006564: .4byte gUnknown_02022AA8
+_08006564: .4byte gPal+0x200
 _08006568: .4byte 0x01000008
 _0800656C:
 	mov r2, r8
@@ -2235,7 +2235,7 @@ _0800656C:
 	adds r1, #0x10
 	lsls r1, r1, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08006582:
 	mov r0, r8
 	str r0, [r5, #0x2c]
@@ -2386,7 +2386,7 @@ sub_8006650: @ 0x08006650
 	adds r1, #0x10
 	lsls r1, r1, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r1, [r4, #0x2c]
 	ldr r0, [r4, #0x30]
 	str r0, [r1, #0x2c]
@@ -2479,7 +2479,7 @@ sub_800671C: @ 0x0800671C
 	lsls r4, r4, #5
 	adds r1, r4, #0
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	pop {r4}
 	pop {r0}
 	bx r0

@@ -317,7 +317,7 @@ sub_801E748: @ 0x0801E748
 	bl Proc_Find
 	adds r7, r0, #0
 	movs r0, #0
-	bl BG_GetMapBuffer
+	bl GetBgTilemap
 	adds r4, r7, #0
 	adds r4, #0x30
 	ldrb r1, [r4]
@@ -604,7 +604,7 @@ _0801E906:
 	ldrb r2, [r5]
 	adds r1, r1, r2
 	lsls r1, r1, #1
-	ldr r4, _0801EA50  @ gBG0TilemapBuffer
+	ldr r4, _0801EA50  @ gBg0Tm
 	adds r1, r1, r4
 	bl Text_Draw
 	adds r0, r7, #0
@@ -642,7 +642,7 @@ _0801E906:
 	bl DrawIcon
 _0801EA1C:
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	add sp, #0xc
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -659,7 +659,7 @@ _0801EA40: .4byte 0x000004F3
 _0801EA44: .4byte 0x000004F4
 _0801EA48: .4byte 0x00000501
 _0801EA4C: .4byte 0x000004F5
-_0801EA50: .4byte gBG0TilemapBuffer
+_0801EA50: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_801E748
 

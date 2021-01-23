@@ -12,20 +12,20 @@ sub_801DD1C: @ 0x0801DD1C
 	movs r4, #0
 	movs r1, #0x10
 	strh r1, [r0]
-	bl SetupBackgroundForWeatherMaybe
+	bl InitBmBgLayers
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #1
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	add sp, #4
 	pop {r4}
 	pop {r0}
@@ -47,7 +47,7 @@ sub_801DD54: @ 0x0801DD54
 	lsrs r2, r2, #0x18
 	movs r0, #1
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	ldrh r0, [r4]
 	subs r0, #1
 	strh r0, [r4]
@@ -56,21 +56,21 @@ sub_801DD54: @ 0x0801DD54
 	bge _0801DD9C
 	adds r0, r5, #0
 	bl Proc_Break
-	bl SetDefaultColorEffects
+	bl SetBlendNone
 	movs r0, #2
 	movs r1, #0
-	bl SetBackgroundTileDataOffset
-	ldr r0, _0801DDA4  @ gBG2TilemapBuffer
+	bl SetBgChrOffset
+	ldr r0, _0801DDA4  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 _0801DD9C:
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801DDA4: .4byte gBG2TilemapBuffer
+_0801DDA4: .4byte gBg2Tm
 
 	THUMB_FUNC_END sub_801DD54
 

@@ -53,7 +53,7 @@ sub_8022300: @ 0x08022300
 	movs r1, #0xa8
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08022374  @ gUnknown_085A7E34
 	movs r3, #0xa3
 	lsls r3, r3, #7

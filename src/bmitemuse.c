@@ -4,6 +4,7 @@
 #include "m4a.h"
 #include "soundwrapper.h"
 #include "hardware.h"
+#include "oam.h"
 #include "ctc.h"
 #include "fontgrp.h"
 #include "ap.h"
@@ -678,8 +679,8 @@ void SetStaffUseAction(struct Unit* unit)
 {
     HideMoveRangeGraphics();
 
-    BG_Fill(gBG2TilemapBuffer, 0);
-    BG_EnableSyncByMask(BG2_SYNC_BIT);
+    TmFill(gBg2Tm, 0);
+    EnableBgSync(BG2_SYNC_BIT);
 
     gActionData.unitActionType = UNIT_ACTION_STAFF;
 }
@@ -756,7 +757,7 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
 
     HandlePlayerCursorMovement();
 
-    if (gKeyStatusPtr->newKeys & A_BUTTON)
+    if (gKeySt->pressed & A_BUTTON)
     {
         if (warpAllowed)
         {
@@ -767,8 +768,8 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
 
             SetStaffUseAction(gActiveUnit);
 
-            BG_Fill(gBG2TilemapBuffer, 0);
-            BG_EnableSyncByMask(BG2_SYNC_BIT);
+            TmFill(gBg2Tm, 0);
+            EnableBgSync(BG2_SYNC_BIT);
 
             PlaySoundEffect(0x6A); // TODO: song ids
 
@@ -780,12 +781,12 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
         }
     }
 
-    if (gKeyStatusPtr->newKeys & B_BUTTON)
+    if (gKeySt->pressed & B_BUTTON)
     {
         Proc_Goto(proc, 99);
 
-        BG_Fill(gBG2TilemapBuffer, 0);
-        BG_EnableSyncByMask(BG2_SYNC_BIT);
+        TmFill(gBg2Tm, 0);
+        EnableBgSync(BG2_SYNC_BIT);
 
         PlaySoundEffect(0x6B); // TODO: song ids
     }
@@ -957,9 +958,9 @@ int RepairMenuItemDraw(struct MenuProc* menu, struct MenuItemProc* menuItem)
 
     DrawItemMenuLineLong(
         &menuItem->text, item, isRepairable,
-        gBG0TilemapBuffer + TILEMAP_INDEX(menuItem->xTile, menuItem->yTile));
+        gBg0Tm + TM_OFFSET(menuItem->xTile, menuItem->yTile));
 
-    BG_EnableSyncByMask(BG0_SYNC_BIT);
+    EnableBgSync(BG0_SYNC_BIT);
 
     return 0;
 }
@@ -1112,7 +1113,7 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
 
     HandlePlayerCursorMovement();
 
-    if (gKeyStatusPtr->newKeys & A_BUTTON)
+    if (gKeySt->pressed & A_BUTTON)
     {
         if (canTorch)
         {
@@ -1133,10 +1134,10 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
         }
     }
 
-    if (gKeyStatusPtr->newKeys & B_BUTTON)
+    if (gKeySt->pressed & B_BUTTON)
     {
-        BG_Fill(gBG2TilemapBuffer, 0);
-        BG_EnableSyncByMask(BG2_SYNC_BIT);
+        TmFill(gBg2Tm, 0);
+        EnableBgSync(BG2_SYNC_BIT);
 
         Proc_Goto(proc, 99);
 

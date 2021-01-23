@@ -28,13 +28,13 @@ void GlobalIRQHandler(void);
 // ??? DummyIRQRoutine(???);
 void SetIRQHandler(int index, void *irq);
 
-// ??? sub_8000D00(???);
-void sub_8000D0C();
-int sub_8000D18(void);
-u32 GetGameClock(void);
-// ??? SetGameClock(???);
-// ??? IncrementGameClock(???);
-u8 ComputeDisplayTime();
+// ??? EnableSoftReset(???);
+void DisableSoftReset();
+bool IsSoftResetEnabled(void);
+u32 GetGameTime(void);
+// ??? SetGameTime(???);
+// ??? IncGameTime(???);
+s8 FormatTime(unsigned time, u16* hours, u16* minutes, u16* seconds);
 
 void StoreRoutinesToIRAM();
 void CallARM_Func3();
@@ -202,7 +202,7 @@ void sub_8006A7C(void); // aka EndDialogueInterpreter (face? probably not)
 // ??? sub_8008B24(???);
 // ??? sub_8008B30(???);
 // ??? sub_8008B44(???);
-bool8 GetZero(void); // idk
+bool GetZero(void); // idk
 // ??? sub_8008F1C(???);
 // ??? sub_8008F20(???);
 // ??? sub_8008F3C(???);
@@ -769,7 +769,7 @@ void SubSkipThread2(void); // bm?
 // ??? UndeployEveryone(???);
 // ??? GotoChapterWithoutSave(???);
 // ??? sub_80155C4(???);
-void SetupBackgroundForWeatherMaybe(void);
+void InitBmBgLayers(void);
 void LoadObjUIGfx(void);
 // ??? sub_80156BC(???);
 void sub_80156D4(void);
@@ -903,7 +903,7 @@ void HideMoveRangeGraphics(void);
 // ??? Destruct6CBMXFADE(???);
 void NewBMXFADE(s8 strongLock);
 // ??? MakeNew6CBMXFADE2(???);
-bool8 DoesBMXFADEExist(void);
+bool DoesBMXFADEExist(void);
 // ??? GetPlayerStartCursorPosition(???);
 // ??? GetEnemyStartCursorPosition(???);
 // ??? sub_801DEF0(???);
@@ -4380,7 +4380,7 @@ void ClearLocalEvents(void);
 // ??? CheckGlobalEventId(???);
 void SetEventId(u16);
 void UnsetEventId(u16);
-bool8 CheckEventId(u16);
+bool CheckEventId(u16);
 // ??? GetGlobalEventIdStorage(???);
 // ??? GetGlobalEventIdStorageSize(???);
 // ??? GetLocalEventIdStorage(???);

@@ -15,14 +15,14 @@ sub_800B910: @ 0x0800B910
 	lsrs r6, r6, #0x18
 	lsls r4, r4, #0x18
 	lsrs r4, r4, #0x18
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r5, r0, #0
 	movs r0, #0xc0
 	lsls r0, r0, #0x13
 	mov r8, r0
 	add r5, r8
 	adds r0, r6, #0
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	add r1, r8
 	lsls r4, r4, #9
@@ -62,7 +62,7 @@ sub_800B954: @ 0x0800B954
 	bl CpuFastSet
 	movs r0, #1
 	lsls r0, r4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	add sp, #0x10
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -79,17 +79,17 @@ sub_800B994: @ 0x0800B994
 	lsls r1, r1, #0x18
 	lsls r2, r2, #0x18
 	lsrs r0, r0, #0x13
-	ldr r3, _0800B9B4  @ gPaletteBuffer
+	ldr r3, _0800B9B4  @ gPal
 	adds r0, r0, r3
 	lsrs r1, r1, #0x13
 	adds r1, r1, r3
 	lsrs r2, r2, #0x15
 	bl CpuFastSet
-	bl EnablePaletteSync
+	bl EnablePalSync
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800B9B4: .4byte gPaletteBuffer
+_0800B9B4: .4byte gPal
 
 	THUMB_FUNC_END sub_800B994
 
@@ -101,7 +101,7 @@ sub_800B9B8: @ 0x0800B9B8
 	lsls r1, r1, #0x18
 	lsrs r4, r1, #0x18
 	adds r0, r5, #0
-	bl BG_GetMapBuffer
+	bl GetBgTilemap
 	adds r2, r0, #0
 	movs r3, #0
 	ldr r7, _0800B9FC  @ 0x00000FFF
@@ -123,7 +123,7 @@ _0800B9D0:
 	bls _0800B9D0
 	movs r0, #1
 	lsls r0, r5
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
@@ -142,7 +142,7 @@ sub_800BA04: @ 0x0800BA04
 	lsls r2, r2, #0x18
 	lsrs r2, r2, #0x18
 	lsls r3, r0, #5
-	ldr r1, _0800BA2C  @ gPaletteBuffer
+	ldr r1, _0800BA2C  @ gPal
 	adds r3, r3, r1
 	ldr r1, _0800BA30  @ end
 	strh r0, [r1]
@@ -155,7 +155,7 @@ sub_800BA04: @ 0x0800BA04
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800BA2C: .4byte gPaletteBuffer
+_0800BA2C: .4byte gPal
 _0800BA30: .4byte end
 
 	THUMB_FUNC_END sub_800BA04
@@ -169,16 +169,16 @@ sub_800BA34: @ 0x0800BA34
 	ldrh r2, [r0]
 	adds r0, #2
 	lsls r1, r1, #5
-	ldr r3, _0800BA58  @ gPaletteBuffer
+	ldr r3, _0800BA58  @ gPal
 	adds r1, r1, r3
 	lsls r2, r2, #3
 	bl CpuFastSet
-	bl EnablePaletteSync
+	bl EnablePalSync
 	pop {r0}
 	bx r0
 	.align 2, 0
 _0800BA54: .4byte end
-_0800BA58: .4byte gPaletteBuffer
+_0800BA58: .4byte gPal
 
 	THUMB_FUNC_END sub_800BA34
 
@@ -565,7 +565,7 @@ _0800BD12:
 	movs r1, #0xe0
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _0800BD30
 	.align 2, 0
 _0800BD20: .4byte unit_icon_pal_npc
@@ -574,7 +574,7 @@ _0800BD24:
 	movs r1, #0xe0
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _0800BD30:
 	lsrs r1, r4, #4
 	movs r0, #0xf
@@ -603,7 +603,7 @@ _0800BD5A:
 	movs r1, #0xe8
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _0800BD78
 	.align 2, 0
 _0800BD68: .4byte unit_icon_pal_npc
@@ -612,7 +612,7 @@ _0800BD6C:
 	movs r1, #0xe8
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _0800BD78:
 	lsrs r1, r4, #8
 	movs r0, #0xf
@@ -641,7 +641,7 @@ _0800BDA2:
 	movs r1, #0xf0
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _0800BDC0
 	.align 2, 0
 _0800BDB0: .4byte unit_icon_pal_enemy
@@ -650,7 +650,7 @@ _0800BDB4:
 	movs r1, #0xf0
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _0800BDC0:
 	pop {r4}
 	pop {r0}
@@ -691,7 +691,7 @@ Event81_: @ 0x0800BDE8
 	movs r0, #2
 	b _0800BE22
 _0800BE02:
-	ldr r2, _0800BE28  @ gLCDControlBuffer
+	ldr r2, _0800BE28  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #2
 	negs r0, r0
@@ -711,7 +711,7 @@ _0800BE22:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800BE28: .4byte gLCDControlBuffer
+_0800BE28: .4byte gDispIo
 
 	THUMB_FUNC_END Event81_
 

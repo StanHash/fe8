@@ -1,5 +1,6 @@
 #include "global.h"
 
+#include "hardware.h"
 #include "proc.h"
 #include "fontgrp.h"
 #include "uiutils.h"
@@ -14,7 +15,7 @@
 // TODO: move those where they belong when possible
 void sub_800E640(struct EventEngineProc*);
 
-static bool8 EventEngine_CanStartSkip(struct EventEngineProc*);
+static bool EventEngine_CanStartSkip(struct EventEngineProc*);
 static void  EventEngine_StartSkip(struct EventEngineProc*);
 static void  sub_800D488(struct EventEngineProc*);
 static void  CallNextQueuedEvent(void); // local
@@ -159,17 +160,13 @@ void EventEngine_OnUpdate(struct EventEngineProc* proc) {
     if (DoesBMXFADEExist())
         return;
     
-    if (EventEngine_CanStartSkip(proc) && (gKeyStatusPtr->newKeys & START_BUTTON)) {
+    if (EventEngine_CanStartSkip(proc) && (gKeySt->pressed & START_BUTTON)) {
         EventEngine_StartSkip(proc);
         return;
     }
 
     if (proc->execType != EV_EXEC_WORLDMAP && proc->execType != EV_EXEC_UNK4) {
-        gLCDControlBuffer.dispcnt.bg0_on = TRUE;
-        gLCDControlBuffer.dispcnt.bg1_on = TRUE;
-        gLCDControlBuffer.dispcnt.bg2_on = TRUE;
-        gLCDControlBuffer.dispcnt.bg3_on = TRUE;
-        gLCDControlBuffer.dispcnt.obj_on = TRUE;
+        SetDispEnable(1, 1, 1, 1, 1);
     }
 
     if (proc->pCallback) {
@@ -290,7 +287,7 @@ void CallNextQueuedEvent(void) {
 }
 
 void CallEvent(const u16* events, u8 execType) {
-    bool8 found = Proc_Find(gProc_StdEventEngine) != 0;
+    bool found = Proc_Find(gProc_StdEventEngine) != 0;
 
     if (found)
         EnqueueEventCall(events, execType);
@@ -321,7 +318,7 @@ struct EventEngineProc* EventEngine_Create(const u16* events, u8 execType) {
     proc->unitLoadCount  = 0;
     proc->idk4E          = 0;
 
-    if (gLCDControlBuffer.blendY == 0x10)
+    if (gDispIo.blendY == 0x10)
         proc->evStateBits |= EV_STATE_FADEDIN;
 
     switch (execType) {
@@ -482,7 +479,7 @@ void CallGameOverEvent(void) {
     EventEngine_Create(gEvent_GameOver, EV_EXEC_GAMEPLAY);
 }
 
-bool8 EventEngine_CanStartSkip(struct EventEngineProc* proc) { // Events_CanSkip
+bool EventEngine_CanStartSkip(struct EventEngineProc* proc) { // Events_CanSkip
     if (!(proc->evStateBits & EV_STATE_0002))
         return FALSE;
 
@@ -539,7 +536,7 @@ void sub_800D488(struct EventEngineProc* unused) {
     Proc_EndEach(gUnknown_08591540);
 }
 
-void SetEventTriggerState(u16 triggerId, bool8 value) {
+void SetEventTriggerState(u16 triggerId, bool value) {
     if (!value)
         UnsetEventId(triggerId);
     else

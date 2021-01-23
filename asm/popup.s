@@ -10,19 +10,19 @@ sub_8010DC0: @ 0x08010DC0
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #2
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #3
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	ldr r5, _08010E44  @ gUnknown_0895DD1C
 	lsls r4, r6, #1
 	adds r4, r4, r6
@@ -30,14 +30,14 @@ sub_8010DC0: @ 0x08010DC0
 	adds r0, r4, r5
 	ldr r6, [r0]
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	movs r0, #0xc0
 	lsls r0, r0, #0x13
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl CopyDataWithPossibleUncomp
-	ldr r0, _08010E48  @ gBG3TilemapBuffer
+	ldr r0, _08010E48  @ gBg3Tm
 	adds r1, r5, #4
 	adds r1, r4, r1
 	ldr r1, [r1]
@@ -50,10 +50,10 @@ sub_8010DC0: @ 0x08010DC0
 	movs r2, #0x80
 	lsls r2, r2, #1
 	adds r1, r2, #0
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	movs r0, #8
-	bl BG_EnableSyncByMask
-	ldr r1, _08010E4C  @ gPaletteBuffer
+	bl EnableBgSync
+	ldr r1, _08010E4C  @ gPal
 	movs r0, #0
 	strh r0, [r1]
 	pop {r4, r5, r6}
@@ -61,8 +61,8 @@ sub_8010DC0: @ 0x08010DC0
 	bx r0
 	.align 2, 0
 _08010E44: .4byte gUnknown_0895DD1C
-_08010E48: .4byte gBG3TilemapBuffer
-_08010E4C: .4byte gPaletteBuffer
+_08010E48: .4byte gBg3Tm
+_08010E4C: .4byte gPal
 
 	THUMB_FUNC_END sub_8010DC0
 
@@ -160,7 +160,7 @@ sub_8010EE8: @ 0x08010EE8
 	bl sub_8012DCC
 	adds r5, r0, #0
 	ldr r0, _08010F2C  @ gUnknown_085A7EE8
-	ldr r4, _08010F30  @ gUnknown_02022AE8
+	ldr r4, _08010F30  @ gPal+0x240
 	adds r1, r4, #0
 	movs r2, #8
 	bl CpuFastSet
@@ -171,14 +171,14 @@ sub_8010EE8: @ 0x08010EE8
 	movs r2, #1
 	adds r3, r5, #0
 	bl sub_807132C
-	bl EnablePaletteSync
+	bl EnablePalSync
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08010F2C: .4byte gUnknown_085A7EE8
-_08010F30: .4byte gUnknown_02022AE8
+_08010F30: .4byte gPal+0x240
 _08010F34: .4byte 0xFFFFFDC0
 
 	THUMB_FUNC_END sub_8010EE8
@@ -445,7 +445,7 @@ _08011156:
 	cmp r0, #0
 	bne _08011078
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	add sp, #0x18
 	pop {r4, r5}
 	pop {r0}
@@ -486,7 +486,7 @@ LongPopup_PrepareGfx: @ 0x0801119C
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #0
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	ldr r0, _080111EC  @ 0x06002000
 	adds r1, r1, r0
@@ -497,8 +497,8 @@ LongPopup_PrepareGfx: @ 0x0801119C
 	bl Font_InitForUI
 	bl ResetIconGraphics
 	bl LoadUiFrameGraphics
-	bl SetDefaultColorEffects
-	ldr r2, _080111F0  @ gLCDControlBuffer
+	bl SetBlendNone
+	ldr r2, _080111F0  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
 	negs r0, r0
@@ -518,7 +518,7 @@ LongPopup_PrepareGfx: @ 0x0801119C
 	bx r0
 	.align 2, 0
 _080111EC: .4byte 0x06002000
-_080111F0: .4byte gLCDControlBuffer
+_080111F0: .4byte gDispIo
 
 	THUMB_FUNC_END LongPopup_PrepareGfx
 
@@ -718,7 +718,7 @@ _0801134C:
 	adds r1, #1
 	adds r1, r1, r7
 	lsls r1, r1, #1
-	ldr r0, _080113B8  @ gBG0TilemapBuffer
+	ldr r0, _080113B8  @ gBg0Tm
 	adds r1, r1, r0
 	add r0, sp, #4
 	bl Text_Draw
@@ -764,7 +764,7 @@ _080113A4:
 	bx r0
 	.align 2, 0
 _080113B4: .4byte 0x0000FFFF
-_080113B8: .4byte gBG0TilemapBuffer
+_080113B8: .4byte gBg0Tm
 _080113BC: .4byte gUnknown_08592228
 
 	THUMB_FUNC_END LongPopup_Draw
@@ -776,7 +776,7 @@ LongPopup_WaitForPress: @ 0x080113C0
 	ldr r0, [r1, #0x30]
 	cmp r0, #0
 	bge _080113E0
-	ldr r0, _080113DC  @ gKeyStatusPtr
+	ldr r0, _080113DC  @ gKeySt
 	ldr r0, [r0]
 	ldrh r0, [r0, #8]
 	cmp r0, #0
@@ -785,7 +785,7 @@ LongPopup_WaitForPress: @ 0x080113C0
 	bl Proc_Break
 	b _080113F2
 	.align 2, 0
-_080113DC: .4byte gKeyStatusPtr
+_080113DC: .4byte gKeySt
 _080113E0:
 	cmp r0, #0
 	beq _080113F2
@@ -814,7 +814,7 @@ LongPopup_Clear: @ 0x080113F8
 	ldrb r1, [r7]
 	adds r0, r0, r1
 	lsls r0, r0, #1
-	ldr r1, _08011448  @ gBG0TilemapBuffer
+	ldr r1, _08011448  @ gBg0Tm
 	adds r0, r0, r1
 	adds r6, r2, #0
 	adds r6, #0x39
@@ -829,20 +829,20 @@ LongPopup_Clear: @ 0x080113F8
 	ldrb r7, [r7]
 	adds r0, r0, r7
 	lsls r0, r0, #1
-	ldr r1, _0801144C  @ gBG1TilemapBuffer
+	ldr r1, _0801144C  @ gBg1Tm
 	adds r0, r0, r1
 	ldrb r1, [r6]
 	ldrb r2, [r4]
 	movs r3, #0
 	bl TileMap_FillRect
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08011448: .4byte gBG0TilemapBuffer
-_0801144C: .4byte gBG1TilemapBuffer
+_08011448: .4byte gBg0Tm
+_0801144C: .4byte gBg1Tm
 
 	THUMB_FUNC_END LongPopup_Clear
 

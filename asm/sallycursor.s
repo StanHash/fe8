@@ -523,7 +523,7 @@ sub_8033608: @ 0x08033608
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -645,7 +645,7 @@ _08033700:
 	ldr r0, [r4, #0x58]
 	bl sub_80970CC
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	add sp, #4
 	pop {r4}
 	pop {r0}
@@ -769,7 +769,7 @@ _080337EC: .4byte gBmMapSize
 sub_80337F0: @ 0x080337F0
 	push {r4, r5, lr}
 	adds r3, r0, #0
-	ldr r0, _08033838  @ gKeyStatusPtr
+	ldr r0, _08033838  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0xb
@@ -803,7 +803,7 @@ _0803380A:
 	bl Proc_Goto
 	b _08033864
 	.align 2, 0
-_08033838: .4byte gKeyStatusPtr
+_08033838: .4byte gKeySt
 _0803383C:
 	ldr r2, [r3, #0x34]
 	adds r2, r4, r2
@@ -974,7 +974,7 @@ sub_8033978: @ 0x08033978
 	beq _0803398C
 	b _08033BDC
 _0803398C:
-	ldr r0, _080339C0  @ gKeyStatusPtr
+	ldr r0, _080339C0  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0x80
@@ -1000,7 +1000,7 @@ _080339B8:
 	bl m4aSongNumStart
 	b _08033BDC
 	.align 2, 0
-_080339C0: .4byte gKeyStatusPtr
+_080339C0: .4byte gKeySt
 _080339C4: .4byte gUnknown_0202BCB0
 _080339C8: .4byte gRAMChapterData
 _080339CC:
@@ -1052,7 +1052,7 @@ _080339CC:
 _08033A34: .4byte gUnknown_0202BCB0
 _08033A38: .4byte gBmMapUnit
 _08033A3C:
-	ldr r0, _08033A68  @ gKeyStatusPtr
+	ldr r0, _08033A68  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #2
@@ -1073,7 +1073,7 @@ _08033A3C:
 	ldrb r0, [r4]
 	b _08033B36
 	.align 2, 0
-_08033A68: .4byte gKeyStatusPtr
+_08033A68: .4byte gKeySt
 _08033A6C: .4byte gRAMChapterData
 _08033A70: .4byte gUnknown_0202BCB0
 _08033A74:
@@ -1225,7 +1225,7 @@ _08033BA4:
 	.align 2, 0
 _08033BB0: .4byte gActiveUnit
 _08033BB4:
-	ldr r0, _08033BD8  @ gKeyStatusPtr
+	ldr r0, _08033BD8  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #8
@@ -1240,7 +1240,7 @@ _08033BB4:
 	bl Proc_Goto
 	b _08033BEC
 	.align 2, 0
-_08033BD8: .4byte gKeyStatusPtr
+_08033BD8: .4byte gKeySt
 _08033BDC:
 	ldr r1, _08033BF4  @ gUnknown_0202BCB0
 	movs r2, #0x20
@@ -1390,7 +1390,7 @@ _08033CC8:
 	adds r1, r5, #0
 	bl PutSprite
 _08033D04:
-	ldr r0, _08033D38  @ gKeyStatusPtr
+	ldr r0, _08033D38  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #1
@@ -1410,7 +1410,7 @@ _08033D28: .4byte gUnknown_0202BCB0
 _08033D2C: .4byte gBmMapRange
 _08033D30: .4byte gBmMapUnit
 _08033D34: .4byte gObject_16x16
-_08033D38: .4byte gKeyStatusPtr
+_08033D38: .4byte gKeySt
 _08033D3C:
 	ldr r0, _08033D50  @ gRAMChapterData
 	adds r0, #0x41
@@ -1685,7 +1685,7 @@ sub_8033F34: @ 0x08033F34
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	bl HandlePlayerCursorMovement
-	ldr r0, _08033F90  @ gKeyStatusPtr
+	ldr r0, _08033F90  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #3
@@ -1722,7 +1722,7 @@ _08033F84:
 	bl Proc_Goto
 	b _08034058
 	.align 2, 0
-_08033F90: .4byte gKeyStatusPtr
+_08033F90: .4byte gKeySt
 _08033F94: .4byte gActiveUnit
 _08033F98: .4byte gUnknown_0202BCB0
 _08033F9C: .4byte gRAMChapterData
@@ -1771,7 +1771,7 @@ _08033FD2:
 	movs r1, #6
 	bl Proc_Goto
 _08034002:
-	ldr r0, _08034070  @ gKeyStatusPtr
+	ldr r0, _08034070  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0x80
@@ -1820,7 +1820,7 @@ _08034060: .4byte gUnknown_0202BCB0
 _08034064: .4byte gBmMapUnit
 _08034068: .4byte gActiveUnitMoveOrigin
 _0803406C: .4byte gActiveUnit
-_08034070: .4byte gKeyStatusPtr
+_08034070: .4byte gKeySt
 _08034074: .4byte gRAMChapterData
 
 	THUMB_FUNC_END sub_8033F34
@@ -2013,7 +2013,7 @@ sub_80341D0: @ 0x080341D0
 	push {lr}
 	bl AddSkipThread2
 	bl BMapDispSuspend
-	ldr r2, _080341FC  @ gLCDControlBuffer
+	ldr r2, _080341FC  @ gDispIo
 	ldrb r0, [r2, #1]
 	movs r1, #1
 	orrs r0, r1
@@ -2030,7 +2030,7 @@ sub_80341D0: @ 0x080341D0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080341FC: .4byte gLCDControlBuffer
+_080341FC: .4byte gDispIo
 
 	THUMB_FUNC_END sub_80341D0
 
@@ -2060,7 +2060,7 @@ ShrinkPlayerUnits: @ 0x08034214
 	ands r0, r1
 	cmp r0, #0
 	bne _08034262
-	ldr r0, _08034270  @ gUnknown_02020188
+	ldr r0, _08034270  @ gBuf
 	bl InitUnitStack
 	movs r4, #1
 _08034236:
@@ -2091,7 +2091,7 @@ _08034262:
 	.align 2, 0
 _08034268: .4byte gRAMChapterData
 _0803426C: .4byte gUnknown_0202BCB0
-_08034270: .4byte gUnknown_02020188
+_08034270: .4byte gBuf
 _08034274: .4byte 0x0001000C
 
 	THUMB_FUNC_END ShrinkPlayerUnits

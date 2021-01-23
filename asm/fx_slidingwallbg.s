@@ -32,7 +32,7 @@ _08086B92:
 	lsrs r1, r1, #0x10
 	movs r0, #3
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r1, #0
 	ldrsh r0, [r4, r1]
 	cmp r0, #0
@@ -56,11 +56,11 @@ sub_8086BB8: @ 0x08086BB8
 	adds r7, r0, #0
 	adds r4, r1, #0
 	adds r5, r2, #0
-	ldr r6, _08086BF0  @ gBG3TilemapBuffer
+	ldr r6, _08086BF0  @ gBg3Tm
 	cmp r4, #0
 	bne _08086BD2
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	movs r1, #0xc0
 	lsls r1, r1, #0x13
 	adds r4, r0, r1
@@ -78,23 +78,23 @@ _08086BD8:
 	ldr r0, _08086BF8  @ gUnknown_08B1754C
 	lsls r1, r5, #5
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _08086C06
 	.align 2, 0
-_08086BF0: .4byte gBG3TilemapBuffer
+_08086BF0: .4byte gBg3Tm
 _08086BF4: .4byte gUnknown_0202BCB0
 _08086BF8: .4byte gUnknown_08B1754C
 _08086BFC:
 	ldr r0, _08086C40  @ gUnknown_08B1754C
 	lsls r1, r5, #5
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08086C06:
 	ldr r0, _08086C44  @ gUnknown_08B12DB4
 	adds r1, r4, #0
 	bl CopyDataWithPossibleUncomp
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	subs r0, r4, r0
 	lsls r0, r0, #0xf
 	lsrs r0, r0, #0x14
@@ -135,11 +135,11 @@ sub_8086C50: @ 0x08086C50
 	adds r5, r2, #0
 	lsls r3, r3, #0x18
 	lsrs r6, r3, #0x18
-	ldr r7, _08086C88  @ gBG3TilemapBuffer
+	ldr r7, _08086C88  @ gBg3Tm
 	cmp r4, #0
 	bne _08086C72
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	movs r1, #0xc0
 	lsls r1, r1, #0x13
 	adds r4, r0, r1
@@ -153,22 +153,22 @@ _08086C78:
 	ldr r0, _08086C8C  @ gUnknown_08B1754C
 	lsls r1, r5, #5
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _08086C9A
 	.align 2, 0
-_08086C88: .4byte gBG3TilemapBuffer
+_08086C88: .4byte gBg3Tm
 _08086C8C: .4byte gUnknown_08B1754C
 _08086C90:
 	ldr r0, _08086CD8  @ gUnknown_08B1754C
 	lsls r1, r5, #5
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08086C9A:
 	ldr r0, _08086CDC  @ gUnknown_08B12DB4
 	adds r1, r4, #0
 	bl CopyDataWithPossibleUncomp
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	subs r0, r4, r0
 	lsls r0, r0, #0xf
 	lsrs r0, r0, #0x14
@@ -211,11 +211,11 @@ sub_8086CE8: @ 0x08086CE8
 	adds r6, r1, #0
 	adds r7, r2, #0
 	mov r8, r3
-	ldr r5, _08086DA8  @ gBG3TilemapBuffer
+	ldr r5, _08086DA8  @ gBg3Tm
 	cmp r6, #0
 	bne _08086D0A
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	movs r1, #0xc0
 	lsls r1, r1, #0x13
 	adds r6, r0, r1
@@ -227,12 +227,12 @@ _08086D0A:
 	movs r1, #0xe0
 	lsls r1, r1, #1
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08086DB0  @ gUnknown_08B12DB4
 	adds r1, r6, #0
 	bl CopyDataWithPossibleUncomp
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	subs r0, r6, r0
 	lsls r0, r0, #0xf
 	lsrs r0, r0, #0x14
@@ -253,7 +253,7 @@ _08086D40:
 	blt _08086D40
 _08086D4C:
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	subs r0, r6, r0
 	lsls r0, r0, #0xf
 	lsrs r0, r0, #0x14
@@ -272,7 +272,7 @@ _08086D64:
 	blt _08086D64
 _08086D70:
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	subs r0, r6, r0
 	lsls r0, r0, #0xf
 	lsrs r0, r0, #0x14
@@ -300,7 +300,7 @@ _08086D94:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08086DA8: .4byte gBG3TilemapBuffer
+_08086DA8: .4byte gBg3Tm
 _08086DAC: .4byte gUnknown_08B1754C
 _08086DB0: .4byte gUnknown_08B12DB4
 _08086DB4: .4byte 0x0000027F

@@ -1,119 +1,120 @@
 #include "global.h"
 
 #include "hardware.h"
+#include "dma.h"
 #include "ctc.h"
 
 #include "uiutils.h"
 
 static const u16 gUnknown_080DA2F4[] = {
-    TILEREF(0x01, BGPAL_UI_FRAME),
-    TILEREF(0x02, BGPAL_UI_FRAME),
-    TILEREF(0x03, BGPAL_UI_FRAME),
-    TILEREF(0x05, BGPAL_UI_FRAME),
+    TILE(0x01, BGPAL_UI_FRAME),
+    TILE(0x02, BGPAL_UI_FRAME),
+    TILE(0x03, BGPAL_UI_FRAME),
+    TILE(0x05, BGPAL_UI_FRAME),
 
-    TILEREF(0x07, BGPAL_UI_FRAME),
-    TILEREF(0x08, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x0A, BGPAL_UI_FRAME),
+    TILE(0x07, BGPAL_UI_FRAME),
+    TILE(0x08, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x0A, BGPAL_UI_FRAME),
 
-    TILEREF(0x06, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x0A, BGPAL_UI_FRAME),
+    TILE(0x06, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x0A, BGPAL_UI_FRAME),
 
-    TILEREF(0x1A, BGPAL_UI_FRAME),
-    TILEREF(0x1B, BGPAL_UI_FRAME),
-    TILEREF(0x1B, BGPAL_UI_FRAME),
-    TILEREF(0x21, BGPAL_UI_FRAME),
+    TILE(0x1A, BGPAL_UI_FRAME),
+    TILE(0x1B, BGPAL_UI_FRAME),
+    TILE(0x1B, BGPAL_UI_FRAME),
+    TILE(0x21, BGPAL_UI_FRAME),
 };
 
 static const u16 gUnknown_080DA314[] = {
-    TILEREF(0x01, BGPAL_UI_FRAME),
-    TILEREF(0x02, BGPAL_UI_FRAME),
-    TILEREF(0x03, BGPAL_UI_FRAME),
-    TILEREF(0x05, BGPAL_UI_FRAME),
+    TILE(0x01, BGPAL_UI_FRAME),
+    TILE(0x02, BGPAL_UI_FRAME),
+    TILE(0x03, BGPAL_UI_FRAME),
+    TILE(0x05, BGPAL_UI_FRAME),
 
-    TILEREF(0x66, BGPAL_UI_FRAME),
-    TILEREF(0x67, BGPAL_UI_FRAME),
-    TILEREF(0x67, BGPAL_UI_FRAME),
-    TILEREF(0x68, BGPAL_UI_FRAME),
+    TILE(0x66, BGPAL_UI_FRAME),
+    TILE(0x67, BGPAL_UI_FRAME),
+    TILE(0x67, BGPAL_UI_FRAME),
+    TILE(0x68, BGPAL_UI_FRAME),
 
-    TILEREF(0x06, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x0A, BGPAL_UI_FRAME),
+    TILE(0x06, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x0A, BGPAL_UI_FRAME),
 
-    TILEREF(0x1A, BGPAL_UI_FRAME),
-    TILEREF(0x1B, BGPAL_UI_FRAME),
-    TILEREF(0x1B, BGPAL_UI_FRAME),
-    TILEREF(0x21, BGPAL_UI_FRAME),
+    TILE(0x1A, BGPAL_UI_FRAME),
+    TILE(0x1B, BGPAL_UI_FRAME),
+    TILE(0x1B, BGPAL_UI_FRAME),
+    TILE(0x21, BGPAL_UI_FRAME),
 };
 
 static const u16 gUnknown_080DA334[] = {
-    TILEREF(0x72, BGPAL_UI_FRAME),
-    TILEREF(0x73, BGPAL_UI_FRAME),
-    TILEREF(0x73, BGPAL_UI_FRAME),
-    TILEREF(0x74, BGPAL_UI_FRAME),
+    TILE(0x72, BGPAL_UI_FRAME),
+    TILE(0x73, BGPAL_UI_FRAME),
+    TILE(0x73, BGPAL_UI_FRAME),
+    TILE(0x74, BGPAL_UI_FRAME),
 
-    TILEREF(0x75, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x76, BGPAL_UI_FRAME),
+    TILE(0x75, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x76, BGPAL_UI_FRAME),
 
-    TILEREF(0x75, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x76, BGPAL_UI_FRAME),
+    TILE(0x75, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x76, BGPAL_UI_FRAME),
 
-    TILEREF(0x77, BGPAL_UI_FRAME),
-    TILEREF(0x78, BGPAL_UI_FRAME),
-    TILEREF(0x78, BGPAL_UI_FRAME),
-    TILEREF(0x79, BGPAL_UI_FRAME),
+    TILE(0x77, BGPAL_UI_FRAME),
+    TILE(0x78, BGPAL_UI_FRAME),
+    TILE(0x78, BGPAL_UI_FRAME),
+    TILE(0x79, BGPAL_UI_FRAME),
 };
 
 static const u16 gUnknown_080DA354[] = {
-    TILEREF(0x01, BGPAL_UI_FRAME),
-    TILEREF(0x02, BGPAL_UI_FRAME),
-    TILEREF(0x03, BGPAL_UI_FRAME),
-    TILEREF(0x05, BGPAL_UI_FRAME),
+    TILE(0x01, BGPAL_UI_FRAME),
+    TILE(0x02, BGPAL_UI_FRAME),
+    TILE(0x03, BGPAL_UI_FRAME),
+    TILE(0x05, BGPAL_UI_FRAME),
 
-    TILEREF(0x0C, BGPAL_UI_FRAME),
-    TILEREF(0x0D, BGPAL_UI_FRAME),
-    TILEREF(0x0E, BGPAL_UI_FRAME),
-    TILEREF(0x0F, BGPAL_UI_FRAME),
+    TILE(0x0C, BGPAL_UI_FRAME),
+    TILE(0x0D, BGPAL_UI_FRAME),
+    TILE(0x0E, BGPAL_UI_FRAME),
+    TILE(0x0F, BGPAL_UI_FRAME),
 
-    TILEREF(0x0B, BGPAL_UI_FRAME),
-    TILEREF(0x0E, BGPAL_UI_FRAME),
-    TILEREF(0x0E, BGPAL_UI_FRAME),
-    TILEREF(0x0F, BGPAL_UI_FRAME),
+    TILE(0x0B, BGPAL_UI_FRAME),
+    TILE(0x0E, BGPAL_UI_FRAME),
+    TILE(0x0E, BGPAL_UI_FRAME),
+    TILE(0x0F, BGPAL_UI_FRAME),
 
-    TILEREF(0x1A, BGPAL_UI_FRAME),
-    TILEREF(0x1B, BGPAL_UI_FRAME),
-    TILEREF(0x1B, BGPAL_UI_FRAME),
-    TILEREF(0x21, BGPAL_UI_FRAME),
+    TILE(0x1A, BGPAL_UI_FRAME),
+    TILE(0x1B, BGPAL_UI_FRAME),
+    TILE(0x1B, BGPAL_UI_FRAME),
+    TILE(0x21, BGPAL_UI_FRAME),
 };
 
 static const u16 gUnknown_080DA374[] = {
-    TILEREF(0x78, BGPAL_UI_FRAME),
-    TILEREF(0x79, BGPAL_UI_FRAME),
-    TILEREF(0x7A, BGPAL_UI_FRAME),
-    TILEREF(0x7B, BGPAL_UI_FRAME),
-    TILEREF(0x7C, BGPAL_UI_FRAME),
-    TILEREF(0x7D, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x09, BGPAL_UI_FRAME),
-    TILEREF(0x34, BGPAL_UI_FRAME),
-    TILEREF(0x7A, BGPAL_UI_FRAME),
-    TILEREF(0x7B, BGPAL_UI_FRAME),
-    TILEREF(0x7C, BGPAL_UI_FRAME),
-    TILEREF(0x63, BGPAL_UI_FRAME) + 0x0400,
-    TILEREF(0x63, BGPAL_UI_FRAME),
-    TILEREF(0x62, BGPAL_UI_FRAME) + 0x0400,
-    TILEREF(0x62, BGPAL_UI_FRAME),
-    TILEREF(0x60, BGPAL_UI_FRAME),
-    TILEREF(0x60, BGPAL_UI_FRAME) + 0x0800,
-    TILEREF(0x61, BGPAL_UI_FRAME),
-    TILEREF(0x61, BGPAL_UI_FRAME) + 0x0800,
+    TILE(0x78, BGPAL_UI_FRAME),
+    TILE(0x79, BGPAL_UI_FRAME),
+    TILE(0x7A, BGPAL_UI_FRAME),
+    TILE(0x7B, BGPAL_UI_FRAME),
+    TILE(0x7C, BGPAL_UI_FRAME),
+    TILE(0x7D, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x09, BGPAL_UI_FRAME),
+    TILE(0x34, BGPAL_UI_FRAME),
+    TILE(0x7A, BGPAL_UI_FRAME),
+    TILE(0x7B, BGPAL_UI_FRAME),
+    TILE(0x7C, BGPAL_UI_FRAME),
+    TILE(0x63, BGPAL_UI_FRAME) + 0x0400,
+    TILE(0x63, BGPAL_UI_FRAME),
+    TILE(0x62, BGPAL_UI_FRAME) + 0x0400,
+    TILE(0x62, BGPAL_UI_FRAME),
+    TILE(0x60, BGPAL_UI_FRAME),
+    TILE(0x60, BGPAL_UI_FRAME) + 0x0800,
+    TILE(0x61, BGPAL_UI_FRAME),
+    TILE(0x61, BGPAL_UI_FRAME) + 0x0800,
 };
 
 static const u16* sUiFrameModelTilemapLookup[] = {
@@ -227,7 +228,7 @@ void UnpackUiFrameBuffered(int id)
     bufAddr = gUnknown_02022288 - bufSize;
 
     CopyDataWithPossibleUncomp(sUiFrameImageLookup[id], bufAddr);
-    RegisterTileGraphics(bufAddr, BG_CHAR_ADDR(0), bufSize);
+    RegisterDataMove(bufAddr, BG_CHAR_ADDR(0), bufSize);
 
     UnpackUiFramePalette(-1);
 }
@@ -245,38 +246,38 @@ void DrawUiFrame(u16* tilemap, int x, int y, int width, int height, int tilebase
     {
         for (ix = x + 1; ix < xMax; ix += 2)
         {
-            u16 tilemapOffset = TILEMAP_INDEX(ix, iy);
+            u16 tilemapOffset = TM_OFFSET(ix, iy);
 
-            tilemap[tilemapOffset + TILEMAP_INDEX(0, 0)] = model[6]  + tilebase; // center tile
-            tilemap[tilemapOffset + TILEMAP_INDEX(1, 0)] = model[6]  + tilebase; // center tile
-            tilemap[tilemapOffset + TILEMAP_INDEX(0, 1)] = model[9]  + tilebase; // bottom center tile (0, 0)
-            tilemap[tilemapOffset + TILEMAP_INDEX(1, 1)] = model[10] + tilebase; // bottom center tile (1, 0)
+            tilemap[tilemapOffset + TM_OFFSET(0, 0)] = model[6]  + tilebase; // center tile
+            tilemap[tilemapOffset + TM_OFFSET(1, 0)] = model[6]  + tilebase; // center tile
+            tilemap[tilemapOffset + TM_OFFSET(0, 1)] = model[9]  + tilebase; // bottom center tile (0, 0)
+            tilemap[tilemapOffset + TM_OFFSET(1, 1)] = model[10] + tilebase; // bottom center tile (1, 0)
         }
 
-        tilemap[TILEMAP_INDEX(x,    iy+0)] = model[8]  + tilebase; // left center tile
-        tilemap[TILEMAP_INDEX(xMax, iy+0)] = model[7]  + tilebase; // right center tile 0
-        tilemap[TILEMAP_INDEX(x,    iy+1)] = model[8]  + tilebase; // left center tile
-        tilemap[TILEMAP_INDEX(xMax, iy+1)] = model[11] + tilebase; // right center tile 1
+        tilemap[TM_OFFSET(x,    iy+0)] = model[8]  + tilebase; // left center tile
+        tilemap[TM_OFFSET(xMax, iy+0)] = model[7]  + tilebase; // right center tile 0
+        tilemap[TM_OFFSET(x,    iy+1)] = model[8]  + tilebase; // left center tile
+        tilemap[TM_OFFSET(xMax, iy+1)] = model[11] + tilebase; // right center tile 1
     }
 
     for (ix = x + 1; ix < xMax; ix += 2)
     {
-        tilemap[TILEMAP_INDEX(ix+0, y)]    = model[2]  + tilebase; // top center tile
-        tilemap[TILEMAP_INDEX(ix+1, y)]    = model[2]  + tilebase; // top centertile
-        tilemap[TILEMAP_INDEX(ix+0, yMax)] = model[13] + tilebase; // bottom center tile (0, 1)
-        tilemap[TILEMAP_INDEX(ix+1, yMax)] = model[14] + tilebase; // bottom center tile (1, 1)
+        tilemap[TM_OFFSET(ix+0, y)]    = model[2]  + tilebase; // top center tile
+        tilemap[TM_OFFSET(ix+1, y)]    = model[2]  + tilebase; // top centertile
+        tilemap[TM_OFFSET(ix+0, yMax)] = model[13] + tilebase; // bottom center tile (0, 1)
+        tilemap[TM_OFFSET(ix+1, yMax)] = model[14] + tilebase; // bottom center tile (1, 1)
     }
 
-    tilemap[TILEMAP_INDEX(x+0, y+0)] = model[0] + tilebase; // top left tile (0, 0)
-    tilemap[TILEMAP_INDEX(x+1, y+0)] = model[1] + tilebase; // top left tile (1, 0)
-    tilemap[TILEMAP_INDEX(x+0, y+1)] = model[4] + tilebase; // top left tile (0, 1)
-    tilemap[TILEMAP_INDEX(x+1, y+1)] = model[5] + tilebase; // top left tile (1, 1)
+    tilemap[TM_OFFSET(x+0, y+0)] = model[0] + tilebase; // top left tile (0, 0)
+    tilemap[TM_OFFSET(x+1, y+0)] = model[1] + tilebase; // top left tile (1, 0)
+    tilemap[TM_OFFSET(x+0, y+1)] = model[4] + tilebase; // top left tile (0, 1)
+    tilemap[TM_OFFSET(x+1, y+1)] = model[5] + tilebase; // top left tile (1, 1)
 
-    tilemap[TILEMAP_INDEX(xMax, y)] = model[3] + tilebase; // top right tile
+    tilemap[TM_OFFSET(xMax, y)] = model[3] + tilebase; // top right tile
 
-    tilemap[TILEMAP_INDEX(x, yMax)] = model[12] + tilebase; // bottom left tile
+    tilemap[TM_OFFSET(x, yMax)] = model[12] + tilebase; // bottom left tile
 
-    tilemap[TILEMAP_INDEX(xMax, yMax)] = model[15] + tilebase; // bottom right tile
+    tilemap[TM_OFFSET(xMax, yMax)] = model[15] + tilebase; // bottom right tile
 }
 
 #ifdef NONMATCHING
@@ -372,68 +373,68 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         {
             for (ix = x + 1; ix < xMax; ix += 2)
             {
-                tilemapOffset = TILEMAP_INDEX(ix, iy);
+                tilemapOffset = TM_OFFSET(ix, iy);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[6];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[6];
 
-                tilemapOffset += TILEMAP_INDEX(1, 0);
+                tilemapOffset += TM_OFFSET(1, 0);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[6];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[6];
 
-                tilemapOffset += TILEMAP_INDEX(-1, 1);
+                tilemapOffset += TM_OFFSET(-1, 1);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[9];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[9];
 
-                tilemapOffset += TILEMAP_INDEX(1, 0);
+                tilemapOffset += TM_OFFSET(1, 0);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[10];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[10];
             }
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(x,    iy+0)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(x,    iy+0)] = model[8]; // left center tile
+            gBg0Tm[TM_OFFSET(x,    iy+0)] = 0;
+            gBg1Tm[TM_OFFSET(x,    iy+0)] = model[8]; // left center tile
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(xMax, iy+0)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(xMax, iy+0)] = model[7]; // right center tile 0
+            gBg0Tm[TM_OFFSET(xMax, iy+0)] = 0;
+            gBg1Tm[TM_OFFSET(xMax, iy+0)] = model[7]; // right center tile 0
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(x,    iy+1)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(x,    iy+1)] = model[8]; // left center tile
+            gBg0Tm[TM_OFFSET(x,    iy+1)] = 0;
+            gBg1Tm[TM_OFFSET(x,    iy+1)] = model[8]; // left center tile
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(xMax, iy+1)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(xMax, iy+1)] = model[11]; // right center tile 1
+            gBg0Tm[TM_OFFSET(xMax, iy+1)] = 0;
+            gBg1Tm[TM_OFFSET(xMax, iy+1)] = model[11]; // right center tile 1
         }
 
         for (ix = x + 1; ix < xMax; ix += 2)
         {
-            gBG0TilemapBuffer[TILEMAP_INDEX(ix+0, y)]    = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(ix+0, y)]    = model[2]; // top center tile
+            gBg0Tm[TM_OFFSET(ix+0, y)]    = 0;
+            gBg1Tm[TM_OFFSET(ix+0, y)]    = model[2]; // top center tile
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(ix+1, y)]    = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(ix+1, y)]    = model[2]; // top centertile
+            gBg0Tm[TM_OFFSET(ix+1, y)]    = 0;
+            gBg1Tm[TM_OFFSET(ix+1, y)]    = model[2]; // top centertile
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(ix+0, yMax)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(ix+0, yMax)] = model[13]; // bottom center tile (0, 1)
+            gBg0Tm[TM_OFFSET(ix+0, yMax)] = 0;
+            gBg1Tm[TM_OFFSET(ix+0, yMax)] = model[13]; // bottom center tile (0, 1)
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(ix+1, yMax)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(ix+1, yMax)] = model[14]; // bottom center tile (1, 1)
+            gBg0Tm[TM_OFFSET(ix+1, yMax)] = 0;
+            gBg1Tm[TM_OFFSET(ix+1, yMax)] = model[14]; // bottom center tile (1, 1)
         }
 
-        gBG0TilemapBuffer[TILEMAP_INDEX(x,    y)]    = 0;
-        gBG0TilemapBuffer[TILEMAP_INDEX(xMax, y)]    = 0;
-        gBG0TilemapBuffer[TILEMAP_INDEX(x,    yMax)] = 0;
-        gBG0TilemapBuffer[TILEMAP_INDEX(xMax, yMax)] = 0;
+        gBg0Tm[TM_OFFSET(x,    y)]    = 0;
+        gBg0Tm[TM_OFFSET(xMax, y)]    = 0;
+        gBg0Tm[TM_OFFSET(x,    yMax)] = 0;
+        gBg0Tm[TM_OFFSET(xMax, yMax)] = 0;
 
-        gBG1TilemapBuffer[TILEMAP_INDEX(x+0, y+0)] = model[0]; // top left tile (0, 0)
-        gBG1TilemapBuffer[TILEMAP_INDEX(x+1, y+0)] = model[1]; // top left tile (1, 0)
-        gBG1TilemapBuffer[TILEMAP_INDEX(x+0, y+1)] = model[4]; // top left tile (0, 1)
-        gBG1TilemapBuffer[TILEMAP_INDEX(x+1, y+1)] = model[5]; // top left tile (1, 1)
+        gBg1Tm[TM_OFFSET(x+0, y+0)] = model[0]; // top left tile (0, 0)
+        gBg1Tm[TM_OFFSET(x+1, y+0)] = model[1]; // top left tile (1, 0)
+        gBg1Tm[TM_OFFSET(x+0, y+1)] = model[4]; // top left tile (0, 1)
+        gBg1Tm[TM_OFFSET(x+1, y+1)] = model[5]; // top left tile (1, 1)
 
-        gBG1TilemapBuffer[TILEMAP_INDEX(xMax, y)]    = model[3];  // top right tile
-        gBG1TilemapBuffer[TILEMAP_INDEX(x,    yMax)] = model[12]; // bottom left tile
-        gBG1TilemapBuffer[TILEMAP_INDEX(xMax, yMax)] = model[15]; // bottom right tile
+        gBg1Tm[TM_OFFSET(xMax, y)]    = model[3];  // top right tile
+        gBg1Tm[TM_OFFSET(x,    yMax)] = model[12]; // bottom left tile
+        gBg1Tm[TM_OFFSET(xMax, yMax)] = model[15]; // bottom right tile
     }
     else
     {
@@ -443,60 +444,60 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
 
             for (ix = x + 1; ix < xMax; ix += 2)
             {
-                tilemapOffset = TILEMAP_INDEX(ix, iy);
+                tilemapOffset = TM_OFFSET(ix, iy);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[r9 ? 5 : 9];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[r9 ? 5 : 9];
 
-                tilemapOffset += TILEMAP_INDEX(1, 0);
+                tilemapOffset += TM_OFFSET(1, 0);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[r9 ? 6 : 10];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[r9 ? 6 : 10];
 
-                tilemapOffset += TILEMAP_INDEX(-1, 1);
+                tilemapOffset += TM_OFFSET(-1, 1);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[9];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[9];
 
-                tilemapOffset += TILEMAP_INDEX(1, 0);
+                tilemapOffset += TM_OFFSET(1, 0);
 
-                gBG0TilemapBuffer[tilemapOffset] = 0;
-                gBG1TilemapBuffer[tilemapOffset] = model[10];
+                gBg0Tm[tilemapOffset] = 0;
+                gBg1Tm[tilemapOffset] = model[10];
             }
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(x,    iy+0)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(x,    iy+0)] = model[r9 ? 4 : 8]; // left center tile
+            gBg0Tm[TM_OFFSET(x,    iy+0)] = 0;
+            gBg1Tm[TM_OFFSET(x,    iy+0)] = model[r9 ? 4 : 8]; // left center tile
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(xMax, iy+0)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(xMax, iy+0)] = model[r9 ? 7 : 11]; // right center tile 0
+            gBg0Tm[TM_OFFSET(xMax, iy+0)] = 0;
+            gBg1Tm[TM_OFFSET(xMax, iy+0)] = model[r9 ? 7 : 11]; // right center tile 0
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(x,    iy+1)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(x,    iy+1)] = model[8]; // left center tile
+            gBg0Tm[TM_OFFSET(x,    iy+1)] = 0;
+            gBg1Tm[TM_OFFSET(x,    iy+1)] = model[8]; // left center tile
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(xMax, iy+1)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(xMax, iy+1)] = model[11]; // right center tile 1
+            gBg0Tm[TM_OFFSET(xMax, iy+1)] = 0;
+            gBg1Tm[TM_OFFSET(xMax, iy+1)] = model[11]; // right center tile 1
         }
 
         for (ix = x + 1; ix < xMax; ix += 2)
         {
-            gBG0TilemapBuffer[TILEMAP_INDEX(ix+0, yMax)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(ix+0, yMax)] = model[13]; // bottom center tile (0, 1)
+            gBg0Tm[TM_OFFSET(ix+0, yMax)] = 0;
+            gBg1Tm[TM_OFFSET(ix+0, yMax)] = model[13]; // bottom center tile (0, 1)
 
-            gBG0TilemapBuffer[TILEMAP_INDEX(ix+1, yMax)] = 0;
-            gBG1TilemapBuffer[TILEMAP_INDEX(ix+1, yMax)] = model[14]; // bottom center tile (1, 1)
+            gBg0Tm[TM_OFFSET(ix+1, yMax)] = 0;
+            gBg1Tm[TM_OFFSET(ix+1, yMax)] = model[14]; // bottom center tile (1, 1)
         }
 
-        gBG0TilemapBuffer[TILEMAP_INDEX(x,    yMax)] = 0;
-        gBG0TilemapBuffer[TILEMAP_INDEX(xMax, yMax)] = 0;
+        gBg0Tm[TM_OFFSET(x,    yMax)] = 0;
+        gBg0Tm[TM_OFFSET(xMax, yMax)] = 0;
 
-        gBG1TilemapBuffer[TILEMAP_INDEX(x,    yMax)] = model[12]; // bottom left tile
-        gBG1TilemapBuffer[TILEMAP_INDEX(xMax, yMax)] = model[15]; // bottom right tile
+        gBg1Tm[TM_OFFSET(x,    yMax)] = model[12]; // bottom left tile
+        gBg1Tm[TM_OFFSET(xMax, yMax)] = model[15]; // bottom right tile
     }
 
-    BG_SetPosition(0, 0, 0);
-    BG_SetPosition(1, 0, 0);
+    SetBgOffset(0, 0, 0);
+    SetBgOffset(1, 0, 0);
 
-    BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT);
+    EnableBgSync(BG0_SYNC_BIT | BG1_SYNC_BIT);
 }
 
 #else // NONMATCHING
@@ -546,7 +547,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         bge _0804E48A\n\
         movs r3, #0\n\
         mov r9, r3\n\
-        ldr r4, _0804E5B4  @ gBG1TilemapBuffer\n\
+        ldr r4, _0804E5B4  @ gBg1Tm\n\
         mov r8, r4\n\
     _0804E3B6:\n\
         ldr r7, [sp, #0x18]\n\
@@ -558,9 +559,9 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r0, [sp, #4]\n\
         cmp r7, r0\n\
         bge _0804E432\n\
-        ldr r3, _0804E5B8  @ gBG0TilemapBuffer\n\
+        ldr r3, _0804E5B8  @ gBg0Tm\n\
         movs r2, #0\n\
-        ldr r6, _0804E5B4  @ gBG1TilemapBuffer\n\
+        ldr r6, _0804E5B4  @ gBg1Tm\n\
     _0804E3CE:\n\
         adds r0, r5, r7\n\
         lsls r0, r0, #0x10\n\
@@ -616,7 +617,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r2, [sp]\n\
         adds r1, r5, r2\n\
         lsls r1, r1, #1\n\
-        ldr r3, _0804E5B8  @ gBG0TilemapBuffer\n\
+        ldr r3, _0804E5B8  @ gBg0Tm\n\
         adds r0, r1, r3\n\
         mov r4, r9\n\
         strh r4, [r0]\n\
@@ -637,7 +638,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r3, [sp]\n\
         adds r1, r2, r3\n\
         lsls r1, r1, #1\n\
-        ldr r4, _0804E5B8  @ gBG0TilemapBuffer\n\
+        ldr r4, _0804E5B8  @ gBg0Tm\n\
         adds r0, r1, r4\n\
         mov r5, r9\n\
         strh r5, [r0]\n\
@@ -662,8 +663,8 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r3, [sp, #4]\n\
         cmp r7, r3\n\
         bge _0804E526\n\
-        ldr r6, _0804E5B8  @ gBG0TilemapBuffer\n\
-        ldr r4, _0804E5B4  @ gBG1TilemapBuffer\n\
+        ldr r6, _0804E5B8  @ gBg0Tm\n\
+        ldr r4, _0804E5B4  @ gBg1Tm\n\
         ldr r5, [sp, #0x24]\n\
         adds r5, #1\n\
         str r5, [sp, #0xc]\n\
@@ -742,7 +743,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r3, [sp]\n\
         adds r2, r1, r3\n\
         lsls r2, r2, #1\n\
-        ldr r4, _0804E5B8  @ gBG0TilemapBuffer\n\
+        ldr r4, _0804E5B8  @ gBg0Tm\n\
         adds r0, r2, r4\n\
         movs r1, #0\n\
         strh r1, [r0]\n\
@@ -756,17 +757,17 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r0, [sp, #0x30]\n\
         adds r4, r0, r3\n\
         lsls r4, r4, #1\n\
-        ldr r3, _0804E5B8  @ gBG0TilemapBuffer\n\
+        ldr r3, _0804E5B8  @ gBg0Tm\n\
         adds r0, r4, r3\n\
         strh r1, [r0]\n\
         ldr r5, [sp, #0x30]\n\
         ldr r0, [sp, #4]\n\
         adds r3, r5, r0\n\
         lsls r3, r3, #1\n\
-        ldr r5, _0804E5B8  @ gBG0TilemapBuffer\n\
+        ldr r5, _0804E5B8  @ gBg0Tm\n\
         adds r0, r3, r5\n\
         strh r1, [r0]\n\
-        ldr r0, _0804E5B4  @ gBG1TilemapBuffer\n\
+        ldr r0, _0804E5B4  @ gBg1Tm\n\
         adds r2, r2, r0\n\
         mov r1, ip\n\
         ldrh r0, [r1]\n\
@@ -776,7 +777,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r2, [sp]\n\
         adds r0, r0, r2\n\
         lsls r0, r0, #1\n\
-        ldr r5, _0804E5B4  @ gBG1TilemapBuffer\n\
+        ldr r5, _0804E5B4  @ gBg1Tm\n\
         adds r0, r0, r5\n\
         ldrh r1, [r1, #2]\n\
         strh r1, [r0]\n\
@@ -792,7 +793,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r1, [sp]\n\
         adds r0, r0, r1\n\
         lsls r0, r0, #1\n\
-        ldr r2, _0804E5B4  @ gBG1TilemapBuffer\n\
+        ldr r2, _0804E5B4  @ gBg1Tm\n\
         adds r0, r0, r2\n\
         ldrh r1, [r5, #0xa]\n\
         strh r1, [r0]\n\
@@ -808,8 +809,8 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         b _0804E76A\n\
         .align 2, 0\n\
     _0804E5B0: .4byte sUiFrameModelTilemapLookup\n\
-    _0804E5B4: .4byte gBG1TilemapBuffer\n\
-    _0804E5B8: .4byte gBG0TilemapBuffer\n\
+    _0804E5B4: .4byte gBg1Tm\n\
+    _0804E5B8: .4byte gBg0Tm\n\
     _0804E5BC:\n\
         adds r0, r5, #1\n\
         str r0, [sp, #0x1c]\n\
@@ -846,10 +847,10 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r4, [sp, #4]\n\
         cmp r7, r4\n\
         bge _0804E67C\n\
-        ldr r6, _0804E794  @ gBG0TilemapBuffer\n\
+        ldr r6, _0804E794  @ gBg0Tm\n\
         mov r8, r6\n\
         movs r3, #0\n\
-        ldr r2, _0804E798  @ gBG1TilemapBuffer\n\
+        ldr r2, _0804E798  @ gBg1Tm\n\
         mov r0, r9\n\
         str r0, [sp, #0x48]\n\
     _0804E60A:\n\
@@ -916,11 +917,11 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r1, [sp]\n\
         adds r0, r5, r1\n\
         lsls r0, r0, #1\n\
-        ldr r2, _0804E794  @ gBG0TilemapBuffer\n\
+        ldr r2, _0804E794  @ gBg0Tm\n\
         adds r1, r0, r2\n\
         movs r6, #0\n\
         strh r6, [r1]\n\
-        ldr r3, _0804E798  @ gBG1TilemapBuffer\n\
+        ldr r3, _0804E798  @ gBg1Tm\n\
         adds r1, r0, r3\n\
         mov r4, r9\n\
         ldr r0, [sp, #0x28]\n\
@@ -934,10 +935,10 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r0, [sp, #4]\n\
         adds r1, r5, r0\n\
         lsls r1, r1, #1\n\
-        ldr r2, _0804E794  @ gBG0TilemapBuffer\n\
+        ldr r2, _0804E794  @ gBg0Tm\n\
         adds r0, r1, r2\n\
         strh r6, [r0]\n\
-        ldr r3, _0804E798  @ gBG1TilemapBuffer\n\
+        ldr r3, _0804E798  @ gBg1Tm\n\
         adds r1, r1, r3\n\
         ldr r0, [sp, #0x2c]\n\
         cmp r4, #0\n\
@@ -952,10 +953,10 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r5, [sp]\n\
         adds r1, r2, r5\n\
         lsls r1, r1, #1\n\
-        ldr r3, _0804E794  @ gBG0TilemapBuffer\n\
+        ldr r3, _0804E794  @ gBg0Tm\n\
         adds r0, r1, r3\n\
         strh r6, [r0]\n\
-        ldr r4, _0804E798  @ gBG1TilemapBuffer\n\
+        ldr r4, _0804E798  @ gBg1Tm\n\
         adds r1, r1, r4\n\
         mov r5, ip\n\
         ldrh r0, [r5, #0x10]\n\
@@ -978,11 +979,11 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r2, [sp, #4]\n\
         cmp r7, r2\n\
         bge _0804E740\n\
-        ldr r3, _0804E794  @ gBG0TilemapBuffer\n\
+        ldr r3, _0804E794  @ gBg0Tm\n\
         mov r9, r3\n\
         movs r4, #0\n\
         mov r8, r4\n\
-        ldr r3, _0804E798  @ gBG1TilemapBuffer\n\
+        ldr r3, _0804E798  @ gBg1Tm\n\
         ldr r2, [sp, #0x30]\n\
         adds r2, #1\n\
         lsls r4, r7, #1\n\
@@ -1020,7 +1021,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         ldr r3, [sp]\n\
         adds r2, r1, r3\n\
         lsls r2, r2, #1\n\
-        ldr r4, _0804E794  @ gBG0TilemapBuffer\n\
+        ldr r4, _0804E794  @ gBg0Tm\n\
         adds r0, r2, r4\n\
         movs r3, #0\n\
         strh r3, [r0]\n\
@@ -1029,7 +1030,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         lsls r1, r1, #1\n\
         adds r0, r1, r4\n\
         strh r3, [r0]\n\
-        ldr r6, _0804E798  @ gBG1TilemapBuffer\n\
+        ldr r6, _0804E798  @ gBg1Tm\n\
         adds r2, r2, r6\n\
         mov r3, ip\n\
         ldrh r0, [r3, #0x18]\n\
@@ -1041,13 +1042,13 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         movs r0, #0\n\
         movs r1, #0\n\
         movs r2, #0\n\
-        bl BG_SetPosition\n\
+        bl SetBgOffset\n\
         movs r0, #1\n\
         movs r1, #0\n\
         movs r2, #0\n\
-        bl BG_SetPosition\n\
+        bl SetBgOffset\n\
         movs r0, #3\n\
-        bl BG_EnableSyncByMask\n\
+        bl EnableBgSync\n\
         add sp, #0x4c\n\
         pop {r3, r4, r5}\n\
         mov r8, r3\n\
@@ -1057,8 +1058,8 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
         pop {r0}\n\
         bx r0\n\
         .align 2, 0\n\
-    _0804E794: .4byte gBG0TilemapBuffer\n\
-    _0804E798: .4byte gBG1TilemapBuffer\n\
+    _0804E794: .4byte gBg0Tm\n\
+    _0804E798: .4byte gBg1Tm\n\
         .syntax divided\n\
     ");
 }
@@ -1067,7 +1068,7 @@ void DrawUiFrame2(int x, int y, int width, int height, int style)
 
 void DisplayUiHand(int x, int y)
 {
-    if ((GetGameClock() - 1) == sPrevHandClockFrame)
+    if ((GetGameTime() - 1) == sPrevHandClockFrame)
     {
         x = (x + sPrevHandScreenPosition.x) >> 1;
         y = (y + sPrevHandScreenPosition.y) >> 1;
@@ -1075,15 +1076,15 @@ void DisplayUiHand(int x, int y)
 
     sPrevHandScreenPosition.x = x;
     sPrevHandScreenPosition.y = y;
-    sPrevHandClockFrame = GetGameClock();
+    sPrevHandClockFrame = GetGameTime();
 
-    x += (sHandHOffsetLookup[GetGameClock() % ARRAY_COUNT(sHandHOffsetLookup)] - 14);
+    x += (sHandHOffsetLookup[GetGameTime() % ARRAY_COUNT(sHandHOffsetLookup)] - 14);
     PutSprite(2, x, y, sSprite_Hand, 0);
 }
 
 void DisplayUiHand_unused(int x, int y)
 {
-    x += (sHandHOffsetLookup[GetGameClock() % ARRAY_COUNT(sHandHOffsetLookup)] - 14);
+    x += (sHandHOffsetLookup[GetGameTime() % ARRAY_COUNT(sHandHOffsetLookup)] - 14);
     PutSprite(2, x, y, sSprite_Hand, 0);
 }
 
@@ -1105,10 +1106,10 @@ int GetUiHandPrevDisplayY(void)
 
 void ClearBg0Bg1(void)
 {
-    BG_Fill(gBG0TilemapBuffer, 0);
-    BG_Fill(gBG1TilemapBuffer, 0);
+    TmFill(gBg0Tm, 0);
+    TmFill(gBg1Tm, 0);
 
-    BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT);
+    EnableBgSync(BG0_SYNC_BIT | BG1_SYNC_BIT);
 }
 
 void DrawUiItemHover(int x, int y, int width)
@@ -1118,14 +1119,14 @@ void DrawUiItemHover(int x, int y, int width)
 
     // TODO: meaningful constants
 
-    gBG1TilemapBuffer[TILEMAP_INDEX(x, y)] = TILEREF(0x7A, BGPAL_UI_FRAME);
+    gBg1Tm[TM_OFFSET(x, y)] = TILE(0x7A, BGPAL_UI_FRAME);
 
     for (x += 1; x < xMax; ++x)
-        gBG1TilemapBuffer[TILEMAP_INDEX(x, y)] = TILEREF(0x7B, BGPAL_UI_FRAME);
+        gBg1Tm[TM_OFFSET(x, y)] = TILE(0x7B, BGPAL_UI_FRAME);
 
-    gBG1TilemapBuffer[TILEMAP_INDEX(x, y)] = TILEREF(0x7C, BGPAL_UI_FRAME);
+    gBg1Tm[TM_OFFSET(x, y)] = TILE(0x7C, BGPAL_UI_FRAME);
 
-    BG_EnableSyncByMask(BG1_SYNC_BIT);
+    EnableBgSync(BG1_SYNC_BIT);
 }
 
 void ClearUiItemHover(int x, int y, int width)
@@ -1135,15 +1136,15 @@ void ClearUiItemHover(int x, int y, int width)
 
     for (; x < xMax; x += 2)
     {
-        gBG1TilemapBuffer[TILEMAP_INDEX(x + 0, y)] = gUnknown_080DA374[6];
-        gBG1TilemapBuffer[TILEMAP_INDEX(x + 1, y)] = gUnknown_080DA374[7];
+        gBg1Tm[TM_OFFSET(x + 0, y)] = gUnknown_080DA374[6];
+        gBg1Tm[TM_OFFSET(x + 1, y)] = gUnknown_080DA374[7];
     }
 
-    gBG1TilemapBuffer[TILEMAP_INDEX(xMax, y)] = (width % 2)
+    gBg1Tm[TM_OFFSET(xMax, y)] = (width % 2)
         ? gUnknown_080DA374[6]
         : gUnknown_080DA374[7];
 
-    BG_EnableSyncByMask(BG1_SYNC_BIT);
+    EnableBgSync(BG1_SYNC_BIT);
 }
 
 void DrawUiItemHoverExt(int bg, int base, int x, int y, int width)
@@ -1154,16 +1155,16 @@ void DrawUiItemHoverExt(int bg, int base, int x, int y, int width)
     xMax = x + width - 1;
     y += 1;
 
-    tilemap = BG_GetMapBuffer(bg);
+    tilemap = GetBgTilemap(bg);
 
-    tilemap[TILEMAP_INDEX(x, y)] = TILEREF(0x7A, BGPAL_UI_FRAME) + base;
+    tilemap[TM_OFFSET(x, y)] = TILE(0x7A, BGPAL_UI_FRAME) + base;
 
     for (x += 1; x < xMax; ++x)
-        tilemap[TILEMAP_INDEX(x, y)] = TILEREF(0x7B, BGPAL_UI_FRAME) + base;
+        tilemap[TM_OFFSET(x, y)] = TILE(0x7B, BGPAL_UI_FRAME) + base;
 
-    tilemap[TILEMAP_INDEX(x, y)] = TILEREF(0x7C, BGPAL_UI_FRAME) + base;
+    tilemap[TM_OFFSET(x, y)] = TILE(0x7C, BGPAL_UI_FRAME) + base;
 
-    BG_EnableSyncByMask(BG_SYNC_BIT(bg));
+    EnableBgSync(BG_SYNC_BIT(bg));
 }
 
 void ClearUiItemHoverExt(int bg, int base, int x, int y, int width)
@@ -1174,19 +1175,19 @@ void ClearUiItemHoverExt(int bg, int base, int x, int y, int width)
     xMax = x + width - 1;
     y += 1;
 
-    tilemap = BG_GetMapBuffer(bg);
+    tilemap = GetBgTilemap(bg);
 
     for (; x < xMax; x += 2)
     {
-        tilemap[TILEMAP_INDEX(x + 0, y)] = gUnknown_080DA374[6] + base;
-        tilemap[TILEMAP_INDEX(x + 1, y)] = gUnknown_080DA374[7] + base;
+        tilemap[TM_OFFSET(x + 0, y)] = gUnknown_080DA374[6] + base;
+        tilemap[TM_OFFSET(x + 1, y)] = gUnknown_080DA374[7] + base;
     }
 
-    tilemap[TILEMAP_INDEX(xMax, y)] = (width % 2)
+    tilemap[TM_OFFSET(xMax, y)] = (width % 2)
         ? gUnknown_080DA374[6] + base
         : gUnknown_080DA374[7] + base;
 
-    BG_EnableSyncByMask(BG_SYNC_BIT(bg));
+    EnableBgSync(BG_SYNC_BIT(bg));
 }
 
 void UnpackUnkUiFrame(void* vram, int palId, int palCount)
@@ -1197,7 +1198,7 @@ void UnpackUnkUiFrame(void* vram, int palId, int palCount)
 
 void DisplayUiHandExt(int x, int y, unsigned objTileOffset)
 {
-    if ((GetGameClock() - 1) == sPrevHandClockFrame)
+    if ((GetGameTime() - 1) == sPrevHandClockFrame)
     {
         x = (x + sPrevHandScreenPosition.x) >> 1;
         y = (y + sPrevHandScreenPosition.y) >> 1;
@@ -1205,9 +1206,9 @@ void DisplayUiHandExt(int x, int y, unsigned objTileOffset)
 
     sPrevHandScreenPosition.x = x;
     sPrevHandScreenPosition.y = y;
-    sPrevHandClockFrame = GetGameClock();
+    sPrevHandClockFrame = GetGameTime();
 
-    x += (sHandHOffsetLookup[GetGameClock() % ARRAY_COUNT(sHandHOffsetLookup)] - 14);
+    x += (sHandHOffsetLookup[GetGameTime() % ARRAY_COUNT(sHandHOffsetLookup)] - 14);
     PutSprite(2, x, y, sSprite_Hand, objTileOffset << 15 >> 20);
 }
 

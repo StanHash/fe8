@@ -303,197 +303,6 @@
 // extern ??? gUnknown_02020140
 // extern ??? gUnknown_02020144
 // extern ??? gUnknown_02020148
-extern u8 gUnknown_02020188[]; // gGenericBuffer
-// extern ??? gUnknown_02020208
-// extern ??? gUnknown_02020288
-// extern ??? gUnknown_02020988
-// extern ??? gUnknown_02021188
-// extern ??? gUnknown_02022188
-extern s8 gUnknown_02022288[];
-extern s8 gUnknown_020222A8[];
-// extern ??? gUnknown_02022308
-extern u16 gPaletteBuffer[];
-// extern ??? gUnknown_020228AA
-// extern ??? gUnknown_020228C8
-// extern ??? gUnknown_020228E8
-// extern ??? gUnknown_02022908
-// extern ??? gUnknown_02022928
-// extern ??? gUnknown_02022968
-// extern ??? gUnknown_02022988
-// extern ??? gUnknown_02022A68
-// extern ??? gUnknown_02022A88
-// extern ??? gUnknown_02022AA8
-// extern ??? gUnknown_02022ABA
-// extern ??? gUnknown_02022AE8
-// extern ??? gUnknown_02022B08
-// extern ??? gUnknown_02022B24
-// extern ??? gUnknown_02022B28
-// extern ??? gUnknown_02022B48
-// extern ??? gUnknown_02022B68
-// extern ??? gUnknown_02022B88
-// extern ??? gUnknown_02022BA4
-// extern ??? gUnknown_02022BA8
-// extern ??? gUnknown_02022BC8
-// extern ??? gUnknown_02022BE8
-// extern ??? gUnknown_02022C08
-// extern ??? gUnknown_02022C28
-// extern ??? gUnknown_02022C48
-// extern ??? gUnknown_02022C68
-extern u16 gBG0TilemapBuffer[];
-// extern ??? gUnknown_02022CAA
-// extern ??? gUnknown_02022CAC
-// extern ??? gUnknown_02022CAE
-// extern ??? gUnknown_02022CB0
-// extern ??? gUnknown_02022CB4
-// extern ??? gUnknown_02022CB8
-// extern ??? gUnknown_02022CC4
-// extern ??? gUnknown_02022CC6
-// extern ??? gUnknown_02022CCA
-// extern ??? gUnknown_02022CCE
-// extern ??? gUnknown_02022CD0
-// extern ??? gUnknown_02022CD4
-// extern ??? gUnknown_02022CDC
-// extern ??? gUnknown_02022CEC
-// extern ??? gUnknown_02022CFE
-// extern ??? gUnknown_02022D02
-// extern ??? gUnknown_02022D08
-// extern ??? gUnknown_02022D10
-// extern ??? gUnknown_02022D18
-// extern ??? gUnknown_02022D2E
-// extern ??? gUnknown_02022D36
-// extern ??? gUnknown_02022D3C
-// extern ??? gUnknown_02022D40
-// extern ??? gUnknown_02022D6E
-// extern ??? gUnknown_02022D72
-// extern ??? gUnknown_02022D76
-// extern ??? gUnknown_02022D86
-// extern ??? gUnknown_02022DB4
-// extern ??? gUnknown_02022DB8
-// extern ??? gUnknown_02022DBA
-// extern ??? gUnknown_02022DEA
-// extern ??? gUnknown_02022DEE
-// extern ??? gUnknown_02022DF2
-// extern ??? gUnknown_02022E00
-// extern ??? gUnknown_02022E2E
-// extern ??? gUnknown_02022E30
-// extern ??? gUnknown_02022E34
-// extern ??? gUnknown_02022E5E
-// extern ??? gUnknown_02022E60
-// extern ??? gUnknown_02022E68
-// extern ??? gUnknown_02022E76
-// extern ??? gUnknown_02022E90
-// extern ??? gUnknown_02022EB4
-// extern ??? gUnknown_02022EE8
-// extern ??? gUnknown_02022EEA
-// extern ??? gUnknown_02022EEC
-// extern ??? gUnknown_02022EF6
-// extern ??? gUnknown_02022F06
-// extern ??? gUnknown_02022F0A
-// extern ??? gUnknown_02022F0E
-// extern ??? gUnknown_02022F10
-// extern ??? gUnknown_02022F1A
-// extern ??? gUnknown_02022F1E
-// extern ??? gUnknown_02022F28
-// extern ??? gUnknown_02022F2A
-// extern ??? gUnknown_02022F38
-// extern ??? gUnknown_02022F4E
-// extern ??? gUnknown_02022F6A
-// extern ??? gUnknown_02022FA8
-// extern ??? gUnknown_02022FBE
-// extern ??? gUnknown_02022FC6
-// extern ??? gUnknown_02022FD4
-// extern ??? gUnknown_02022FE8
-// extern ??? gUnknown_02023016
-// extern ??? gUnknown_02023028
-// extern ??? gUnknown_0202304E
-// extern ??? gUnknown_0202306E
-// extern ??? gUnknown_02023084
-// extern ??? gUnknown_020230A8
-// extern ??? gUnknown_020230CA
-// extern ??? gUnknown_020230CE
-// extern ??? gUnknown_020230F4
-// extern ??? gUnknown_020230F6
-// extern ??? gUnknown_0202310E
-// extern ??? gUnknown_02023114
-// extern ??? gUnknown_02023116
-// extern ??? gUnknown_02023130
-// extern ??? gUnknown_02023136
-extern u16 gBG1TilemapBuffer[];
-// extern ??? gUnknown_020234AC
-// extern ??? gUnknown_020234AE
-// extern ??? gUnknown_020234B0
-// extern ??? gUnknown_020234BE
-// extern ??? gUnknown_020234C0
-// extern ??? gUnknown_020234CA
-// extern ??? gUnknown_020234CE
-// extern ??? gUnknown_020234D0
-// extern ??? gUnknown_020234E2
-// extern ??? gUnknown_020234E4
-// extern ??? gUnknown_020234FE
-// extern ??? gUnknown_0202352C
-// extern ??? gUnknown_02023548
-// extern ??? gUnknown_020235AA
-// extern ??? gUnknown_020235EA
-// extern ??? gUnknown_020235EE
-// extern ??? gUnknown_020235F0
-// extern ??? gUnknown_020235FC
-// extern ??? gUnknown_020235FE
-// extern ??? gUnknown_02023628
-// extern ??? gUnknown_020236E4
-// extern ??? gUnknown_020237E8
-// extern ??? gUnknown_02023816
-// extern ??? gUnknown_02023828
-// extern ??? gUnknown_0202384E
-// extern ??? gUnknown_0202387E
-// extern ??? gUnknown_020238A8
-// extern ??? gUnknown_020238CA
-// extern ??? gUnknown_020238F4
-// extern ??? gUnknown_020238F6
-// extern ??? gUnknown_0202393E
-// extern ??? gUnknown_0202396C
-// extern ??? gUnknown_020239A8
-// I'm not sure if this is u8 or u16.
-// In text mode, the tilemap entries are 16 bits,
-// while in affine mode, they are 8 bits.
-extern u16 gBG2TilemapBuffer[];
-// extern ??? gUnknown_02023CAA
-// extern ??? gUnknown_02023CAE
-// extern ??? gUnknown_02023CB6
-// extern ??? gUnknown_02023CC0
-// extern ??? gUnknown_02023CC2
-// extern ??? gUnknown_02023CC6
-// extern ??? gUnknown_02023CC8
-// extern ??? gUnknown_02023CE8
-// extern ??? gUnknown_02023CEA
-// extern ??? gUnknown_02023D0C
-// extern ??? gUnknown_02023D12
-// extern ??? gUnknown_02023D40
-// extern ??? gUnknown_02023D88
-// extern ??? gUnknown_02023D90
-// extern ??? gUnknown_02023D9C
-// extern ??? gUnknown_02023DAA
-// extern ??? gUnknown_02023DB8
-// extern ??? gUnknown_02023DBA
-// extern ??? gUnknown_02023DE8
-// extern ??? gUnknown_02023DEA
-// extern ??? gUnknown_02023DEE
-// extern ??? gUnknown_02023DF8
-// extern ??? gUnknown_02023E10
-// extern ??? gUnknown_02023E42
-// extern ??? gUnknown_02023E6C
-// extern ??? gUnknown_02023E82
-// extern ??? gUnknown_02023E88
-// extern ??? gUnknown_02023EA8
-// extern ??? gUnknown_02023F68
-// extern ??? gUnknown_02023FBA
-// extern ??? gUnknown_0202400A
-// extern ??? gUnknown_02024044
-// extern ??? gUnknown_0202404A
-extern u16 gBG3TilemapBuffer[];
-extern void *gBGVramTilemapPointers[];
-extern void (*gMainCallback)(void);
-extern struct Struct02024CD4 gUnknown_02024CD4;
-extern struct TileDataTransfer gUnknown_02024CDC[];
 // extern ??? gUnknown_02026968
 // extern ??? gUnknown_02026A6C
 // extern ??? gUnknown_02026A90
@@ -659,18 +468,6 @@ extern struct MapAnimState gUnknown_0203E1F0;
 // extern ??? gUnknown_03000000
 // extern ??? gLCGRNValue
 
-// time.c/hardware.c
-// extern ??? gUnknown_0300000C
-extern u8 sModifiedBGs;  // BGs that need copying
-extern s8 sModifiedPalette;
-extern u16 gUnknown_03000010;
-// extern ??? gUnknown_03000014
-extern u8 gUnknown_03000018;
-extern u8 gUnknown_03000019;
-extern u8 gUnknown_0300001A;
-extern struct OamDataTransfer gUnknown_03000020;
-extern struct OamDataTransfer gUnknown_03000030;
-
 // extern ??? gUnknown_030000D0
 // extern ??? gUnknown_030000D8
 // extern ??? gUnknown_030000E8
@@ -755,32 +552,23 @@ extern struct OamDataTransfer gUnknown_03000030;
 // extern ??? SoundMainRAM_Buffer
 // extern ??? gUnknown_03002C61
 extern u8 gUnknown_03003060;
-extern void* gUnknown_03003070;
-extern struct Struct03003080 gLCDControlBuffer;
 //extern u16 gUnknown_0300308C[];
 // extern ??? gUnknown_03003090
 // extern ??? gUnknown_03003094
 // extern ??? gUnknown_03003098
 // extern ??? gUnknown_030030B4
 // extern ??? gUnknown_030030B6
-extern u16 gUnknown_030030BC;
 // extern ??? gUnknown_030030C8
 // extern ??? gUnknown_030030D8
 // extern ??? gUnknown_030030F0
 // extern ??? gUnknown_03003128
-extern u16 gUnknown_0300312C;
 // extern ??? gUnknown_03003130
-extern void (*sHBlankHandler1)(void);
-extern u16 gUnknown_03003140[];
 extern u32 gUnknown_03003240[];
 // extern ??? gUnknown_03003540
 // extern ??? gUnknown_03003740
-extern u32 *gUnknown_03003744;
-extern void (*sHBlankHandler2)(void);
 // extern ??? gUnknown_03003750
 // extern ??? gUnknown_03004150
 // extern ??? gUnknown_03004154
-extern u16* gUnknown_03004158;
 // extern ??? gUnknown_03004160
 // extern ??? gUnknown_03004960
 // extern ??? gUnknown_03004980
@@ -842,8 +630,6 @@ extern const char gBuildDateTime[]; // "2005/02/04(FRI) 16:55:40...."
 extern const char gYearProjectCreated[]; // "_2003..."
 // extern ??? gUnknown_080D74F4
 extern const u16 gUnknown_080D7504[];
-extern short gSinLookup[]; // gSinTable; needs to be non-const to match?
-//extern const s16 gCosLookup[]; // gCosTable
 // extern ??? gUnknown_080D77BC
 // extern ??? gUnknown_080D77DC
 // extern ??? gUnknown_080D77FC
@@ -1269,7 +1055,6 @@ extern const char *const gUnknown_0815D48C[];
 // .data variables
 // Everything below this point must not be declared as const.
 
-extern struct KeyStatusBuffer *gKeyStatusPtr;
 extern void *gUnknown_08587938[];
 extern struct BgCnt *gUnknown_08587948[];
 // extern ??? sMusicProc1Script

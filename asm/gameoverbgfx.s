@@ -79,7 +79,7 @@ sub_8021208: @ 0x08021208
 	lsls r2, r2, #8
 	lsrs r2, r2, #0x10
 	movs r0, #2
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #0
 	ldrsh r1, [r4, r0]
 	negs r1, r1
@@ -91,7 +91,7 @@ sub_8021208: @ 0x08021208
 	lsls r2, r2, #8
 	lsrs r2, r2, #0x10
 	movs r0, #3
-	bl BG_SetPosition
+	bl SetBgOffset
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -147,7 +147,7 @@ sub_80212C0: @ 0x080212C0
 	movs r0, #0x3e
 	movs r1, #0
 	bl Sound_PlaySong80024D4
-	ldr r3, _080213C8  @ gLCDControlBuffer
+	ldr r3, _080213C8  @ gDispIo
 	ldrb r2, [r3, #0xc]
 	movs r1, #4
 	negs r1, r1
@@ -171,59 +171,59 @@ sub_80212C0: @ 0x080212C0
 	strb r0, [r3, #0x18]
 	movs r0, #2
 	movs r1, #0
-	bl SetBackgroundTileDataOffset
+	bl SetBgChrOffset
 	movs r0, #3
 	movs r1, #0
-	bl SetBackgroundTileDataOffset
+	bl SetBgChrOffset
 	ldr r0, _080213CC  @ gUnknown_08A0AB0C
 	ldr r1, _080213D0  @ 0x06001000
 	bl CopyDataWithPossibleUncomp
 	ldr r0, _080213D4  @ gUnknown_08A0AE64
 	movs r1, #0x80
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _080213D8  @ gUnknown_08A07DD8
 	ldr r1, _080213DC  @ 0x06002000
 	bl CopyDataWithPossibleUncomp
 	ldr r0, _080213E0  @ gUnknown_08A0AE44
 	movs r1, #0
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	bl ClearBg0Bg1
-	ldr r0, _080213E4  @ gUnknown_02022EF6
+	ldr r0, _080213E4  @ gBg0Tm+0x24E
 	ldr r1, _080213E8  @ gUnknown_08A0AE84
 	movs r2, #0x80
 	bl CallARM_FillTileRect
 	bl sub_801FEE8
 	bl sub_801FE14
 	movs r0, #0xc
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r0, _080213EC  @ sub_802127C
-	bl SetPrimaryHBlankHandler
+	bl SetOnHBlankA
 	movs r0, #1
 	movs r1, #0xe
 	movs r2, #0xe
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	movs r4, #0
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #1
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	bl sub_8001710
-	ldr r4, _080213F0  @ gPaletteBuffer
+	ldr r4, _080213F0  @ gPal
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #1
@@ -244,23 +244,23 @@ _080213B0:
 	subs r4, #1
 	cmp r4, #0
 	bge _080213B0
-	bl EnablePaletteSync
+	bl EnablePalSync
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080213C8: .4byte gLCDControlBuffer
+_080213C8: .4byte gDispIo
 _080213CC: .4byte gUnknown_08A0AB0C
 _080213D0: .4byte 0x06001000
 _080213D4: .4byte gUnknown_08A0AE64
 _080213D8: .4byte gUnknown_08A07DD8
 _080213DC: .4byte 0x06002000
 _080213E0: .4byte gUnknown_08A0AE44
-_080213E4: .4byte gUnknown_02022EF6
+_080213E4: .4byte gBg0Tm+0x24E
 _080213E8: .4byte gUnknown_08A0AE84
 _080213EC: .4byte sub_802127C
-_080213F0: .4byte gPaletteBuffer
+_080213F0: .4byte gPal
 
 	THUMB_FUNC_END sub_80212C0
 
@@ -268,13 +268,13 @@ _080213F0: .4byte gPaletteBuffer
 sub_80213F4: @ 0x080213F4
 	push {r4, lr}
 	adds r4, r0, #0
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #7
 	ands r1, r0
 	cmp r1, #0
 	bne _08021422
 	bl sub_80D74B0
-	bl EnablePaletteSync
+	bl EnablePalSync
 	adds r1, r4, #0
 	adds r1, #0x4c
 	ldrh r0, [r1]
@@ -319,7 +319,7 @@ sub_8021434: @ 0x08021434
 	movs r1, #0x63
 	bl Proc_Goto
 _08021450:
-	ldr r0, _0802146C  @ gKeyStatusPtr
+	ldr r0, _0802146C  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0xb
@@ -334,7 +334,7 @@ _08021466:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0802146C: .4byte gKeyStatusPtr
+_0802146C: .4byte gKeySt
 
 	THUMB_FUNC_END sub_8021434
 
@@ -342,7 +342,7 @@ _0802146C: .4byte gKeyStatusPtr
 sub_8021470: @ 0x08021470
 	push {r4, r5, lr}
 	bl sub_8001710
-	ldr r4, _080214A4  @ gPaletteBuffer
+	ldr r4, _080214A4  @ gPal
 	movs r5, #1
 	negs r5, r5
 	adds r0, r4, #0
@@ -362,7 +362,7 @@ sub_8021470: @ 0x08021470
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080214A4: .4byte gPaletteBuffer
+_080214A4: .4byte gPal
 
 	THUMB_FUNC_END sub_8021470
 
@@ -371,7 +371,7 @@ sub_80214A8: @ 0x080214A8
 	push {r4, lr}
 	adds r4, r0, #0
 	bl sub_80D74B0
-	bl EnablePaletteSync
+	bl EnablePalSync
 	adds r1, r4, #0
 	adds r1, #0x4c
 	ldrh r0, [r1]
@@ -394,10 +394,10 @@ _080214CC:
 sub_80214D4: @ 0x080214D4
 	push {lr}
 	movs r0, #0
-	bl SetPrimaryHBlankHandler
+	bl SetOnHBlankA
 	movs r0, #0
-	bl SetSecondaryHBlankHandler
-	ldr r2, _08021510  @ gLCDControlBuffer
+	bl SetOnHBlankB
+	ldr r2, _08021510  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #2
 	negs r0, r0
@@ -412,15 +412,15 @@ sub_80214D4: @ 0x080214D4
 	subs r1, #8
 	ands r0, r1
 	strb r0, [r2, #1]
-	ldr r1, _08021514  @ gPaletteBuffer
+	ldr r1, _08021514  @ gPal
 	movs r0, #0
 	strh r0, [r1]
-	bl EnablePaletteSync
+	bl EnablePalSync
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08021510: .4byte gLCDControlBuffer
-_08021514: .4byte gPaletteBuffer
+_08021510: .4byte gDispIo
+_08021514: .4byte gPal
 
 	THUMB_FUNC_END sub_80214D4
 

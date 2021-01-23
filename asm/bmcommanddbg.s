@@ -234,7 +234,7 @@ _080344A4: .4byte gActiveUnit
 	THUMB_FUNC_START GetUnitCommandUseFlags
 GetUnitCommandUseFlags: @ 0x080344A8
 	push {r4, lr}
-	bl GetGameClock
+	bl GetGameTime
 	bl CanUnitUseVisit
 	adds r4, r0, #0
 	lsls r4, r4, #0x18

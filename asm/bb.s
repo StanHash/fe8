@@ -74,7 +74,7 @@ sub_80354E0: @ 0x080354E0
 	movs r1, #0xa0
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	adds r4, r7, #0
 	adds r4, #0x48
 	movs r6, #1
@@ -166,7 +166,7 @@ sub_80355AC: @ 0x080355AC
 	cmp r0, #0x14
 	bls _080355E0
 	ldr r2, _080355D8  @ 0x04000050
-	ldr r1, _080355DC  @ gUnknown_030030BC
+	ldr r1, _080355DC  @ gDispIo+0x3C
 	ldrh r0, [r1]
 	strh r0, [r2]
 	adds r2, #2
@@ -179,7 +179,7 @@ sub_80355AC: @ 0x080355AC
 	.align 2, 0
 _080355D4: .4byte 0x04000006
 _080355D8: .4byte 0x04000050
-_080355DC: .4byte gUnknown_030030BC
+_080355DC: .4byte gDispIo+0x3C
 _080355E0:
 	ldr r1, _08035608  @ gUnknown_0859E166
 	adds r0, r2, #0
@@ -217,7 +217,7 @@ sub_8035614: @ 0x08035614
 	movs r1, #8
 	strb r1, [r0]
 	ldr r0, _0803562C  @ sub_80355AC
-	bl SetPrimaryHBlankHandler
+	bl SetOnHBlankA
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -259,7 +259,7 @@ sub_803564C: @ 0x0803564C
 	cmp r0, #8
 	bne _0803566E
 	movs r0, #0
-	bl SetPrimaryHBlankHandler
+	bl SetOnHBlankA
 	adds r0, r4, #0
 	bl Proc_Break
 _0803566E:

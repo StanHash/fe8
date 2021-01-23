@@ -1,6 +1,4 @@
 #include "global.h"
-#include "functions.h"
-#include "variables.h"
 
 #define IRQ_COUNT 14
 extern void *gIRQHandlers[IRQ_COUNT];

@@ -16,7 +16,7 @@ sub_801F9CC: @ 0x0801F9CC
 	lsls r0, r0, #0x10
 	cmp r0, #0
 	blt _0801F9EE
-	ldr r0, _0801F9F8  @ gKeyStatusPtr
+	ldr r0, _0801F9F8  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #3
@@ -30,7 +30,7 @@ _0801F9F4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801F9F8: .4byte gKeyStatusPtr
+_0801F9F8: .4byte gKeySt
 
 	THUMB_FUNC_END sub_801F9CC
 
@@ -74,7 +74,7 @@ _0801FA2A:
 	movs r0, #4
 	bl LoadIconPalettes
 	lsls r0, r4, #1
-	ldr r1, _0801FA84  @ gUnknown_02022EEA
+	ldr r1, _0801FA84  @ gBg0Tm+0x242
 	adds r0, r0, r1
 	movs r2, #0x80
 	lsls r2, r2, #7
@@ -84,7 +84,7 @@ _0801FA2A:
 _0801FA5A:
 	bl sub_8003D20
 	lsls r1, r4, #1
-	ldr r0, _0801FA84  @ gUnknown_02022EEA
+	ldr r0, _0801FA84  @ gBg0Tm+0x242
 	adds r1, r1, r0
 	movs r0, #0x14
 	str r0, [sp]
@@ -101,7 +101,7 @@ _0801FA5A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801FA84: .4byte gUnknown_02022EEA
+_0801FA84: .4byte gBg0Tm+0x242
 _0801FA88: .4byte gUnknown_0859B0C0
 
 	THUMB_FUNC_END sub_801F9FC
@@ -174,7 +174,7 @@ _0801FAEC:
 	movs r0, #4
 	bl LoadIconPalettes
 	lsls r0, r6, #1
-	ldr r1, _0801FBA4  @ gUnknown_02022EEA
+	ldr r1, _0801FBA4  @ gBg0Tm+0x242
 	adds r0, r0, r1
 	movs r2, #0x80
 	lsls r2, r2, #7
@@ -222,7 +222,7 @@ _0801FB50:
 	bl Text_AppendString
 _0801FB7E:
 	lsls r1, r6, #1
-	ldr r0, _0801FBA4  @ gUnknown_02022EEA
+	ldr r0, _0801FBA4  @ gBg0Tm+0x242
 	adds r1, r1, r0
 	add r0, sp, #4
 	bl Text_Draw
@@ -238,7 +238,7 @@ _0801FB7E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801FBA4: .4byte gUnknown_02022EEA
+_0801FBA4: .4byte gBg0Tm+0x242
 _0801FBA8: .4byte gUnknown_0859B0C0
 
 	THUMB_FUNC_END sub_801FA8C
@@ -299,7 +299,7 @@ _0801FC18:
 	movs r3, #4
 	bl DrawUiFrame2
 	lsls r5, r5, #1
-	ldr r4, _0801FC60  @ gUnknown_02022EEA
+	ldr r4, _0801FC60  @ gBg0Tm+0x242
 	adds r6, r5, r4
 	adds r0, r7, #0
 	bl GetItemIconId
@@ -323,7 +323,7 @@ _0801FC18:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801FC60: .4byte gUnknown_02022EEA
+_0801FC60: .4byte gBg0Tm+0x242
 _0801FC64: .4byte gUnknown_0859B0C0
 
 	THUMB_FUNC_END sub_801FBAC
@@ -419,7 +419,7 @@ _0801FD1A:
 	movs r3, #4
 	bl DrawUiFrame2
 	lsls r1, r6, #1
-	ldr r5, _0801FD68  @ gUnknown_02022EEA
+	ldr r5, _0801FD68  @ gBg0Tm+0x242
 	adds r1, r1, r5
 	add r0, sp, #4
 	bl Text_Draw
@@ -445,7 +445,7 @@ _0801FD1A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801FD68: .4byte gUnknown_02022EEA
+_0801FD68: .4byte gBg0Tm+0x242
 _0801FD6C: .4byte gUnknown_0859B0C0
 
 	THUMB_FUNC_END sub_801FC68

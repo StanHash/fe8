@@ -133,7 +133,7 @@ sub_800680C: @ 0x0800680C
 	lsrs r7, r2, #0x18
 	ldr r4, _08006890  @ gUnknown_030000F0
 	movs r0, #0
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	ldr r0, _08006894  @ 0x000003FF
 	ands r0, r5
@@ -170,7 +170,7 @@ _08006862:
 	beq _08006884
 	ldr r4, _080068A0  @ gUnknown_089E8238
 	movs r0, #1
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	ldr r0, _080068A4  @ 0x06000200
 	adds r1, r1, r0
@@ -179,7 +179,7 @@ _08006862:
 	ldr r0, _080068A8  @ gUnknown_089E84D4
 	movs r1, #0x60
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08006884:
 	bl sub_80067E8
 	pop {r4, r5, r6, r7}
@@ -217,8 +217,8 @@ sub_80068AC: @ 0x080068AC
 	adds r4, #0x10
 	lsls r1, r4, #5
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
-	ldr r2, _0800694C  @ gPaletteBuffer
+	bl ApplyPaletteExt
+	ldr r2, _0800694C  @ gPal
 	lsls r4, r4, #4
 	adds r0, r4, #4
 	lsls r0, r0, #1
@@ -268,7 +268,7 @@ _0800693C: .4byte gUnknown_030000F0
 _08006940: .4byte 0x000003FF
 _08006944: .4byte 0x06010000
 _08006948: .4byte gUnknown_0859EF20
-_0800694C: .4byte gPaletteBuffer
+_0800694C: .4byte gPal
 _08006950: .4byte 0x00007247
 _08006954: .4byte 0x000031AE
 _08006958: .4byte 0x00007FFF
@@ -283,7 +283,7 @@ sub_8006964: @ 0x08006964
 	ldr r0, _08006974  @ gUnknown_0859EF00
 	movs r1, #0x40
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -591,7 +591,7 @@ sub_8006B4C: @ 0x08006B4C
 	bl sub_8006ADC
 	cmp r0, #0
 	bne _08006BC4
-	ldr r0, _08006BB4  @ gKeyStatusPtr
+	ldr r0, _08006BB4  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0xa
@@ -606,22 +606,22 @@ sub_8006B4C: @ 0x08006B4C
 	adds r0, r4, #0
 	bl Proc_End
 	bl sub_8006A7C
-	ldr r0, _08006BBC  @ gBG0TilemapBuffer
+	ldr r0, _08006BBC  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _08006BC0  @ gBG1TilemapBuffer
+	bl TmFill
+	ldr r0, _08006BC0  @ gBg1Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	b _08006BEE
 	.align 2, 0
 _08006BAC: .4byte gUnknown_08591470
 _08006BB0: .4byte gUnknown_085914C8
-_08006BB4: .4byte gKeyStatusPtr
+_08006BB4: .4byte gKeySt
 _08006BB8: .4byte gUnknown_0859133C
-_08006BBC: .4byte gBG0TilemapBuffer
-_08006BC0: .4byte gBG1TilemapBuffer
+_08006BBC: .4byte gBg0Tm
+_08006BC0: .4byte gBg1Tm
 _08006BC4:
 	ldr r0, _08006BF4  @ gUnknown_085913F0
 	bl Proc_Find
@@ -631,7 +631,7 @@ _08006BC4:
 	bl sub_8006ADC
 	cmp r0, #0
 	bne _08006BEE
-	ldr r0, _08006BF8  @ gKeyStatusPtr
+	ldr r0, _08006BF8  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0xf3
@@ -648,7 +648,7 @@ _08006BEE:
 	bx r0
 	.align 2, 0
 _08006BF4: .4byte gUnknown_085913F0
-_08006BF8: .4byte gKeyStatusPtr
+_08006BF8: .4byte gKeySt
 _08006BFC: .4byte gUnknown_0859133C
 
 	THUMB_FUNC_END sub_8006B4C
@@ -664,11 +664,11 @@ sub_8006C00: @ 0x08006C00
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 _08006C24:
 	ldr r0, _08006C30  @ gUnknown_08591340
 	movs r1, #3
@@ -817,7 +817,7 @@ _08006D40:
 	adds r4, r0, #0
 	cmp r4, #1
 	bne _08006D54
-	bl GetGameClock
+	bl GetGameTime
 	ands r0, r4
 	cmp r0, #0
 	beq _08006D7E
@@ -949,7 +949,7 @@ _08006E30:
 	ldrb r5, [r5, #0xc]
 	adds r4, r4, r5
 	lsls r4, r4, #1
-	ldr r1, _08006E88  @ gBG0TilemapBuffer
+	ldr r1, _08006E88  @ gBg0Tm
 	adds r4, r4, r1
 	adds r1, r4, #0
 	bl Text_Draw
@@ -973,7 +973,7 @@ _08006E7C:
 	bx r1
 	.align 2, 0
 _08006E84: .4byte gUnknown_030000D0
-_08006E88: .4byte gBG0TilemapBuffer
+_08006E88: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8006DA0
 
@@ -1133,11 +1133,11 @@ sub_8006F8C: @ 0x08006F8C
 	ldr r0, _08006FA8  @ gUnknown_0859F000
 	movs r1, #0x60
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08006FAC  @ gUnknown_0859EFE0
 	movs r1, #0x40
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _08006FC4
 	.align 2, 0
 _08006FA8: .4byte gUnknown_0859F000
@@ -1146,11 +1146,11 @@ _08006FB0:
 	ldr r0, _08006FC8  @ gUnknown_089E84D4
 	movs r1, #0x60
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08006FCC  @ gUnknown_0859EF00
 	movs r1, #0x40
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08006FC4:
 	pop {r0}
 	bx r0
@@ -1639,7 +1639,7 @@ _08007462:
 	ldrb r0, [r5, #0xc]
 	adds r4, r4, r0
 	lsls r4, r4, #1
-	ldr r0, _080074A8  @ gBG0TilemapBuffer
+	ldr r0, _080074A8  @ gBg0Tm
 	adds r4, r4, r0
 	ldrb r0, [r5, #8]
 	str r0, [sp]
@@ -1653,7 +1653,7 @@ _08007462:
 	.align 2, 0
 _080074A0: .4byte gUnknown_08591490
 _080074A4: .4byte gUnknown_030000D0
-_080074A8: .4byte gBG0TilemapBuffer
+_080074A8: .4byte gBg0Tm
 _080074AC:
 	ldr r6, _080074EC  @ gUnknown_08591490
 	ldr r5, [r7]
@@ -1673,7 +1673,7 @@ _080074AC:
 	ldrb r0, [r5, #0xc]
 	adds r4, r4, r0
 	lsls r4, r4, #1
-	ldr r0, _080074F4  @ gBG0TilemapBuffer
+	ldr r0, _080074F4  @ gBg0Tm
 	adds r4, r4, r0
 	ldrb r0, [r5, #8]
 	str r0, [sp]
@@ -1687,7 +1687,7 @@ _080074AC:
 	.align 2, 0
 _080074EC: .4byte gUnknown_08591490
 _080074F0: .4byte gUnknown_030000D0
-_080074F4: .4byte gBG0TilemapBuffer
+_080074F4: .4byte gBg0Tm
 _080074F8:
 	ldr r6, _08007538  @ gUnknown_085914A0
 	ldr r5, [r7]
@@ -1707,7 +1707,7 @@ _080074F8:
 	ldrb r0, [r5, #0xc]
 	adds r4, r4, r0
 	lsls r4, r4, #1
-	ldr r0, _08007540  @ gBG0TilemapBuffer
+	ldr r0, _08007540  @ gBg0Tm
 	adds r4, r4, r0
 	ldrb r0, [r5, #8]
 	str r0, [sp]
@@ -1721,7 +1721,7 @@ _080074F8:
 	.align 2, 0
 _08007538: .4byte gUnknown_085914A0
 _0800753C: .4byte gUnknown_030000D0
-_08007540: .4byte gBG0TilemapBuffer
+_08007540: .4byte gBg0Tm
 _08007544:
 	ldr r6, _08007584  @ gUnknown_085914A0
 	ldr r5, [r7]
@@ -1741,7 +1741,7 @@ _08007544:
 	ldrb r0, [r5, #0xc]
 	adds r4, r4, r0
 	lsls r4, r4, #1
-	ldr r0, _0800758C  @ gBG0TilemapBuffer
+	ldr r0, _0800758C  @ gBg0Tm
 	adds r4, r4, r0
 	ldrb r0, [r5, #8]
 	str r0, [sp]
@@ -1755,7 +1755,7 @@ _08007544:
 	.align 2, 0
 _08007584: .4byte gUnknown_085914A0
 _08007588: .4byte gUnknown_030000D0
-_0800758C: .4byte gBG0TilemapBuffer
+_0800758C: .4byte gBg0Tm
 _08007590:
 	ldr r0, [r7]
 	ldr r2, [r0]
@@ -2659,7 +2659,7 @@ sub_8007C4C: @ 0x08007C4C
 	push {r4, r5, lr}
 	sub sp, #4
 	adds r5, r0, #0
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r4, r0, #1
 	movs r0, #0xf
 	ands r4, r0
@@ -2702,7 +2702,7 @@ _08007C8C:
 	movs r0, #0
 	bl PutSprite
 _08007CAC:
-	ldr r0, _08007CD0  @ gKeyStatusPtr
+	ldr r0, _08007CD0  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0xf3
@@ -2719,7 +2719,7 @@ _08007CC0:
 	.align 2, 0
 _08007CC8: .4byte gUnknown_08591430
 _08007CCC: .4byte 0x0000B2BF
-_08007CD0: .4byte gKeyStatusPtr
+_08007CD0: .4byte gKeySt
 
 	THUMB_FUNC_END sub_8007C4C
 
@@ -2796,7 +2796,7 @@ sub_8007D38: @ 0x08007D38
 	ldrb r1, [r2, #0xc]
 	adds r0, r0, r1
 	lsls r0, r0, #1
-	ldr r1, _08007D84  @ gBG0TilemapBuffer
+	ldr r1, _08007D84  @ gBg0Tm
 	adds r0, r0, r1
 	ldrb r1, [r2, #0xe]
 	subs r1, #2
@@ -2821,7 +2821,7 @@ sub_8007D38: @ 0x08007D38
 	b _08007D9E
 	.align 2, 0
 _08007D80: .4byte gUnknown_0859133C
-_08007D84: .4byte gBG0TilemapBuffer
+_08007D84: .4byte gBg0Tm
 _08007D88:
 	ldrb r0, [r1, #9]
 	adds r0, #1
@@ -2855,7 +2855,7 @@ sub_8007DA4: @ 0x08007DA4
 	ldrh r2, [r4]
 	movs r0, #0
 	movs r1, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	adds r0, r5, #0
 	adds r0, #0x66
 	movs r2, #0
@@ -2867,7 +2867,7 @@ sub_8007DA4: @ 0x08007DA4
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	bl sub_80081EC
 	adds r0, r5, #0
 	bl Proc_Break
@@ -2920,13 +2920,13 @@ sub_8007DE8: @ 0x08007DE8
 	adds r2, r0, #0
 	mov r1, r9
 	strh r1, [r2, #0x2a]
-	ldr r0, _08007E94  @ gBG0TilemapBuffer
+	ldr r0, _08007E94  @ gBg0Tm
 	subs r5, r5, r0
 	asrs r5, r5, #1
 	movs r0, #0x1f
 	ands r0, r5
 	lsls r0, r0, #3
-	ldr r3, _08007E98  @ gLCDControlBuffer
+	ldr r3, _08007E98  @ gDispIo
 	ldrh r1, [r3, #0x1c]
 	subs r0, r0, r1
 	add r0, r8
@@ -2958,8 +2958,8 @@ _08007E82:
 	bx r0
 	.align 2, 0
 _08007E90: .4byte gUnknown_085914B0
-_08007E94: .4byte gBG0TilemapBuffer
-_08007E98: .4byte gLCDControlBuffer
+_08007E94: .4byte gBg0Tm
+_08007E98: .4byte gDispIo
 
 	THUMB_FUNC_END sub_8007DE8
 
@@ -2967,7 +2967,7 @@ _08007E98: .4byte gLCDControlBuffer
 sub_8007E9C: @ 0x08007E9C
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r0, _08007EC8  @ gKeyStatusPtr
+	ldr r0, _08007EC8  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #2
@@ -2987,7 +2987,7 @@ _08007EC0:
 	movs r0, #0
 	b _08007EF6
 	.align 2, 0
-_08007EC8: .4byte gKeyStatusPtr
+_08007EC8: .4byte gKeySt
 _08007ECC: .4byte gRAMChapterData
 _08007ED0: .4byte gUnknown_030000E8
 _08007ED4:
@@ -3041,7 +3041,7 @@ _08007F2A:
 	beq _08007F38
 	bl _call_via_r0
 _08007F38:
-	ldr r0, _08007F98  @ gKeyStatusPtr
+	ldr r0, _08007F98  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0x10
@@ -3088,7 +3088,7 @@ _08007F8C:
 	bx r0
 	.align 2, 0
 _08007F94: .4byte gRAMChapterData
-_08007F98: .4byte gKeyStatusPtr
+_08007F98: .4byte gKeySt
 
 	THUMB_FUNC_END sub_8007E9C
 
@@ -3104,7 +3104,7 @@ sub_8007F9C: @ 0x08007F9C
 	ldrb r1, [r2, #0xc]
 	adds r0, r0, r1
 	lsls r0, r0, #1
-	ldr r1, _08007FD8  @ gBG0TilemapBuffer
+	ldr r1, _08007FD8  @ gBg0Tm
 	adds r0, r0, r1
 	ldrb r1, [r2, #0xe]
 	subs r1, #2
@@ -3122,7 +3122,7 @@ sub_8007F9C: @ 0x08007F9C
 	bx r0
 	.align 2, 0
 _08007FD4: .4byte gUnknown_0859133C
-_08007FD8: .4byte gBG0TilemapBuffer
+_08007FD8: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8007F9C
 
@@ -3138,7 +3138,7 @@ sub_8007FDC: @ 0x08007FDC
 	ldrh r2, [r4]
 	movs r0, #0
 	movs r1, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r1, #0
 	ldrsh r0, [r4, r1]
 	cmp r0, #0xf
@@ -3155,7 +3155,7 @@ sub_8007FDC: @ 0x08007FDC
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r5, #0
 	ldr r0, [r4]
 	ldrb r0, [r0, #0xa]
@@ -3179,7 +3179,7 @@ _08008026:
 	ldrb r4, [r4, #0xc]
 	adds r1, r1, r4
 	lsls r1, r1, #1
-	ldr r2, _080080CC  @ gBG0TilemapBuffer
+	ldr r2, _080080CC  @ gBg0Tm
 	adds r1, r1, r2
 	bl Text_Draw
 	adds r5, #1
@@ -3200,7 +3200,7 @@ _0800805A:
 	ldrb r1, [r2, #0xc]
 	adds r0, r0, r1
 	lsls r0, r0, #1
-	ldr r1, _080080CC  @ gBG0TilemapBuffer
+	ldr r1, _080080CC  @ gBg0Tm
 	adds r0, r0, r1
 	ldrb r1, [r2, #0xe]
 	subs r1, #2
@@ -3238,7 +3238,7 @@ _080080BC:
 	.align 2, 0
 _080080C4: .4byte gUnknown_0859133C
 _080080C8: .4byte gUnknown_030000D0
-_080080CC: .4byte gBG0TilemapBuffer
+_080080CC: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8007FDC
 
@@ -3366,13 +3366,13 @@ sub_80081A8: @ 0x080081A8
 	ldr r1, [r0]
 	movs r0, #0xff
 	strb r0, [r1, #0xf]
-	ldr r0, _080081E4  @ gBG1TilemapBuffer
+	ldr r0, _080081E4  @ gBg1Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #2
 	bl sub_8008F20
 	bl sub_80081EC
-	ldr r2, _080081E8  @ gLCDControlBuffer
+	ldr r2, _080081E8  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
 	negs r0, r0
@@ -3387,17 +3387,17 @@ sub_80081A8: @ 0x080081A8
 	bx r0
 	.align 2, 0
 _080081E0: .4byte gUnknown_0859133C
-_080081E4: .4byte gBG1TilemapBuffer
-_080081E8: .4byte gLCDControlBuffer
+_080081E4: .4byte gBg1Tm
+_080081E8: .4byte gDispIo
 
 	THUMB_FUNC_END sub_80081A8
 
 	THUMB_FUNC_START sub_80081EC
 sub_80081EC: @ 0x080081EC
 	push {r4, r5, r6, lr}
-	ldr r0, _08008244  @ gBG0TilemapBuffer
+	ldr r0, _08008244  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #1
 	bl sub_8008F20
 	ldr r2, _08008248  @ gUnknown_0859133C
@@ -3437,7 +3437,7 @@ _0800823E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08008244: .4byte gBG0TilemapBuffer
+_08008244: .4byte gBg0Tm
 _08008248: .4byte gUnknown_0859133C
 _0800824C: .4byte gUnknown_030000D0
 
@@ -3503,9 +3503,9 @@ sub_80082A4: @ 0x080082A4
 	movs r0, #0
 	mov r8, r0
 	movs r6, #0
-	ldr r0, _080082F4  @ gBG1TilemapBuffer
+	ldr r0, _080082F4  @ gBg1Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r7, #1
 	cmp r5, #0xf
 	bgt _080082CE
@@ -3530,7 +3530,7 @@ _080082DA:
 	beq _08008302
 	b _0800835A
 	.align 2, 0
-_080082F4: .4byte gBG1TilemapBuffer
+_080082F4: .4byte gBg1Tm
 _080082F8:
 	cmp r7, #2
 	beq _0800833A
@@ -3697,7 +3697,7 @@ sub_80083F8: @ 0x080083F8
 	add r0, sp
 	ldr r4, [r0]
 	movs r0, #1
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	ldr r0, _08008460  @ 0x06000200
 	adds r1, r1, r0
@@ -3728,7 +3728,7 @@ _08008460: .4byte 0x06000200
 	THUMB_FUNC_START sub_8008464
 sub_8008464: @ 0x08008464
 	push {r4, r5, r6, lr}
-	ldr r4, _080084DC  @ gLCDControlBuffer
+	ldr r4, _080084DC  @ gDispIo
 	mov ip, r4
 	ldrb r4, [r4, #1]
 	movs r5, #0x20
@@ -3787,7 +3787,7 @@ sub_8008464: @ 0x08008464
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080084DC: .4byte gLCDControlBuffer
+_080084DC: .4byte gDispIo
 
 	THUMB_FUNC_END sub_8008464
 
@@ -3797,7 +3797,7 @@ sub_80084E0: @ 0x080084E0
 	adds r5, r1, #0
 	adds r4, r2, #0
 	adds r6, r3, #0
-	bl BG_GetMapBuffer
+	bl GetBgTilemap
 	adds r3, r0, #0
 	cmp r6, #5
 	bls _080084F4
@@ -3991,7 +3991,7 @@ sub_8008668: @ 0x08008668
 	str r2, [sp]
 	adds r5, r3, #0
 	ldr r4, [sp, #0x28]
-	bl BG_GetMapBuffer
+	bl GetBgTilemap
 	adds r7, r0, #0
 	subs r5, #1
 	subs r4, #1
@@ -4163,17 +4163,17 @@ sub_80087A8: @ 0x080087A8
 	movs r1, #1
 	movs r2, #0
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	movs r0, #1
-	bl sub_8001F64
-	ldr r1, _08008808  @ gLCDControlBuffer
+	bl SetBlendBackdropB
+	ldr r1, _08008808  @ gDispIo
 	adds r2, r1, #0
 	adds r2, #0x34
 	ldrb r0, [r2]
@@ -4188,13 +4188,13 @@ sub_80087A8: @ 0x080087A8
 	movs r1, #0
 	movs r2, #0x10
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 _08008802:
 	add sp, #4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08008808: .4byte gLCDControlBuffer
+_08008808: .4byte gDispIo
 
 	THUMB_FUNC_END sub_80087A8
 
@@ -4248,7 +4248,7 @@ sub_8008840: @ 0x08008840
 	lsrs r2, r2, #0x10
 	movs r0, #1
 	movs r1, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #0x80
 	lsls r0, r0, #1
 	bl sub_8006ADC
@@ -4264,7 +4264,7 @@ sub_8008840: @ 0x08008840
 	lsrs r2, r2, #0x18
 	movs r0, #1
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 _08008892:
 	ldr r0, [r5, #0x58]
 	cmp r0, #0xc
@@ -4660,7 +4660,7 @@ _08008B20: .4byte gUnknown_030000F0
 sub_8008B24: @ 0x08008B24
 	push {lr}
 	movs r0, #0
-	bl SetPrimaryHBlankHandler
+	bl SetOnHBlankA
 	pop {r0}
 	bx r0
 
@@ -5049,7 +5049,7 @@ sub_8008F20: @ 0x08008F20
 	cmp r0, #0
 	bne _08008F34
 	adds r0, r4, #0
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 _08008F34:
 	pop {r4}
 	pop {r0}

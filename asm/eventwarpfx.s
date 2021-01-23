@@ -16,7 +16,7 @@ sub_8021B9C: @ 0x08021B9C
 	ldr r0, _08021C50  @ gUnknown_085A61A8
 	movs r1, #0xa0
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08021C54  @ gUnknown_085A61C8
 	ldr r4, _08021C58  @ gBmFrameTmap0
 	adds r1, r4, #0
@@ -34,12 +34,12 @@ _08021BC8:
 	subs r5, #1
 	cmp r5, #0
 	bne _08021BC8
-	ldr r0, _08021C5C  @ gBG0TilemapBuffer
+	ldr r0, _08021C5C  @ gBg0Tm
 	movs r1, #0x80
 	lsls r1, r1, #1
-	bl BG_Fill
+	bl TmFill
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r0, _08021C60  @ gRAMChapterData
 	adds r0, #0x41
 	ldrb r0, [r0]
@@ -53,21 +53,21 @@ _08021BF8:
 	movs r1, #0xa
 	movs r2, #0xc
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	str r5, [sp]
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
-	ldr r2, _08021C64  @ gLCDControlBuffer
+	bl SetBlendTargetB
+	ldr r2, _08021C64  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
 	negs r0, r0
@@ -91,9 +91,9 @@ _08021C4C: .4byte 0x06002000
 _08021C50: .4byte gUnknown_085A61A8
 _08021C54: .4byte gUnknown_085A61C8
 _08021C58: .4byte gBmFrameTmap0
-_08021C5C: .4byte gBG0TilemapBuffer
+_08021C5C: .4byte gBg0Tm
 _08021C60: .4byte gRAMChapterData
-_08021C64: .4byte gLCDControlBuffer
+_08021C64: .4byte gDispIo
 
 	THUMB_FUNC_END sub_8021B9C
 
@@ -117,7 +117,7 @@ _08021C7A:
 	adds r2, #0x4c
 	cmp r0, #0
 	beq _08021C9E
-	ldr r0, _08021CCC  @ gKeyStatusPtr
+	ldr r0, _08021CCC  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #4]
 	movs r0, #1
@@ -148,7 +148,7 @@ _08021C9E:
 	.align 2, 0
 _08021CC4: .4byte gUnknown_0859B48C
 _08021CC8: .4byte gUnknown_0859B448
-_08021CCC: .4byte gKeyStatusPtr
+_08021CCC: .4byte gKeySt
 _08021CD0:
 	lsls r0, r6, #0x10
 	asrs r0, r0, #0x10
@@ -161,19 +161,19 @@ _08021CDC:
 	lsls r0, r0, #1
 	ldr r1, _08021CFC  @ gBmFrameTmap0
 	adds r0, r0, r1
-	ldr r1, _08021D00  @ gBG0TilemapBuffer
+	ldr r1, _08021D00  @ gBg0Tm
 	movs r2, #4
 	movs r3, #7
 	bl TileMap_CopyRect
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 _08021CF6:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08021CFC: .4byte gBmFrameTmap0
-_08021D00: .4byte gBG0TilemapBuffer
+_08021D00: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8021C68
 
@@ -189,16 +189,16 @@ sub_8021D04: @ 0x08021D04
 	movs r0, #0xb5
 	bl m4aSongNumStart
 _08021D18:
-	ldr r0, _08021D30  @ gBG0TilemapBuffer
+	ldr r0, _08021D30  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08021D2C: .4byte gRAMChapterData
-_08021D30: .4byte gBG0TilemapBuffer
+_08021D30: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8021D04
 
@@ -248,7 +248,7 @@ sub_8021D34: @ 0x08021D34
 	lsls r2, r2, #0x10
 	lsrs r2, r2, #0x10
 	movs r0, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6, r7}
@@ -289,7 +289,7 @@ sub_8021DA4: @ 0x08021DA4
 	adds r1, r5, #0
 	adds r2, r6, #0
 	str r3, [sp]
-	bl BG_SetPosition
+	bl SetBgOffset
 	ldr r3, [sp]
 	adds r3, #0x66
 	movs r0, #1

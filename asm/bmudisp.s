@@ -23,7 +23,7 @@ SetupMapSpritesPalettes: @ 0x08026628
 	movs r1, #0xe0
 	lsls r1, r1, #2
 	movs r2, #0x80
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _08026654  @ gUnknown_0202BCB0
 	ldrb r1, [r0, #4]
 	movs r0, #0x40
@@ -34,7 +34,7 @@ SetupMapSpritesPalettes: @ 0x08026628
 	movs r1, #0xd8
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	b _08026668
 	.align 2, 0
 _08026650: .4byte unit_icon_pal_player
@@ -45,7 +45,7 @@ _0802665C:
 	movs r1, #0xd8
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _08026668:
 	pop {r0}
 	bx r0
@@ -61,7 +61,7 @@ sub_8026670: @ 0x08026670
 	movs r1, #0xf0
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -821,7 +821,7 @@ sub_8026C1C: @ 0x08026C1C
 	adds r0, r0, r1
 	ldrh r6, [r0]
 	movs r4, #0
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #0x48
 	bl __umodsi3
 	adds r1, r0, #0
@@ -1193,7 +1193,7 @@ _08026F28: .4byte gUnknown_02033F40
 	THUMB_FUNC_START SMS_FlushDirect
 SMS_FlushDirect: @ 0x08026F2C
 	push {r4, r5, lr}
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #0x48
 	bl __umodsi3
 	adds r4, r0, #0
@@ -1247,7 +1247,7 @@ SMS_FlushIndirect: @ 0x08026F94
 	ldr r0, _08026FB4  @ gUnknown_0203A4CC
 	movs r1, #0
 	str r1, [r0]
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #0x48
 	bl __umodsi3
 	adds r1, r0, #0
@@ -1269,7 +1269,7 @@ _08026FC2:
 	ldr r1, _08026FD4  @ 0x06011000
 	movs r2, #0x80
 	lsls r2, r2, #6
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	b _08026FE8
 	.align 2, 0
 _08026FD0: .4byte gUnknown_02036010
@@ -1281,7 +1281,7 @@ _08026FD8:
 	ldr r1, _08026FF0  @ 0x06011000
 	movs r2, #0x80
 	lsls r2, r2, #6
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 _08026FE8:
 	pop {r0}
 	bx r0
@@ -1296,7 +1296,7 @@ sub_8026FF4: @ 0x08026FF4
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #0x48
 	bl __umodsi3
 	adds r1, r0, #0
@@ -1358,7 +1358,7 @@ sub_8027068: @ 0x08027068
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #0x48
 	bl __umodsi3
 	adds r1, r0, #0
@@ -1400,7 +1400,7 @@ _080270B6:
 	adds r0, r4, #0
 	adds r1, r5, #0
 	movs r2, #0x40
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	movs r0, #0x80
 	lsls r0, r0, #3
 	adds r5, r5, r0
@@ -1423,7 +1423,7 @@ sub_80270DC: @ 0x080270DC
 	push {r4, r5, r6, r7, lr}
 	adds r4, r0, #0
 	adds r7, r1, #0
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #0x48
 	bl __umodsi3
 	adds r1, r0, #0
@@ -1457,7 +1457,7 @@ _0802711A:
 	adds r0, r5, r4
 	adds r1, r7, r4
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	movs r0, #0x80
 	lsls r0, r0, #3
 	adds r4, r4, r0
@@ -1852,7 +1852,7 @@ _080273F2:
 	ands r0, r1
 	cmp r0, #0
 	beq _08027406
-	bl GetGameClock
+	bl GetGameTime
 	adds r3, r0, #0
 	movs r0, #2
 	ands r3, r0
@@ -2022,7 +2022,7 @@ DisplayChapterTileMarker: @ 0x08027530
 	bl GetROMChapterStruct
 	adds r0, #0x90
 	ldrb r4, [r0]
-	bl GetGameClock
+	bl GetGameTime
 	movs r2, #0
 	movs r1, #0x1f
 	ands r1, r0
@@ -2127,7 +2127,7 @@ _08027620:
 	movs r0, #0
 _08027622:
 	mov r9, r0
-	bl GetGameClock
+	bl GetGameTime
 	movs r2, #0
 	movs r1, #0x1f
 	ands r1, r0
@@ -2136,22 +2136,22 @@ _08027622:
 	movs r2, #1
 _08027634:
 	adds r7, r2, #0
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r0, r0, #3
 	movs r1, #0xc
 	bl __umodsi3
 	str r0, [sp, #8]
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r0, r0, #4
 	movs r1, #7
 	bl __umodsi3
 	str r0, [sp, #0xc]
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r0, r0, #3
 	movs r1, #9
 	bl __umodsi3
 	str r0, [sp, #0x10]
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r0, r0, #2
 	movs r1, #0x12
 	bl __umodsi3

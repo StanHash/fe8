@@ -252,7 +252,7 @@ sub_80099E4: @ 0x080099E4
 Goto6CLabel12IfSomething: @ 0x08009A00
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _08009A20  @ gKeyStatusPtr
+	ldr r0, _08009A20  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #4]
 	movs r0, #0x85
@@ -266,7 +266,7 @@ _08009A1A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009A20: .4byte gKeyStatusPtr
+_08009A20: .4byte gKeySt
 
 	THUMB_FUNC_END Goto6CLabel12IfSomething
 
@@ -336,20 +336,20 @@ sub_8009A84: @ 0x08009A84
 	sub sp, #4
 	movs r0, #0
 	str r0, [sp]
-	ldr r1, _08009AAC  @ gPaletteBuffer
+	ldr r1, _08009AAC  @ gPal
 	ldr r2, _08009AB0  @ 0x01000100
 	mov r0, sp
 	bl CpuFastSet
-	bl EnablePaletteSync
+	bl EnablePalSync
 	ldr r0, _08009AB4  @ Delete6CIfNotMarkedB
 	bl Proc_ForAll
 	ldr r0, _08009AB8  @ SomeUpdateRoutine
-	bl SetMainUpdateRoutine
+	bl SetMainFunc
 	add sp, #4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009AAC: .4byte gPaletteBuffer
+_08009AAC: .4byte gPal
 _08009AB0: .4byte 0x01000100
 _08009AB4: .4byte Delete6CIfNotMarkedB
 _08009AB8: .4byte SomeUpdateRoutine
@@ -860,15 +860,15 @@ sub_8009E28: @ 0x08009E28
 	movs r1, #0
 	movs r2, #0
 	movs r3, #0x10
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	movs r0, #1
 	str r0, [sp]
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #1
-	bl sub_8001F48
+	bl SetBlendBackdropA
 	add sp, #4
 	pop {r0}
 	bx r0
@@ -982,9 +982,9 @@ sub_8009EFC: @ 0x08009EFC
 NewGameControl: @ 0x08009F08
 	push {lr}
 	ldr r0, _08009F34  @ SomeUpdateRoutine
-	bl SetMainUpdateRoutine
+	bl SetMainFunc
 	ldr r0, _08009F38  @ GeneralVBlankHandler
-	bl SetInterrupt_LCDVBlank
+	bl SetOnVBlank
 	ldr r0, _08009F3C  @ gUnknown_085916D4
 	movs r1, #3
 	bl Proc_Start

@@ -1,6 +1,7 @@
 
 #include "global.h"
 
+#include "hardware.h"
 #include "proc.h"
 #include "bmitem.h"
 #include "bmunit.h"
@@ -17,7 +18,7 @@ static void SortAiUnitList(int count);
 static void CpOrderFunc_End(ProcPtr proc);
 
 static
-u32* CONST_DATA sUnitPriorityArray = (void*) gUnknown_02020188;
+u32* CONST_DATA sUnitPriorityArray = (void*) gBuf;
 
 struct ProcCmd CONST_DATA gProcScr_CpOrder[] =
 {

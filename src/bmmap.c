@@ -255,13 +255,13 @@ void UnpackChapterMapGraphics(int chapterId) {
             (void*)(BG_VRAM + 0x20 * 0x600)); // TODO: tile id constant?
 
     // Apply tileset palette
-    CopyToPaletteBuffer(
+    ApplyPaletteExt(
         gChapterDataAssetTable[GetROMChapterStruct(chapterId)->mapPaletteId],
         0x20 * 6, 0x20 * 10); // TODO: palette id constant?
 }
 
 void UnpackChapterMapPalette(void) {
-    CopyToPaletteBuffer(
+    ApplyPaletteExt(
         gChapterDataAssetTable[GetROMChapterStruct(gRAMChapterData.chapterIndex)->mapPaletteId],
         0x20 * 6, 0x20 * 10); // TODO: palette id constant?
 }
@@ -384,34 +384,30 @@ void RenderBmMap(void) {
 
     for (iy = (10 - 1); iy >= 0; --iy)
         for (ix = (15 - 1); ix >= 0; --ix)
-            DisplayBmTile(gBG3TilemapBuffer, ix, iy,
+            DisplayBmTile(gBg3Tm, ix, iy,
                 (short) gUnknown_0202BCB0.mapRenderOrigin.x + ix, (short) gUnknown_0202BCB0.mapRenderOrigin.y + iy);
 
-    BG_EnableSyncByMask(1 << 3);
-    BG_SetPosition(3, 0, 0);
+    EnableBgSync(BG3_SYNC_BIT);
+    SetBgOffset(3, 0, 0);
 
-    gLCDControlBuffer.dispcnt.bg0_on = TRUE;
-    gLCDControlBuffer.dispcnt.bg1_on = TRUE;
-    gLCDControlBuffer.dispcnt.bg2_on = TRUE;
-    gLCDControlBuffer.dispcnt.bg3_on = TRUE;
-    gLCDControlBuffer.dispcnt.obj_on = TRUE;
+    SetDispEnable(1, 1, 1, 1, 1);
 }
 
 void RenderBmMapOnBg2(void) {
     int ix, iy;
 
-    SetBackgroundTileDataOffset(2, 0x8000);
+    SetBgChrOffset(2, 0x8000);
 
     gUnknown_0202BCB0.mapRenderOrigin.x = gUnknown_0202BCB0.camera.x >> 4;
     gUnknown_0202BCB0.mapRenderOrigin.y = gUnknown_0202BCB0.camera.y >> 4;
 
     for (iy = (10 - 1); iy >= 0; --iy)
         for (ix = (15 - 1); ix >= 0; --ix)
-            DisplayBmTile(gBG2TilemapBuffer, ix, iy,
+            DisplayBmTile(gBg2Tm, ix, iy,
                 (short) gUnknown_0202BCB0.mapRenderOrigin.x + ix, (short) gUnknown_0202BCB0.mapRenderOrigin.y + iy);
 
-    BG_EnableSyncByMask(1 << 2);
-    BG_SetPosition(2, 0, 0);
+    EnableBgSync(BG2_SYNC_BIT);
+    SetBgOffset(2, 0, 0);
 }
 
 void UpdateBmMapDisplay(void) {
@@ -439,14 +435,14 @@ void UpdateBmMapDisplay(void) {
 
     gUnknown_0202BCB0.cameraPrevious = gUnknown_0202BCB0.camera;
 
-    BG_SetPosition(3,
+    SetBgOffset(3,
         gUnknown_0202BCB0.camera.x - gUnknown_0202BCB0.mapRenderOrigin.x * 16,
         gUnknown_0202BCB0.camera.y - gUnknown_0202BCB0.mapRenderOrigin.y * 16
     );
 
     // TODO: GAME STATE BITS CONSTANTS
     if (gUnknown_0202BCB0.gameStateBits & 1) {
-        BG_SetPosition(2,
+        SetBgOffset(2,
             gUnknown_0202BCB0.camera.x - gUnknown_0202BCB0.mapRenderOrigin.x * 16,
             gUnknown_0202BCB0.camera.y - gUnknown_0202BCB0.mapRenderOrigin.y * 16
         );
@@ -464,24 +460,24 @@ void RenderBmMapColumn(u16 xOffset) {
 
     if (!(gUnknown_0202BCB0.gameStateBits & 1)) {
         for (iy = 10; iy >= 0; --iy) {
-            DisplayBmTile(gBG3TilemapBuffer,
+            DisplayBmTile(gBg3Tm,
                 xTileMap, (yTileMap + iy) & 0xF,
                 xBmMap, (yBmMap + iy));
         }
 
-        BG_EnableSyncByMask(1 << 3);
+        EnableBgSync(BG3_SYNC_BIT);
     } else {
         for (iy = 10; iy >= 0; --iy) {
-            DisplayBmTile(gBG3TilemapBuffer,
+            DisplayBmTile(gBg3Tm,
                 xTileMap, (yTileMap + iy) & 0xF,
                 xBmMap, (yBmMap + iy));
 
-            DisplayMovementViewTile(gBG2TilemapBuffer,
+            DisplayMovementViewTile(gBg2Tm,
                 xBmMap, (yBmMap + iy),
                 xTileMap, (yTileMap + iy) & 0xF);
         }
 
-        BG_EnableSyncByMask((1 << 3) | (1 << 2));
+        EnableBgSync(BG3_SYNC_BIT | BG2_SYNC_BIT);
     }
 }
 
@@ -496,24 +492,24 @@ void RenderBmMapLine(u16 yOffset) {
 
     if (!(gUnknown_0202BCB0.gameStateBits & 1)) {
         for (ix = 15; ix >= 0; --ix) {
-            DisplayBmTile(gBG3TilemapBuffer,
+            DisplayBmTile(gBg3Tm,
                 (xTileMap + ix) & 0xF, yTileMap,
                 (xBmMap + ix), yBmMap);
         }
 
-        BG_EnableSyncByMask(1 << 3);
+        EnableBgSync(BG3_SYNC_BIT);
     } else {
         for (ix = 15; ix >= 0; --ix) {
-            DisplayBmTile(gBG3TilemapBuffer,
+            DisplayBmTile(gBg3Tm,
                 (xTileMap + ix) & 0xF, yTileMap,
                 (xBmMap + ix), yBmMap);
 
-            DisplayMovementViewTile(gBG2TilemapBuffer,
+            DisplayMovementViewTile(gBg2Tm,
                 (xBmMap + ix), yBmMap,
                 (xTileMap + ix) & 0xF, yTileMap);
         }
 
-        BG_EnableSyncByMask((1 << 3) | (1 << 2));
+        EnableBgSync(BG3_SYNC_BIT | BG2_SYNC_BIT);
     }
 }
 
@@ -673,15 +669,15 @@ void sub_801A278(void) {
     // TODO: game state bits constants
     if (!sub_800D208() || (gUnknown_0202BCB0.gameStateBits & 0x10)) {
         // TODO: macros?
-        RegisterBlankTile(0x400 + (*tile++ & 0x3FF));
-        RegisterBlankTile(0x400 + (*tile++ & 0x3FF));
-        RegisterBlankTile(0x400 + (*tile++ & 0x3FF));
-        RegisterBlankTile(0x400 + (*tile++ & 0x3FF));
+        SetBlankChr(0x400 + (*tile++ & 0x3FF));
+        SetBlankChr(0x400 + (*tile++ & 0x3FF));
+        SetBlankChr(0x400 + (*tile++ & 0x3FF));
+        SetBlankChr(0x400 + (*tile++ & 0x3FF));
     }
 
     // TODO: macro?
-    gPaletteBuffer[0] = 0;
-    EnablePaletteSync();
+    gPal[0] = 0;
+    EnablePalSync();
 }
 
 void RevertMapChange(int id) {

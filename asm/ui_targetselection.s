@@ -266,7 +266,7 @@ _0804FA7E:
 	adds r0, r5, #0
 	bl _call_via_r2
 _0804FA8E:
-	ldr r0, _0804FAA0  @ gKeyStatusPtr
+	ldr r0, _0804FAA0  @ gKeySt
 	ldr r0, [r0]
 	strh r6, [r0, #8]
 	adds r0, r5, #0
@@ -275,7 +275,7 @@ _0804FA8E:
 	bx r1
 	.align 2, 0
 _0804FA9C: .4byte gUnknown_085B655C
-_0804FAA0: .4byte gKeyStatusPtr
+_0804FAA0: .4byte gKeySt
 
 	THUMB_FUNC_END NewTargetSelection
 
@@ -326,7 +326,7 @@ TargetSelection_HandleMoveInput: @ 0x0804FAEC
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r3, [r4, #0x30]
-	ldr r2, _0804FB5C  @ gKeyStatusPtr
+	ldr r2, _0804FB5C  @ gKeySt
 	ldr r0, [r2]
 	ldrh r1, [r0, #6]
 	movs r0, #0x60
@@ -382,7 +382,7 @@ _0804FB56:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804FB5C: .4byte gKeyStatusPtr
+_0804FB5C: .4byte gKeySt
 _0804FB60: .4byte gRAMChapterData
 
 	THUMB_FUNC_END TargetSelection_HandleMoveInput
@@ -392,7 +392,7 @@ TargetSelection_HandleSelectInput: @ 0x0804FB64
 	push {r4, lr}
 	adds r2, r0, #0
 	movs r4, #0
-	ldr r0, _0804FB84  @ gKeyStatusPtr
+	ldr r0, _0804FB84  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #1
@@ -406,7 +406,7 @@ TargetSelection_HandleSelectInput: @ 0x0804FB64
 	ldr r3, [r0, #0x14]
 	b _0804FBA4
 	.align 2, 0
-_0804FB84: .4byte gKeyStatusPtr
+_0804FB84: .4byte gKeySt
 _0804FB88:
 	movs r0, #2
 	ands r0, r1

@@ -60,7 +60,7 @@ _0801F59C:
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
 	ldr r1, _0801F5FC  @ gUnknown_0202BCB0
@@ -181,7 +181,7 @@ sub_801F68C: @ 0x0801F68C
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _0801F6B8  @ gUnknown_0859AFE8
 	adds r1, r4, #0
 	bl Proc_StartBlocking
@@ -206,7 +206,7 @@ sub_801F6BC: @ 0x0801F6BC
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _0801F6E8  @ gUnknown_0859AFE8
 	adds r1, r4, #0
 	bl Proc_StartBlocking
@@ -320,7 +320,7 @@ sub_801F780: @ 0x0801F780
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r0, _0801F7D4  @ gUnknown_0859B008
 	adds r1, r4, #0
 	bl Proc_StartBlocking
@@ -356,7 +356,7 @@ sub_801F7D8: @ 0x0801F7D8
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
 	ldr r0, _0801F83C  @ gUnknown_0202BCB0
@@ -510,7 +510,7 @@ sub_801F904: @ 0x0801F904
 	movs r1, #0x90
 	lsls r1, r1, #2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
 	ldr r1, _0801F970  @ gUnknown_0202BCB0

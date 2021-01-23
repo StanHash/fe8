@@ -1,5 +1,6 @@
 #include "global.h"
 #include "proc.h"
+#include "oam.h"
 #include "ctc.h"
 
 struct SpriteEntry
@@ -134,10 +135,10 @@ static struct SpriteEntry EWRAM_DATA sSpriteLayers[0x10] = {};
 
 void PutObjectAffine(int id, int pa, int pb, int pc, int pd)
 {
-    gUnknown_03003140[id*0x10 + 0x03] = pa;
-    gUnknown_03003140[id*0x10 + 0x07] = pb;
-    gUnknown_03003140[id*0x10 + 0x0B] = pc;
-    gUnknown_03003140[id*0x10 + 0x0F] = pd;
+    gOam[id*0x10 + 0x03] = pa;
+    gOam[id*0x10 + 0x07] = pb;
+    gOam[id*0x10 + 0x0B] = pc;
+    gOam[id*0x10 + 0x0F] = pd;
 }
 
 void ClearSprites(void)

@@ -1,7 +1,7 @@
 
 #include "global.h"
 
-#include "ctc.h"
+#include "oam.h"
 #include "proc.h"
 
 // This file contains data for to-be-decompiled face.c

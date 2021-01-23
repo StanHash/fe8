@@ -262,25 +262,25 @@ void TradeMenu_InitUnitNameDisplay(struct TradeMenuProc* proc)
     sub_80ADBFC(1, 184, -1, 0);
 
     // TODO: special effect constants
-    SetSpecialColorEffectsParameters(1, 12, 6, 0);
+    SetBlendConfig(1, 12, 6, 0);
 
     // TODO: name functions
-    sub_8001ED0(FALSE, FALSE, FALSE, FALSE, FALSE);
-    sub_8001F0C(TRUE,  TRUE,  TRUE,  TRUE,  TRUE);
+    SetBlendTargetA(FALSE, FALSE, FALSE, FALSE, FALSE);
+    SetBlendTargetB(TRUE,  TRUE,  TRUE,  TRUE,  TRUE);
 
     // TODO: text color constants
 
     str = GetStringFromIndex(UNIT_NAME_ID(proc->units[0]));
     xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextWidth(str)) / 2;
 
-    DrawTextInline(NULL, gBG0TilemapBuffer + TILEMAP_INDEX(0, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
+    DrawTextInline(NULL, gBg0Tm + TM_OFFSET(0, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
 
     str = GetStringFromIndex(UNIT_NAME_ID(proc->units[1]));
     xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextWidth(str)) / 2;
 
-    DrawTextInline(NULL, gBG0TilemapBuffer + TILEMAP_INDEX(24, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
+    DrawTextInline(NULL, gBg0Tm + TM_OFFSET(24, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
 
-    BG_EnableSyncByMask(BG0_SYNC_BIT);
+    EnableBgSync(BG0_SYNC_BIT);
 }
 
 void TradeMenu_HighlightUpdater_OnInit(struct TradeMenuProc* proc)
@@ -340,7 +340,7 @@ void TradeMenu_RefreshItemText(struct TradeMenuProc* proc)
 
     int col, row;
 
-    CpuFastFill(0, gBG0TilemapBuffer + TILEMAP_INDEX(0, 9), 11 * 0x20 * sizeof(u16));
+    CpuFastFill(0, gBg0Tm + TM_OFFSET(0, 9), 11 * 0x20 * sizeof(u16));
 
     for (col = 0; col < 2; ++col)
     {
@@ -353,12 +353,12 @@ void TradeMenu_RefreshItemText(struct TradeMenuProc* proc)
             if (item)
             {
                 DrawItemMenuLine(&gTradeMenuText[col][row], item, IsItemDisplayUsable(proc->units[col], item),
-                    gBG0TilemapBuffer + TILEMAP_INDEX(xLookup[col] + 1, yLookup[col] + row * 2 + 1));
+                    gBg0Tm + TM_OFFSET(xLookup[col] + 1, yLookup[col] + row * 2 + 1));
             }
         }
     }
 
-    BG_EnableSyncByMask(BG0_SYNC_BIT);
+    EnableBgSync(BG0_SYNC_BIT);
 }
 
 void TradeMenu_RefreshSelectableCells(struct TradeMenuProc* proc)
@@ -383,7 +383,7 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
     s8 changedSelection = FALSE;
     int newSelectedRow;
 
-    if ((gKeyStatusPtr->repeatedKeys & DPAD_LEFT) && proc->hoverColumn == TRADEMENU_UNIT_RIGHT)
+    if ((gKeySt->repeated & DPAD_LEFT) && proc->hoverColumn == TRADEMENU_UNIT_RIGHT)
     {
         newSelectedRow = TradeMenu_GetAdjustedRow(proc, TRADEMENU_UNIT_LEFT, proc->hoverRow);
 
@@ -399,7 +399,7 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
         PlaySoundEffect(0x67);
     }
 
-    if ((gKeyStatusPtr->repeatedKeys & DPAD_RIGHT) && proc->hoverColumn == TRADEMENU_UNIT_LEFT)
+    if ((gKeySt->repeated & DPAD_RIGHT) && proc->hoverColumn == TRADEMENU_UNIT_LEFT)
     {
         newSelectedRow = TradeMenu_GetAdjustedRow(proc, TRADEMENU_UNIT_RIGHT, proc->hoverRow);
 
@@ -415,11 +415,11 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
         PlaySoundEffect(0x67);
     }
 
-    if ((gKeyStatusPtr->repeatedKeys & DPAD_UP))
+    if ((gKeySt->repeated & DPAD_UP))
     {
         if (proc->hoverRow == 0)
         {
-            if (gKeyStatusPtr->repeatedKeys != gKeyStatusPtr->newKeys)
+            if (gKeySt->repeated != gKeySt->pressed)
                 goto end;
 
             proc->hoverRow = TradeMenu_GetAdjustedRow(proc, proc->hoverColumn, UNIT_ITEM_COUNT - 1) + 1;
@@ -433,11 +433,11 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
         PlaySoundEffect(0x66);
     }
 
-    if ((gKeyStatusPtr->repeatedKeys & DPAD_DOWN))
+    if ((gKeySt->repeated & DPAD_DOWN))
     {
         if (!proc->hasItem[proc->hoverColumn][proc->hoverRow + 1])
         {
-            if (gKeyStatusPtr->repeatedKeys != gKeyStatusPtr->newKeys)
+            if (gKeySt->repeated != gKeySt->pressed)
                 goto end;
 
             proc->hoverRow = -1;
@@ -494,7 +494,7 @@ void TradeMenu_InitItemDisplay(struct TradeMenuProc* proc)
     sub_8006458(0, 5);
     sub_8006458(1, 5);
 
-    BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT);
+    EnableBgSync(BG0_SYNC_BIT | BG1_SYNC_BIT);
 }
 
 void TradeMenu_OnInitUnselected(struct TradeMenuProc* proc)
@@ -519,17 +519,17 @@ void TradeMenu_OnLoopUnselected(struct TradeMenuProc* proc)
             8 * sItemDisplayTileLocation[proc->hoverColumn][proc->hoverRow].x,
             8 * sItemDisplayTileLocation[proc->hoverColumn][proc->hoverRow].y);
 
-        if (gKeyStatusPtr->newKeys & A_BUTTON)
+        if (gKeySt->pressed & A_BUTTON)
         {
             Proc_Goto(proc, L_TRADEMENU_SELECTED);
             PlaySoundEffect(0x6A); // TODO: SONG ID DEFINITIONS
         }
-        else if (gKeyStatusPtr->newKeys & B_BUTTON)
+        else if (gKeySt->pressed & B_BUTTON)
         {
             Proc_Goto(proc, L_TRADEMENU_END);
             PlaySoundEffect(0x6B); // TODO: SONG ID DEFINITIONS
         }
-        else if (gKeyStatusPtr->newKeys & R_BUTTON)
+        else if (gKeySt->pressed & R_BUTTON)
         {
             Proc_StartBlocking(sProcScr_TradeMenu_HelpBox, proc);
         }
@@ -583,19 +583,19 @@ void TradeMenu_OnLoopSelected(struct TradeMenuProc* proc)
             8 * sItemDisplayTileLocation[proc->selectedColumn][proc->selectedRow].x,
             8 * sItemDisplayTileLocation[proc->selectedColumn][proc->selectedRow].y);
 
-        if (gKeyStatusPtr->newKeys & A_BUTTON)
+        if (gKeySt->pressed & A_BUTTON)
         {
             TradeMenu_ApplyItemSwap(proc);
 
             PlaySoundEffect(0x6A); // TODO: SONG ID DEFINITIONS
             Proc_Break(proc);
         }
-        else if (gKeyStatusPtr->newKeys & B_BUTTON)
+        else if (gKeySt->pressed & B_BUTTON)
         {
             PlaySoundEffect(0x6B); // TODO: SONG ID DEFINITIONS
             Proc_Break(proc);
         }
-        else if (gKeyStatusPtr->newKeys & R_BUTTON)
+        else if (gKeySt->pressed & R_BUTTON)
         {
             Proc_StartBlocking(sProcScr_TradeMenu_HelpBox, proc);
         }
@@ -659,7 +659,7 @@ void TradeMenu_HelpBox_OnInit(struct Proc* proc)
         8 * sItemDisplayTileLocation[tradeMenu->hoverColumn][tradeMenu->hoverRow].y,
         item);
 
-    gKeyStatusPtr->newKeys = gKeyStatusPtr->newKeys &~ (B_BUTTON | R_BUTTON);
+    gKeySt->pressed = gKeySt->pressed &~ (B_BUTTON | R_BUTTON);
 }
 
 void TradeMenu_HelpBox_OnLoop(struct Proc* proc)
@@ -677,7 +677,7 @@ void TradeMenu_HelpBox_OnLoop(struct Proc* proc)
             item);
     }
 
-    if (gKeyStatusPtr->newKeys & (B_BUTTON | R_BUTTON))
+    if (gKeySt->pressed & (B_BUTTON | R_BUTTON))
     {
         Proc_Break(proc);
     }
@@ -737,7 +737,7 @@ struct Proc* StartTradeMenu(struct Unit* lUnit, struct Unit* rUnit, int unused)
 
     if (sub_80837F8())
     {
-        SetKeyStatus_IgnoreMask(A_BUTTON | START_BUTTON | DPAD_DOWN | DPAD_UP);
+        SetKeyIgnore(A_BUTTON | START_BUTTON | DPAD_DOWN | DPAD_UP);
         proc->tradeTutorialState = 1;
     }
 
@@ -812,16 +812,16 @@ void sub_802DEDC(struct Proc* ee)
 
 s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
 {
-    if (proc->tradeTutorialState != 4 && (gKeyStatusPtr->newKeys == 0))
+    if (proc->tradeTutorialState != 4 && (gKeySt->pressed == 0))
         return FALSE;
 
     switch (sTradeMenuProc->tradeTutorialState)
     {
 
     case 2:
-        if (gKeyStatusPtr->newKeys & DPAD_RIGHT)
+        if (gKeySt->pressed & DPAD_RIGHT)
         {
-            SetKeyStatus_IgnoreMask(START_BUTTON | DPAD_UP | DPAD_DOWN);
+            SetKeyIgnore(START_BUTTON | DPAD_UP | DPAD_DOWN);
             sub_802E168(proc);
 
             return FALSE;
@@ -834,16 +834,16 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
         return TRUE;
 
     case 3:
-        if (!(gKeyStatusPtr->newKeys & (B_BUTTON | DPAD_LEFT | R_BUTTON)))
+        if (!(gKeySt->pressed & (B_BUTTON | DPAD_LEFT | R_BUTTON)))
         {
-            if (!(gKeyStatusPtr->newKeys & A_BUTTON))
+            if (!(gKeySt->pressed & A_BUTTON))
                 return FALSE;
 
-            if (!(gKeyStatusPtr->newKeys & (DPAD_UP | DPAD_DOWN)))
+            if (!(gKeySt->pressed & (DPAD_UP | DPAD_DOWN)))
             {
                 if (GetItemIndex(proc->units[proc->hoverColumn]->items[proc->hoverRow]) == ITEM_VULNERARY)
                 {
-                    SetKeyStatus_IgnoreMask(START_BUTTON | DPAD_UP | DPAD_DOWN);
+                    SetKeyIgnore(START_BUTTON | DPAD_UP | DPAD_DOWN);
                     sub_802E0C0();
 
                     return FALSE;
@@ -858,7 +858,7 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
         return TRUE;
 
     case 5:
-        if (gKeyStatusPtr->newKeys & A_BUTTON)
+        if (gKeySt->pressed & A_BUTTON)
         {
             sub_802E1A8(proc);
 
@@ -877,9 +877,9 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
         return TRUE;
 
     case 8:
-        if (gKeyStatusPtr->newKeys & B_BUTTON)
+        if (gKeySt->pressed & B_BUTTON)
         {
-            SetKeyStatus_IgnoreMask(0);
+            SetKeyIgnore(0);
             UnsetEventId(0x87); // TODO: EID/FLAG DEFINTIONS
 
             return FALSE;
@@ -934,7 +934,7 @@ void sub_802E100(void)
 
 s8 AreKeysHeld(void)
 {
-    if (!gKeyStatusPtr->heldKeys)
+    if (!gKeySt->held)
         return FALSE;
 
     return TRUE;

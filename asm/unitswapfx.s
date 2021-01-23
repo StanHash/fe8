@@ -106,7 +106,7 @@ sub_801EAE8: @ 0x0801EAE8
 	mov r0, r8
 	subs r0, r0, r1
 	mov r8, r0
-	ldr r2, _0801EBDC  @ gSinLookup
+	ldr r2, _0801EBDC  @ gSinLut
 	ldr r1, [sp, #4]
 	asrs r0, r1, #9
 	movs r1, #0xff
@@ -191,7 +191,7 @@ _0801EBCA:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801EBDC: .4byte gSinLookup
+_0801EBDC: .4byte gSinLut
 _0801EBE0: .4byte gUnknown_0202BCB0
 _0801EBE4: .4byte gObject_16x16
 

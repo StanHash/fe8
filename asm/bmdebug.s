@@ -55,7 +55,7 @@ _0801BBCC:
 	ldrsh r0, [r5, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _0801BC18  @ gBG0TilemapBuffer
+	ldr r0, _0801BC18  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
 	bl Text_Draw
@@ -64,7 +64,7 @@ _0801BBCC:
 	bx r1
 	.align 2, 0
 _0801BC14: .4byte gUnknown_08A20E74
-_0801BC18: .4byte gBG0TilemapBuffer
+_0801BC18: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_801BB98
 
@@ -72,7 +72,7 @@ _0801BC18: .4byte gBG0TilemapBuffer
 sub_801BC1C: @ 0x0801BC1C
 	push {r4, r5, r6, r7, lr}
 	adds r6, r1, #0
-	ldr r2, _0801BCC0  @ gKeyStatusPtr
+	ldr r2, _0801BCC0  @ gKeySt
 	ldr r0, [r2]
 	ldrh r1, [r0, #6]
 	movs r0, #0x10
@@ -145,7 +145,7 @@ _0801BC72:
 	ldrsh r0, [r6, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _0801BCC8  @ gBG0TilemapBuffer
+	ldr r0, _0801BCC8  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
 	bl Text_Draw
@@ -155,9 +155,9 @@ _0801BCB8:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801BCC0: .4byte gKeyStatusPtr
+_0801BCC0: .4byte gKeySt
 _0801BCC4: .4byte gUnknown_08A20E74
-_0801BCC8: .4byte gBG0TilemapBuffer
+_0801BCC8: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_801BC1C
 
@@ -213,7 +213,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	ldrsh r0, [r5, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _0801BD54  @ gBG0TilemapBuffer
+	ldr r0, _0801BD54  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl Text_Draw
@@ -224,7 +224,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	.align 2, 0
 _0801BD4C: .4byte gUnknown_0859AA5C
 _0801BD50: .4byte gUnknown_0859AA7C
-_0801BD54: .4byte gBG0TilemapBuffer
+_0801BD54: .4byte gBg0Tm
 
 	THUMB_FUNC_END DebugMapMenu_DisplayInfoDraw
 
@@ -236,7 +236,7 @@ DebugMapMenu_DisplayInfoIdle: @ 0x0801BD58
 	ldr r0, _0801BD98  @ gUnknown_0859AA5C
 	bl Proc_Find
 	adds r2, r0, #0
-	ldr r0, _0801BD9C  @ gKeyStatusPtr
+	ldr r0, _0801BD9C  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0x31
@@ -262,7 +262,7 @@ _0801BD90:
 	bx r1
 	.align 2, 0
 _0801BD98: .4byte gUnknown_0859AA5C
-_0801BD9C: .4byte gKeyStatusPtr
+_0801BD9C: .4byte gKeySt
 
 	THUMB_FUNC_END DebugMapMenu_DisplayInfoIdle
 
@@ -316,7 +316,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	ldrsh r0, [r5, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _0801BE24  @ gBG0TilemapBuffer
+	ldr r0, _0801BE24  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
 	bl Text_Draw
@@ -328,7 +328,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	.align 2, 0
 _0801BE1C: .4byte gUnknown_080D7A6C
 _0801BE20: .4byte gUnknown_0859AA5C
-_0801BE24: .4byte gBG0TilemapBuffer
+_0801BE24: .4byte gBg0Tm
 
 	THUMB_FUNC_END DebugMenu_WeatherDraw
 
@@ -340,7 +340,7 @@ DebugMenu_WeatherIdle: @ 0x0801BE28
 	ldr r0, _0801BE94  @ gUnknown_0859AA5C
 	bl Proc_Find
 	adds r4, r0, #0
-	ldr r5, _0801BE98  @ gKeyStatusPtr
+	ldr r5, _0801BE98  @ gKeySt
 	ldr r0, [r5]
 	ldrh r1, [r0, #8]
 	movs r0, #0x10
@@ -392,7 +392,7 @@ _0801BE70:
 	mov pc, r0
 	.align 2, 0
 _0801BE94: .4byte gUnknown_0859AA5C
-_0801BE98: .4byte gKeyStatusPtr
+_0801BE98: .4byte gKeySt
 _0801BE9C: .4byte _0801BEA0
 _0801BEA0: @ jump table
 	.4byte _0801BEBC @ case 0
@@ -482,7 +482,7 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	ldrsh r0, [r5, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _0801BF68  @ gBG0TilemapBuffer
+	ldr r0, _0801BF68  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
 	bl Text_Draw
@@ -491,7 +491,7 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801BF68: .4byte gBG0TilemapBuffer
+_0801BF68: .4byte gBg0Tm
 
 	THUMB_FUNC_END DebugMenu_ClearDraw
 
@@ -501,7 +501,7 @@ DebugMenu_ClearIdle: @ 0x0801BF6C
 	sub sp, #0x64
 	adds r6, r0, #0
 	adds r7, r1, #0
-	ldr r4, _0801BFEC  @ gKeyStatusPtr
+	ldr r4, _0801BFEC  @ gKeySt
 	ldr r0, [r4]
 	ldrh r1, [r0, #6]
 	movs r0, #0x30
@@ -520,7 +520,7 @@ DebugMenu_ClearIdle: @ 0x0801BF6C
 	blt _0801BF9A
 	subs r5, #1
 _0801BF9A:
-	ldr r0, _0801BFEC  @ gKeyStatusPtr
+	ldr r0, _0801BFEC  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #6]
 	movs r0, #0x10
@@ -563,7 +563,7 @@ _0801BFD8:
 	strb r0, [r2, #0xe]
 	b _0801BFFA
 	.align 2, 0
-_0801BFEC: .4byte gKeyStatusPtr
+_0801BFEC: .4byte gKeySt
 _0801BFF0:
 	mov r0, sp
 	ldrb r1, [r0, #0xe]
@@ -634,21 +634,21 @@ DebugMenuInit: @ 0x0801C05C
 	ldr r0, _0801C088  @ gRAMChapterData
 	ldrb r0, [r0, #0x1b]
 	strb r0, [r1]
-	ldr r4, _0801C08C  @ gUnknown_02022D76
+	ldr r4, _0801C08C  @ gBg0Tm+0xCE
 	movs r0, #0
 	bl GetROMChapterStruct
 	ldr r1, [r0]
 	adds r0, r4, #0
 	bl PrintDebugStringToBG
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	pop {r4}
 	pop {r1}
 	bx r1
 	.align 2, 0
 _0801C084: .4byte gUnknown_03001780
 _0801C088: .4byte gRAMChapterData
-_0801C08C: .4byte gUnknown_02022D76
+_0801C08C: .4byte gBg0Tm+0xCE
 
 	THUMB_FUNC_END DebugMenuInit
 
@@ -656,9 +656,9 @@ _0801C08C: .4byte gUnknown_02022D76
 DEBUGONLY_Startup: @ 0x0801C090
 	push {r4, lr}
 	ldr r0, _0801C0E0  @ SomeUpdateRoutine
-	bl SetMainUpdateRoutine
+	bl SetMainFunc
 	ldr r0, _0801C0E4  @ GeneralVBlankHandler
-	bl SetInterrupt_LCDVBlank
+	bl SetOnVBlank
 	bl RefreshBMapGraphics
 	movs r0, #2
 	movs r1, #0
@@ -680,7 +680,7 @@ DEBUGONLY_Startup: @ 0x0801C090
 	movs r0, #0xbf
 	ands r0, r1
 	strb r0, [r4, #4]
-	ldr r0, _0801C0F8  @ gUnknown_02023CE8
+	ldr r0, _0801C0F8  @ gBg2Tm+0x40
 	bl PrintDebugBuildDateAndTime
 	pop {r4}
 	pop {r0}
@@ -692,7 +692,7 @@ _0801C0E8: .4byte gUnknown_080D7A7C
 _0801C0EC: .4byte gDebugContinueMenuDef
 _0801C0F0: .4byte gUnknown_0202BCB0
 _0801C0F4: .4byte 0x0600B000
-_0801C0F8: .4byte gUnknown_02023CE8
+_0801C0F8: .4byte gBg2Tm+0x40
 
 	THUMB_FUNC_END DEBUGONLY_Startup
 
@@ -705,7 +705,7 @@ DebugContinueMenuInit: @ 0x0801C0FC
 	movs r1, #0
 	strb r1, [r0]
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	add r0, sp, #4
 	movs r1, #3
 	bl sub_80A2EF8
@@ -781,7 +781,7 @@ DebugContinueMenuEnd: @ 0x0801C198
 	bl DeleteFaceByIndex
 	movs r0, #1
 	bl DeleteFaceByIndex
-	ldr r2, _0801C1D4  @ gLCDControlBuffer
+	ldr r2, _0801C1D4  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #2
 	negs r0, r0
@@ -796,22 +796,22 @@ DebugContinueMenuEnd: @ 0x0801C198
 	subs r1, #8
 	ands r0, r1
 	strb r0, [r2, #1]
-	ldr r1, _0801C1D8  @ gPaletteBuffer
+	ldr r1, _0801C1D8  @ gPal
 	movs r0, #0
 	strh r0, [r1]
-	bl EnablePaletteSync
+	bl EnablePalSync
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801C1D4: .4byte gLCDControlBuffer
-_0801C1D8: .4byte gPaletteBuffer
+_0801C1D4: .4byte gDispIo
+_0801C1D8: .4byte gPal
 
 	THUMB_FUNC_END DebugContinueMenuEnd
 
 	THUMB_FUNC_START sub_801C1DC
 sub_801C1DC: @ 0x0801C1DC
 	push {lr}
-	bl GetGameClock
+	bl GetGameTime
 	bl InitRN
 	bl ClearUnits
 	movs r3, #1
@@ -865,10 +865,10 @@ sub_801C224: @ 0x0801C224
 sub_801C248: @ 0x0801C248
 	push {r4, lr}
 	adds r4, r1, #0
-	bl GetGameClock
+	bl GetGameTime
 	bl InitRN
 	bl ClearUnits
-	ldr r0, _0801C278  @ gKeyStatusPtr
+	ldr r0, _0801C278  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #4]
 	movs r0, #0x80
@@ -884,7 +884,7 @@ sub_801C248: @ 0x0801C248
 	bl sub_80A4E70
 	b _0801C28A
 	.align 2, 0
-_0801C278: .4byte gKeyStatusPtr
+_0801C278: .4byte gKeySt
 _0801C27C:
 	movs r3, #1
 	negs r3, r3
@@ -1132,7 +1132,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	ldrsh r0, [r4, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _0801C444  @ gBG0TilemapBuffer
+	ldr r0, _0801C444  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r5, #0
 	bl Text_Draw
@@ -1143,7 +1143,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	.align 2, 0
 _0801C43C: .4byte gUnknown_0859AA7C
 _0801C440: .4byte gRAMChapterData
-_0801C444: .4byte gBG0TilemapBuffer
+_0801C444: .4byte gBg0Tm
 
 	THUMB_FUNC_END DebugMenu_FogDraw
 
@@ -1156,7 +1156,7 @@ DebugMenu_FogIdle: @ 0x0801C448
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0801C4A6
-	ldr r0, _0801C480  @ gKeyStatusPtr
+	ldr r0, _0801C480  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #0x31
@@ -1174,7 +1174,7 @@ DebugMenu_FogIdle: @ 0x0801C448
 	bl sub_801E2E0
 	b _0801C49E
 	.align 2, 0
-_0801C480: .4byte gKeyStatusPtr
+_0801C480: .4byte gKeySt
 _0801C484: .4byte gRAMChapterData
 _0801C488:
 	movs r0, #0xe
@@ -1299,7 +1299,7 @@ _0801C51C:
 	ldrsh r0, [r5, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _0801C584  @ gBG0TilemapBuffer
+	ldr r0, _0801C584  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
 	bl Text_Draw
@@ -1310,7 +1310,7 @@ _0801C51C:
 	bx r1
 	.align 2, 0
 _0801C580: .4byte gRAMChapterData
-_0801C584: .4byte gBG0TilemapBuffer
+_0801C584: .4byte gBg0Tm
 
 	THUMB_FUNC_END DebugChargeMenu_Draw
 
@@ -1319,7 +1319,7 @@ DebugChargeMenu_Idle: @ 0x0801C588
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	adds r6, r1, #0
-	ldr r2, _0801C5B8  @ gKeyStatusPtr
+	ldr r2, _0801C5B8  @ gKeySt
 	ldr r0, [r2]
 	ldrh r1, [r0, #8]
 	movs r0, #0x31
@@ -1341,7 +1341,7 @@ DebugChargeMenu_Idle: @ 0x0801C588
 	lsls r0, r0, #0x1d
 	b _0801C5CA
 	.align 2, 0
-_0801C5B8: .4byte gKeyStatusPtr
+_0801C5B8: .4byte gKeySt
 _0801C5BC: .4byte gRAMChapterData
 _0801C5C0:
 	ldr r1, _0801C610  @ gRAMChapterData
@@ -1457,7 +1457,7 @@ DebugMenuMapIdleCore: @ 0x0801C65C
 	stm r1!, {r2, r5, r6}
 	ldr r0, [r0]
 	str r0, [r1]
-	ldr r0, _0801C6A4  @ gKeyStatusPtr
+	ldr r0, _0801C6A4  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #6]
 	movs r0, #0x10
@@ -1477,7 +1477,7 @@ DebugMenuMapIdleCore: @ 0x0801C65C
 	b _0801C6C2
 	.align 2, 0
 _0801C6A0: .4byte gUnknown_080D7AB4
-_0801C6A4: .4byte gKeyStatusPtr
+_0801C6A4: .4byte gKeySt
 _0801C6A8:
 	movs r0, #0x20
 	ands r0, r1
@@ -1588,7 +1588,7 @@ _0801C7EC:
 	.align 2, 0
 _0801C7F4: .4byte gUnknown_03001780
 _0801C7F8:
-	ldr r0, _0801C810  @ gKeyStatusPtr
+	ldr r0, _0801C810  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #4]
 	movs r0, #0x80
@@ -1600,7 +1600,7 @@ _0801C7F8:
 	movs r0, #3
 	b _0801C81C
 	.align 2, 0
-_0801C810: .4byte gKeyStatusPtr
+_0801C810: .4byte gKeySt
 _0801C814: .4byte gUnknown_03001780
 _0801C818:
 	ldr r1, _0801C888  @ gUnknown_03001780
@@ -1620,7 +1620,7 @@ _0801C81C:
 	lsls r5, r4, #5
 	adds r5, r5, r7
 	lsls r5, r5, #1
-	ldr r6, _0801C88C  @ gBG0TilemapBuffer
+	ldr r6, _0801C88C  @ gBg0Tm
 	adds r5, r5, r6
 	ldr r0, _0801C890  @ gUnknown_080D7AC4
 	mov r8, r0
@@ -1642,8 +1642,8 @@ _0801C81C:
 	mov r1, r9
 	bl PrintDebugStringToBG
 	movs r0, #1
-	bl BG_EnableSyncByMask
-	bl EnablePaletteSync
+	bl EnableBgSync
+	bl EnablePalSync
 	add sp, #0x10
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -1654,7 +1654,7 @@ _0801C81C:
 	bx r0
 	.align 2, 0
 _0801C888: .4byte gUnknown_03001780
-_0801C88C: .4byte gBG0TilemapBuffer
+_0801C88C: .4byte gBg0Tm
 _0801C890: .4byte gUnknown_080D7AC4
 
 	THUMB_FUNC_END DebugMenuMapIdleCore

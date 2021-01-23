@@ -2082,11 +2082,11 @@ void UpdateObstacleFromBattle(struct BattleUnit* bu) {
 }
 
 void BeginBattleAnimations(void) {
-    BG_Fill(gBG2TilemapBuffer, 0);
-    BG_EnableSyncByMask(1 << 2);
+    TmFill(gBg2Tm, 0);
+    EnableBgSync(BG2_SYNC_BIT);
 
-    gPaletteBuffer[0] = 0;
-    EnablePaletteSync();
+    gPal[0] = 0;
+    EnablePalSync();
 
     RenderBmMap();
 

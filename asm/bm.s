@@ -6,7 +6,7 @@
 LoadObjUIGfx: @ 0x08015680
 	push {r4, lr}
 	ldr r0, _080156AC  @ gUnknown_0859E8E0
-	ldr r4, _080156B0  @ gUnknown_02020188
+	ldr r4, _080156B0  @ gBuf
 	adds r1, r4, #0
 	bl CopyDataWithPossibleUncomp
 	ldr r1, _080156B4  @ 0x06010000
@@ -18,13 +18,13 @@ LoadObjUIGfx: @ 0x08015680
 	movs r1, #0x80
 	lsls r1, r1, #2
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
 _080156AC: .4byte gUnknown_0859E8E0
-_080156B0: .4byte gUnknown_02020188
+_080156B0: .4byte gBuf
 _080156B4: .4byte 0x06010000
 _080156B8: .4byte gUnknown_0859ED70
 
@@ -37,7 +37,7 @@ sub_80156BC: @ 0x080156BC
 	movs r1, #0x80
 	lsls r1, r1, #2
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -132,7 +132,7 @@ HandleCursorMovement: @ 0x08015714
 	cmp r0, #0x77
 	bls _08015792
 	movs r1, #0xf0
-	ldr r0, _08015820  @ gKeyStatusPtr
+	ldr r0, _08015820  @ gKeySt
 	ldr r0, [r0]
 	ldrh r2, [r0, #8]
 	mov r0, ip
@@ -212,7 +212,7 @@ _0801580C:
 _08015814: .4byte gUnknown_0202BCB0
 _08015818: .4byte gUnknown_0859A438
 _0801581C: .4byte gBmMapMovement
-_08015820: .4byte gKeyStatusPtr
+_08015820: .4byte gKeySt
 _08015824: .4byte gBmMapSize
 _08015828: .4byte gRAMChapterData
 _0801582C:
@@ -596,7 +596,7 @@ DisplayCursor: @ 0x08015A98
 	movs r0, #0
 	mov r9, r0
 	mov r8, r0
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r4, r0, #1
 	movs r0, #0xf
 	ands r4, r0
@@ -625,7 +625,7 @@ _08015AE0:
 	.align 2, 0
 _08015AEC: .4byte gUnknown_0859A4C0
 _08015AF0:
-	bl GetGameClock
+	bl GetGameTime
 	subs r0, #1
 	ldr r5, _08015B2C  @ gUnknown_0202BD40
 	ldr r1, [r5]
@@ -651,7 +651,7 @@ _08015B10:
 	ldr r0, _08015B30  @ gUnknown_0202BD3C
 	strh r6, [r0]
 	strh r7, [r0, #2]
-	bl GetGameClock
+	bl GetGameTime
 	str r0, [r5]
 	b _08015B52
 	.align 2, 0
@@ -707,7 +707,7 @@ sub_8015B88: @ 0x08015B88
 	sub sp, #4
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r0, r0, #1
 	movs r1, #0xf
 	ands r0, r1
@@ -755,7 +755,7 @@ sub_8015BD4: @ 0x08015BD4
 	adds r6, r1, #0
 	lsls r4, r2, #0x18
 	lsrs r4, r4, #0x18
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r0, r0, #3
 	movs r1, #3
 	bl __umodsi3

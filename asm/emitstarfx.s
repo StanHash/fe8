@@ -45,7 +45,7 @@ sub_8021FEC: @ 0x08021FEC
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	beq _0802200A
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #3
 	ands r1, r0
 	cmp r1, #0
@@ -144,7 +144,7 @@ sub_80220A8: @ 0x080220A8
 	push {r5, r6, r7}
 	sub sp, #4
 	adds r6, r0, #0
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #3
 	ands r1, r0
 	cmp r1, #0
@@ -328,20 +328,20 @@ _08022216:
 	movs r0, #2
 	movs r1, #0
 	movs r2, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	movs r4, #1
 	str r4, [sp]
 	movs r0, #1
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	str r4, [sp]
 	movs r0, #1
 	movs r1, #1
 	movs r2, #1
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	ldrh r0, [r5]
 	adds r0, #1
 	strh r0, [r5]
@@ -366,7 +366,7 @@ sub_8022250: @ 0x08022250
 	ldr r0, _080222A8  @ gUnknown_0859B540
 	ldr r1, _080222AC  @ 0x06014000
 	movs r2, #0x20
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	ldr r0, _080222B0  @ gUnknown_0859B528
 	adds r1, r6, #0
 	bl Proc_Start

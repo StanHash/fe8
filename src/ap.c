@@ -3,6 +3,7 @@
 #include "ctc.h"
 #include "proc.h"
 #include "hardware.h"
+#include "oam.h"
 
 #define AP_MAX_COUNT 0x14 // 20
 
@@ -183,13 +184,13 @@ void AP_QueueObjRotScale(struct APHandle* handle) {
     it    = handle->pCurrentRotScale + 1;         // rotscale data start
 
     for (i = 0; i < count; it += 3, i++) {
-        WriteOAMRotScaleData(
+        SetObjAffine(
             handle->rotScaleIndex + i,  // oam rotscale index
 
-            Div(+COS(it[0])*16, it[1]), // pa
-            Div(-SIN(it[0])*16, it[2]), // pb
-            Div(+SIN(it[0])*16, it[1]), // pc
-            Div(+COS(it[0])*16, it[2])  // pd
+            Div(+COS_Q12(it[0])*16, it[1]), // pa
+            Div(-SIN_Q12(it[0])*16, it[2]), // pb
+            Div(+SIN_Q12(it[0])*16, it[1]), // pc
+            Div(+COS_Q12(it[0])*16, it[2])  // pd
         );
     }
 }
@@ -245,7 +246,7 @@ void AP_QueueObjGraphics(struct APHandle* handle) {
             sOamTileSizeLut[OBJ_SIZE_TABLE_INDEX(itObjData)+1]         // y size (tiles)
         );
 
-        if (!gLCDControlBuffer.dispcnt.obj1dMap)
+        if (!gDispIo.dispCt.obj1dMap)
             // Adding (width * sizeof(Tile4bpp))
             tileOffset += (sOamTileSizeLut[OBJ_SIZE_TABLE_INDEX(itObjData)]) * 0x20;
         else

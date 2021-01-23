@@ -6,6 +6,7 @@
 
 #include "proc.h"
 #include "hardware.h"
+#include "oam.h"
 #include "fontgrp.h"
 #include "uiutils.h"
 #include "chapterdata.h"
@@ -253,11 +254,11 @@ void BMapVSync_UpdateMapPalAnimations(struct BMVSyncProc* proc) {
 
     CpuCopy16(
         proc->tilePalAnimCurrent->data,
-        proc->tilePalAnimCurrent->colorStart + (0x10 * BM_BGPAL_6) + gPaletteBuffer,
+        proc->tilePalAnimCurrent->colorStart + (0x10 * BM_BGPAL_6) + gPal,
         proc->tilePalAnimCurrent->colorCount*2
     );
 
-    EnablePaletteSync();
+    EnablePalSync();
 
     if ((++proc->tilePalAnimCurrent)->time == 0)
         proc->tilePalAnimCurrent = proc->tilePalAnimStart;
@@ -275,7 +276,7 @@ void BMapVSync_InitMapAnimations(struct BMVSyncProc* proc) {
 }
 
 void BMapVSync_OnEnd(struct BMVSyncProc* proc) {
-    SetSecondaryHBlankHandler(NULL);
+    SetOnHBlankB(NULL);
 }
 
 void BMapVSync_OnLoop(struct BMVSyncProc* proc) {
@@ -298,9 +299,9 @@ void BMapDispSuspend(void) {
     if (++gUnknown_0202BCB0.gameGfxSemaphore > 1)
         return; // gfx was already blocked, nothing needs to be done.
 
-    SetSecondaryHBlankHandler(NULL);
-    gPaletteBuffer[0] = 0;
-    EnablePaletteSync();
+    SetOnHBlankB(NULL);
+    gPal[0] = 0;
+    EnablePalSync();
     Proc_BlockEachMarked(1);
 }
 
@@ -331,15 +332,15 @@ void AllocWeatherParticles(unsigned weatherId) {
     case WEATHER_SNOWSTORM:
     case WEATHER_RAIN:
     case WEATHER_SANDSTORM:
-        SetupOAMBufferSplice(0x20);
+        InitOam(0x20);
         break;
 
     case WEATHER_FLAMES:
-        SetupOAMBufferSplice(0x10);
+        InitOam(0x10);
         break;
 
     default:
-        SetupOAMBufferSplice(0);
+        InitOam(0);
         break;
 
     } // switch (weatherId)
@@ -347,7 +348,7 @@ void AllocWeatherParticles(unsigned weatherId) {
 
 void WfxNone_Init(void) {
     AllocWeatherParticles(gRAMChapterData.chapterWeatherId);
-    SetSecondaryHBlankHandler(NULL);
+    SetOnHBlankB(NULL);
 }
 
 void WfxSnow_Init(void) {
@@ -376,11 +377,11 @@ void WfxSnow_Init(void) {
 }
 
 void WfxSnow_VSync(void) {
-    if (GetPrimaryOAMSize()) {
+    if (GetOamSplice()) {
         struct { short x, y; } origins[3];
         int i;
 
-        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameClock() % 2) * 0x20);
+        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameTime() % 2) * 0x20);
 
         origins[0].x = (gUnknown_0202BCB0.camera.x * 12) / 16;
         origins[0].y = gUnknown_0202BCB0.camera.y;
@@ -425,10 +426,10 @@ void WfxRain_Init(void) {
 }
 
 void WfxRain_VSync(void) {
-    if (GetPrimaryOAMSize()) {
+    if (GetOamSplice()) {
         int i;
 
-        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameClock() % 2) * 0x20);
+        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameTime() % 2) * 0x20);
 
         for (i = 0; i < 0x20; ++i) {
             it->xPosition += it->xSpeed;
@@ -451,8 +452,8 @@ void WfxSandStorm_Init(void) {
 
     AllocWeatherParticles(gRAMChapterData.chapterWeatherId);
 
-    CopyDataWithPossibleUncomp(gUnknown_085A3964, gUnknown_02020188);
-    CopyTileGfxForObj(gUnknown_02020188, OBJ_VRAM0 + 0x1C * 0x20, 4, 4);
+    CopyDataWithPossibleUncomp(gUnknown_085A3964, gBuf);
+    CopyTileGfxForObj(gBuf, OBJ_VRAM0 + 0x1C * 0x20, 4, 4);
 
     for (i = 0; i < 0x40; ++i) {
         sWeatherEffect.particles[i].xPosition = AdvanceGetLCGRNValue();
@@ -464,10 +465,10 @@ void WfxSandStorm_Init(void) {
 }
 
 void WfxSandStorm_VSync(void) {
-    if (GetPrimaryOAMSize()) {
+    if (GetOamSplice()) {
         int i;
 
-        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameClock() % 2) * 0x20);
+        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameTime() % 2) * 0x20);
 
         for (i = 0; i < 0x20; ++i) {
             it->xPosition += it->xSpeed;
@@ -491,8 +492,8 @@ void WfxSnowStorm_Init(void) {
 
     AllocWeatherParticles(gRAMChapterData.chapterWeatherId);
 
-    CopyDataWithPossibleUncomp(gUnknown_085A39EC, gUnknown_02020188);
-    CopyTileGfxForObj(gUnknown_02020188, OBJ_VRAM0 + 0x18 * 0x20, 8, 4);
+    CopyDataWithPossibleUncomp(gUnknown_085A39EC, gBuf);
+    CopyTileGfxForObj(gBuf, OBJ_VRAM0 + 0x18 * 0x20, 8, 4);
 
     for (i = 0; i < 0x40; ++i) {
         unsigned type = typeLookup[i & 7];
@@ -518,10 +519,10 @@ void WfxSnowStorm_Init(void) {
 }
 
 void WfxSnowStorm_VSync(void) {
-    if (GetPrimaryOAMSize()) {
+    if (GetOamSplice()) {
         int i;
 
-        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameClock() % 2) * 0x20);
+        struct WeatherParticle* it = sWeatherEffect.particles + ((GetGameTime() % 2) * 0x20);
 
         for (i = 0; i < 0x20; ++i) {
             it->xPosition += it->xSpeed;
@@ -563,7 +564,7 @@ void WfxBlue_Init(void) {
     for (; i < 320; ++i)
         *palIt++ = RGB(0, 0, (31 - i / 10));
 
-    SetSecondaryHBlankHandler(handler);
+    SetOnHBlankB(handler);
 }
 
 void WfxBlue_VSync(void) {}
@@ -595,11 +596,11 @@ void WfxFlamesInitGradientPublic(void) {
 
     for (i = 0; i < 4; ++i) {
         for (j = 0; j < 0x10; ++j) {
-            const int color = gPaletteBuffer[0x10 * (i + BM_BGPAL_TILESET_BASE) + j];
+            const int color = gPal[0x10 * (i + BM_BGPAL_TILESET_BASE) + j];
 
-            int r = RED_VALUE(color);
-            int g = GREEN_VALUE(color);
-            int b = BLUE_VALUE(color);
+            int r = RGB5_R(color);
+            int g = RGB5_G(color);
+            int b = RGB5_B(color);
 
             for (k = 0; k < 8; ++k) {
                 r = r + 2;
@@ -621,11 +622,11 @@ void WfxFlamesInitGradient(void) {
 
     for (i = 0; i < 4; ++i) {
         for (j = 0; j < 0x10; ++j) {
-            const int color = gPaletteBuffer[0x10 * (i + BM_BGPAL_TILESET_BASE) + j];
+            const int color = gPal[0x10 * (i + BM_BGPAL_TILESET_BASE) + j];
 
-            int r = RED_VALUE(color);
-            int g = GREEN_VALUE(color);
-            int b = BLUE_VALUE(color);
+            int r = RGB5_R(color);
+            int g = RGB5_G(color);
+            int b = RGB5_B(color);
 
             for (k = 0; k < 8; ++k) {
                 r = r + 2;
@@ -639,7 +640,7 @@ void WfxFlamesInitGradient(void) {
         }
     }
 
-    SetSecondaryHBlankHandler(WfxFlamesHSync);
+    SetOnHBlankB(WfxFlamesHSync);
 }
 
 void WfxFlamesInitParticles(void) {
@@ -647,7 +648,7 @@ void WfxFlamesInitParticles(void) {
 
     AllocWeatherParticles(gRAMChapterData.chapterWeatherId);
     CopyDataWithPossibleUncomp(gUnknown_085A3A84, OBJ_VRAM0 + 0x18 * 0x20);
-    CopyToPaletteBuffer(gUnknown_085A3AC0, 0x340, 0x20);
+    ApplyPaletteExt(gUnknown_085A3AC0, 0x340, 0x20);
 
     for (i = 0; i < 0x10; ++i) {
         sWeatherEffect.particles[i].xPosition = AdvanceGetLCGRNValue();
@@ -667,18 +668,18 @@ void WfxFlamesUpdateGradient(void) {
     int i, j;
 
     CpuFastCopy(
-        gPaletteBuffer + BM_BGPAL_TILESET_BASE * 0x10,
+        gPal + BM_BGPAL_TILESET_BASE * 0x10,
         ((u16*)(PLTT)) + BM_BGPAL_TILESET_BASE * 0x10,
 
         0x20 * 4
     );
 
     for (i = 12; i < 16; ++i) {
-        const int color = gPaletteBuffer[(BM_BGPAL_TILESET_BASE + 2) * 0x10 + i];
+        const int color = gPal[(BM_BGPAL_TILESET_BASE + 2) * 0x10 + i];
 
-        int r = RED_VALUE(color);
-        int g = GREEN_VALUE(color);
-        int b = BLUE_VALUE(color);
+        int r = RGB5_R(color);
+        int g = RGB5_G(color);
+        int b = RGB5_B(color);
 
         for (j = 0; j < 8; ++j) {
             r = r + 2;
@@ -696,7 +697,7 @@ void WfxFlamesUpdateGradient(void) {
 void WfxFlamesUpdateParticles(void) {
     struct WeatherParticle* it = sWeatherEffect.particles;
 
-    if (GetPrimaryOAMSize()) {
+    if (GetOamSplice()) {
         int i;
 
         for (i = 0; i < 0x10; ++i, ++it) {
@@ -772,7 +773,7 @@ void WfxClouds_Init(void) {
         sWeatherEffect.gfxData
     );
 
-    CopyToPaletteBuffer(
+    ApplyPaletteExt(
         gUnknown_085A401C,
         ((0x10 + BM_OBJPAL_10) * 0x10 * sizeof(u16)),
         0x10 * sizeof(u16)
@@ -782,7 +783,7 @@ void WfxClouds_Init(void) {
 void WfxClouds_VSync(void) {
     u32* gfx = sWeatherEffect.gfxData;
 
-    switch (GetGameClock() % 8) {
+    switch (GetGameTime() % 8) {
 
     case 0:
         WfxCloudsOffsetGraphicsEffect(gfx + 0 * (14 * 8));
@@ -804,7 +805,7 @@ void WfxClouds_VSync(void) {
         CopyTileGfxForObj(gfx, OBJ_VRAM0 + (0x20 * 18), 14, 4);
         break;
 
-    } // switch (GetGameClock() % 8)
+    } // switch (GetGameTime() % 8)
 }
 
 void WfxClouds_Update(void) {
@@ -972,8 +973,8 @@ void StartBattleMap(struct GameCtrlProc* gameCtrl) {
 
     SetupBackgrounds(NULL);
 
-    SetMainUpdateRoutine(SomeUpdateRoutine);
-    SetInterrupt_LCDVBlank(GeneralVBlankHandler);
+    SetMainFunc(SomeUpdateRoutine);
+    SetOnVBlank(GeneralVBlankHandler);
 
     ClearBattleMapState();
     sub_80156D4();
@@ -998,11 +999,11 @@ void StartBattleMap(struct GameCtrlProc* gameCtrl) {
     gRAMChapterData.chapterWeatherId =
         GetROMChapterStruct(gRAMChapterData.chapterIndex)->initialWeather;
 
-    SetupBackgroundForWeatherMaybe();
+    InitBmBgLayers();
     InitChapterMap(gRAMChapterData.chapterIndex);
     InitMapObstacles();
 
-    gRAMChapterData.unk4 = GetGameClock();
+    gRAMChapterData.unk4 = GetGameTime();
     gRAMChapterData.chapterTotalSupportGain = 0;
 
     gRAMChapterData.unk48 = 0;
@@ -1028,20 +1029,20 @@ void StartBattleMap(struct GameCtrlProc* gameCtrl) {
         StartBMapMain(gameCtrl);
 
     // TODO: MACRO?
-    gPaletteBuffer[0] = 0;
-    EnablePaletteSync();
+    gPal[0] = 0;
+    EnablePalSync();
 
-    sub_8001ED0(TRUE, TRUE, TRUE, TRUE, TRUE);
-    sub_8001F48(TRUE);
+    SetBlendTargetA(TRUE, TRUE, TRUE, TRUE, TRUE);
+    SetBlendBackdropA(TRUE);
 
-    SetSpecialColorEffectsParameters(3, 0, 0, 0x10);
+    SetBlendConfig(3, 0, 0, 0x10);
 }
 
 void RestartBattleMap(void) {
     SetupBackgrounds(NULL);
 
-    SetMainUpdateRoutine(SomeUpdateRoutine);
-    SetInterrupt_LCDVBlank(GeneralVBlankHandler);
+    SetMainFunc(SomeUpdateRoutine);
+    SetOnVBlank(GeneralVBlankHandler);
 
     sub_80156D4();
     SetupMapSpritesPalettes();
@@ -1052,7 +1053,7 @@ void RestartBattleMap(void) {
     gRAMChapterData.chapterWeatherId =
         GetROMChapterStruct(gRAMChapterData.chapterIndex)->initialWeather;
 
-    SetupBackgroundForWeatherMaybe();
+    InitBmBgLayers();
 
     InitChapterMap(gRAMChapterData.chapterIndex);
 
@@ -1064,14 +1065,10 @@ void RestartBattleMap(void) {
     Proc_Start(gProc_MapTask, PROC_TREE_4);
 
     // TODO: MACRO?
-    gPaletteBuffer[0] = 0;
-    EnablePaletteSync();
+    gPal[0] = 0;
+    EnablePalSync();
 
-    gLCDControlBuffer.dispcnt.bg0_on = TRUE;
-    gLCDControlBuffer.dispcnt.bg1_on = TRUE;
-    gLCDControlBuffer.dispcnt.bg2_on = TRUE;
-    gLCDControlBuffer.dispcnt.bg3_on = FALSE;
-    gLCDControlBuffer.dispcnt.obj_on = FALSE;
+    SetDispEnable(1, 1, 1, 0, 0);
 }
 
 /**
@@ -1086,8 +1083,8 @@ void GameCtrl_StartResumedGame(struct GameCtrlProc* gameCtrl) {
 
     SetupBackgrounds(NULL);
 
-    SetMainUpdateRoutine(SomeUpdateRoutine);
-    SetInterrupt_LCDVBlank(GeneralVBlankHandler);
+    SetMainFunc(SomeUpdateRoutine);
+    SetOnVBlank(GeneralVBlankHandler);
 
     ClearBattleMapState();
 
@@ -1134,31 +1131,27 @@ void GameCtrl_StartResumedGame(struct GameCtrlProc* gameCtrl) {
 
     } // switch (gActionData.suspendPointType)
 
-    sub_8001ED0(TRUE, TRUE, TRUE, TRUE, TRUE);
-    sub_8001F48(TRUE);
+    SetBlendTargetA(TRUE, TRUE, TRUE, TRUE, TRUE);
+    SetBlendBackdropA(TRUE);
 
-    SetSpecialColorEffectsParameters(3, 0, 0, 0x10);
+    SetBlendConfig(3, 0, 0, 0x10);
 }
 
 void RefreshBMapDisplay_FromBattle(void) {
-    SetMainUpdateRoutine(SomeUpdateRoutine);
-    SetInterrupt_LCDVBlank(GeneralVBlankHandler);
+    SetMainFunc(SomeUpdateRoutine);
+    SetOnVBlank(GeneralVBlankHandler);
 
     LoadGameCoreGfx();
     SetupMapSpritesPalettes();
 
     ClearBg0Bg1();
+    SetWinEnable(0, 0, 0);
+    SetBlendNone();
 
-    gLCDControlBuffer.dispcnt.win0_on = FALSE;
-    gLCDControlBuffer.dispcnt.win1_on = FALSE;
-    gLCDControlBuffer.dispcnt.objWin_on = FALSE;
+    SetBlankChr(0);
+    TmFill(gBg2Tm, 0);
 
-    SetDefaultColorEffects();
-
-    RegisterBlankTile(0);
-    BG_Fill(gBG2TilemapBuffer, 0);
-
-    BG_EnableSyncByMask(1 << 2); // Enable bg2 sync
+    EnableBgSync(BG2_SYNC_BIT);
 }
 
 void BMapDispResume_FromBattleDelayed(void) {
@@ -1268,11 +1261,7 @@ void MapMain_ResumeFromPhaseIdle(struct BMapMainProc* mapMain) {
     RefreshEntityBmMaps();
     SMS_UpdateFromGameData();
 
-    gLCDControlBuffer.dispcnt.bg0_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg1_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg2_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg3_on = FALSE;
-    gLCDControlBuffer.dispcnt.obj_on = FALSE;
+    SetDispEnable(0, 0, 0, 0, 0);
 
     Proc_Goto(mapMain, 4);
 }
@@ -1281,11 +1270,7 @@ void MapMain_ResumeFromAction(struct BMapMainProc* mapMain) {
     RefreshEntityBmMaps();
     SMS_UpdateFromGameData();
 
-    gLCDControlBuffer.dispcnt.bg0_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg1_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg2_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg3_on = FALSE;
-    gLCDControlBuffer.dispcnt.obj_on = FALSE;
+    SetDispEnable(0, 0, 0, 0, 0);
 
     Proc_Goto(mapMain, 6);
 
@@ -1302,11 +1287,7 @@ void MapMain_ResumeFromBskPhase(struct BMapMainProc* mapMain) {
     RefreshEntityBmMaps();
     SMS_UpdateFromGameData();
 
-    gLCDControlBuffer.dispcnt.bg0_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg1_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg2_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg3_on = FALSE;
-    gLCDControlBuffer.dispcnt.obj_on = FALSE;
+    SetDispEnable(0, 0, 0, 0, 0);
 
     Proc_Goto(mapMain, 7);
 }
@@ -1319,11 +1300,7 @@ void MapMain_ResumeFromArenaFight(struct BMapMainProc* mapMain) {
     BattleGenerateArena(gActiveUnit);
     BeginBattleAnimations();
 
-    gLCDControlBuffer.dispcnt.bg0_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg1_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg2_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg3_on = FALSE;
-    gLCDControlBuffer.dispcnt.obj_on = FALSE;
+    SetDispEnable(0, 0, 0, 0, 0);
 
     RefreshEntityBmMaps();
 
@@ -1340,11 +1317,7 @@ void MapMain_ResumeFromPhaseChange(struct BMapMainProc* mapMain) {
     RefreshEntityBmMaps();
     SMS_UpdateFromGameData();
 
-    gLCDControlBuffer.dispcnt.bg0_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg1_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg2_on = FALSE;
-    gLCDControlBuffer.dispcnt.bg3_on = FALSE;
-    gLCDControlBuffer.dispcnt.obj_on = FALSE;
+    SetDispEnable(0, 0, 0, 0, 0);
 
     Proc_Goto(mapMain, 8);
 }

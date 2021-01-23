@@ -13,49 +13,6 @@ struct BattleHit;
 
 // Type definitions for types without any other home :/
 
-struct BgCoords
-{
-    u16 x;
-    u16 y;
-};
-
-struct Struct03003080
-{
-    /*0x00*/ struct DispCnt dispcnt;
-    /*0x04*/ struct DispStat dispstat;
-    /*0x08*/ u8 filler8[4];
-    /*0x0C*/ struct BgCnt bg0cnt;
-    /*0x10*/ struct BgCnt bg1cnt;
-    /*0x14*/ struct BgCnt bg2cnt;
-    /*0x18*/ struct BgCnt bg3cnt;
-    /*0x1C*/ struct BgCoords bgoffset[4];
-    /*0x2C*/ u8 win0_right, win0_left;
-    /*0x2C*/ u8 win1_right, win1_left;
-    /*0x30*/ u8 win0_bottom, win0_top;
-    /*0x30*/ u8 win1_bottom, win1_top;
-    /*0x34*/ struct WinCnt wincnt;
-    /*0x38*/ u16 mosaic;
-             u8 filler3A[2];
-    /*0x3C*/ struct BlendCnt bldcnt;
-    /*0x40*/ u8 filler40[4];
-    /*0x44*/ u8 blendCoeffA;
-    /*0x45*/ u8 blendCoeffB;
-    /*0x46*/ u8 blendY;
-    /*0x48*/ u16 bg2pa;
-    /*0x4A*/ u16 bg2pb;
-    /*0x4C*/ u16 bg2pc;
-    /*0x4E*/ u16 bg2pd;
-    /*0x50*/ u32 bg2x;
-    /*0x54*/ u32 bg2y;
-    /*0x58*/ u16 bg3pa;
-    /*0x5A*/ u16 bg3pb;
-    /*0x5C*/ u16 bg3pc;
-    /*0x5E*/ u16 bg3pd;
-    /*0x60*/ u32 bg3x;
-    /*0x64*/ u32 bg3y;
-    /*0x68*/ s8 colorAddition;
-};
-
 struct Struct0858791C
 {
     u8 filler0[4];
@@ -70,33 +27,10 @@ struct TileDataTransfer
     u16 mode;
 };
 
-struct OamDataTransfer
-{
-    void *src;
-    void *dest;
-    u16 unk8;
-    u16 count;
-};
-
 struct Struct02024CD4
 {
     int unk0;
     int unk4;
-};
-
-struct KeyStatusBuffer
-{
-    u8 repeatDelay;     // initial delay before generating auto-repeat presses
-    u8 repeatInterval;  // time between auto-repeat presses
-    u8 repeatTimer;     // (decreased by one each frame, reset to repeatDelay when Presses change and repeatInterval when reaches 0)
-    u16 heldKeys;       // keys that are currently held down
-    u16 repeatedKeys;   // auto-repeated keys
-    u16 newKeys;        // keys that went down this frame
-    u16 prevKeys;       // keys that were held down last frame
-    u16 LastPressState;
-    bool16 ABLRPressed; // 1 for Release (A B L R Only), 0 Otherwise
-    u16 newKeys2;
-    u16 TimeSinceStartSelect; // Time since last Non-Start Non-Select Button was pressed
 };
 
 typedef void (*InterruptHandler)(void);

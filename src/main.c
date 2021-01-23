@@ -7,10 +7,6 @@
 #include "mu.h"
 #include "soundwrapper.h"
 
-EWRAM_DATA static struct KeyStatusBuffer sKeyStatusBuffer = {0};
-
-struct KeyStatusBuffer *gKeyStatusPtr = &sKeyStatusBuffer;
-
 // uninitialized memory in the original build due to changing this call to no longer use __FILE__.
 const u16 gUninitializedMemory[] = {0x4641, 0x464A, 0x4653, 0x465C};
 
@@ -28,16 +24,16 @@ void AgbMain()
     CpuFastFill(0, (void *)EWRAM_START, 0x40000);    
 
     waitCnt = (REG_WAITCNT != 0);
-    sub_8001C5C(waitCnt);
+    SetHealthSafetySkipEnable(waitCnt);
     if (waitCnt == TRUE)
         RegisterRamReset(~2);
     REG_WAITCNT = 0x45B4;
     StoreIRQToIRAM();
-    SetInterrupt_LCDVBlank(NULL);
+    SetOnVBlank(NULL);
     REG_DISPSTAT = 8;
     REG_IME = 1;
-    ResetKeyStatus(gKeyStatusPtr);
-    UpdateKeyStatus(gKeyStatusPtr);
+    InitKeySt(gKeySt);
+    RefreshKeySt(gKeySt);
     StoreRoutinesToIRAM();
     sub_80A2C3C();
     Proc_Init();
@@ -45,7 +41,7 @@ void AgbMain()
     MU_Init();
     SetLCGRNValue(0x42D690E9);
     InitRN(AdvanceGetLCGRNValue());
-    sub_8000D0C();
+    DisableSoftReset();
     sub_80A7374();
     sub_80A40A8();
 
@@ -53,7 +49,7 @@ void AgbMain()
     m4aSoundInit();
     Sound_SetDefaultMaxNumChannels();
 
-    SetInterrupt_LCDVBlank(GeneralVBlankHandler);
+    SetOnVBlank(GeneralVBlankHandler);
     sub_80BC81C();
     SetSomeByte(1);
     Font_InitForUIDefault();
@@ -62,7 +58,7 @@ void AgbMain()
     // perform the game loop.
     while (1)
     {
-        ExecMainUpdate();
-        SoftResetIfKeyComboPressed();
+        RunMainFunc();
+        SoftResetIfKeyCombo();
     };
 }

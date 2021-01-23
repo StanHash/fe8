@@ -33,7 +33,7 @@ sub_803471C: @ 0x0803471C
 	ands r0, r1
 	cmp r0, #0
 	beq _08034790
-	bl GetGameClock
+	bl GetGameTime
 	movs r1, #0x1f
 	ands r1, r0
 	cmp r1, #0x13
@@ -201,7 +201,7 @@ _08034862:
 	lsls r4, r3, #5
 	adds r0, r4, r7
 	lsls r0, r0, #1
-	ldr r1, _080349C4  @ gBG1TilemapBuffer
+	ldr r1, _080349C4  @ gBg1Tm
 	mov sl, r1
 	add r0, sl
 	ldr r1, _080349C8  @ gUnknown_08A173EC
@@ -332,12 +332,12 @@ _0803496C:
 	adds r1, #3
 	adds r1, r1, r7
 	lsls r1, r1, #1
-	ldr r0, _080349D0  @ gBG0TilemapBuffer
+	ldr r0, _080349D0  @ gBg0Tm
 	adds r1, r1, r0
 	ldr r0, [sp, #0xc]
 	bl Text_Draw
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	mov r0, r8
 	add sp, #0x20
 	pop {r3, r4, r5}
@@ -349,10 +349,10 @@ _0803496C:
 	bx r1
 	.align 2, 0
 _080349C0: .4byte gUnknown_0859E13C
-_080349C4: .4byte gBG1TilemapBuffer
+_080349C4: .4byte gBg1Tm
 _080349C8: .4byte gUnknown_08A173EC
 _080349CC: .4byte gUnknown_080D7F92
-_080349D0: .4byte gBG0TilemapBuffer
+_080349D0: .4byte gBg0Tm
 
 	THUMB_FUNC_END UnitInfoWindow_DrawBase
 
@@ -496,7 +496,7 @@ sub_8034ADC: @ 0x08034ADC
 	adds r4, #4
 	adds r4, r4, r1
 	lsls r4, r4, #1
-	ldr r1, _08034B0C  @ gBG0TilemapBuffer
+	ldr r1, _08034B0C  @ gBg0Tm
 	adds r4, r4, r1
 	ldr r1, [r0]
 	ldr r2, [r0, #4]
@@ -513,7 +513,7 @@ sub_8034ADC: @ 0x08034ADC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08034B0C: .4byte gBG0TilemapBuffer
+_08034B0C: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8034ADC
 
@@ -711,19 +711,19 @@ _08034C6A:
 	adds r1, r5, #0
 	adds r1, #0x63
 	lsls r1, r1, #1
-	ldr r0, _08034CAC  @ gBG0TilemapBuffer
+	ldr r0, _08034CAC  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
 	bl Text_Draw
 	b _08034D34
 	.align 2, 0
-_08034CAC: .4byte gBG0TilemapBuffer
+_08034CAC: .4byte gBg0Tm
 _08034CB0:
 	movs r0, #0
 	mov r9, r0
 	cmp r9, sl
 	bge _08034D34
-	ldr r3, _08034D44  @ gBG0TilemapBuffer
+	ldr r3, _08034D44  @ gBg0Tm
 	adds r2, r5, #0
 	adds r2, #0x61
 	adds r1, r5, #0
@@ -788,7 +788,7 @@ _08034D34:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08034D44: .4byte gBG0TilemapBuffer
+_08034D44: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8034C3C
 
@@ -862,7 +862,7 @@ _08034DC4:
 	bl Text_AppendString
 	ldr r0, [sp, #0x18]
 	lsls r1, r0, #1
-	ldr r0, _08034E58  @ gBG0TilemapBuffer
+	ldr r0, _08034E58  @ gBg0Tm
 	mov r8, r0
 	add r1, r8
 	adds r0, r7, #0
@@ -921,7 +921,7 @@ _08034E46:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08034E58: .4byte gBG0TilemapBuffer
+_08034E58: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8034D48
 
@@ -991,7 +991,7 @@ _08034EC8:
 	bl Text_AppendString
 	ldr r0, [sp, #0x18]
 	lsls r1, r0, #1
-	ldr r2, _08034F98  @ gBG0TilemapBuffer
+	ldr r2, _08034F98  @ gBg0Tm
 	mov r8, r2
 	add r1, r8
 	adds r0, r7, #0
@@ -1061,7 +1061,7 @@ _08034F12:
 	blt _08034EAC
 _08034F80:
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	add sp, #0x1c
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -1071,7 +1071,7 @@ _08034F80:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08034F98: .4byte gBG0TilemapBuffer
+_08034F98: .4byte gBg0Tm
 
 	THUMB_FUNC_END DrawHammerneUnitInfoWindow
 
@@ -1111,7 +1111,7 @@ sub_8034FB0: @ 0x08034FB0
 	bl sub_80349FC
 	adds r4, #0x61
 	lsls r4, r4, #1
-	ldr r0, _08034FF8  @ gBG0TilemapBuffer
+	ldr r0, _08034FF8  @ gBg0Tm
 	adds r4, r4, r0
 	adds r0, r5, #0
 	adds r1, r4, #0
@@ -1121,7 +1121,7 @@ sub_8034FB0: @ 0x08034FB0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08034FF8: .4byte gBG0TilemapBuffer
+_08034FF8: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8034FB0
 
@@ -1172,7 +1172,7 @@ sub_803501C: @ 0x0803501C
 	adds r1, r4, #0
 	adds r1, #0x61
 	lsls r1, r1, #1
-	ldr r0, _0803508C  @ gBG0TilemapBuffer
+	ldr r0, _0803508C  @ gBg0Tm
 	mov r9, r0
 	add r1, r9
 	adds r0, r6, #0
@@ -1195,7 +1195,7 @@ sub_803501C: @ 0x0803501C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803508C: .4byte gBG0TilemapBuffer
+_0803508C: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_803501C
 
@@ -1241,7 +1241,7 @@ sub_80350A4: @ 0x080350A4
 	bl sub_8034B48
 	adds r4, #0x61
 	lsls r4, r4, #1
-	ldr r0, _080350F8  @ gBG0TilemapBuffer
+	ldr r0, _080350F8  @ gBg0Tm
 	adds r4, r4, r0
 	adds r0, r5, #0
 	adds r1, r4, #0
@@ -1251,7 +1251,7 @@ sub_80350A4: @ 0x080350A4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080350F8: .4byte gBG0TilemapBuffer
+_080350F8: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_80350A4
 
@@ -1310,7 +1310,7 @@ sub_803511C: @ 0x0803511C
 	adds r1, r4, #0
 	adds r1, #0x61
 	lsls r1, r1, #1
-	ldr r6, _08035198  @ gBG0TilemapBuffer
+	ldr r6, _08035198  @ gBg0Tm
 	adds r1, r1, r6
 	mov r0, r8
 	bl Text_Draw
@@ -1332,7 +1332,7 @@ sub_803511C: @ 0x0803511C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035198: .4byte gBG0TilemapBuffer
+_08035198: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_803511C
 
@@ -1422,7 +1422,7 @@ SetupUnitRescueWindow: @ 0x08035204
 	adds r1, r4, #0
 	adds r1, #0x61
 	lsls r1, r1, #1
-	ldr r2, _080352B4  @ gBG0TilemapBuffer
+	ldr r2, _080352B4  @ gBg0Tm
 	mov r9, r2
 	add r1, r9
 	bl Text_Draw
@@ -1466,7 +1466,7 @@ SetupUnitRescueWindow: @ 0x08035204
 	.align 2, 0
 _080352AC: .4byte gUnknown_0203A9FC
 _080352B0: .4byte gActiveUnit
-_080352B4: .4byte gBG0TilemapBuffer
+_080352B4: .4byte gBg0Tm
 _080352B8: .4byte 0x00000121
 
 	THUMB_FUNC_END SetupUnitRescueWindow
@@ -1509,7 +1509,7 @@ sub_80352BC: @ 0x080352BC
 	adds r1, r4, #0
 	adds r1, #0x61
 	lsls r1, r1, #1
-	ldr r2, _08035378  @ gBG0TilemapBuffer
+	ldr r2, _08035378  @ gBg0Tm
 	mov r8, r2
 	add r1, r8
 	bl Text_Draw
@@ -1554,7 +1554,7 @@ sub_80352BC: @ 0x080352BC
 	.align 2, 0
 _08035370: .4byte gUnknown_0203A9FC
 _08035374: .4byte gActiveUnit
-_08035378: .4byte gBG0TilemapBuffer
+_08035378: .4byte gBg0Tm
 _0803537C: .4byte 0x00000121
 
 	THUMB_FUNC_END sub_80352BC
@@ -1626,7 +1626,7 @@ sub_80353B8: @ 0x080353B8
 	adds r1, r4, #0
 	adds r1, #0x61
 	lsls r1, r1, #1
-	ldr r6, _08035474  @ gBG0TilemapBuffer
+	ldr r6, _08035474  @ gBg0Tm
 	adds r1, r1, r6
 	bl Text_Draw
 	ldr r0, [r5, #4]
@@ -1670,7 +1670,7 @@ sub_80353B8: @ 0x080353B8
 	.align 2, 0
 _0803546C: .4byte gActiveUnit
 _08035470: .4byte gUnknown_0203A9FC
-_08035474: .4byte gBG0TilemapBuffer
+_08035474: .4byte gBg0Tm
 _08035478: .4byte 0x00000121
 
 	THUMB_FUNC_END sub_80353B8

@@ -36,7 +36,7 @@ _08031528: .4byte 0x01000064
 	THUMB_FUNC_START ShrinkConvoyItemList
 ShrinkConvoyItemList: @ 0x0803152C
 	push {r4, r5, r6, lr}
-	ldr r6, _0803156C  @ gUnknown_02020188
+	ldr r6, _0803156C  @ gBuf
 	adds r4, r6, #0
 	bl GetConvoyItemArray
 	adds r1, r0, #0
@@ -66,7 +66,7 @@ _08031544:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803156C: .4byte gUnknown_02020188
+_0803156C: .4byte gBuf
 
 	THUMB_FUNC_END ShrinkConvoyItemList
 

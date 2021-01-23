@@ -249,19 +249,19 @@ MenuCommand_DrawExtraItem: @ 0x0801E144
 	ldrsh r0, [r4, r1]
 	adds r2, r2, r0
 	lsls r2, r2, #1
-	ldr r0, _0801E184  @ gBG0TilemapBuffer
+	ldr r0, _0801E184  @ gBg0Tm
 	adds r2, r2, r0
 	adds r0, r5, #0
 	adds r1, r6, #0
 	bl DrawItemMenuLineNoColor
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	pop {r4, r5, r6}
 	pop {r1}
 	bx r1
 	.align 2, 0
 _0801E180: .4byte gUnknown_0202BCB0
-_0801E184: .4byte gBG0TilemapBuffer
+_0801E184: .4byte gBg0Tm
 
 	THUMB_FUNC_END MenuCommand_DrawExtraItem
 
@@ -412,7 +412,7 @@ SendToConvoyMenu_Idle: @ 0x0801E294
 	movs r0, #0
 	b _0801E2C8
 _0801E2A2:
-	ldr r0, _0801E2D0  @ gKeyStatusPtr
+	ldr r0, _0801E2D0  @ gKeySt
 	ldr r1, [r0]
 	movs r0, #0
 	strh r0, [r1, #8]
@@ -435,7 +435,7 @@ _0801E2C8:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801E2D0: .4byte gKeyStatusPtr
+_0801E2D0: .4byte gKeySt
 _0801E2D4: .4byte gActionData
 _0801E2D8: .4byte gActiveUnit
 _0801E2DC: .4byte gUnknown_0202BCB0

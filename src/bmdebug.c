@@ -12,7 +12,7 @@ int Return2or3BySecondParity(void)
     unsigned short minutes;
     unsigned short seconds;
 
-    ComputeDisplayTime(GetGameClock(),&hours,&minutes,&seconds);
+    FormatTime(GetGameTime(),&hours,&minutes,&seconds);
     if ((seconds & 1) == 0) {
         retVal = 2;
     }
@@ -30,7 +30,7 @@ int Return3or2BySecondParity(void)
     unsigned short minutes;
     unsigned short seconds;
 
-    ComputeDisplayTime(GetGameClock(),&hours,&minutes,&seconds);
+    FormatTime(GetGameTime(),&hours,&minutes,&seconds);
     if ((seconds & 1) != 0) {
         retVal = 2;
     }
@@ -60,14 +60,14 @@ void DummyFunction(void)
 
 void Loop6C_WaitForSelectPress(struct Proc *proc)
 {
-    if (gKeyStatusPtr->newKeys & SELECT_BUTTON) {
+    if (gKeySt->pressed & SELECT_BUTTON) {
         Proc_Break(proc);
     }
 }
 
 void SetNewKeyStatusWith16(void)
 {
-    NewKeyStatusSetter(16);
+    StartKeySimulation(16);
 }
 
 
@@ -92,8 +92,8 @@ void DebugPrintWithProc(struct DebugPrintProc *proc)
     Text_Init(&textHandler, width);
     Text_AppendString(&textHandler, text);
     DrawUiFrame2(x, y, width + 2, 4, 0);
-    Text_Draw(&textHandler, &gBG0TilemapBuffer[32 * (y + 1) + (x + 1)]);
-    BG_EnableSyncByMask(3);
+    Text_Draw(&textHandler, &gBg0Tm[32 * (y + 1) + (x + 1)]);
+    EnableBgSync(BG0_SYNC_BIT | BG1_SYNC_BIT);
 }
 
 struct ProcCmd gProc_DebugPrintWithProc[] = {

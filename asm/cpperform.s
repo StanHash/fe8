@@ -12,7 +12,7 @@ sub_8039E88: @ 0x08039E88
 	ldr r1, [r4, #0x30]
 	ldr r2, [r4, #0x58]
 	bl DisplayCursor
-	ldr r0, _08039EC8  @ gKeyStatusPtr
+	ldr r0, _08039EC8  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #4]
 	movs r0, #9
@@ -39,7 +39,7 @@ _08039EBC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08039EC8: .4byte gKeyStatusPtr
+_08039EC8: .4byte gKeySt
 
 	THUMB_FUNC_END sub_8039E88
 
@@ -1067,21 +1067,21 @@ sub_803A69C: @ 0x0803A69C
 	movs r0, #0
 	b _0803A6C2
 _0803A6AA:
-	ldr r0, _0803A6C8  @ gBG0TilemapBuffer
+	ldr r0, _0803A6C8  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _0803A6CC  @ gBG1TilemapBuffer
+	bl TmFill
+	ldr r0, _0803A6CC  @ gBg1Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	movs r0, #1
 _0803A6C2:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0803A6C8: .4byte gBG0TilemapBuffer
-_0803A6CC: .4byte gBG1TilemapBuffer
+_0803A6C8: .4byte gBg0Tm
+_0803A6CC: .4byte gBg1Tm
 
 	THUMB_FUNC_END sub_803A69C
 

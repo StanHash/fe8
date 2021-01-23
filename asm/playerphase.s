@@ -22,7 +22,7 @@ _0801C8A8: .4byte gActionData
 	THUMB_FUNC_START HandlePlayerCursorMovement
 HandlePlayerCursorMovement: @ 0x0801C8AC
 	push {lr}
-	ldr r2, _0801C8DC  @ gKeyStatusPtr
+	ldr r2, _0801C8DC  @ gKeySt
 	ldr r3, [r2]
 	ldrh r1, [r3, #4]
 	movs r0, #2
@@ -43,7 +43,7 @@ HandlePlayerCursorMovement: @ 0x0801C8AC
 	bl sub_801588C
 	b _0801C8FC
 	.align 2, 0
-_0801C8DC: .4byte gKeyStatusPtr
+_0801C8DC: .4byte gKeySt
 _0801C8E0: .4byte gUnknown_0202BCB0
 _0801C8E4: .4byte 0x00070007
 _0801C8E8:
@@ -63,7 +63,7 @@ _0801C8FC:
 	ands r0, r1
 	cmp r0, #0
 	beq _0801C918
-	ldr r0, _0801C920  @ gKeyStatusPtr
+	ldr r0, _0801C920  @ gKeySt
 	ldr r2, [r0]
 	ldrh r1, [r2, #8]
 	ldr r0, _0801C924  @ 0x0000FCF4
@@ -74,7 +74,7 @@ _0801C918:
 	bx r0
 	.align 2, 0
 _0801C91C: .4byte gUnknown_0202BCB0
-_0801C920: .4byte gKeyStatusPtr
+_0801C920: .4byte gKeySt
 _0801C924: .4byte 0x0000FCF4
 
 	THUMB_FUNC_END HandlePlayerCursorMovement
@@ -107,7 +107,7 @@ PlayerPhase_MainLoop: @ 0x0801C940
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	bl HandlePlayerCursorMovement
-	ldr r4, _0801C97C  @ gKeyStatusPtr
+	ldr r4, _0801C97C  @ gKeySt
 	ldr r0, [r4]
 	ldrh r1, [r0, #8]
 	movs r0, #0x80
@@ -133,7 +133,7 @@ _0801C974:
 	bl m4aSongNumStart
 	b _0801CB38
 	.align 2, 0
-_0801C97C: .4byte gKeyStatusPtr
+_0801C97C: .4byte gKeySt
 _0801C980: .4byte gUnknown_0202BCB0
 _0801C984: .4byte gRAMChapterData
 _0801C988:
@@ -194,7 +194,7 @@ _0801C994:
 _0801CA04: .4byte gUnknown_0202BCB0
 _0801CA08: .4byte gBmMapUnit
 _0801CA0C:
-	ldr r0, _0801CA4C  @ gKeyStatusPtr
+	ldr r0, _0801CA4C  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #1
@@ -224,7 +224,7 @@ _0801CA0C:
 	beq _0801CABC
 	b _0801CAD4
 	.align 2, 0
-_0801CA4C: .4byte gKeyStatusPtr
+_0801CA4C: .4byte gKeySt
 _0801CA50: .4byte gUnknown_0202BCB0
 _0801CA54: .4byte gBmMapUnit
 _0801CA58:
@@ -281,7 +281,7 @@ _0801CABC:
 	bl Proc_Goto
 	b _0801CB38
 _0801CAD4:
-	ldr r0, _0801CB2C  @ gKeyStatusPtr
+	ldr r0, _0801CB2C  @ gKeySt
 	ldr r2, [r0]
 	ldrh r1, [r2, #8]
 	movs r0, #8
@@ -321,7 +321,7 @@ _0801CB20:
 	bl Proc_Goto
 	b _0801CB64
 	.align 2, 0
-_0801CB2C: .4byte gKeyStatusPtr
+_0801CB2C: .4byte gKeySt
 _0801CB30: .4byte gUnknown_0202BCB0
 _0801CB34: .4byte gBmMapUnit
 _0801CB38:
@@ -579,7 +579,7 @@ sub_801CD1C: @ 0x0801CD1C
 	adds r5, r0, #0
 	movs r4, #0xff
 	bl HandlePlayerCursorMovement
-	ldr r0, _0801CD44  @ gKeyStatusPtr
+	ldr r0, _0801CD44  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #1
@@ -593,7 +593,7 @@ sub_801CD1C: @ 0x0801CD1C
 	bl GetCombinedEnemyWeaponUsabilityBits
 	b _0801CD76
 	.align 2, 0
-_0801CD44: .4byte gKeyStatusPtr
+_0801CD44: .4byte gKeySt
 _0801CD48: .4byte gActiveUnit
 _0801CD4C:
 	bl sub_80844B0
@@ -634,7 +634,7 @@ _0801CD80:
 	beq _0801CDE2
 	movs r4, #1
 _0801CD98:
-	ldr r0, _0801CDC0  @ gKeyStatusPtr
+	ldr r0, _0801CDC0  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #2
@@ -653,7 +653,7 @@ _0801CD98:
 	b _0801CDE2
 	.align 2, 0
 _0801CDBC: .4byte gUnknown_0202BCB0
-_0801CDC0: .4byte gKeyStatusPtr
+_0801CDC0: .4byte gKeySt
 _0801CDC4: .4byte gActiveUnit
 _0801CDC8:
 	movs r0, #0x80
@@ -1783,7 +1783,7 @@ _0801D6F4:
 sub_801D6FC: @ 0x0801D6FC
 	push {lr}
 	bl RefreshBMapGraphics
-	bl SetDefaultColorEffects
+	bl SetBlendNone
 	pop {r0}
 	bx r0
 
@@ -1922,7 +1922,7 @@ _0801D814: .4byte sub_801D818
 	THUMB_FUNC_START sub_801D818
 sub_801D818: @ 0x0801D818
 	push {lr}
-	ldr r1, _0801D830  @ gKeyStatusPtr
+	ldr r1, _0801D830  @ gKeySt
 	ldr r2, [r1]
 	movs r3, #0
 	movs r1, #1
@@ -1932,7 +1932,7 @@ sub_801D818: @ 0x0801D818
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801D830: .4byte gKeyStatusPtr
+_0801D830: .4byte gKeySt
 
 	THUMB_FUNC_END sub_801D818
 
@@ -1998,7 +1998,7 @@ Load6CRangeDisplaySquareGfx: @ 0x0801D89C
 	ldr r1, _0801D8C8  @ 0x06005080
 	adds r0, r5, #0
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	ldr r0, _0801D8CC  @ gUnknown_0202BCB0
 	ldrb r1, [r0, #4]
 	movs r0, #1
@@ -2018,7 +2018,7 @@ _0801D8D0:
 	ldr r1, _0801D8E8  @ 0x06005000
 	adds r0, r5, #0
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	adds r0, r4, #0
 	bl Proc_End
 _0801D8E0:
@@ -2044,7 +2044,7 @@ Loop6C_MLVCHC: @ 0x0801D8EC
 	ldr r0, [r0]
 	ldr r1, _0801D928  @ 0x06005000
 	movs r2, #0x80
-	bl RegisterTileGraphics
+	bl RegisterDataMove
 	ldrh r0, [r4]
 	adds r0, #1
 	strh r0, [r4]
@@ -2068,7 +2068,7 @@ _0801D928: .4byte 0x06005000
 Setup6CRangeDisplayGfx: @ 0x0801D92C
 	push {r4, r5, r6, r7, lr}
 	sub sp, #4
-	ldr r2, _0801D9D0  @ gLCDControlBuffer
+	ldr r2, _0801D9D0  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
 	negs r0, r0
@@ -2098,7 +2098,7 @@ _0801D95C:
 	ldrsh r2, [r7, r0]
 	adds r2, r2, r5
 	str r5, [sp]
-	ldr r0, _0801D9D8  @ gBG2TilemapBuffer
+	ldr r0, _0801D9D8  @ gBg2Tm
 	adds r3, r4, #0
 	bl DisplayMovementViewTile
 	subs r4, #1
@@ -2108,42 +2108,42 @@ _0801D95C:
 	cmp r5, #0
 	bge _0801D958
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	movs r0, #2
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #1
 	movs r1, #0xa
 	movs r2, #6
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	movs r0, #0
 	str r0, [sp]
 	movs r1, #0
 	movs r2, #1
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	movs r0, #0
-	bl sub_8001F48
+	bl SetBlendBackdropA
 	movs r0, #1
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	movs r0, #1
-	bl sub_8001F64
-	bl SetupBackgroundForWeatherMaybe
+	bl SetBlendBackdropB
+	bl InitBmBgLayers
 	add sp, #4
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801D9D0: .4byte gLCDControlBuffer
+_0801D9D0: .4byte gDispIo
 _0801D9D4: .4byte gUnknown_0202BCB0
-_0801D9D8: .4byte gBG2TilemapBuffer
+_0801D9D8: .4byte gBg2Tm
 
 	THUMB_FUNC_END Setup6CRangeDisplayGfx
 
@@ -2151,7 +2151,7 @@ _0801D9D8: .4byte gBG2TilemapBuffer
 Loop6C_MoveLimitView: @ 0x0801D9DC
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	bl GetGameClock
+	bl GetGameTime
 	lsrs r5, r0, #1
 	movs r0, #0x1f
 	ands r5, r0
@@ -2166,7 +2166,7 @@ Loop6C_MoveLimitView: @ 0x0801D9DC
 	adds r0, r0, r1
 	movs r1, #0x82
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _0801DA04:
 	ldrh r1, [r4]
 	movs r0, #2
@@ -2178,7 +2178,7 @@ _0801DA04:
 	adds r0, r0, r1
 	movs r1, #0xa2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _0801DA1C:
 	ldrh r1, [r4]
 	movs r0, #4
@@ -2190,7 +2190,7 @@ _0801DA1C:
 	adds r0, r0, r1
 	movs r1, #0xa2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _0801DA34:
 	ldrh r1, [r4]
 	movs r0, #0x10
@@ -2202,7 +2202,7 @@ _0801DA34:
 	adds r0, r0, r1
 	movs r1, #0xa2
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 _0801DA4C:
 	pop {r4, r5}
 	pop {r0}
@@ -2223,22 +2223,22 @@ DestructMoveLimitView: @ 0x0801DA60
 	ands r0, r1
 	cmp r0, #0
 	beq _0801DA7C
-	ldr r0, _0801DA90  @ gBG2TilemapBuffer
+	ldr r0, _0801DA90  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 _0801DA7C:
 	ldr r2, _0801DA94  @ gUnknown_0202BCB0
 	ldrb r1, [r2, #4]
 	movs r0, #0xfc
 	ands r0, r1
 	strb r0, [r2, #4]
-	bl SetupBackgroundForWeatherMaybe
+	bl InitBmBgLayers
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801DA90: .4byte gBG2TilemapBuffer
+_0801DA90: .4byte gBg2Tm
 _0801DA94: .4byte gUnknown_0202BCB0
 
 	THUMB_FUNC_END DestructMoveLimitView

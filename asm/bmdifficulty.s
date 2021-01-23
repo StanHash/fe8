@@ -483,7 +483,7 @@ sub_8037E7C: @ 0x08037E7C
 	ldr r0, [r0, #4]
 	lsls r0, r0, #0xd
 	lsrs r4, r0, #0xe
-	bl GetGameClock
+	bl GetGameTime
 	ldr r1, _08037EA8  @ gRAMChapterData
 	ldr r1, [r1, #4]
 	subs r0, r0, r1
@@ -953,7 +953,7 @@ _08038204: .4byte gUnknown_0859E6EC
 	THUMB_FUNC_START PushGlobalTimer
 PushGlobalTimer: @ 0x08038208
 	push {lr}
-	bl GetGameClock
+	bl GetGameTime
 	ldr r1, _08038218  @ gUnknown_020038C4
 	str r0, [r1]
 	pop {r0}
@@ -968,7 +968,7 @@ PopGlobalTimer: @ 0x0803821C
 	push {lr}
 	ldr r0, _0803822C  @ gUnknown_020038C4
 	ldr r0, [r0]
-	bl SetGameClock
+	bl SetGameTime
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -998,24 +998,24 @@ sub_8038240: @ 0x08038240
 	adds r7, r0, #0
 	ldr r0, _080383F4  @ gUnknown_08A20050
 	bl SetupBackgrounds
-	ldr r0, _080383F8  @ gBG0TilemapBuffer
+	ldr r0, _080383F8  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _080383FC  @ gBG1TilemapBuffer
+	bl TmFill
+	ldr r0, _080383FC  @ gBg1Tm
 	mov r8, r0
 	movs r1, #0
-	bl BG_Fill
-	ldr r2, _08038400  @ gBG2TilemapBuffer
+	bl TmFill
+	ldr r2, _08038400  @ gBg2Tm
 	mov sl, r2
 	mov r0, sl
 	movs r1, #0
-	bl BG_Fill
-	ldr r4, _08038404  @ gBG3TilemapBuffer
+	bl TmFill
+	ldr r4, _08038404  @ gBg3Tm
 	mov r9, r4
 	mov r0, r9
 	movs r1, #0
-	bl BG_Fill
-	ldr r4, _08038408  @ gLCDControlBuffer
+	bl TmFill
+	ldr r4, _08038408  @ gDispIo
 	ldrb r2, [r4, #0xc]
 	movs r1, #4
 	negs r1, r1
@@ -1051,44 +1051,44 @@ sub_8038240: @ 0x08038240
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #2
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r0, #3
 	movs r1, #0
 	movs r2, #0
-	bl BG_SetPosition
+	bl SetBgOffset
 	movs r4, #0
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #1
 	movs r3, #0
-	bl sub_8001ED0
+	bl SetBlendTargetA
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
 	movs r3, #1
-	bl sub_8001F0C
+	bl SetBlendTargetB
 	movs r0, #0
-	bl sub_8001F48
+	bl SetBlendBackdropA
 	movs r0, #0
-	bl sub_8001F64
+	bl SetBlendBackdropB
 	movs r0, #1
 	movs r1, #6
 	movs r2, #0x10
 	movs r3, #0
-	bl SetSpecialColorEffectsParameters
+	bl SetBlendConfig
 	ldr r4, _0803840C  @ gUnknown_08A21658
 	movs r0, #3
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	movs r0, #0xc0
 	lsls r0, r0, #0x13
@@ -1099,7 +1099,7 @@ sub_8038240: @ 0x08038240
 	movs r2, #0x80
 	lsls r2, r2, #1
 	adds r1, r2, #0
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r1, _08038414  @ gUnknown_08A25ECC
 	movs r2, #0x80
 	lsls r2, r2, #8
@@ -1107,27 +1107,27 @@ sub_8038240: @ 0x08038240
 	bl CallARM_FillTileRect
 	ldr r4, _08038418  @ gUnknown_08A26380
 	movs r0, #2
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	ldr r2, _0803841C  @ 0x06004C00
 	adds r1, r1, r2
 	adds r0, r4, #0
 	bl CopyDataWithPossibleUncomp
 	ldr r0, _08038420  @ gUnknown_08A268F8
-	ldr r4, _08038424  @ gUnknown_02020188
+	ldr r4, _08038424  @ gBuf
 	adds r1, r4, #0
 	bl CopyDataWithPossibleUncomp
 	ldr r0, _08038428  @ gUnknown_08A268D8
 	movs r1, #0xe0
 	movs r2, #0x20
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	ldr r2, _0803842C  @ 0x00007260
 	mov r0, sl
 	adds r1, r4, #0
 	bl CallARM_FillTileRect
 	ldr r4, _08038430  @ gUnknown_089A234C
 	movs r0, #1
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	ldr r0, _08038434  @ 0x06004000
 	adds r1, r1, r0
@@ -1139,7 +1139,7 @@ sub_8038240: @ 0x08038240
 	ldr r0, _0803843C  @ gUnknown_089A28E0
 	movs r1, #0x40
 	movs r2, #0x40
-	bl CopyToPaletteBuffer
+	bl ApplyPaletteExt
 	movs r2, #0x88
 	lsls r2, r2, #6
 	adds r3, r2, #0
@@ -1158,10 +1158,10 @@ _080383B2:
 	adds r0, r7, #0
 	bl sub_8038BA4
 	movs r0, #0xf
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r0, _08038440  @ gUnknown_0200310C
 	bl sub_80AB760
-	ldr r0, _08038444  @ gPaletteBuffer
+	ldr r0, _08038444  @ gPal
 	movs r2, #0xa8
 	lsls r2, r2, #2
 	adds r1, r0, r2
@@ -1177,18 +1177,18 @@ _080383B2:
 	bx r0
 	.align 2, 0
 _080383F4: .4byte gUnknown_08A20050
-_080383F8: .4byte gBG0TilemapBuffer
-_080383FC: .4byte gBG1TilemapBuffer
-_08038400: .4byte gBG2TilemapBuffer
-_08038404: .4byte gBG3TilemapBuffer
-_08038408: .4byte gLCDControlBuffer
+_080383F8: .4byte gBg0Tm
+_080383FC: .4byte gBg1Tm
+_08038400: .4byte gBg2Tm
+_08038404: .4byte gBg3Tm
+_08038408: .4byte gDispIo
 _0803840C: .4byte gUnknown_08A21658
 _08038410: .4byte gUnknown_08A25DCC
 _08038414: .4byte gUnknown_08A25ECC
 _08038418: .4byte gUnknown_08A26380
 _0803841C: .4byte 0x06004C00
 _08038420: .4byte gUnknown_08A268F8
-_08038424: .4byte gUnknown_02020188
+_08038424: .4byte gBuf
 _08038428: .4byte gUnknown_08A268D8
 _0803842C: .4byte 0x00007260
 _08038430: .4byte gUnknown_089A234C
@@ -1196,7 +1196,7 @@ _08038434: .4byte 0x06004000
 _08038438: .4byte gUnknown_089A27B4
 _0803843C: .4byte gUnknown_089A28E0
 _08038440: .4byte gUnknown_0200310C
-_08038444: .4byte gPaletteBuffer
+_08038444: .4byte gPal
 
 	THUMB_FUNC_END sub_8038240
 
@@ -1239,7 +1239,7 @@ _08038468:
 	ldrsb r0, [r5, r0]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _080384B8  @ gBG0TilemapBuffer
+	ldr r0, _080384B8  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl Text_Draw
@@ -1253,7 +1253,7 @@ _080384A8:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080384B8: .4byte gBG0TilemapBuffer
+_080384B8: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8038448
 
@@ -1340,7 +1340,7 @@ _0803853E:
 	subs r1, r7, r4
 	add r1, r9
 	lsls r1, r1, #1
-	ldr r0, _08038584  @ gBG0TilemapBuffer
+	ldr r0, _08038584  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl Text_Draw
@@ -1360,7 +1360,7 @@ _08038570:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08038584: .4byte gBG0TilemapBuffer
+_08038584: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_80384BC
 
@@ -1457,7 +1457,7 @@ _08038618:
 	subs r0, r0, r4
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _08038664  @ gBG0TilemapBuffer
+	ldr r0, _08038664  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r5, #0
 	bl Text_Draw
@@ -1478,7 +1478,7 @@ _0803864E:
 	bx r1
 	.align 2, 0
 _08038660: .4byte 0x0000FFFF
-_08038664: .4byte gBG0TilemapBuffer
+_08038664: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8038588
 
@@ -1541,7 +1541,7 @@ sub_8038698: @ 0x08038698
 	add r1, sp, #8
 	adds r2, r4, #0
 	mov r3, r8
-	bl ComputeDisplayTime
+	bl FormatTime
 	ldr r2, [sp, #0x10]
 	lsls r0, r2, #0x18
 	movs r1, #0xf9
@@ -1636,7 +1636,7 @@ _0803871E:
 	asrs r0, r0, #0x18
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _080387CC  @ gBG0TilemapBuffer
+	ldr r0, _080387CC  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl Text_Draw
@@ -1660,7 +1660,7 @@ _0803871E:
 	b _080387EE
 	.align 2, 0
 _080387C8: .4byte 0x0000020D
-_080387CC: .4byte gBG0TilemapBuffer
+_080387CC: .4byte gBg0Tm
 _080387D0:
 	mov r1, sp
 	ldrh r0, [r1, #0xa]
@@ -1728,7 +1728,7 @@ _080387EE:
 	asrs r0, r0, #0x18
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _08038894  @ gBG0TilemapBuffer
+	ldr r0, _08038894  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl Text_Draw
@@ -1751,7 +1751,7 @@ _080387EE:
 	b _080388B6
 	.align 2, 0
 _08038890: .4byte 0x0000020D
-_08038894: .4byte gBG0TilemapBuffer
+_08038894: .4byte gBg0Tm
 _08038898:
 	mov r1, sp
 	ldrh r0, [r1, #0xc]
@@ -1836,7 +1836,7 @@ sub_8038900: @ 0x08038900
 	add r1, sp, #8
 	adds r2, r4, #0
 	adds r3, r5, #0
-	bl ComputeDisplayTime
+	bl FormatTime
 	mov r1, sl
 	lsls r0, r1, #0x18
 	movs r2, #0xf9
@@ -1945,7 +1945,7 @@ _080389FC:
 	asrs r0, r0, #0x18
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _08038A54  @ gBG0TilemapBuffer
+	ldr r0, _08038A54  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl Text_Draw
@@ -1970,7 +1970,7 @@ _08038A2E:
 	movs r1, #0
 	b _08038A78
 	.align 2, 0
-_08038A54: .4byte gBG0TilemapBuffer
+_08038A54: .4byte gBg0Tm
 _08038A58:
 	mov r1, sp
 	ldrh r0, [r1, #0xa]
@@ -2052,7 +2052,7 @@ _08038AE4:
 	asrs r0, r0, #0x18
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _08038B38  @ gBG0TilemapBuffer
+	ldr r0, _08038B38  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
 	bl Text_Draw
@@ -2077,7 +2077,7 @@ _08038B12:
 	movs r1, #0
 	b _08038B5C
 	.align 2, 0
-_08038B38: .4byte gBG0TilemapBuffer
+_08038B38: .4byte gBg0Tm
 _08038B3C:
 	mov r1, sp
 	ldrh r0, [r1, #0xc]
@@ -2158,19 +2158,19 @@ sub_8038BA4: @ 0x08038BA4
 	mov r9, r1
 	adds r2, r5, #0
 	bl CpuSet
-	bl GetGameClock
+	bl GetGameTime
 	adds r4, r0, #0
 	ldr r0, _08038E20  @ gUnknown_020038C4
 	ldr r0, [r0]
-	bl SetGameClock
+	bl SetGameTime
 	add r0, sp, #8
 	bl sub_8037EB0
 	adds r0, r4, #0
-	bl SetGameClock
+	bl SetGameTime
 	bl sub_8003D20
 	ldr r4, _08038E24  @ gUnknown_020038AC
 	movs r0, #0
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	adds r1, r0, #0
 	ldr r2, _08038E28  @ 0x06000020
 	adds r1, r1, r2
@@ -2445,7 +2445,7 @@ sub_8038E38: @ 0x08038E38
 	add r0, sp, #8
 	bl sub_8037E7C
 	adds r5, r0, #0
-	bl GetGameClock
+	bl GetGameTime
 	ldr r1, _08038E9C  @ gRAMChapterData
 	ldr r1, [r1, #4]
 	subs r0, r0, r1
@@ -2472,7 +2472,7 @@ _08038E66:
 	adds r1, r5, #0
 	bl sub_8038900
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	add sp, #0x14
 	pop {r4, r5}
 	pop {r0}
@@ -2491,7 +2491,7 @@ sub_8038EA8: @ 0x08038EA8
 	push {r4, lr}
 	adds r4, r0, #0
 	bl sub_8038E38
-	ldr r0, _08038ECC  @ gKeyStatusPtr
+	ldr r0, _08038ECC  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #3
@@ -2505,7 +2505,7 @@ _08038EC4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08038ECC: .4byte gKeyStatusPtr
+_08038ECC: .4byte gKeySt
 
 	THUMB_FUNC_END sub_8038EA8
 
@@ -2513,7 +2513,7 @@ _08038ECC: .4byte gKeyStatusPtr
 sub_8038ED0: @ 0x08038ED0
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _08038EEC  @ gKeyStatusPtr
+	ldr r0, _08038EEC  @ gKeySt
 	ldr r0, [r0]
 	ldrh r1, [r0, #8]
 	movs r0, #3
@@ -2526,7 +2526,7 @@ _08038EE8:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08038EEC: .4byte gKeyStatusPtr
+_08038EEC: .4byte gKeySt
 
 	THUMB_FUNC_END sub_8038ED0
 
@@ -2536,21 +2536,21 @@ sub_8038EF0: @ 0x08038EF0
 	sub sp, #4
 	bl sub_80AB77C
 	bl EndGreenTextColorManager
-	ldr r0, _08038F5C  @ gBG0TilemapBuffer
+	ldr r0, _08038F5C  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _08038F60  @ gBG1TilemapBuffer
+	bl TmFill
+	ldr r0, _08038F60  @ gBg1Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _08038F64  @ gBG2TilemapBuffer
+	bl TmFill
+	ldr r0, _08038F64  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
-	ldr r0, _08038F68  @ gBG3TilemapBuffer
+	bl TmFill
+	ldr r0, _08038F68  @ gBg3Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #0xf
-	bl BG_EnableSyncByMask
-	ldr r2, _08038F6C  @ gLCDControlBuffer
+	bl EnableBgSync
+	ldr r2, _08038F6C  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #2
 	negs r0, r0
@@ -2568,21 +2568,21 @@ sub_8038EF0: @ 0x08038EF0
 	bl Font_InitForUIDefault
 	movs r0, #0
 	str r0, [sp]
-	ldr r1, _08038F70  @ gPaletteBuffer
+	ldr r1, _08038F70  @ gPal
 	ldr r2, _08038F74  @ 0x01000100
 	mov r0, sp
 	bl CpuFastSet
-	bl EnablePaletteSync
+	bl EnablePalSync
 	add sp, #4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08038F5C: .4byte gBG0TilemapBuffer
-_08038F60: .4byte gBG1TilemapBuffer
-_08038F64: .4byte gBG2TilemapBuffer
-_08038F68: .4byte gBG3TilemapBuffer
-_08038F6C: .4byte gLCDControlBuffer
-_08038F70: .4byte gPaletteBuffer
+_08038F5C: .4byte gBg0Tm
+_08038F60: .4byte gBg1Tm
+_08038F64: .4byte gBg2Tm
+_08038F68: .4byte gBg3Tm
+_08038F6C: .4byte gDispIo
+_08038F70: .4byte gPal
 _08038F74: .4byte 0x01000100
 
 	THUMB_FUNC_END sub_8038EF0
@@ -2597,7 +2597,7 @@ sub_8038F78: @ 0x08038F78
 	sub sp, #0xc
 	adds r5, r0, #0
 	movs r0, #0
-	bl GetBackgroundTileDataOffset
+	bl GetBgChrOffset
 	str r0, [sp, #8]
 	ldr r0, _08038FC4  @ 0x01000008
 	mov sl, r0
@@ -2863,7 +2863,7 @@ _0803919C:
 	bl m4aSongNumStart
 _080391AE:
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	adds r0, r5, #0
 	bl Proc_Break
 _080391BA:
@@ -2915,15 +2915,15 @@ sub_8039200: @ 0x08039200
 	ldr r2, _0803923C  @ 0x04000003
 	mov r1, sp
 	bl CpuSet
-	bl GetGameClock
+	bl GetGameTime
 	adds r4, r0, #0
 	ldr r0, _08039240  @ gUnknown_020038C4
 	ldr r0, [r0]
-	bl SetGameClock
+	bl SetGameTime
 	mov r0, sp
 	bl sub_8037EB0
 	adds r0, r4, #0
-	bl SetGameClock
+	bl SetGameTime
 	cmp r5, #4
 	bhi _08039292
 	lsls r0, r5, #2
@@ -3098,15 +3098,15 @@ sub_8039360: @ 0x08039360
 	adds r0, r4, #0
 	mov r1, sp
 	bl CpuSet
-	bl GetGameClock
+	bl GetGameTime
 	adds r5, r0, #0
 	ldr r0, _080393B4  @ gUnknown_020038C4
 	ldr r0, [r0]
-	bl SetGameClock
+	bl SetGameTime
 	mov r0, sp
 	bl sub_8037EB0
 	adds r0, r5, #0
-	bl SetGameClock
+	bl SetGameTime
 	adds r0, r4, #0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -3315,7 +3315,7 @@ _0803950E:
 	movs r3, #0x1a
 	bl sub_8038588
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r0, _08039550  @ gRAMChapterData
 	adds r0, #0x41
 	ldrb r0, [r0]
@@ -3433,7 +3433,7 @@ _080395A8:
 	adds r0, r5, #0
 	bl sub_8038588
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r0, [r7, #0x3c]
 	cmp r0, #0
 	ble _08039616

@@ -180,7 +180,7 @@ _080226A8:
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1c
 	lsrs r0, r0, #0x1e
-	bl BG_GetMapBuffer
+	bl GetBgTilemap
 	adds r1, r0, #0
 	movs r2, #0x2c
 	ldrsh r0, [r4, r2]
@@ -269,11 +269,11 @@ _08022744: .4byte gActionData
 GenericSelection_BackToUM: @ 0x08022748
 	push {lr}
 	bl EndTargetSelection
-	ldr r0, _08022794  @ gBG2TilemapBuffer
+	ldr r0, _08022794  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	bl sub_8003D20
 	bl HideMoveRangeGraphics
 	ldr r0, _08022798  @ gUnitActionMenuDef
@@ -298,7 +298,7 @@ GenericSelection_BackToUM: @ 0x08022748
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022794: .4byte gBG2TilemapBuffer
+_08022794: .4byte gBg2Tm
 _08022798: .4byte gUnitActionMenuDef
 _0802279C: .4byte gUnknown_0202BCB0
 _080227A0: .4byte gActiveUnit
@@ -381,11 +381,11 @@ _08022828: .4byte gUnknown_0202BCB0
 GenericSelection_BackToUM_CamWait: @ 0x0802282C
 	push {lr}
 	bl EndTargetSelection
-	ldr r0, _08022858  @ gBG2TilemapBuffer
+	ldr r0, _08022858  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	bl HideMoveRangeGraphics
 	bl sub_8003D20
 	ldr r0, _0802285C  @ gProcScr_0859B600
@@ -395,7 +395,7 @@ GenericSelection_BackToUM_CamWait: @ 0x0802282C
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022858: .4byte gBG2TilemapBuffer
+_08022858: .4byte gBg2Tm
 _0802285C: .4byte gProcScr_0859B600
 
 	THUMB_FUNC_END GenericSelection_BackToUM_CamWait
@@ -403,11 +403,11 @@ _0802285C: .4byte gProcScr_0859B600
 	THUMB_FUNC_START ItemMenu_ButtonBPressed
 ItemMenu_ButtonBPressed: @ 0x08022860
 	push {lr}
-	ldr r0, _08022894  @ gBG2TilemapBuffer
+	ldr r0, _08022894  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	bl sub_8003D20
 	ldr r0, _08022898  @ gUnitActionMenuDef
 	ldr r2, _0802289C  @ gUnknown_0202BCB0
@@ -424,7 +424,7 @@ ItemMenu_ButtonBPressed: @ 0x08022860
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022894: .4byte gBG2TilemapBuffer
+_08022894: .4byte gBg2Tm
 _08022898: .4byte gUnitActionMenuDef
 _0802289C: .4byte gUnknown_0202BCB0
 
@@ -1067,7 +1067,7 @@ UnknownMenu_Draw: @ 0x08022D34
 	ldrsh r1, [r5, r6]
 	adds r3, r3, r1
 	lsls r3, r3, #1
-	ldr r1, _08022D80  @ gBG0TilemapBuffer
+	ldr r1, _08022D80  @ gBg0Tm
 	adds r3, r3, r1
 	adds r1, r4, #0
 	bl DrawItemMenuLine
@@ -1077,7 +1077,7 @@ UnknownMenu_Draw: @ 0x08022D34
 	bx r1
 	.align 2, 0
 _08022D7C: .4byte gActiveUnit
-_08022D80: .4byte gBG0TilemapBuffer
+_08022D80: .4byte gBg0Tm
 
 	THUMB_FUNC_END UnknownMenu_Draw
 
@@ -1297,18 +1297,18 @@ _08022F0C: .4byte gActiveUnit
 	THUMB_FUNC_START sub_8022F10
 sub_8022F10: @ 0x08022F10
 	push {lr}
-	ldr r0, _08022F30  @ gBG2TilemapBuffer
+	ldr r0, _08022F30  @ gBg2Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 	movs r0, #4
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	bl HideMoveRangeGraphics
 	bl sub_80373B4
 	movs r0, #0
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022F30: .4byte gBG2TilemapBuffer
+_08022F30: .4byte gBg2Tm
 
 	THUMB_FUNC_END sub_8022F10
 
@@ -1930,18 +1930,18 @@ _080233A6:
 	ldrsh r1, [r4, r6]
 	adds r3, r3, r1
 	lsls r3, r3, #1
-	ldr r1, _080233D4  @ gBG0TilemapBuffer
+	ldr r1, _080233D4  @ gBg0Tm
 	adds r3, r3, r1
 	adds r1, r5, #0
 	bl DrawItemMenuLine
 	movs r0, #1
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 _080233CC:
 	pop {r4, r5, r6, r7}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080233D4: .4byte gBG0TilemapBuffer
+_080233D4: .4byte gBg0Tm
 
 	THUMB_FUNC_END ItemSelectMenu_TextDraw
 
@@ -2070,12 +2070,12 @@ sub_80234AC: @ 0x080234AC
 	lsls r2, r2, #2
 	movs r3, #0
 	bl Font_InitForUI
-	ldr r0, _080234E0  @ gUnknown_02022CFE
+	ldr r0, _080234E0  @ gBg0Tm+0x56
 	ldr r1, _080234E4  @ gBmFrameTmap0
 	movs r2, #9
 	movs r3, #0x13
 	bl TileMap_CopyRect
-	ldr r0, _080234E8  @ gUnknown_020234FE
+	ldr r0, _080234E8  @ gBg1Tm+0x56
 	ldr r1, _080234EC  @ gUnknown_0200422C
 	movs r2, #9
 	movs r3, #0x13
@@ -2085,9 +2085,9 @@ sub_80234AC: @ 0x080234AC
 	.align 2, 0
 _080234D8: .4byte gUnknown_02002774
 _080234DC: .4byte 0x06004000
-_080234E0: .4byte gUnknown_02022CFE
+_080234E0: .4byte gBg0Tm+0x56
 _080234E4: .4byte gBmFrameTmap0
-_080234E8: .4byte gUnknown_020234FE
+_080234E8: .4byte gBg1Tm+0x56
 _080234EC: .4byte gUnknown_0200422C
 
 	THUMB_FUNC_END sub_80234AC
@@ -2108,25 +2108,25 @@ MenuCommand_SelectNo: @ 0x080234FC
 	movs r0, #0
 	bl SetFont
 	ldr r0, _08023528  @ gBmFrameTmap0
-	ldr r1, _0802352C  @ gUnknown_02022CFE
+	ldr r1, _0802352C  @ gBg0Tm+0x56
 	movs r2, #9
 	movs r3, #0x13
 	bl TileMap_CopyRect
 	ldr r0, _08023530  @ gUnknown_0200422C
-	ldr r1, _08023534  @ gUnknown_020234FE
+	ldr r1, _08023534  @ gBg1Tm+0x56
 	movs r2, #9
 	movs r3, #0x13
 	bl TileMap_CopyRect
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	movs r0, #0xb
 	pop {r1}
 	bx r1
 	.align 2, 0
 _08023528: .4byte gBmFrameTmap0
-_0802352C: .4byte gUnknown_02022CFE
+_0802352C: .4byte gBg0Tm+0x56
 _08023530: .4byte gUnknown_0200422C
-_08023534: .4byte gUnknown_020234FE
+_08023534: .4byte gBg1Tm+0x56
 
 	THUMB_FUNC_END MenuCommand_SelectNo
 
@@ -2194,13 +2194,13 @@ sub_80235A8: @ 0x080235A8
 	cmp r0, #0
 	beq _08023648
 	ldr r0, _08023634  @ gBmFrameTmap0
-	ldr r5, _08023638  @ gUnknown_02022CFE
+	ldr r5, _08023638  @ gBg0Tm+0x56
 	adds r1, r5, #0
 	movs r2, #9
 	movs r3, #0x13
 	bl TileMap_CopyRect
 	ldr r0, _0802363C  @ gUnknown_0200422C
-	ldr r4, _08023640  @ gUnknown_020234FE
+	ldr r4, _08023640  @ gBg1Tm+0x56
 	adds r1, r4, #0
 	movs r2, #9
 	movs r3, #0x13
@@ -2218,7 +2218,7 @@ sub_80235A8: @ 0x080235A8
 	movs r3, #0
 	bl TileMap_FillRect
 	movs r0, #3
-	bl BG_EnableSyncByMask
+	bl EnableBgSync
 	ldr r0, _08023644  @ gItemSelectMenuDef
 	bl StartOrphanMenu
 	adds r4, r0, #0
@@ -2244,9 +2244,9 @@ sub_80235A8: @ 0x080235A8
 	.align 2, 0
 _08023630: .4byte gActiveUnit
 _08023634: .4byte gBmFrameTmap0
-_08023638: .4byte gUnknown_02022CFE
+_08023638: .4byte gBg0Tm+0x56
 _0802363C: .4byte gUnknown_0200422C
-_08023640: .4byte gUnknown_020234FE
+_08023640: .4byte gBg1Tm+0x56
 _08023644: .4byte gItemSelectMenuDef
 _08023648:
 	bl ClearBg0Bg1
@@ -2601,9 +2601,9 @@ MenuCommand_SelectYes: @ 0x080238E0
 	ldrb r0, [r4, #0x12]
 	cmp r0, #0
 	beq _080238FE
-	ldr r0, _08023914  @ gBG0TilemapBuffer
+	ldr r0, _08023914  @ gBg0Tm
 	movs r1, #0
-	bl BG_Fill
+	bl TmFill
 _080238FE:
 	adds r0, r5, #0
 	bl sub_80235A8
@@ -2614,7 +2614,7 @@ _080238FE:
 	.align 2, 0
 _0802390C: .4byte gActiveUnit
 _08023910: .4byte gActionData
-_08023914: .4byte gBG0TilemapBuffer
+_08023914: .4byte gBg0Tm
 
 	THUMB_FUNC_END MenuCommand_SelectYes
 
@@ -2684,7 +2684,7 @@ _08023962:
 	ldrsh r4, [r4, r5]
 	adds r3, r3, r4
 	lsls r3, r3, #1
-	ldr r4, _0802399C  @ gBG0TilemapBuffer
+	ldr r4, _0802399C  @ gBg0Tm
 	adds r3, r3, r4
 	bl DrawItemMenuLine
 	pop {r4, r5}
@@ -2692,7 +2692,7 @@ _08023962:
 	bx r1
 	.align 2, 0
 _08023998: .4byte gActiveUnit
-_0802399C: .4byte gBG0TilemapBuffer
+_0802399C: .4byte gBg0Tm
 
 	THUMB_FUNC_END BallistaRangeMenu_Draw
 
@@ -3949,7 +3949,7 @@ sub_8024260: @ 0x08024260
 	bl StartOrphanMenu
 	adds r0, r4, #0
 	bl EndTargetSelection
-	ldr r0, _080242F8  @ gUnknown_0202352C
+	ldr r0, _080242F8  @ gBg1Tm+0x84
 	ldr r1, _080242FC  @ gUnknown_085A0D4C
 	movs r2, #0x80
 	lsls r2, r2, #5
@@ -3970,7 +3970,7 @@ sub_8024260: @ 0x08024260
 	ldr r0, [r0]
 	ldrh r0, [r0]
 	bl GetStringFromIndex
-	ldr r5, _08024300  @ gUnknown_02022D6E
+	ldr r5, _08024300  @ gBg0Tm+0xC6
 	movs r1, #7
 	str r1, [sp]
 	str r0, [sp, #4]
@@ -3997,9 +3997,9 @@ sub_8024260: @ 0x08024260
 	.align 2, 0
 _080242F0: .4byte gActionData
 _080242F4: .4byte gStealItemMenuDef
-_080242F8: .4byte gUnknown_0202352C
+_080242F8: .4byte gBg1Tm+0x84
 _080242FC: .4byte gUnknown_085A0D4C
-_08024300: .4byte gUnknown_02022D6E
+_08024300: .4byte gBg0Tm+0xC6
 
 	THUMB_FUNC_END sub_8024260
 
@@ -4071,7 +4071,7 @@ StealItemMenuCommand_Draw: @ 0x08024348
 	ldrsh r1, [r5, r6]
 	adds r3, r3, r1
 	lsls r3, r3, #1
-	ldr r1, _08024398  @ gBG0TilemapBuffer
+	ldr r1, _08024398  @ gBg0Tm
 	adds r3, r3, r1
 	adds r1, r4, #0
 	bl DrawItemMenuLine
@@ -4080,7 +4080,7 @@ StealItemMenuCommand_Draw: @ 0x08024348
 	bx r1
 	.align 2, 0
 _08024394: .4byte gActionData
-_08024398: .4byte gBG0TilemapBuffer
+_08024398: .4byte gBg0Tm
 
 	THUMB_FUNC_END StealItemMenuCommand_Draw
 
@@ -5113,7 +5113,7 @@ ItemMenu_Draw1stCommand: @ 0x08024AAC
 	ldrsh r0, [r4, r2]
 	adds r1, r1, r0
 	lsls r1, r1, #1
-	ldr r0, _08024AEC  @ gBG0TilemapBuffer
+	ldr r0, _08024AEC  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r5, #0
 	bl Text_Draw
@@ -5123,7 +5123,7 @@ ItemMenu_Draw1stCommand: @ 0x08024AAC
 	bx r1
 	.align 2, 0
 _08024AE8: .4byte gUnknown_0202BCB0
-_08024AEC: .4byte gBG0TilemapBuffer
+_08024AEC: .4byte gBg0Tm
 
 	THUMB_FUNC_END ItemMenu_Draw1stCommand
 
@@ -5210,7 +5210,7 @@ ItemMenu_DrawOtherCommands: @ 0x08024B54
 	ldrsh r2, [r2, r4]
 	adds r3, r3, r2
 	lsls r3, r3, #1
-	ldr r2, _08024B98  @ gBG0TilemapBuffer
+	ldr r2, _08024B98  @ gBg0Tm
 	adds r3, r3, r2
 	movs r2, #1
 	bl DrawItemMenuLine
@@ -5220,7 +5220,7 @@ ItemMenu_DrawOtherCommands: @ 0x08024B54
 	bx r1
 	.align 2, 0
 _08024B94: .4byte gActiveUnit
-_08024B98: .4byte gBG0TilemapBuffer
+_08024B98: .4byte gBg0Tm
 
 	THUMB_FUNC_END ItemMenu_DrawOtherCommands
 

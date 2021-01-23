@@ -160,7 +160,7 @@ struct MenuProc* StartMenuAt(
     struct MenuRect rect,
     struct Proc* parent)
 {
-    return StartMenuCore(def, rect, 1, TILEREF(0, 0), 0, 0, parent);
+    return StartMenuCore(def, rect, 1, TILE(0, 0), 0, 0, parent);
 }
 
 struct MenuProc* StartMenuCore(
@@ -178,8 +178,8 @@ struct MenuProc* StartMenuCore(
     int xTileInner = rect.x + 1;
     int yTileInner = rect.y + 1;
 
-    BG_SetPosition(frontBg, 0, 0);
-    BG_SetPosition(backBg, 0, 0);
+    SetBgOffset(frontBg, 0, 0);
+    SetBgOffset(backBg, 0, 0);
 
     PlaySoundEffect(0x68); /* TODO: song ids! */
 
@@ -239,7 +239,7 @@ struct MenuProc* StartMenuCore(
     proc->frontBg = frontBg & 3;
     proc->unk68   = unk;
 
-    gKeyStatusPtr->newKeys = 0;
+    gKeySt->pressed = 0;
 
     return proc;
 }
@@ -261,8 +261,8 @@ struct Proc* EndMenu(struct MenuProc* proc)
 
     Proc_End(proc);
 
-    BG_SetPosition(proc->frontBg, 0, 0);
-    BG_SetPosition(proc->backBg, 0, 0);
+    SetBgOffset(proc->frontBg, 0, 0);
+    SetBgOffset(proc->backBg, 0, 0);
 
     return proc->proc_parent;
 }
@@ -275,14 +275,14 @@ void EndAllMenus(void)
 inline
 void SyncMenuBgs(struct MenuProc* proc)
 {
-    BG_EnableSyncByMask(BG_SYNC_BIT(proc->backBg) + BG_SYNC_BIT(proc->frontBg));
+    EnableBgSync(BG_SYNC_BIT(proc->backBg) + BG_SYNC_BIT(proc->frontBg));
 }
 
 inline
 void ClearMenuBgs(struct MenuProc* proc)
 {
-    BG_Fill(BG_GetMapBuffer(proc->frontBg), 0);
-    BG_Fill(BG_GetMapBuffer(proc->backBg), 0);
+    TmFill(GetBgTilemap(proc->frontBg), 0);
+    TmFill(GetBgTilemap(proc->backBg), 0);
 
     SyncMenuBgs(proc);
 }
@@ -310,12 +310,12 @@ void RedrawMenu(struct MenuProc* proc)
         return;
 
     DrawUiFrame(
-        BG_GetMapBuffer(proc->backBg),
+        GetBgTilemap(proc->backBg),
         proc->rect.x, proc->rect.y, proc->rect.w, proc->rect.h,
         proc->tileref, proc->def->style);
 
     ClearUiFrame(
-        BG_GetMapBuffer(proc->frontBg),
+        GetBgTilemap(proc->frontBg),
         proc->rect.x, proc->rect.y, proc->rect.w, proc->rect.h);
 
     for (i = 0; i < proc->itemCount; ++i)
@@ -341,7 +341,7 @@ void RedrawMenu(struct MenuProc* proc)
 
         Text_Draw(
             &item->text,
-            TILEMAP_LOCATED(BG_GetMapBuffer(proc->frontBg), item->xTile, item->yTile));
+            GetBgTilemap(proc->frontBg) + TM_OFFSET(item->xTile, item->yTile));
     }
 
     DrawMenuItemHover(proc, proc->itemCurrent, TRUE);
@@ -430,11 +430,11 @@ void ProcessMenuDpadInput(struct MenuProc* proc)
 
     // Handle Up keyin
 
-    if (gKeyStatusPtr->repeatedKeys & DPAD_UP)
+    if (gKeySt->repeated & DPAD_UP)
     {
         if (proc->itemCurrent == 0)
         {
-            if (gKeyStatusPtr->repeatedKeys != gKeyStatusPtr->newKeys)
+            if (gKeySt->repeated != gKeySt->pressed)
                 return;
 
             proc->itemCurrent = proc->itemCount;
@@ -445,11 +445,11 @@ void ProcessMenuDpadInput(struct MenuProc* proc)
 
     // Handle down keyin
 
-    if (gKeyStatusPtr->repeatedKeys & DPAD_DOWN)
+    if (gKeySt->repeated & DPAD_DOWN)
     {
         if (proc->itemCurrent == (proc->itemCount - 1))
         {
-            if (gKeyStatusPtr->repeatedKeys != gKeyStatusPtr->newKeys)
+            if (gKeySt->repeated != gKeySt->pressed)
                 return;
 
             proc->itemCurrent = -1;
@@ -490,7 +490,7 @@ int ProcessMenuSelectInput(struct MenuProc* proc)
     if (itemDef->onIdle)
         result = itemDef->onIdle(proc, item);
 
-    if (gKeyStatusPtr->newKeys & A_BUTTON)
+    if (gKeySt->pressed & A_BUTTON)
     {
         // A Button press
 
@@ -499,14 +499,14 @@ int ProcessMenuSelectInput(struct MenuProc* proc)
         if ((result == 0xFF) && itemDef->onSelected)
             result = itemDef->onSelected(proc, item);
     }
-    else if (gKeyStatusPtr->newKeys & B_BUTTON)
+    else if (gKeySt->pressed & B_BUTTON)
     {
         // B Button press
 
         if (proc->def->onBPress)
             result = proc->def->onBPress(proc, item);
     }
-    else if (gKeyStatusPtr->newKeys & R_BUTTON)
+    else if (gKeySt->pressed & R_BUTTON)
     {
         // R Button press
 
@@ -568,7 +568,7 @@ void Menu_AutoHelpBox_OnLoop(struct MenuProc* proc)
 
     DisplayUiHand(x, y);
 
-    if (gKeyStatusPtr->newKeys & (B_BUTTON | R_BUTTON))
+    if (gKeySt->pressed & (B_BUTTON | R_BUTTON))
     {
         CloseHelpBox();
         Proc_GotoScript(proc, sProc_MenuMain);
@@ -596,7 +596,7 @@ void Menu_FrozenHelpBox_OnLoop(struct MenuProc* proc)
 
     DisplayFrozenUiHand(x, y);
 
-    if (gKeyStatusPtr->newKeys & (B_BUTTON | R_BUTTON))
+    if (gKeySt->pressed & (B_BUTTON | R_BUTTON))
     {
         CloseHelpBox();
         Proc_GotoScript(proc, sProc_MenuMain);
@@ -620,7 +620,7 @@ void Menu_Frozen_OnLoop(struct MenuProc* proc)
 
     DisplayFrozenUiHand(x, y);
 
-    if (gKeyStatusPtr->newKeys & (A_BUTTON | B_BUTTON))
+    if (gKeySt->pressed & (A_BUTTON | B_BUTTON))
         Proc_GotoScript(proc, sProc_MenuMain);
 }
 
@@ -674,8 +674,8 @@ void ApplyMenuCursorVScroll(struct MenuProc* proc, int* xRef, int* yRef)
 
     off = (proc->itemCount*16 - 9*16) * proc->itemCurrent / 9;
 
-    BG_SetPosition(proc->frontBg, 0, off);
-    BG_SetPosition(proc->backBg, 0, off);
+    SetBgOffset(proc->frontBg, 0, off);
+    SetBgOffset(proc->backBg, 0, off);
 
     *yRef -= off;
 }

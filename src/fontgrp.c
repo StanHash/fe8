@@ -4,6 +4,7 @@
 #include "global.h"
 #include "proc.h"
 #include "hardware.h"
+#include "dma.h"
 #include "ctc.h"
 
 #include "fontgrp.h"
@@ -44,19 +45,19 @@ void SetupDebugFontForBG(int bg, int tileDataOffset)
     if (tileDataOffset == 0)
         tileDataOffset = 0x5800;
 
-    SetBackgroundTileDataOffset(bg, 0);
-    SetBackgroundScreenSize(bg, 0);
-    RegisterTileGraphics(debug_font_4bpp, (void *)(VRAM + (tileDataOffset & 0x1FFFF)), 0x800);
+    SetBgChrOffset(bg, 0);
+    SetBgScreenSize(bg, 0);
+    RegisterDataMove(debug_font_4bpp, (void *)(VRAM + (tileDataOffset & 0x1FFFF)), 0x800);
 
-    gPaletteBuffer[0] = 0;
-    gPaletteBuffer[2] = RGB(31, 31, 31);
-    EnablePaletteSync();
+    gPal[0] = 0;
+    gPal[2] = RGB(31, 31, 31);
+    EnablePalSync();
 
-    BG_Fill(BG_GetMapBuffer(bg), 0);
+    TmFill(GetBgTilemap(bg), 0);
 
     gUnknown_02026E30.bg = bg;
     gUnknown_02026E30.tileDataOffset = tileDataOffset;
-    gUnknown_02026E30.tileIndex = GetTileIndex(bg, tileDataOffset);
+    gUnknown_02026E30.tileIndex = GetBgChrId(bg, tileDataOffset);
 }
 
 void PrintDebugStringToBG(u16 *dest, const char *str)
@@ -79,7 +80,7 @@ void PrintDebugStringToBG(u16 *dest, const char *str)
         str++;
     }
 
-    BG_EnableSync(gUnknown_02026E30.bg);
+    EnableBgSyncById(gUnknown_02026E30.bg);
 }
 
 void sub_800384C(u16 *dest, const char *fmt, ...)
@@ -104,8 +105,8 @@ void sub_8003870(void)
     gUnknown_02026E30.unk8 = 0;
     gUnknown_02026E30.unkC = 0;
 
-    BG_Fill(gBG2TilemapBuffer, 0);
-    BG_EnableSyncByMask(1 << 2);
+    TmFill(gBg2Tm, 0);
+    EnableBgSync(BG2_SYNC_BIT);
 }
 
 void sub_80038B4(const char *fmt, ...)
@@ -210,10 +211,10 @@ void FlushDBGToBG2(void)
 {
     int i;
 
-    BG_Fill(gBG2TilemapBuffer, 0);
+    TmFill(gBg2Tm, 0);
     for (i = 0; i < 20; i++)
     {
-        u16* r3 = gBG2TilemapBuffer + i * 0x20;
+        u16* r3 = gBg2Tm + i * 0x20;
 
         if (gUnknown_02026E30.unk14[(i + gUnknown_02026E30.unk10) & 0xFF][0] != 0)
         {
@@ -234,7 +235,7 @@ void FlushDBGToBG2(void)
         }
     }
 
-    BG_EnableSyncByMask(1 << 2);
+    EnableBgSync(BG2_SYNC_BIT);
 }
 
 int sub_8003ABC(u16 a, u16 b)
@@ -272,13 +273,13 @@ void SetupDebugFontForOBJ(int a, int objPalNum)
     gUnknown_02028E50 = a / 32;
     gUnknown_02028E54 = (objPalNum & 0xF) << 12;
 
-    RegisterTileGraphics(debug_font_4bpp, (void *)(VRAM + ((a + 0x10000) & 0x1FFFF)), 0x800);
+    RegisterDataMove(debug_font_4bpp, (void *)(VRAM + ((a + 0x10000) & 0x1FFFF)), 0x800);
 
-    gPaletteBuffer[(objPalNum + 16) * 16 + 0] = RGB(0, 0, 0);
-    gPaletteBuffer[(objPalNum + 16) * 16 + 1] = RGB(0, 0, 31);
-    gPaletteBuffer[(objPalNum + 16) * 16 + 2] = RGB(31, 31, 31);
+    gPal[(objPalNum + 16) * 16 + 0] = RGB(0, 0, 0);
+    gPal[(objPalNum + 16) * 16 + 1] = RGB(0, 0, 31);
+    gPal[(objPalNum + 16) * 16 + 2] = RGB(31, 31, 31);
 
-    EnablePaletteSync();
+    EnablePalSync();
 }
 
 void PrintDebugStringAsOBJ(int a, int b, const char *str)
@@ -860,16 +861,16 @@ void Font_SpecializedGlyphDrawer(struct TextHandle *th, struct Glyph *glyph)
 
 void Font_LoadForUI(void)
 {
-    CopyToPaletteBuffer(gUnknown_0859EF00, gCurrentFont->paletteNum * 32, 32);
-    gPaletteBuffer[gCurrentFont->paletteNum * 16] = 0;
+    ApplyPaletteExt(gUnknown_0859EF00, gCurrentFont->paletteNum * 32, 32);
+    gPal[gCurrentFont->paletteNum * 16] = 0;
     gCurrentFont->drawGlyph = Font_StandardGlyphDrawer;
     SetFontGlyphSet(0);
 }
 
 void Font_LoadForDialogue(void)
 {
-    CopyToPaletteBuffer(gUnknown_0859EF20, gCurrentFont->paletteNum * 32, 32);
-    gPaletteBuffer[gCurrentFont->paletteNum * 16] = 0;
+    ApplyPaletteExt(gUnknown_0859EF20, gCurrentFont->paletteNum * 32, 32);
+    gPal[gCurrentFont->paletteNum * 16] = 0;
     gCurrentFont->drawGlyph = Font_StandardGlyphDrawer;
     SetFontGlyphSet(1);
 }
@@ -1131,11 +1132,11 @@ void sub_8004974(void)
 
 void sub_8004984(void)
 {
-    u32 index = (GetGameClock() / 4) % 16;
+    u32 index = (GetGameTime() / 4) % 16;
 
-    //gPaletteBuffer[14] = gUnknown_0859EFC0[index];
-    gPaletteBuffer[14] = index[gUnknown_0859EFC0];
-    EnablePaletteSync();
+    //gPal[14] = gUnknown_0859EFC0[index];
+    gPal[14] = index[gUnknown_0859EFC0];
+    EnablePalSync();
 }
 
 struct ProcCmd gUnknown_08588284[] =
@@ -1297,7 +1298,7 @@ void sub_8004BF0(int a, u16 *b)
 
 void sub_8004C1C(void)
 {
-    int r5 = GetGameClock();
+    int r5 = GetGameTime();
     int i;
     int j;
 
@@ -1306,10 +1307,10 @@ void sub_8004C1C(void)
         for (j = 0; j < 30; j++)
         {
             int index = i * 64 + j;
-            sub_8004B0C((u16 *)gBG0TilemapBuffer + index, 0, r5++ & 1);
+            sub_8004B0C((u16 *)gBg0Tm + index, 0, r5++ & 1);
         }
     }
-    BG_EnableSyncByMask(1 << 0);
+    EnableBgSync(BG0_SYNC_BIT);
 }
 
 void sub_8004C68(u16 *a, int b, int c, u8 d)
@@ -1320,7 +1321,7 @@ void sub_8004C68(u16 *a, int b, int c, u8 d)
     int var1;
     int var2;
 
-    u8 r9 = ComputeDisplayTime(c, &sp0, &sp2, &sp4);
+    u8 r9 = FormatTime(c, &sp0, &sp2, &sp4);
 
     sub_8004B88(a + 2, b, sp0);
 
