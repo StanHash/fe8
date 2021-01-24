@@ -283,7 +283,7 @@ sub_8035678: @ 0x08035678
 	strh r1, [r0]
 	ldr r0, _08035694  @ gUnknown_0859E188
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -301,7 +301,7 @@ sub_8035698: @ 0x08035698
 	movs r0, #0
 	bl sub_8015EDC
 	ldr r0, _080356B8  @ gUnknown_0859E188
-	bl Proc_BreakEach
+	bl BreakEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -367,7 +367,7 @@ NewBottomHelpText: @ 0x08035708
 	beq _08035734
 	ldr r0, _08035740  @ gUnknown_0859E1B8
 	adds r1, r2, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x2c]
 	bl sub_80354E0
 	bl sub_801A278
@@ -390,7 +390,7 @@ _08035744: .4byte gUnknown_0202BCB0
 DeleteEach6CBB: @ 0x08035748
 	push {lr}
 	ldr r0, _08035754  @ gUnknown_0859E1B8
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -402,7 +402,7 @@ _08035754: .4byte gUnknown_0859E1B8
 sub_8035758: @ 0x08035758
 	push {lr}
 	ldr r0, _0803576C  @ gUnknown_0859E1B8
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08035766
 	movs r0, #1
@@ -421,13 +421,13 @@ sub_8035770: @ 0x08035770
 	adds r7, r1, #0
 	ldr r5, _080357A4  @ gUnknown_0859E1B8
 	adds r0, r5, #0
-	bl Proc_Find
+	bl FindProc
 	adds r4, r0, #0
 	cmp r4, #0
 	bne _0803578E
 	adds r0, r5, #0
 	adds r1, r6, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 _0803578E:
 	str r7, [r4, #0x2c]

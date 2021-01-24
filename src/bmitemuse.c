@@ -2,7 +2,7 @@
 #include "global.h"
 
 #include "m4a.h"
-#include "soundwrapper.h"
+#include "sound.h"
 #include "hardware.h"
 #include "oam.h"
 #include "ctc.h"
@@ -91,7 +91,7 @@ static void DoUseTorchStaff(struct Unit* unit);
 
 extern struct Unit gStatGainSimUnit;
 
-extern struct ProcCmd CONST_DATA gProcScr_0859B600[]; // go back to unit menu proc
+extern struct ProcScr CONST_DATA gProcScr_0859B600[]; // go back to unit menu proc
 
 extern const struct MenuDef gMenuInfo_RepairItems;
 
@@ -114,9 +114,9 @@ static void WarpSelect_OnCancel(struct WarpSelectProc* proc);
 static void TorchSelect_OnInit(struct WarpSelectProc* proc);
 static void TorchSelect_OnIdle(struct WarpSelectProc* proc);
 
-struct ProcCmd CONST_DATA gProcScr_SquareSelectWarp[] =
+struct ProcScr CONST_DATA gProcScr_SquareSelectWarp[] =
 {
-    PROC_SET_END_CB(WarpSelect_OnEnd),
+    PROC_ONEND(WarpSelect_OnEnd),
 
     PROC_CALL(AddSkipThread2),
 
@@ -144,7 +144,7 @@ PROC_LABEL(100),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_SquareSelectTorch[] =
+struct ProcScr CONST_DATA gProcScr_SquareSelectTorch[] =
 {
     PROC_CALL(AddSkipThread2),
 
@@ -771,13 +771,13 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
             TmFill(gBg2Tm, 0);
             EnableBgSync(BG2_SYNC_BIT);
 
-            PlaySoundEffect(0x6A); // TODO: song ids
+            PlaySe(0x6A); // TODO: song ids
 
             return;
         }
         else
         {
-            PlaySoundEffect(0x6C); // TODO: song ids
+            PlaySe(0x6C); // TODO: song ids
         }
     }
 
@@ -788,7 +788,7 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
         TmFill(gBg2Tm, 0);
         EnableBgSync(BG2_SYNC_BIT);
 
-        PlaySoundEffect(0x6B); // TODO: song ids
+        PlaySe(0x6B); // TODO: song ids
     }
 
     if (warpAllowed != proc->prevWarpAllowed)
@@ -828,7 +828,7 @@ void WarpSelect_OnCancel(struct WarpSelectProc* proc)
         gActiveUnit->xPos,
         gActiveUnit->yPos);
 
-    Proc_Start(gProcScr_0859B600, PROC_TREE_3);
+    SpawnProc(gProcScr_0859B600, PROC_TREE_3);
 }
 
 void WarpSelect_OnEnd(struct WarpSelectProc* proc)
@@ -843,7 +843,7 @@ static int WarpOnSelectTarget(ProcPtr proc, struct SelectTarget* target)
 
     gActionData.targetIndex = target->uid;
 
-    Proc_Start(gProcScr_SquareSelectWarp, PROC_TREE_3);
+    SpawnProc(gProcScr_SquareSelectWarp, PROC_TREE_3);
 
     return 4; // TODO: Map Select Return Constants
 }
@@ -858,7 +858,7 @@ void DoUseWarpStaff(struct Unit* unit)
         NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, WarpOnSelectTarget),
         GetStringFromIndex(0x875)); // TODO: msgid "Select character to warp."
 
-    PlaySoundEffect(0x6A); // TODO: song ids
+    PlaySe(0x6A); // TODO: song ids
 }
 
 static int OnSelectPutTrap(ProcPtr proc, struct SelectTarget* target)
@@ -881,7 +881,7 @@ void DoUsePutTrap(struct Unit* unit, void(*func)(struct Unit*), int msgHelp)
         NewTargetSelection_Specialized(&gSelectInfo_PutTrap, OnSelectPutTrap),
         GetStringFromIndex(msgHelp));
 
-    PlaySoundEffect(0x6A); // TODO: song ids
+    PlaySe(0x6A); // TODO: song ids
 }
 
 int RepairSelectOnSelect(ProcPtr proc, struct SelectTarget* target)
@@ -915,7 +915,7 @@ void DoUseRepairStaff(struct Unit* unit)
         NewTargetSelection(&gSelectInfo_Repair),
         GetStringFromIndex(0x878)); // TODO: msgid "Select the character whose weapon needs repair."
 
-    PlaySoundEffect(0x6A); // TODO: song ids
+    PlaySe(0x6A); // TODO: song ids
 }
 
 int RepairSelectOnChange(ProcPtr proc, struct SelectTarget* target)
@@ -1117,7 +1117,7 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
     {
         if (canTorch)
         {
-            PlaySoundEffect(0x6A); // TODO: song ids
+            PlaySe(0x6A); // TODO: song ids
 
             Proc_Break(proc);
 
@@ -1130,7 +1130,7 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
         }
         else
         {
-            PlaySoundEffect(0x6C); // TODO: song ids
+            PlaySe(0x6C); // TODO: song ids
         }
     }
 
@@ -1141,7 +1141,7 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
 
         Proc_Goto(proc, 99);
 
-        PlaySoundEffect(0x6B); // TODO: song ids
+        PlaySe(0x6B); // TODO: song ids
     }
 
     DisplayCursor(
@@ -1152,8 +1152,8 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
 
 void DoUseTorchStaff(struct Unit* unit)
 {
-    Proc_Start(gProcScr_SquareSelectTorch, PROC_TREE_3);
-    PlaySoundEffect(0x6A); // TODO: song ids
+    SpawnProc(gProcScr_SquareSelectTorch, PROC_TREE_3);
+    PlaySe(0x6A); // TODO: song ids
 }
 
 s8 CanUnitUseItemPrepScreen(struct Unit* unit, int item)

@@ -20,7 +20,7 @@ sub_8035AA4: @ 0x08035AA4
 	movs r2, #0xca
 	lsls r2, r2, #6
 	adds r0, r4, #0
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	adds r6, r4, #0
 	movs r0, #0x80
 	lsls r0, r0, #1
@@ -31,7 +31,7 @@ _08035AD4:
 	adds r1, r5, #0
 	movs r2, #2
 	movs r3, #4
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	movs r0, #0x80
 	lsls r0, r0, #1
 	adds r5, r5, r0
@@ -462,7 +462,7 @@ sub_8035DDC: @ 0x08035DDC
 	beq _08035E10
 	ldr r0, _08035E08  @ gUnknown_0859E2D0
 	adds r1, r2, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	ldr r0, _08035E0C  @ gRAMChapterData
 	adds r0, #0x41
 	ldrb r0, [r0]
@@ -479,7 +479,7 @@ _08035E0C: .4byte gRAMChapterData
 _08035E10:
 	ldr r0, _08035E1C  @ gUnknown_0859E2D0
 	movs r1, #3
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _08035E18:
 	pop {r0}
 	bx r0

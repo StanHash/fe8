@@ -77,7 +77,7 @@
     .4byte 0
 .endm
 
-.macro PROC_JUMP ap6CCode
+.macro PROC_GOTO_SCR ap6CCode
 	.2byte 0x0D
 	.2byte 0
 	.4byte \ap6CCode
@@ -101,7 +101,7 @@
 	.4byte 0
 .endm
 
-.macro PROC_END_IF_DUPLICATE
+.macro PROC_END_IF_DUP
 	.2byte 0x11
 	.2byte 0
 	.4byte 0
@@ -137,7 +137,7 @@
 	.4byte \aprRoutine
 .endm
 
-.macro PROC_END_DUPLICATES
+.macro PROC_END_DUPS
 	.2byte 0x17
 	.2byte 0
 	.4byte 0

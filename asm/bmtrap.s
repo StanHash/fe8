@@ -37,7 +37,7 @@ sub_8037494: @ 0x08037494
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _080374BC  @ gUnknown_0859E520
-	bl Proc_Find
+	bl FindProc
 	ldr r1, _080374C0  @ gBattleActor
 	adds r1, #0x53
 	movs r2, #0
@@ -63,7 +63,7 @@ sub_80374C4: @ 0x080374C4
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _080374EC  @ gUnknown_0859E520
-	bl Proc_Find
+	bl FindProc
 	ldr r1, _080374F0  @ gBattleTarget
 	adds r1, #0x53
 	movs r2, #0
@@ -325,7 +325,7 @@ _08037690:
 	ldr r0, _080376B4  @ gUnknown_0859E5FC
 _080376A4:
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r1, r0, #0
 	adds r0, #0x50
 	strh r4, [r0]

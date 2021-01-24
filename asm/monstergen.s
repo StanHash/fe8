@@ -11,7 +11,7 @@ sub_80782A8: @ 0x080782A8
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r6, r1, #0x18
-	bl NextRN_100
+	bl RandNext_100
 	lsls r0, r0, #0x18
 	lsrs r3, r0, #0x18
 	movs r5, #0

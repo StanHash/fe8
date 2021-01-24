@@ -31,7 +31,7 @@ NewEkrBattleDeamon: @ 0x0804FD60
 	ldr r4, _0804FD80  @ gUnknown_0203E0F8
 	ldr r0, _0804FD84  @ gUnknown_085B9358
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	ldr r1, _0804FD88  @ gUnknown_0203E0F4
 	movs r0, #1
@@ -106,7 +106,7 @@ NewEkrBattle: @ 0x0804FDD4
 	ldr r4, _0804FE1C  @ gUnknown_02000064
 	ldr r0, _0804FE20  @ gUnknown_085B9378
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	ldr r0, _0804FE24  @ InBattleMainRoutine
 	bl SetMainFunc
@@ -2234,11 +2234,11 @@ NewEkrLvlupFan: @ 0x08050DE4
 	push {lr}
 	ldr r0, _08050DFC  @ gUnknown_085B93A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	movs r0, #0x80
-	bl Sound_SetVolume80022EC
+	bl SetBgmVolume
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -2271,7 +2271,7 @@ _08050E28:
 	bne _08050E3A
 	movs r0, #0x80
 	lsls r0, r0, #1
-	bl Sound_SetVolume80022EC
+	bl SetBgmVolume
 	adds r0, r4, #0
 	bl Proc_Break
 _08050E3A:
@@ -2392,7 +2392,7 @@ NewEkrGauge: @ 0x08050EF8
 	ldr r4, _08050F44  @ gUnknown_02000068
 	ldr r0, _08050F48  @ gUnknown_085B93B8
 	movs r1, #1
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	movs r0, #0
 	bl EkrGauge_80511C0
@@ -3894,7 +3894,7 @@ NewEkrDispUP: @ 0x08051AC4
 	ldr r4, _08051AEC  @ gUnknown_0200006C
 	ldr r0, _08051AF0  @ gUnknown_085B95EC
 	movs r1, #5
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	movs r0, #0
 	movs r1, #0
@@ -4939,7 +4939,7 @@ sub_8052304: @ 0x08052304
 	str r0, [r1]
 	ldr r0, _08052354  @ gUnknown_085B9604
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r4, [r6, #0x64]
 	adds r0, r4, #0
@@ -5281,7 +5281,7 @@ sub_80525E8: @ 0x080525E8
 	str r0, [r1]
 	ldr r0, _08052624  @ gUnknown_085B962C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -5723,7 +5723,7 @@ sub_8052978: @ 0x08052978
 	str r0, [r1]
 	ldr r0, _080529AC  @ gUnknown_085B9664
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	strh r5, [r4, #0x2c]
 	adds r0, r6, #0
@@ -5803,7 +5803,7 @@ sub_8052A0C: @ 0x08052A0C
 	str r0, [r1]
 	ldr r0, _08052A40  @ gUnknown_085B968C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r7, #0
 	bl GetAISSubjectId
@@ -6027,7 +6027,7 @@ _08052BD2:
 	str r0, [r1]
 	ldr r0, _08052C20  @ gUnknown_085B96B4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	str r6, [r4, #0x60]
@@ -6107,7 +6107,7 @@ sub_8052C7C: @ 0x08052C7C
 	adds r5, r1, #0
 	ldr r0, _08052C9C  @ gUnknown_085B96DC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	str r5, [r0, #0x60]
 	movs r1, #0
@@ -6251,7 +6251,7 @@ sub_8052D8C: @ 0x08052D8C
 	str r0, [r1]
 	ldr r0, _08052DB4  @ gUnknown_085B96F4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	strh r4, [r0, #0x2c]
 	str r5, [r0, #0x64]
 _08052DA8:
@@ -6290,7 +6290,7 @@ sub_8052DD4: @ 0x08052DD4
 	adds r5, r1, #0
 	ldr r0, _08052DF4  @ gUnknown_085B9724
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	str r5, [r0, #0x60]
 	ldr r1, _08052DF8  @ gUnknown_02017738
@@ -6525,7 +6525,7 @@ sub_8052FAC: @ 0x08052FAC
 	str r0, [r1]
 	ldr r0, _08052FE8  @ gUnknown_085B975C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	str r5, [r0, #0x60]
 	movs r1, #0
@@ -6700,7 +6700,7 @@ sub_8053120: @ 0x08053120
 	adds r5, r1, #0
 	ldr r0, _08053140  @ gUnknown_085B977C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	str r5, [r0, #0x60]
 	movs r1, #0
@@ -6776,7 +6776,7 @@ sub_80531A4: @ 0x080531A4
 	adds r6, r1, #0
 	ldr r0, _08053204  @ gUnknown_085B9794
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	str r6, [r0, #0x60]
 	movs r4, #0
@@ -6869,7 +6869,7 @@ _08053260:
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
@@ -6896,7 +6896,7 @@ sub_805328C: @ 0x0805328C
 	adds r6, r1, #0
 	ldr r0, _08053360  @ gUnknown_085B97AC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	str r6, [r4, #0x60]
@@ -7027,7 +7027,7 @@ _080533A4:
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
@@ -7071,7 +7071,7 @@ _080533F4: @ jump table
 _08053408:
 	ldr r0, _0805343C  @ gUnknown_085B97C4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetAISSubjectId
@@ -7228,7 +7228,7 @@ sub_8053514: @ 0x08053514
 	ldrsh r0, [r4, r5]
 	str r0, [sp]
 	movs r0, #1
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	ldr r5, _08053580  @ gUnknown_0201FB0C
 	str r1, [r5]
@@ -7283,7 +7283,7 @@ sub_8053584: @ 0x08053584
 	ldrsh r0, [r4, r5]
 	str r0, [sp]
 	movs r0, #4
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	ldr r5, _080535EC  @ gUnknown_0201FB0C
 	str r1, [r5]
@@ -7396,7 +7396,7 @@ sub_8053678: @ 0x08053678
 	adds r5, r1, #0
 	ldr r0, _080536B0  @ gUnknown_085B97EC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	ldr r2, _080536B4  @ gUnknown_085B9804
 	lsls r1, r4, #3
 	adds r1, r1, r2
@@ -7481,7 +7481,7 @@ sub_8053718: @ 0x08053718
 	push {lr}
 	ldr r0, _08053728  @ gUnknown_085B9884
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	pop {r1}
 	bx r1
 	.align 2, 0
@@ -7513,7 +7513,7 @@ _08053744:
 	str r0, [r1]
 	ldr r0, _08053774  @ gUnknown_085B989C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r2, r0, #0
 	movs r0, #0
 	strh r0, [r2, #0x2c]
@@ -7846,7 +7846,7 @@ _080539F4:
 	str r4, [r0]
 	ldr r0, _08053A24  @ gUnknown_085B98B4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	mov r0, r8
 	str r0, [r5, #0x5c]
@@ -8458,7 +8458,7 @@ StartSpellBG_FLASH: @ 0x08053F10
 	adds r5, r1, #0
 	ldr r0, _08053F40  @ gUnknown_085B98CC
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -8489,7 +8489,7 @@ sub_8053F4C: @ 0x08053F4C
 	adds r5, r1, #0
 	ldr r0, _08053F7C  @ gUnknown_085B98CC
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -8520,7 +8520,7 @@ sub_8053F8C: @ 0x08053F8C
 	adds r5, r1, #0
 	ldr r0, _08053FB8  @ gUnknown_085B98CC
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -8548,7 +8548,7 @@ sub_8053FC4: @ 0x08053FC4
 	adds r5, r1, #0
 	ldr r0, _08053FE0  @ gUnknown_085B98CC
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -8613,7 +8613,7 @@ sub_8054030: @ 0x08054030
 	adds r6, r2, #0
 	ldr r0, _08054050  @ gUnknown_085B98F4
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -8685,7 +8685,7 @@ sub_80540B0: @ 0x080540B0
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08054118  @ gPal
 	ldr r4, _0805411C  @ gUnknown_020165C8
@@ -8748,7 +8748,7 @@ sub_8054134: @ 0x08054134
 	adds r6, r2, #0
 	ldr r0, _08054154  @ gUnknown_085B991C
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -8820,7 +8820,7 @@ sub_80541B4: @ 0x080541B4
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _0805421C  @ gPal
 	ldr r4, _08054220  @ gUnknown_020165C8
@@ -8883,7 +8883,7 @@ sub_8054238: @ 0x08054238
 	adds r6, r2, #0
 	ldr r0, _08054258  @ gUnknown_085B9944
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -8955,7 +8955,7 @@ sub_80542B8: @ 0x080542B8
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08054320  @ gPal
 	ldr r4, _08054324  @ gUnknown_020165C8
@@ -9018,7 +9018,7 @@ sub_805433C: @ 0x0805433C
 	adds r6, r2, #0
 	ldr r0, _0805435C  @ gUnknown_085B996C
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -9090,7 +9090,7 @@ sub_80543BC: @ 0x080543BC
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08054424  @ gPal
 	ldr r4, _08054428  @ gUnknown_020165C8
@@ -9157,7 +9157,7 @@ sub_8054440: @ 0x08054440
 	lsrs r5, r5, #0x10
 	ldr r0, _08054474  @ gUnknown_085B9994
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r6, [r1, #0x5c]
 	movs r0, #0
@@ -9353,7 +9353,7 @@ sub_80545C0: @ 0x080545C0
 	ldr r4, _0805467C  @ gUnknown_0201777C
 	ldr r0, _08054680  @ gUnknown_085B99C4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	str r5, [r0, #0x5c]
 	movs r3, #0
@@ -9618,7 +9618,7 @@ sub_80547DC: @ 0x080547DC
 	lsrs r5, r5, #0x10
 	ldr r0, _08054814  @ gUnknown_085B99E4
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	str r6, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -9746,7 +9746,7 @@ sub_80548E0: @ 0x080548E0
 	lsrs r5, r5, #0x10
 	ldr r0, _0805492C  @ gUnknown_085B9A0C
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	str r6, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -9904,7 +9904,7 @@ _08054A36:
 	ldr r6, [r0]
 	ldr r0, _08054AC0  @ gUnknown_085B9A34
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, #0x29
 	movs r1, #0
@@ -10040,7 +10040,7 @@ _08054B50: .4byte gUnknown_0201776C
 DeleteEach6C_efxStatusUnit: @ 0x08054B54
 	push {lr}
 	ldr r0, _08054B60  @ gUnknown_085B9A34
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -10454,7 +10454,7 @@ sub_8054E8C: @ 0x08054E8C
 	lsrs r5, r5, #0x10
 	ldr r0, _08054EC8  @ gUnknown_085B9A5C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r2, #0
 	strh r2, [r0, #0x2c]
 	str r2, [r0, #0x44]
@@ -10612,7 +10612,7 @@ NewEfxSpellCast: @ 0x08054FA8
 	bne _08054FF4
 	ldr r0, _08054FDC  @ gUnknown_085B9A84
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, #0x29
 	strb r4, [r0]
@@ -10697,7 +10697,7 @@ sub_8055038: @ 0x08055038
 	movs r0, #0
 	movs r1, #0
 	movs r2, #8
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _08055094  @ gUnknown_0201C790
 	ldr r4, _08055098  @ gPal+0xC0
@@ -10781,7 +10781,7 @@ sub_80550DC: @ 0x080550DC
 	movs r0, #0
 	movs r1, #8
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	ldr r7, _08055150  @ gUnknown_0201C790
 	ldr r6, _08055154  @ gPal+0xC0
@@ -12070,7 +12070,7 @@ sub_8055A40: @ 0x08055A40
 	adds r4, r0, #0
 	ldr r0, _08055A5C  @ gUnknown_085B9AB4
 	movs r1, #1
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -12397,7 +12397,7 @@ NewEkrBattleStarting: @ 0x08055CDC
 	push {lr}
 	ldr r0, _08055CEC  @ gUnknown_085B9AD4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -12559,7 +12559,7 @@ _08055E12:
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	movs r3, #0x3a
 	ldrsh r2, [r7, r3]
@@ -12570,7 +12570,7 @@ _08055E12:
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	movs r3, #0x34
 	ldrsh r2, [r7, r3]
@@ -12581,7 +12581,7 @@ _08055E12:
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0xf0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	movs r3, #0x3c
 	ldrsh r2, [r7, r3]
@@ -12592,7 +12592,7 @@ _08055E12:
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0xa0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r2, _08055EF8  @ gDispIo
 	movs r3, #0x2d
 	adds r3, r3, r2
@@ -12783,7 +12783,7 @@ ekrBattleStarting_8055FE8: @ 0x08055FE8
 	movs r0, #0
 	movs r1, #4
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	bl sub_807168C
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -12858,7 +12858,7 @@ ekrBattleStarting_8056078: @ 0x08056078
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	ldr r0, _080560D0  @ gUnknown_0203E0FE
 	movs r1, #0
@@ -12898,7 +12898,7 @@ sub_80560D8: @ 0x080560D8
 	push {lr}
 	ldr r0, _080560EC  @ gUnknown_085B9B1C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	pop {r0}
@@ -12937,7 +12937,7 @@ _08056118:
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	ldr r0, _08056168  @ gUnknown_0203E0FE
 	movs r1, #0
@@ -13045,7 +13045,7 @@ _080561F0:
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #4
-	bl sub_8012DCC
+	bl Interpolate
 	bl sub_807168C
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -13268,7 +13268,7 @@ _080563AE:
 	str r0, [sp]
 	movs r0, #0
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	movs r3, #0x3a
 	ldrsh r1, [r7, r3]
@@ -13279,7 +13279,7 @@ _080563AE:
 	str r0, [sp]
 	movs r0, #0
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	movs r3, #0x34
 	ldrsh r1, [r7, r3]
@@ -13290,7 +13290,7 @@ _080563AE:
 	str r0, [sp]
 	movs r0, #0
 	movs r2, #0xf0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	movs r3, #0x3c
 	ldrsh r1, [r7, r3]
@@ -13301,7 +13301,7 @@ _080563AE:
 	str r0, [sp]
 	movs r0, #0
 	movs r2, #0xa0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, _08056478  @ gDispIo
 	movs r3, #0x2d
 	adds r3, r3, r1
@@ -13509,7 +13509,7 @@ _0805659C: @ jump table
 _080565B0:
 	ldr r0, _08056600  @ gUnknown_085B9B6C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r7, [r5, #0x44]
 	adds r1, r5, #0
@@ -13588,7 +13588,7 @@ _0805664C: .4byte gUnknown_085B9C84
 _08056650:
 	ldr r0, _080566AC  @ gUnknown_085B9B6C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r7, [r5, #0x44]
 	adds r1, r5, #0
@@ -13680,7 +13680,7 @@ _080566FE:
 	strh r4, [r5, #0x36]
 	ldr r0, _08056770  @ gUnknown_085B9B6C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r7, [r5, #0x44]
 	adds r1, r5, #0
@@ -13761,7 +13761,7 @@ _080567B8: .4byte gUnknown_085B9C64
 _080567BC:
 	ldr r0, _08056800  @ gUnknown_085B9B6C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r7, [r5, #0x44]
 	adds r1, r5, #0
@@ -13876,7 +13876,7 @@ _08056886:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r5, #2]
 	movs r0, #0x3a
 	ldrsh r1, [r4, r0]
@@ -13894,7 +13894,7 @@ _080568B0:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r5, #2]
 	movs r0, #0x3c
 	ldrsh r1, [r4, r0]
@@ -13907,7 +13907,7 @@ _080568D2:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r5, #4]
 	ldrh r2, [r4, #0x2c]
 	movs r0, #0x2c
@@ -13932,7 +13932,7 @@ sub_8056900: @ 0x08056900
 	adds r5, r0, #0
 	ldr r0, _0805692C  @ gUnknown_085B9CE4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x44]
 	movs r1, #0
@@ -14267,7 +14267,7 @@ _08056BB8:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r7, r0, #0x10
 	ldr r0, [r4, #0x4c]
@@ -14294,7 +14294,7 @@ _08056BB8:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
 	movs r0, #0x3a
@@ -14318,7 +14318,7 @@ _08056C16:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
 	movs r0, #0x3a
@@ -14331,7 +14331,7 @@ _08056C16:
 	movs r0, #0
 	movs r1, #0x58
 _08056C44:
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r1, r0, #0x10
 	add r2, sp, #4
@@ -14372,7 +14372,7 @@ _08056C6A:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
 	movs r0, #0x3c
@@ -14396,7 +14396,7 @@ _08056CB6:
 	ldrsh r0, [r4, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
 	movs r0, #0x3c
@@ -14409,7 +14409,7 @@ _08056CB6:
 	movs r0, #0
 	movs r1, #0x58
 _08056CE4:
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r1, r0, #0x10
 	add r2, sp, #4
@@ -14452,7 +14452,7 @@ NewEkrWindowAppear: @ 0x08056D24
 	adds r4, r1, #0
 	ldr r0, _08056D68  @ gUnknown_085B9D0C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x44]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -14553,7 +14553,7 @@ _08056DDA:
 	movs r0, #4
 	movs r1, #0
 _08056DEC:
-	bl sub_8012DCC
+	bl Interpolate
 	adds r2, r0, #0
 	ldr r1, _08056E0C  @ gUnknown_02000038
 	movs r3, #0
@@ -14581,7 +14581,7 @@ NewEkrNamewinAppear: @ 0x08056E10
 	adds r6, r2, #0
 	ldr r0, _08056E40  @ gUnknown_085B9D24
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x44]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -14700,7 +14700,7 @@ _08056ED8:
 	str r0, [sp]
 	movs r0, #1
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	b _08056F0C
 _08056EF8:
 	ldr r2, [r4, #0x48]
@@ -14711,7 +14711,7 @@ _08056EF8:
 	str r0, [sp]
 	movs r0, #4
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 _08056F0C:
 	lsls r1, r0, #0x10
 	lsrs r1, r1, #0x10
@@ -14732,7 +14732,7 @@ sub_8056F20: @ 0x08056F20
 	adds r5, r1, #0
 	ldr r0, _08056F44  @ gUnknown_085B9D44
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x44]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -14817,7 +14817,7 @@ _08056FAC:
 	str r0, [sp]
 	movs r0, #1
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	b _08056FE4
 _08056FCE:
 	movs r2, #0x50
@@ -14829,7 +14829,7 @@ _08056FCE:
 	str r0, [sp]
 	movs r0, #4
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 _08056FE4:
 	lsls r2, r0, #0x10
 	lsrs r2, r2, #0x10
@@ -20024,7 +20024,7 @@ NewEkrChienCHR: @ 0x0805990C
 	adds r4, r0, #0
 	ldr r0, _08059920  @ gUnknown_085B9D94
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	pop {r4}
 	pop {r0}
@@ -22157,7 +22157,7 @@ NewEfxAnimeDrvProc: @ 0x0805A9C0
 	ldr r4, _0805A9D8  @ gUnknown_0201FB18
 	ldr r0, _0805A9DC  @ gUnknown_085B9DAC
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	bl AnimClearAll
 	pop {r4}
@@ -22197,7 +22197,7 @@ sub_805AA00: @ 0x0805AA00
 	adds r4, r0, #0
 	ldr r0, _0805AA24  @ gUnknown_085B9DC4
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r4, #0
 	bl sub_805A60C
@@ -23093,7 +23093,7 @@ sub_805B0CC: @ 0x0805B0CC
 	ldr r0, _0805B0E8  @ MainUpdate_8055C68
 	bl SetMainFunc
 	ldr r0, _0805B0EC  @ gUnknown_085B9A34
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -23107,7 +23107,7 @@ NewEkrTogiInitPROC: @ 0x0805B0F0
 	push {lr}
 	ldr r0, _0805B100  @ gUnknown_085B9DDC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -23237,7 +23237,7 @@ sub_805B200: @ 0x0805B200
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _0805B25C  @ gUnknown_020165C8
 	ldr r4, _0805B260  @ gPal
@@ -23292,7 +23292,7 @@ NewEkrTogiEndPROC: @ 0x0805B278
 	push {lr}
 	ldr r0, _0805B28C  @ gUnknown_085B9E0C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	bl EndEkrTogiColor
 	pop {r0}
 	bx r0
@@ -23338,7 +23338,7 @@ sub_805B2BC: @ 0x0805B2BC
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _0805B318  @ gUnknown_020165C8
 	ldr r4, _0805B31C  @ gPal
@@ -23402,7 +23402,7 @@ NewEkrTogiColor: @ 0x0805B34C
 	ldr r4, _0805B370  @ gUnknown_0201FB24
 	ldr r0, _0805B374  @ gUnknown_085B9E34
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -23512,7 +23512,7 @@ sub_805B400: @ 0x0805B400
 	str r0, [r1]
 	ldr r0, _0805B440  @ gUnknown_085D4F98
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -23629,7 +23629,7 @@ sub_805B4E8: @ 0x0805B4E8
 	adds r5, r1, #0
 	ldr r0, _0805B528  @ gUnknown_085D4FB8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -23695,7 +23695,7 @@ sub_805B554: @ 0x0805B554
 	str r0, [r1]
 	ldr r0, _0805B580  @ gUnknown_085D4FD0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -23780,7 +23780,7 @@ sub_805B5E0: @ 0x0805B5E0
 	str r0, [r1]
 	ldr r0, _0805B62C  @ gUnknown_085D4FF0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	mov r0, r8
 	str r0, [r7, #0x5c]
@@ -24193,7 +24193,7 @@ _0805B908:
 _0805B90E:
 	ldr r0, _0805B938  @ gUnknown_085D5008
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	ldr r1, [sp]
 	str r1, [r0, #0x5c]
 	movs r1, #0
@@ -24345,7 +24345,7 @@ sub_805BA1C: @ 0x0805BA1C
 	str r0, [r1]
 	ldr r0, _0805BA60  @ gUnknown_085D5028
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -24394,7 +24394,7 @@ sub_805BA64: @ 0x0805BA64
 	subs r0, r0, r4
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	ldr r0, [r5, #0x4c]
 	cmp r0, #1
@@ -24437,7 +24437,7 @@ _0805BAD0:
 	movs r0, #0
 	movs r1, #8
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r2, r0, #0
 	lsls r1, r4, #0x18
 	lsrs r1, r1, #0x18
@@ -24491,7 +24491,7 @@ sub_805BB24: @ 0x0805BB24
 	str r0, [r1]
 	ldr r0, _0805BB80  @ gUnknown_085D5040
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	mov r0, r8
 	str r0, [r4, #0x5c]
@@ -24668,7 +24668,7 @@ StartSpellThing_MagicQuake: @ 0x0805BC80
 	str r0, [r1]
 	ldr r0, _0805BCC0  @ gUnknown_085D5058
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	adds r0, r5, #0
@@ -24912,7 +24912,7 @@ StartSpellAnimDummy: @ 0x0805BE90
 	bl ClearBG1Setup
 	ldr r0, _0805BEB0  @ gUnknown_085D5070
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -24978,7 +24978,7 @@ StartSpellAnimHandAxe: @ 0x0805BF08
 	bl ClearBG1Setup
 	ldr r0, _0805BF3C  @ gUnknown_085D5088
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25085,7 +25085,7 @@ sub_805BFDC: @ 0x0805BFDC
 	str r0, [r1]
 	ldr r0, _0805C024  @ gUnknown_085D50A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r4, [r6, #0x5c]
 	movs r0, #0
@@ -25230,7 +25230,7 @@ sub_805C104: @ 0x0805C104
 	str r0, [r1]
 	ldr r0, _0805C148  @ gUnknown_085D50C0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r4, [r6, #0x5c]
 	movs r0, #0
@@ -25326,7 +25326,7 @@ sub_805C1C8: @ 0x0805C1C8
 	str r0, [r1]
 	ldr r0, _0805C208  @ gUnknown_085D50D8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	str r5, [r4, #0x60]
@@ -25410,7 +25410,7 @@ StartSpellAnimArrow: @ 0x0805C264
 	bl ClearBG1Setup
 	ldr r0, _0805C298  @ gUnknown_085D50F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25530,7 +25530,7 @@ sub_805C358: @ 0x0805C358
 	str r0, [r1]
 	ldr r0, _0805C3A4  @ gUnknown_085D5110
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25601,7 +25601,7 @@ StartSpellAnimJavelin: @ 0x0805C3F0
 	bl ClearBG1Setup
 	ldr r0, _0805C440  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25641,7 +25641,7 @@ sub_805C44C: @ 0x0805C44C
 	bl ClearBG1Setup
 	ldr r0, _0805C49C  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25681,7 +25681,7 @@ sub_805C4A8: @ 0x0805C4A8
 	bl ClearBG1Setup
 	ldr r0, _0805C4F8  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25721,7 +25721,7 @@ sub_805C504: @ 0x0805C504
 	bl ClearBG1Setup
 	ldr r0, _0805C554  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25761,7 +25761,7 @@ sub_805C560: @ 0x0805C560
 	bl ClearBG1Setup
 	ldr r0, _0805C5B0  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25801,7 +25801,7 @@ sub_805C5BC: @ 0x0805C5BC
 	bl ClearBG1Setup
 	ldr r0, _0805C60C  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25841,7 +25841,7 @@ sub_805C618: @ 0x0805C618
 	bl ClearBG1Setup
 	ldr r0, _0805C668  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25881,7 +25881,7 @@ sub_805C674: @ 0x0805C674
 	bl ClearBG1Setup
 	ldr r0, _0805C6C4  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25921,7 +25921,7 @@ sub_805C6D0: @ 0x0805C6D0
 	bl ClearBG1Setup
 	ldr r0, _0805C720  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -25961,7 +25961,7 @@ sub_805C72C: @ 0x0805C72C
 	bl ClearBG1Setup
 	ldr r0, _0805C77C  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -26001,7 +26001,7 @@ sub_805C788: @ 0x0805C788
 	bl ClearBG1Setup
 	ldr r0, _0805C7D8  @ gUnknown_085D5128
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -26127,7 +26127,7 @@ sub_805C88C: @ 0x0805C88C
 	str r0, [r1]
 	ldr r0, _0805C8BC  @ gUnknown_085D5140
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -26210,7 +26210,7 @@ StartSpellAnimSong: @ 0x0805C934
 	bl ClearBG1Setup
 	ldr r0, _0805C968  @ gUnknown_085D5158
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -26356,7 +26356,7 @@ sub_805CA64: @ 0x0805CA64
 	str r0, [r1]
 	ldr r0, _0805CAB0  @ gUnknown_085D5170
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -26465,7 +26465,7 @@ sub_805CB40: @ 0x0805CB40
 	str r0, [r1]
 	ldr r0, _0805CB98  @ gUnknown_085D5260
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	movs r0, #0
@@ -26540,7 +26540,7 @@ StartSpellAnimDance: @ 0x0805CBDC
 	bl ClearBG1Setup
 	ldr r0, _0805CC10  @ gUnknown_085D5278
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -26683,7 +26683,7 @@ sub_805CD0C: @ 0x0805CD0C
 	bl ClearBG1Setup
 	ldr r0, _0805CD58  @ gUnknown_085D5290
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -26818,7 +26818,7 @@ sub_805CE1C: @ 0x0805CE1C
 	str r0, [r1]
 	ldr r0, _0805CE74  @ gUnknown_085D52A8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r7, #0
@@ -26911,7 +26911,7 @@ sub_805CEC8: @ 0x0805CEC8
 	bl ClearBG1Setup
 	ldr r0, _0805CF00  @ gUnknown_085D52C0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -27031,7 +27031,7 @@ sub_805CFC0: @ 0x0805CFC0
 	str r0, [r1]
 	ldr r0, _0805D01C  @ gUnknown_085D52D8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -27110,7 +27110,7 @@ StartSpellAnimFireBreath: @ 0x0805D064
 	bl ClearBG1Setup
 	ldr r0, _0805D098  @ gUnknown_085D52F0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -27224,7 +27224,7 @@ sub_805D14C: @ 0x0805D14C
 	str r0, [r1]
 	ldr r0, _0805D1AC  @ gUnknown_085D5308
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -27361,7 +27361,7 @@ sub_805D260: @ 0x0805D260
 	str r0, [r1]
 	ldr r0, _0805D2A8  @ gUnknown_085D5320
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -27429,7 +27429,7 @@ sub_805D2EC: @ 0x0805D2EC
 	str r0, [r1]
 	ldr r0, _0805D31C  @ gUnknown_085D5338
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -27507,7 +27507,7 @@ StartSpellAnimIceBreath: @ 0x0805D388
 	bl ClearBG1Setup
 	ldr r0, _0805D3C0  @ gUnknown_085D5358
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -27601,7 +27601,7 @@ sub_805D444: @ 0x0805D444
 	str r0, [r1]
 	ldr r0, _0805D484  @ gUnknown_085D5370
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	ldr r2, _0805D488  @ gUnknown_085E420C
@@ -27670,7 +27670,7 @@ StartSpellAnimDarkBreath: @ 0x0805D4D0
 	bl ClearBG1Setup
 	ldr r0, _0805D504  @ gUnknown_085D5390
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -27771,7 +27771,7 @@ sub_805D59C: @ 0x0805D59C
 	str r0, [r1]
 	ldr r0, _0805D5DC  @ gUnknown_085D53A8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -27853,7 +27853,7 @@ sub_805D644: @ 0x0805D644
 	str r0, [r1]
 	ldr r0, _0805D674  @ gUnknown_085D53F0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -27924,7 +27924,7 @@ sub_805D6CC: @ 0x0805D6CC
 	str r0, [r1]
 	ldr r0, _0805D72C  @ gUnknown_085D5410
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -28058,7 +28058,7 @@ StartSpellAnimThunder: @ 0x0805D7D8
 	bl ClearBG1Setup
 	ldr r0, _0805D810  @ gUnknown_085D5428
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -28165,7 +28165,7 @@ sub_805D8B4: @ 0x0805D8B4
 	str r0, [r1]
 	ldr r0, _0805D910  @ gUnknown_085D5440
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -28292,7 +28292,7 @@ sub_805D9BC: @ 0x0805D9BC
 	str r0, [r1]
 	ldr r0, _0805D9EC  @ gUnknown_085D5468
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -28363,7 +28363,7 @@ sub_805DA44: @ 0x0805DA44
 	str r0, [r1]
 	ldr r0, _0805DA90  @ gUnknown_085D5488
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -28433,7 +28433,7 @@ StartSpellAnimFire: @ 0x0805DAD4
 	bl ClearBG1Setup
 	ldr r0, _0805DB14  @ gUnknown_085D54A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r1, #0
@@ -28466,7 +28466,7 @@ StartSpellAnimElfire: @ 0x0805DB18
 	bl ClearBG1Setup
 	ldr r0, _0805DB58  @ gUnknown_085D54A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -28628,7 +28628,7 @@ sub_805DC64: @ 0x0805DC64
 	str r0, [r1]
 	ldr r0, _0805DCAC  @ gUnknown_085D54B8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -28717,7 +28717,7 @@ sub_805DD1C: @ 0x0805DD1C
 	str r0, [r1]
 	ldr r0, _0805DD64  @ gUnknown_085D5530
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	movs r0, #0
@@ -28820,7 +28820,7 @@ StartSubSpell_efxFireHITBG: @ 0x0805DDF0
 	str r0, [r1]
 	ldr r0, _0805DE4C  @ gUnknown_085D5548
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -28933,7 +28933,7 @@ StartSubSpell_efxElfireBG: @ 0x0805DED8
 	str r0, [r1]
 	ldr r0, _0805DF38  @ gUnknown_085D5608
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -29030,7 +29030,7 @@ StartSubSpell_efxElfireBGCOL: @ 0x0805DFA4
 	str r0, [r1]
 	ldr r0, _0805DFDC  @ gUnknown_085D5620
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -29103,7 +29103,7 @@ StartSubSpell_efxElfireOBJ: @ 0x0805E030
 	str r0, [r1]
 	ldr r0, _0805E074  @ gUnknown_085D5640
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -29192,7 +29192,7 @@ StartSpellAnimFimbulvetr: @ 0x0805E0E4
 	bl ClearBG1Setup
 	ldr r0, _0805E11C  @ gUnknown_085D5658
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -29351,7 +29351,7 @@ sub_805E230: @ 0x0805E230
 	str r0, [r1]
 	ldr r0, _0805E288  @ gUnknown_085D5670
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -29463,7 +29463,7 @@ sub_805E318: @ 0x0805E318
 	str r0, [r1]
 	ldr r0, _0805E370  @ gUnknown_085D56B8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -29599,7 +29599,7 @@ sub_805E430: @ 0x0805E430
 	str r0, [r1]
 	ldr r0, _0805E484  @ gUnknown_085D5728
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -29672,7 +29672,7 @@ sub_805E4C4: @ 0x0805E4C4
 	str r0, [r1]
 	ldr r0, _0805E504  @ gUnknown_085D5740
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -29747,7 +29747,7 @@ sub_805E53C: @ 0x0805E53C
 	str r0, [r1]
 	ldr r0, _0805E5D0  @ gUnknown_085D5758
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	str r6, [r7, #0x5c]
 	strh r5, [r7, #0x2c]
@@ -29992,7 +29992,7 @@ sub_805E754: @ 0x0805E754
 	bl ClearBG1Setup
 	ldr r0, _0805E78C  @ gUnknown_085D5770
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -30114,7 +30114,7 @@ sub_805E850: @ 0x0805E850
 	str r0, [r1]
 	ldr r0, _0805E890  @ gUnknown_085D5788
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -30202,7 +30202,7 @@ sub_805E900: @ 0x0805E900
 	str r0, [r1]
 	ldr r0, _0805E920  @ gUnknown_085D57F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	pop {r4}
 	pop {r0}
@@ -30275,7 +30275,7 @@ sub_805E98C: @ 0x0805E98C
 	str r0, [r1]
 	ldr r0, _0805E9AC  @ gUnknown_085D5820
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	pop {r4}
 	pop {r0}
@@ -30327,7 +30327,7 @@ sub_805E9E4: @ 0x0805E9E4
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _0805EA44  @ gPal
 	ldr r4, _0805EA48  @ gUnknown_020165C8
@@ -30379,7 +30379,7 @@ sub_805EA4C: @ 0x0805EA4C
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
@@ -30431,7 +30431,7 @@ sub_805EAAC: @ 0x0805EAAC
 	bl CpuFastSet
 	ldr r0, _0805EAEC  @ gUnknown_085D5860
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -30461,7 +30461,7 @@ sub_805EAF0: @ 0x0805EAF0
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r3, r0, #0
 	ldr r4, _0805EB50  @ gUnknown_020165C8
 	adds r0, r4, #0
@@ -30543,7 +30543,7 @@ sub_805EB98: @ 0x0805EB98
 	bl ClearBG1Setup
 	ldr r0, _0805EBD0  @ gUnknown_085D5880
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -30696,7 +30696,7 @@ sub_805ECD4: @ 0x0805ECD4
 	str r0, [r1]
 	ldr r0, _0805ED24  @ gUnknown_085D5898
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -30792,7 +30792,7 @@ sub_805ED98: @ 0x0805ED98
 	str r0, [r1]
 	ldr r0, _0805EDD0  @ gUnknown_085D58B8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -30866,7 +30866,7 @@ sub_805EE24: @ 0x0805EE24
 	str r0, [r1]
 	ldr r0, _0805EE6C  @ gUnknown_085D58D8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r4, [r6, #0x5c]
 	movs r0, #0
@@ -30954,7 +30954,7 @@ sub_805EED8: @ 0x0805EED8
 	bl ClearBG1Setup
 	ldr r0, _0805EF10  @ gUnknown_085D58F0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -31100,7 +31100,7 @@ sub_805F004: @ 0x0805F004
 	str r0, [r1]
 	ldr r0, _0805F060  @ gUnknown_085D5908
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -31182,7 +31182,7 @@ sub_805F0B0: @ 0x0805F0B0
 	str r0, [r1]
 	ldr r0, _0805F118  @ gUnknown_085D5908
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -31300,7 +31300,7 @@ sub_805F1A4: @ 0x0805F1A4
 	str r0, [r1]
 	ldr r0, _0805F1E0  @ gUnknown_085D5A68
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
@@ -31334,7 +31334,7 @@ sub_805F1E8: @ 0x0805F1E8
 	str r0, [r1]
 	ldr r0, _0805F22C  @ gUnknown_085D5AB0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
@@ -31524,7 +31524,7 @@ StartSpellAnimNosferatu: @ 0x0805F354
 	bl ClearBG1Setup
 	ldr r0, _0805F38C  @ gUnknown_085D5AE0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -31693,7 +31693,7 @@ sub_805F4B0: @ 0x0805F4B0
 	str r0, [r1]
 	ldr r0, _0805F514  @ gUnknown_085D5AF8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r4, [r6, #0x5c]
 	adds r1, r6, #0
@@ -31757,7 +31757,7 @@ sub_805F53C: @ 0x0805F53C
 	str r0, [r1]
 	ldr r0, _0805F5B0  @ gUnknown_085D5B28
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -32134,7 +32134,7 @@ sub_805F838: @ 0x0805F838
 	str r0, [r1]
 	ldr r0, _0805F864  @ gUnknown_085D5CD8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -32163,7 +32163,7 @@ sub_805F868: @ 0x0805F868
 	movs r0, #4
 	movs r1, #0
 	movs r2, #0x80
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r4, #0x4c]
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -32199,7 +32199,7 @@ sub_805F8B4: @ 0x0805F8B4
 	bl ClearBG1Setup
 	ldr r0, _0805F8EC  @ gUnknown_085D5CF0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -32316,7 +32316,7 @@ sub_805F9A8: @ 0x0805F9A8
 	str r0, [r1]
 	ldr r0, _0805FA00  @ gUnknown_085D5D08
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -32464,7 +32464,7 @@ StartSpellAnimPurge: @ 0x0805FAE0
 	bl ClearBG1Setup
 	ldr r0, _0805FB1C  @ gUnknown_085D5EAC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r6, #0
@@ -32677,7 +32677,7 @@ sub_805FC90: @ 0x0805FC90
 	str r0, [r1]
 	ldr r0, _0805FCCC  @ gUnknown_085D5EC4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -32776,7 +32776,7 @@ sub_805FD5C: @ 0x0805FD5C
 	str r0, [r1]
 	ldr r0, _0805FD8C  @ gUnknown_085D6284
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -32864,7 +32864,7 @@ sub_805FDFC: @ 0x0805FDFC
 	str r0, [r1]
 	ldr r0, _0805FE58  @ gUnknown_085D62DC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _0805FE5C  @ gUnknown_0866F58C
@@ -32930,7 +32930,7 @@ StartSpellAnimDivine: @ 0x0805FE84
 	bl ClearBG1Setup
 	ldr r0, _0805FEBC  @ gUnknown_085D62FC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -33078,7 +33078,7 @@ sub_805FFB0: @ 0x0805FFB0
 	str r0, [r1]
 	ldr r0, _08060008  @ gUnknown_085D6314
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -33139,7 +33139,7 @@ sub_8060034: @ 0x08060034
 	str r0, [r1]
 	ldr r0, _0806008C  @ gUnknown_085D6314
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -33200,7 +33200,7 @@ sub_80600B8: @ 0x080600B8
 	str r0, [r1]
 	ldr r0, _08060110  @ gUnknown_085D6314
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -33341,7 +33341,7 @@ sub_80601E0: @ 0x080601E0
 	str r0, [r1]
 	ldr r0, _08060224  @ gUnknown_085D648C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -33436,7 +33436,7 @@ sub_806028C: @ 0x0806028C
 	bl ClearBG1Setup
 	ldr r0, _080602C4  @ gUnknown_085D64A4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -33643,7 +33643,7 @@ sub_8060440: @ 0x08060440
 	str r0, [r1]
 	ldr r0, _08060498  @ gUnknown_085D64BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -33695,7 +33695,7 @@ sub_80604B0: @ 0x080604B0
 	str r0, [r1]
 	ldr r0, _08060500  @ gUnknown_085D64BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -33740,7 +33740,7 @@ sub_8060514: @ 0x08060514
 	str r0, [r1]
 	ldr r0, _08060558  @ gUnknown_085D64BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -33845,7 +33845,7 @@ sub_80605E8: @ 0x080605E8
 	str r0, [r1]
 	ldr r0, _08060644  @ gUnknown_085D65AC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
@@ -34060,7 +34060,7 @@ sub_8060790: @ 0x08060790
 	str r0, [r1]
 	ldr r0, _080607CC  @ gUnknown_085D65F4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -34151,7 +34151,7 @@ sub_8060838: @ 0x08060838
 	str r0, [r1]
 	ldr r0, _08060884  @ gUnknown_085D6624
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -34204,7 +34204,7 @@ StartSpellAnimFenrir: @ 0x080608A4
 	bl ClearBG1Setup
 	ldr r0, _080608DC  @ gUnknown_085D6644
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -34449,7 +34449,7 @@ sub_8060A9C: @ 0x08060A9C
 	str r0, [r1]
 	ldr r0, _08060B14  @ gUnknown_085D665C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -34558,7 +34558,7 @@ sub_8060B7C: @ 0x08060B7C
 	str r0, [r1]
 	ldr r0, _08060BB8  @ gUnknown_085D667C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -34644,7 +34644,7 @@ sub_8060C18: @ 0x08060C18
 	str r0, [r1]
 	ldr r0, _08060C68  @ gUnknown_085D66A4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -34717,7 +34717,7 @@ sub_8060CAC: @ 0x08060CAC
 	str r0, [r1]
 	ldr r0, _08060D14  @ gUnknown_085D66BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r1, #0
@@ -34783,7 +34783,7 @@ sub_8060D3C: @ 0x08060D3C
 	str r0, [r1]
 	ldr r0, _08060D9C  @ gUnknown_085D66BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r1, #0
@@ -34944,7 +34944,7 @@ sub_8060E90: @ 0x08060E90
 	str r0, [r1]
 	ldr r0, _08060ECC  @ gUnknown_085D686C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -35020,7 +35020,7 @@ sub_8060F24: @ 0x08060F24
 	str r0, [r1]
 	ldr r0, _08060F68  @ gUnknown_085D6884
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -35093,7 +35093,7 @@ sub_8060FA4: @ 0x08060FA4
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r4, _0806101C  @ gSinLut
 	ldr r2, [r6, #0x44]
 	lsls r1, r2, #1
@@ -35153,7 +35153,7 @@ StartSpellAnimHeal: @ 0x08061024
 	bl ClearBG1Setup
 	ldr r0, _08061048  @ gUnknown_085D68BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -35302,7 +35302,7 @@ StartSpellAnimMend: @ 0x08061158
 	bl ClearBG1Setup
 	ldr r0, _0806117C  @ gUnknown_085D68D4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -35474,7 +35474,7 @@ StartSpellAnimRecover: @ 0x080612BC
 	bl ClearBG1Setup
 	ldr r0, _080612E0  @ gUnknown_085D68EC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -35646,7 +35646,7 @@ sub_8061420: @ 0x08061420
 	bl ClearBG1Setup
 	ldr r0, _08061444  @ gUnknown_085D6904
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -35826,7 +35826,7 @@ sub_8061594: @ 0x08061594
 	str r0, [r1]
 	ldr r0, _080615E0  @ gUnknown_085D691C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -35914,7 +35914,7 @@ sub_8061650: @ 0x08061650
 	str r0, [r1]
 	ldr r0, _0806169C  @ gUnknown_085D691C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r1, #0
@@ -36055,7 +36055,7 @@ sub_8061774: @ 0x08061774
 	str r0, [r1]
 	ldr r0, _080617A0  @ gUnknown_085D6934
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -36117,7 +36117,7 @@ sub_80617E4: @ 0x080617E4
 	str r0, [r1]
 	ldr r0, _08061810  @ gUnknown_085D6934
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -36222,7 +36222,7 @@ sub_806189C: @ 0x0806189C
 	str r0, [r1]
 	ldr r0, _080618D4  @ gUnknown_085D6954
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	strh r5, [r0, #0x2c]
 	strh r6, [r0, #0x2e]
@@ -36292,7 +36292,7 @@ _0806191C:
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	b _08061950
 _0806193C:
 	movs r2, #0x2c
@@ -36303,7 +36303,7 @@ _0806193C:
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 _08061950:
 	lsls r1, r0, #0x18
 	lsrs r1, r1, #0x18
@@ -36333,7 +36333,7 @@ sub_806196C: @ 0x0806196C
 	str r0, [r1]
 	ldr r0, _080619BC  @ gUnknown_085D6974
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -36378,7 +36378,7 @@ sub_80619CC: @ 0x080619CC
 	str r0, [r1]
 	ldr r0, _08061A20  @ gUnknown_085D698C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -36516,7 +36516,7 @@ sub_8061ACC: @ 0x08061ACC
 	str r0, [r1]
 	ldr r0, _08061B00  @ gUnknown_085D69AC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r5, [r1, #0x5c]
 	movs r0, #0
@@ -36687,7 +36687,7 @@ sub_8061C18: @ 0x08061C18
 	bl ClearBG1Setup
 	ldr r0, _08061C44  @ gUnknown_085D69CC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	movs r1, #0
@@ -36711,7 +36711,7 @@ sub_8061C48: @ 0x08061C48
 	bl ClearBG1Setup
 	ldr r0, _08061C74  @ gUnknown_085D69CC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -36820,7 +36820,7 @@ sub_8061D28: @ 0x08061D28
 	str r0, [r1]
 	ldr r0, _08061D68  @ gUnknown_085D69E4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -36921,7 +36921,7 @@ sub_8061DF8: @ 0x08061DF8
 	str r0, [r1]
 	ldr r0, _08061E28  @ gUnknown_085D6A0C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -37002,7 +37002,7 @@ sub_8061E8C: @ 0x08061E8C
 	str r0, [r1]
 	ldr r0, _08061F5C  @ gUnknown_085D6A2C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	movs r1, #0
 	mov r8, r1
@@ -37220,7 +37220,7 @@ sub_8062058: @ 0x08062058
 	str r0, [r1]
 	ldr r0, _08062088  @ gUnknown_085D6A48
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -37297,7 +37297,7 @@ sub_80620EC: @ 0x080620EC
 	bl ClearBG1Setup
 	ldr r0, _08062124  @ gUnknown_085D6A68
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -37504,7 +37504,7 @@ sub_80622A0: @ 0x080622A0
 	str r0, [r1]
 	ldr r0, _080622E0  @ gUnknown_085D6A80
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -37595,7 +37595,7 @@ sub_8062358: @ 0x08062358
 	str r0, [r1]
 	ldr r0, _08062398  @ gUnknown_085D6B00
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	ldr r3, _0806239C  @ gUnknown_0867EE04
@@ -37663,7 +37663,7 @@ StartSpellAnimSilence: @ 0x080623E0
 	bl ClearBG1Setup
 	ldr r0, _08062418  @ gUnknown_085D6B20
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -37818,7 +37818,7 @@ sub_8062524: @ 0x08062524
 	str r0, [r1]
 	ldr r0, _08062588  @ gUnknown_085D6B38
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -37927,7 +37927,7 @@ sub_8062608: @ 0x08062608
 	str r0, [r1]
 	ldr r0, _08062650  @ gUnknown_085D6B98
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _08062654  @ gUnknown_08680FFC
@@ -37982,7 +37982,7 @@ StartSpellAnimSleep: @ 0x08062678
 	bl ClearBG1Setup
 	ldr r0, _080626B0  @ gUnknown_085D6BB8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -38133,7 +38133,7 @@ sub_80627B4: @ 0x080627B4
 	str r0, [r1]
 	ldr r0, _08062818  @ gUnknown_085D6BD0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -38242,7 +38242,7 @@ sub_8062898: @ 0x08062898
 	str r0, [r1]
 	ldr r0, _080628E0  @ gUnknown_085D6C28
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _080628E4  @ gUnknown_0868C2E8
@@ -38283,7 +38283,7 @@ sub_80628F0: @ 0x080628F0
 	str r0, [r1]
 	ldr r0, _0806292C  @ gUnknown_085D6C48
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _08062930  @ gUnknown_0868C168
@@ -38329,7 +38329,7 @@ sub_8062944: @ 0x08062944
 	str r0, [r1]
 	ldr r0, _08062964  @ gUnknown_085D6C68
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	pop {r4}
 	pop {r0}
@@ -38380,7 +38380,7 @@ StartSpellAnimHammerne: @ 0x08062998
 	bl ClearBG1Setup
 	ldr r0, _080629D0  @ gUnknown_085D6CB0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -38549,7 +38549,7 @@ sub_8062AF4: @ 0x08062AF4
 	str r0, [r1]
 	ldr r0, _08062B34  @ gUnknown_085D6CC8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -38640,7 +38640,7 @@ sub_8062BAC: @ 0x08062BAC
 	str r0, [r1]
 	ldr r0, _08062BF4  @ gUnknown_085D6D48
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _08062BF8  @ gUnknown_08684908
@@ -38691,7 +38691,7 @@ StartSpellAnimBerserk: @ 0x08062C14
 	bl ClearBG1Setup
 	ldr r0, _08062C4C  @ gUnknown_085D6D68
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -38830,7 +38830,7 @@ sub_8062D30: @ 0x08062D30
 	str r0, [r1]
 	ldr r0, _08062E28  @ gUnknown_085D6D80
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	movs r1, #0
 	mov r9, r1
@@ -39003,7 +39003,7 @@ sub_8062EAC: @ 0x08062EAC
 	str r0, [r1]
 	ldr r0, _08062ED4  @ gUnknown_085D6D98
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -39093,7 +39093,7 @@ sub_8062F4C: @ 0x08062F4C
 	str r0, [r1]
 	ldr r0, _08062F98  @ gUnknown_085D6DB8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
@@ -39440,7 +39440,7 @@ sub_8063214: @ 0x08063214
 	bl ClearBG1Setup
 	ldr r0, _0806324C  @ gUnknown_085D6E70
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -39571,7 +39571,7 @@ sub_806331C: @ 0x0806331C
 	str r0, [r1]
 	ldr r0, _08063364  @ gUnknown_085D6E88
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -39658,7 +39658,7 @@ sub_80633D0: @ 0x080633D0
 	str r0, [r1]
 	ldr r0, _08063418  @ gUnknown_085D6EB4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _0806341C  @ gUnknown_08692524
@@ -39699,7 +39699,7 @@ sub_8063428: @ 0x08063428
 	str r0, [r1]
 	ldr r0, _08063460  @ gUnknown_085D6ED4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _08063464  @ gUnknown_08692674
@@ -39745,7 +39745,7 @@ StartSpellAnimShine: @ 0x08063480
 	bl ClearBG1Setup
 	ldr r0, _080634B8  @ gUnknown_085D6EF4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -39877,7 +39877,7 @@ sub_8063590: @ 0x08063590
 	str r0, [r1]
 	ldr r0, _080635D4  @ gUnknown_085D6F0C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -39969,7 +39969,7 @@ sub_806364C: @ 0x0806364C
 	str r0, [r1]
 	ldr r0, _080636AC  @ gUnknown_085D6F30
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -40105,7 +40105,7 @@ sub_806376C: @ 0x0806376C
 	str r0, [r1]
 	ldr r0, _080637A4  @ gUnknown_085D6F6C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -40178,7 +40178,7 @@ sub_80637F8: @ 0x080637F8
 	str r0, [r1]
 	ldr r0, _08063834  @ gUnknown_085D6F8C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -40307,7 +40307,7 @@ sub_80638F0: @ 0x080638F0
 	str r0, [r1]
 	ldr r0, _08063940  @ gUnknown_085D6FB4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -40373,7 +40373,7 @@ StartSpellAnimLuna: @ 0x08063974
 	bl ClearBG1Setup
 	ldr r0, _080639AC  @ gUnknown_085D6FCC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -40607,7 +40607,7 @@ sub_8063B6C: @ 0x08063B6C
 	str r0, [r1]
 	ldr r0, _08063BB4  @ gUnknown_085D6FE4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -40688,7 +40688,7 @@ sub_8063C20: @ 0x08063C20
 	push {lr}
 	ldr r0, _08063C3C  @ gUnknown_085D7000
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	strh r1, [r0, #0x2e]
@@ -40806,7 +40806,7 @@ sub_8063CFC: @ 0x08063CFC
 	adds r4, r0, #0
 	ldr r0, _08063D18  @ gUnknown_085D7018
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	movs r1, #0x14
@@ -40835,7 +40835,7 @@ sub_8063D1C: @ 0x08063D1C
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r5, #0x44]
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -40870,7 +40870,7 @@ sub_8063D64: @ 0x08063D64
 	str r0, [r1]
 	ldr r0, _08063DCC  @ gUnknown_085D70F0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r4, [r6, #0x5c]
 	movs r0, #0
@@ -41021,7 +41021,7 @@ sub_8063EA0: @ 0x08063EA0
 	str r0, [r1]
 	ldr r0, _08063EDC  @ gUnknown_085D7110
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -41105,7 +41105,7 @@ sub_8063F3C: @ 0x08063F3C
 	str r0, [r1]
 	ldr r0, _08063F98  @ gUnknown_085D7138
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -41215,7 +41215,7 @@ sub_8064024: @ 0x08064024
 _0806402A:
 	ldr r0, _08064054  @ gUnknown_085D71B0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	str r4, [r0, #0x44]
 	adds r4, #1
@@ -41306,7 +41306,7 @@ sub_80640D0: @ 0x080640D0
 	movs r0, #4
 	movs r1, #0
 	movs r2, #0x32
-	bl sub_8012DCC
+	bl Interpolate
 	movs r2, #0x80
 	lsls r2, r2, #2
 	adds r1, r2, #0
@@ -41458,7 +41458,7 @@ sub_80641F0: @ 0x080641F0
 	movs r0, #1
 	movs r1, #0x32
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	movs r2, #0x80
 	lsls r2, r2, #3
 	adds r1, r2, #0
@@ -41538,7 +41538,7 @@ sub_806428C: @ 0x0806428C
 	str r0, [r1]
 	ldr r0, _080642B8  @ gUnknown_085D71E0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -41567,7 +41567,7 @@ sub_80642BC: @ 0x080642BC
 	movs r0, #4
 	movs r1, #0x80
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r4, #0x4c]
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -41603,7 +41603,7 @@ sub_8064308: @ 0x08064308
 	bl ClearBG1Setup
 	ldr r0, _08064340  @ gUnknown_085D71F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -41828,7 +41828,7 @@ sub_80644E0: @ 0x080644E0
 	str r0, [r1]
 	ldr r0, _08064538  @ gUnknown_085D7210
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -41972,7 +41972,7 @@ sub_80645FC: @ 0x080645FC
 	ldrsh r0, [r4, r5]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, _08064648  @ gDispIo
 	strh r0, [r1, #0x20]
 	ldrh r0, [r4, #0x2c]
@@ -42031,7 +42031,7 @@ sub_806466C: @ 0x0806466C
 	str r0, [r1]
 	ldr r0, _080646A4  @ gUnknown_085D7240
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -42106,7 +42106,7 @@ sub_80646FC: @ 0x080646FC
 	adds r4, r0, #0
 	ldr r0, _0806471C  @ gUnknown_085D7268
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	strh r1, [r0, #0x2e]
@@ -42222,7 +42222,7 @@ sub_80647D0: @ 0x080647D0
 	adds r4, r1, #0
 	ldr r0, _080647EC  @ gUnknown_085D7280
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	strh r4, [r0, #0x2e]
@@ -42250,7 +42250,7 @@ sub_80647F0: @ 0x080647F0
 	str r0, [sp]
 	movs r0, #4
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r5, #0x44]
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -42284,7 +42284,7 @@ sub_8064838: @ 0x08064838
 	str r0, [r1]
 	ldr r0, _08064880  @ gUnknown_085D7398
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -42422,7 +42422,7 @@ sub_8064958: @ 0x08064958
 	str r0, [r1]
 	ldr r0, _08064990  @ gUnknown_085D73B8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -42496,7 +42496,7 @@ sub_80649E4: @ 0x080649E4
 	str r0, [r1]
 	ldr r0, _08064A2C  @ gUnknown_085D73D8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -42634,7 +42634,7 @@ sub_8064B04: @ 0x08064B04
 	str r0, [r1]
 	ldr r0, _08064B3C  @ gUnknown_085D73F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -42708,7 +42708,7 @@ sub_8064B90: @ 0x08064B90
 	str r0, [r1]
 	ldr r0, _08064BEC  @ gUnknown_085D7418
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -42785,7 +42785,7 @@ sub_8064C28: @ 0x08064C28
 	str r0, [r1]
 	ldr r0, _08064C6C  @ gUnknown_085D7430
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -42894,7 +42894,7 @@ sub_8064D00: @ 0x08064D00
 	str r0, [r1]
 	ldr r0, _08064D8C  @ gUnknown_085D7450
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -43001,7 +43001,7 @@ sub_8064DE4: @ 0x08064DE4
 	str r0, [r1]
 	ldr r0, _08064E1C  @ gUnknown_085D7470
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -43074,7 +43074,7 @@ StartSpellAnimAura: @ 0x08064E74
 	bl ClearBG1Setup
 	ldr r0, _08064EAC  @ gUnknown_085D7490
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -43271,7 +43271,7 @@ sub_8065008: @ 0x08065008
 	str r0, [r1]
 	ldr r0, _08065070  @ gUnknown_085D74A8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -43338,7 +43338,7 @@ sub_806509C: @ 0x0806509C
 	str r0, [r1]
 	ldr r0, _08065104  @ gUnknown_085D74A8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -43405,7 +43405,7 @@ sub_8065130: @ 0x08065130
 	str r0, [r1]
 	ldr r0, _08065198  @ gUnknown_085D74A8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -43518,7 +43518,7 @@ sub_806521C: @ 0x0806521C
 	str r0, [r1]
 	ldr r0, _08065264  @ gUnknown_085D7530
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -43656,7 +43656,7 @@ sub_806533C: @ 0x0806533C
 	str r0, [r1]
 	ldr r0, _08065378  @ gUnknown_085D7550
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -43730,7 +43730,7 @@ sub_80653CC: @ 0x080653CC
 	str r0, [r1]
 	ldr r0, _08065418  @ gUnknown_085D7570
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -43836,7 +43836,7 @@ sub_8065498: @ 0x08065498
 	str r0, [r1]
 	ldr r0, _080654E4  @ gUnknown_085D75E8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -43980,7 +43980,7 @@ sub_80655C4: @ 0x080655C4
 	str r0, [r1]
 	ldr r0, _08065614  @ gUnknown_085D7650
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	ldr r3, _08065618  @ gUnknown_08752020
@@ -44034,7 +44034,7 @@ sub_8065634: @ 0x08065634
 	bl ClearBG1Setup
 	ldr r0, _0806566C  @ gUnknown_085D7670
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -44064,7 +44064,7 @@ sub_8065670: @ 0x08065670
 	bl ClearBG1Setup
 	ldr r0, _080656A8  @ gUnknown_085D7670
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -44094,7 +44094,7 @@ sub_80656AC: @ 0x080656AC
 	bl ClearBG1Setup
 	ldr r0, _080656E4  @ gUnknown_085D7670
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -44124,7 +44124,7 @@ sub_80656E8: @ 0x080656E8
 	bl ClearBG1Setup
 	ldr r0, _08065720  @ gUnknown_085D7670
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -44240,7 +44240,7 @@ StartSpellAnimIvaldi: @ 0x080657D4
 	bl ClearBG1Setup
 	ldr r0, _0806580C  @ gUnknown_085D7688
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -44469,7 +44469,7 @@ StartSpellBG_IvaldiBG1: @ 0x080659AC
 	str r0, [r1]
 	ldr r0, _080659FC  @ gUnknown_085D76A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -44569,7 +44569,7 @@ StartSpellBG_IvaldiBG2: @ 0x08065A80
 	str r0, [r1]
 	ldr r0, _08065AD8  @ gUnknown_085D76E8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetCoreAIStruct
@@ -44671,7 +44671,7 @@ StartSpellBG_IvaldiBG3: @ 0x08065B54
 	str r0, [r1]
 	ldr r0, _08065BA4  @ gUnknown_085D7714
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -44776,7 +44776,7 @@ StartSpellBG_IvaldiBG4: @ 0x08065C38
 	str r0, [r1]
 	ldr r0, _08065C8C  @ gUnknown_085D77B0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -44959,7 +44959,7 @@ StartSpellOBJ_IvaldiFall: @ 0x08065DA4
 	str r0, [r1]
 	ldr r0, _08065DF4  @ gUnknown_085D77CC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetCoreAIStruct
@@ -45148,7 +45148,7 @@ StartSpellOBJ_IvaldiSideWash: @ 0x08065F10
 	str r0, [r1]
 	ldr r0, _08065F60  @ gUnknown_085D77E4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetCoreAIStruct
@@ -45315,7 +45315,7 @@ sub_8066060: @ 0x08066060
 	str r0, [r1]
 	ldr r0, _080660B0  @ gUnknown_085D77FC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetCoreAIStruct
@@ -45594,7 +45594,7 @@ sub_8066258: @ 0x08066258
 	str r0, [r1]
 	ldr r0, _080662D0  @ gUnknown_085D7814
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -45742,7 +45742,7 @@ sub_8066390: @ 0x08066390
 	str r0, [r1]
 	ldr r0, _080663F0  @ gUnknown_085D782C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	mov r0, r8
 	bl GetCoreAIStruct
@@ -45843,7 +45843,7 @@ sub_8066470: @ 0x08066470
 	str r0, [r1]
 	ldr r0, _080664A4  @ gUnknown_085D7844
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -45873,7 +45873,7 @@ sub_80664A8: @ 0x080664A8
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _08066508  @ gPal
 	ldr r4, _0806650C  @ gUnknown_020165C8
@@ -45922,7 +45922,7 @@ sub_8066514: @ 0x08066514
 	bl ClearBG1Setup
 	ldr r0, _0806654C  @ gUnknown_085D785C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -46128,7 +46128,7 @@ sub_80666D0: @ 0x080666D0
 	str r0, [r1]
 	ldr r0, _08066710  @ gUnknown_085D7874
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -46256,7 +46256,7 @@ sub_80667E0: @ 0x080667E0
 	str r0, [r1]
 	ldr r0, _08066828  @ gUnknown_085D7B8C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -46409,7 +46409,7 @@ sub_8066914: @ 0x08066914
 	str r0, [r1]
 	ldr r0, _08066954  @ gUnknown_085D7BC8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -46527,7 +46527,7 @@ sub_8066A0C: @ 0x08066A0C
 	str r0, [r1]
 	ldr r0, _08066A4C  @ gUnknown_085D7C58
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -46653,7 +46653,7 @@ sub_8066B14: @ 0x08066B14
 	str r0, [r1]
 	ldr r0, _08066B3C  @ gUnknown_085D7D30
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -46680,7 +46680,7 @@ sub_8066B40: @ 0x08066B40
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08066BB4  @ gPal
 	ldr r4, _08066BB8  @ gUnknown_020165C8
@@ -46751,7 +46751,7 @@ sub_8066BD4: @ 0x08066BD4
 	str r0, [r1]
 	ldr r0, _08066C0C  @ gUnknown_085D7D58
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -46893,7 +46893,7 @@ sub_8066CB8: @ 0x08066CB8
 	str r0, [r1]
 	ldr r0, _08066D3C  @ gUnknown_085D7D78
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -47020,7 +47020,7 @@ sub_8066DB0: @ 0x08066DB0
 	str r0, [r1]
 	ldr r0, _08066E34  @ gUnknown_085D7D90
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -47165,7 +47165,7 @@ sub_8066EC8: @ 0x08066EC8
 	str r0, [r1]
 	ldr r0, _08066F50  @ gUnknown_085D7DA8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -47293,7 +47293,7 @@ sub_8066FC4: @ 0x08066FC4
 	str r0, [r1]
 	ldr r0, _0806704C  @ gUnknown_085D7DC0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -47430,7 +47430,7 @@ sub_80670DC: @ 0x080670DC
 	str r0, [r1]
 	ldr r0, _08067164  @ gUnknown_085D7DD8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -47548,7 +47548,7 @@ sub_80671F4: @ 0x080671F4
 	str r0, [r1]
 	ldr r0, _08067238  @ gUnknown_085D7DF0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetCoreAIStruct
@@ -47844,7 +47844,7 @@ sub_8067400: @ 0x08067400
 	str r0, [r1]
 	ldr r0, _0806748C  @ gUnknown_085D7E08
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	mov r0, r8
 	bl GetCoreAIStruct
@@ -47937,7 +47937,7 @@ StartSpellAnimStone: @ 0x080674D4
 	bl ClearBG1Setup
 	ldr r0, _0806750C  @ gUnknown_085D7E20
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -48061,7 +48061,7 @@ sub_80675D4: @ 0x080675D4
 	str r0, [r1]
 	ldr r0, _08067638  @ gUnknown_085D7E38
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -48193,7 +48193,7 @@ sub_80676E4: @ 0x080676E4
 	str r0, [r1]
 	ldr r0, _08067754  @ gUnknown_085D7EE8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r6, #0
 	bl GetCoreAIStruct
@@ -48277,7 +48277,7 @@ StartSpellAnimEvilEye: @ 0x08067798
 	bl ClearBG1Setup
 	ldr r0, _080677D0  @ gUnknown_085D7F00
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -48398,7 +48398,7 @@ sub_806788C: @ 0x0806788C
 	str r0, [r1]
 	ldr r0, _080678EC  @ gUnknown_085D7F18
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -48516,7 +48516,7 @@ sub_8067984: @ 0x08067984
 	str r0, [r1]
 	ldr r0, _080679C0  @ gUnknown_085D8020
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r4, #0
 	bl GetCoreAIStruct
@@ -48665,7 +48665,7 @@ sub_8067AA0: @ 0x08067AA0
 	str r0, [r1]
 	ldr r0, _08067B3C  @ gUnknown_085D8098
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r6, #0
 	bl GetCoreAIStruct
@@ -48756,7 +48756,7 @@ StartSpellAnimNaglfar: @ 0x08067B7C
 	bl ClearBG1Setup
 	ldr r0, _08067BB4  @ gUnknown_085D80B0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -49037,7 +49037,7 @@ sub_8067DC4: @ 0x08067DC4
 	str r0, [r1]
 	ldr r0, _08067E08  @ gUnknown_085D80C8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -49138,7 +49138,7 @@ sub_8067E98: @ 0x08067E98
 	str r0, [r1]
 	ldr r0, _08067ED4  @ gUnknown_085D80E8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -49237,7 +49237,7 @@ sub_8067F64: @ 0x08067F64
 	str r0, [r1]
 	ldr r0, _08067FA4  @ gUnknown_085D81C0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -49332,7 +49332,7 @@ sub_8068028: @ 0x08068028
 	str r0, [r1]
 	ldr r0, _08068068  @ gUnknown_085D81F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -49468,7 +49468,7 @@ sub_80680EC: @ 0x080680EC
 	str r0, [r1]
 	ldr r0, _080681A0  @ gUnknown_085D8238
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetCoreAIStruct
@@ -49613,7 +49613,7 @@ sub_806823C: @ 0x0806823C
 	str r0, [r1]
 	ldr r0, _080682D4  @ gUnknown_085D8250
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	mov r0, r8
 	bl GetCoreAIStruct
@@ -49702,7 +49702,7 @@ sub_8068314: @ 0x08068314
 	str r0, [r1]
 	ldr r0, _08068344  @ gUnknown_085D8268
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
 	bl GetCoreAIStruct
@@ -50127,7 +50127,7 @@ sub_8068614: @ 0x08068614
 	adds r6, r2, #0
 	ldr r0, _08068634  @ gUnknown_085D8280
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -50189,7 +50189,7 @@ sub_8068680: @ 0x08068680
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _0806872C  @ gPal
 	ldr r4, _08068730  @ gUnknown_020165C8
@@ -50276,7 +50276,7 @@ sub_8068738: @ 0x08068738
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _080687C8  @ gPal
 	ldr r4, _080687CC  @ gUnknown_020165C8
@@ -50356,7 +50356,7 @@ sub_80687E4: @ 0x080687E4
 	bl ClearBG1Setup
 	ldr r0, _08068818  @ gUnknown_085D82B0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -50466,7 +50466,7 @@ sub_80688C0: @ 0x080688C0
 	str r0, [r1]
 	ldr r0, _08068920  @ gUnknown_085D82C8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -50603,7 +50603,7 @@ sub_80689D4: @ 0x080689D4
 	str r0, [r1]
 	ldr r0, _08068A1C  @ gUnknown_085D82E0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -50671,7 +50671,7 @@ sub_8068A60: @ 0x08068A60
 	str r0, [r1]
 	ldr r0, _08068A90  @ gUnknown_085D82F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -50821,7 +50821,7 @@ sub_8068B80: @ 0x08068B80
 	bl ClearBG1Setup
 	ldr r0, _08068BB4  @ gUnknown_085D8318
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -51022,7 +51022,7 @@ sub_8068D20: @ 0x08068D20
 	movs r0, #1
 	movs r1, #4
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r3, r0, #0
 	ldr r0, _08068D70  @ gPal
 	movs r1, #6
@@ -51064,7 +51064,7 @@ sub_8068D78: @ 0x08068D78
 	str r0, [r1]
 	ldr r0, _08068D98  @ gUnknown_085D8330
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	pop {r0}
@@ -51784,7 +51784,7 @@ sub_80692B0: @ 0x080692B0
 	str r0, [r1]
 	ldr r0, _08069314  @ gUnknown_085D83A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -52009,7 +52009,7 @@ sub_8069488: @ 0x08069488
 	str r0, [r1]
 	ldr r0, _080694D4  @ gUnknown_085D8484
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -52127,7 +52127,7 @@ _08069574:
 	movs r1, #0
 	movs r2, #0x10
 _08069582:
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 _08069588:
 	mov r2, r9
@@ -52293,7 +52293,7 @@ sub_80696F0: @ 0x080696F0
 	push {lr}
 	ldr r0, _08069700  @ gUnknown_085D84B4
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -52528,7 +52528,7 @@ sub_8069878: @ 0x08069878
 	str r0, [r1]
 	ldr r0, _080698D0  @ gUnknown_085D8704
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -52807,7 +52807,7 @@ sub_8069AC4: @ 0x08069AC4
 	adds r4, r0, #0
 	ldr r0, _08069AF0  @ gUnknown_085D871C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -52906,7 +52906,7 @@ sub_8069B68: @ 0x08069B68
 	str r0, [r1]
 	ldr r0, _08069BCC  @ gUnknown_085D8734
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	str r6, [r7, #0x5c]
 	movs r0, #0
@@ -52996,7 +52996,7 @@ sub_8069C18: @ 0x08069C18
 	str r0, [r1]
 	ldr r0, _08069C7C  @ gUnknown_085D8734
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	str r6, [r7, #0x5c]
 	movs r0, #0
@@ -53303,7 +53303,7 @@ sub_8069E88: @ 0x08069E88
 	adds r4, r0, #0
 	ldr r0, _08069EB8  @ gUnknown_085D874C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -53335,7 +53335,7 @@ StartSpellAnimCrimsonEye: @ 0x08069EC4
 	bl ClearBG1Setup
 	ldr r0, _08069EFC  @ gUnknown_085D8764
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -53543,7 +53543,7 @@ sub_806A068: @ 0x0806A068
 	str r0, [r1]
 	ldr r0, _0806A0B4  @ gUnknown_085D87AC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -53592,7 +53592,7 @@ sub_806A0CC: @ 0x0806A0CC
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0x78
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, [r4, #0x60]
 	strh r0, [r1, #2]
 	movs r0, #0x3a
@@ -53604,7 +53604,7 @@ sub_806A0CC: @ 0x0806A0CC
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0x40
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, [r4, #0x60]
 	strh r0, [r1, #4]
 	ldrh r0, [r4, #0x2c]
@@ -53654,7 +53654,7 @@ sub_806A138: @ 0x0806A138
 	str r0, [r1]
 	ldr r0, _0806A1DC  @ gUnknown_085D87C4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r7, [r6, #0x5c]
 	movs r0, #1
@@ -53694,7 +53694,7 @@ _0806A174:
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0x78
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r4, #2]
 	movs r0, #0x3a
 	ldrsh r2, [r6, r0]
@@ -53705,7 +53705,7 @@ _0806A174:
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0x40
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r4, #4]
 	add sp, #4
 	pop {r3}
@@ -53979,7 +53979,7 @@ sub_806A3CC: @ 0x0806A3CC
 	str r0, [r1]
 	ldr r0, _0806A3F0  @ gUnknown_085D885C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -54002,7 +54002,7 @@ sub_806A3F4: @ 0x0806A3F4
 	str r0, [r1]
 	ldr r0, _0806A43C  @ gUnknown_085D8CC4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -54110,7 +54110,7 @@ sub_806A4CC: @ 0x0806A4CC
 	str r0, [r1]
 	ldr r0, _0806A524  @ gUnknown_085D8894
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -54228,7 +54228,7 @@ _0806A5A8:
 	str r0, [sp]
 	movs r0, #0
 	movs r2, #0x80
-	bl sub_8012DCC
+	bl Interpolate
 	muls r0, r7, r0
 	asrs r7, r0, #8
 	cmp r7, #1
@@ -54367,7 +54367,7 @@ _0806A6A2:
 	str r0, [sp]
 	movs r0, #0
 	adds r2, r5, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	cmp r4, #0x2c
 	ble _0806A6BA
@@ -54405,7 +54405,7 @@ _0806A6E0:
 	movs r0, #0
 	adds r1, r5, #0
 	adds r3, r4, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	subs r0, r6, r5
 	add sp, #4
@@ -54436,7 +54436,7 @@ _0806A714:
 	movs r1, #0x80
 	movs r2, #0x20
 	adds r3, r7, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	movs r1, #0x80
 	lsls r1, r1, #1
@@ -54445,14 +54445,14 @@ _0806A714:
 	str r4, [sp]
 	movs r0, #0
 	adds r3, r7, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	movs r0, #0x2d
 	str r0, [sp]
 	movs r0, #0
 	adds r2, r5, #0
 	adds r3, r6, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r7, r0, #0
 	cmp r7, #1
 	bgt _0806A750
@@ -54592,7 +54592,7 @@ _0806A822:
 	str r0, [sp]
 	movs r0, #4
 	adds r1, r4, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldrh r1, [r7, #0x32]
 	adds r1, r1, r0
 	strh r1, [r6, #2]
@@ -54610,7 +54610,7 @@ _0806A822:
 	str r0, [sp]
 	movs r0, #4
 	adds r1, r4, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldrh r1, [r7, #0x3a]
 	adds r1, r1, r0
 	strh r1, [r6, #4]
@@ -54621,7 +54621,7 @@ _0806A822:
 	movs r0, #4
 	movs r1, #2
 	mov r2, r8
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	ldr r0, [sp, #4]
 	adds r2, r5, #0
@@ -54782,7 +54782,7 @@ sub_806A9C4: @ 0x0806A9C4
 	movs r0, #4
 	movs r1, #0
 	movs r2, #0x18
-	bl sub_8012DCC
+	bl Interpolate
 	mov r9, r0
 	movs r7, #0
 _0806A9E6:
@@ -54954,7 +54954,7 @@ _0806AAFC:
 	str r4, [sp]
 	movs r0, #1
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldrh r1, [r5, #0x32]
 	adds r1, r1, r0
 	strh r1, [r7, #2]
@@ -54967,7 +54967,7 @@ _0806AAFC:
 	str r4, [sp]
 	movs r0, #1
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldrh r1, [r5, #0x3a]
 	adds r1, r1, r0
 	strh r1, [r7, #4]
@@ -54977,7 +54977,7 @@ _0806AAFC:
 	movs r0, #1
 	movs r1, #0x18
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	mov r0, r9
 	adds r2, r6, #0
@@ -55038,7 +55038,7 @@ sub_806ABCC: @ 0x0806ABCC
 	str r0, [r1]
 	ldr r0, _0806AC04  @ gUnknown_085D8960
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -55401,7 +55401,7 @@ sub_806AEF4: @ 0x0806AEF4
 	bl ClearBG1Setup
 	ldr r0, _0806AF2C  @ gUnknown_085D89A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -55689,7 +55689,7 @@ sub_806B134: @ 0x0806B134
 	str r0, [r1]
 	ldr r0, _0806B17C  @ gUnknown_085D8A78
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -55775,7 +55775,7 @@ sub_806B1E8: @ 0x0806B1E8
 	str r0, [r1]
 	ldr r0, _0806B238  @ gUnknown_085D8ABC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -55886,7 +55886,7 @@ sub_806B2C0: @ 0x0806B2C0
 	str r0, [r1]
 	ldr r0, _0806B308  @ gUnknown_085D8AD4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -55985,7 +55985,7 @@ _0806B382:
 	movs r1, #0
 	movs r2, #0x10
 _0806B390:
-	bl sub_8012DCC
+	bl Interpolate
 	mov sl, r0
 _0806B396:
 	ldrh r0, [r7]
@@ -56137,7 +56137,7 @@ sub_806B4E4: @ 0x0806B4E4
 	push {lr}
 	ldr r0, _0806B4F4  @ gUnknown_085D8AEC
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -56154,7 +56154,7 @@ sub_806B4F8: @ 0x0806B4F8
 	bl ClearBG1Setup
 	ldr r0, _0806B530  @ gUnknown_085D8B0C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -56354,7 +56354,7 @@ sub_806B680: @ 0x0806B680
 	str r0, [r1]
 	ldr r0, _0806B6C0  @ gUnknown_085D8B24
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	ldr r3, _0806B6C4  @ gUnknown_086EAE24
@@ -56499,7 +56499,7 @@ sub_806B7A8: @ 0x0806B7A8
 	str r0, [r1]
 	ldr r0, _0806B7F4  @ gUnknown_085D8BD0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -56618,7 +56618,7 @@ sub_806B89C: @ 0x0806B89C
 	str r0, [r1]
 	ldr r0, _0806B8E8  @ gUnknown_085D8C0C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -56709,7 +56709,7 @@ sub_806B940: @ 0x0806B940
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [sp, #8]
 	ldrh r0, [r6]
 	strh r0, [r5]
@@ -56980,7 +56980,7 @@ sub_806BBDC: @ 0x0806BBDC
 	push {lr}
 	ldr r0, _0806BBEC  @ gUnknown_085D8C24
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -57095,7 +57095,7 @@ sub_806BC98: @ 0x0806BC98
 	str r0, [r1]
 	ldr r0, _0806BCE8  @ gUnknown_085D8C4C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	str r5, [r7, #0x5c]
 	movs r0, #0
@@ -57376,7 +57376,7 @@ sub_806BEEC: @ 0x0806BEEC
 	str r0, [r1]
 	ldr r0, _0806BF24  @ gUnknown_085D8C64
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -57590,7 +57590,7 @@ sub_806C0B8: @ 0x0806C0B8
 	str r0, [r1]
 	ldr r0, _0806C100  @ gUnknown_085D8CC4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -57847,7 +57847,7 @@ sub_806C2D4: @ 0x0806C2D4
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [sp, #8]
 	ldrh r0, [r6]
 	strh r0, [r5]
@@ -58008,7 +58008,7 @@ sub_806C464: @ 0x0806C464
 	push {lr}
 	ldr r0, _0806C474  @ gUnknown_085D8CE4
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -58035,7 +58035,7 @@ sub_806C478: @ 0x0806C478
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [sp, #8]
 	ldrh r0, [r6]
 	strh r0, [r5]
@@ -58196,7 +58196,7 @@ sub_806C608: @ 0x0806C608
 	push {lr}
 	ldr r0, _0806C618  @ gUnknown_085D8D14
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -58211,7 +58211,7 @@ sub_806C61C: @ 0x0806C61C
 	adds r5, r1, #0
 	ldr r0, _0806C644  @ gUnknown_085D8D44
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -58265,7 +58265,7 @@ sub_806C67C: @ 0x0806C67C
 	adds r4, r1, #0
 	ldr r0, _0806C6A0  @ gUnknown_085D8D5C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r5, [r6, #0x5c]
 	movs r0, #0
@@ -58371,7 +58371,7 @@ _0806C74E:
 	bl ClearBG1Setup
 	ldr r0, _0806C764  @ gUnknown_085D8D74
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	strh r4, [r0, #0x2c]
 _0806C75E:
@@ -58417,7 +58417,7 @@ sub_806C798: @ 0x0806C798
 	adds r5, r0, #0
 	ldr r0, _0806C7D4  @ gUnknown_085D8D8C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -58474,7 +58474,7 @@ sub_806C810: @ 0x0806C810
 	adds r4, r0, #0
 	ldr r0, _0806C834  @ gUnknown_085D8DA4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -58552,7 +58552,7 @@ sub_806C87C: @ 0x0806C87C
 _0806C8AE:
 	ldr r0, _0806C8C0  @ gUnknown_085D8DC4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	strh r5, [r0, #0x2c]
 _0806C8BA:
@@ -58610,7 +58610,7 @@ sub_806C904: @ 0x0806C904
 	str r0, [r1]
 	ldr r0, _0806C968  @ gUnknown_085D8DDC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -58715,7 +58715,7 @@ sub_806C9E8: @ 0x0806C9E8
 	bl ClearBG1Setup
 	ldr r0, _0806CA04  @ gUnknown_085D8E1C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -58761,7 +58761,7 @@ sub_806CA38: @ 0x0806CA38
 	adds r5, r0, #0
 	ldr r0, _0806CA74  @ gUnknown_085D8E34
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -58818,7 +58818,7 @@ sub_806CAB0: @ 0x0806CAB0
 	adds r4, r0, #0
 	ldr r0, _0806CAD4  @ gUnknown_085D8E4C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -58877,7 +58877,7 @@ sub_806CB1C: @ 0x0806CB1C
 	bl ClearBG1Setup
 	ldr r0, _0806CB38  @ gUnknown_085D8E6C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -58935,7 +58935,7 @@ sub_806CB7C: @ 0x0806CB7C
 	str r0, [r1]
 	ldr r0, _0806CBE0  @ gUnknown_085D8E84
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -59040,7 +59040,7 @@ sub_806CC60: @ 0x0806CC60
 	adds r5, r1, #0
 	ldr r0, _0806CC84  @ gUnknown_085D8EC4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -59072,7 +59072,7 @@ sub_806CC94: @ 0x0806CC94
 	adds r4, r1, #0
 	ldr r0, _0806CCBC  @ gUnknown_085D8EDC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -59301,7 +59301,7 @@ sub_806CE30: @ 0x0806CE30
 	bne _0806CE6E
 	ldr r0, _0806CE60  @ gUnknown_085D8F0C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	strh r5, [r0, #0x2c]
 	ldr r0, _0806CE64  @ gUnknown_0203E120
@@ -59346,7 +59346,7 @@ sub_806CE80: @ 0x0806CE80
 	str r0, [r1]
 	ldr r0, _0806CEBC  @ gUnknown_085D8F24
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -59478,7 +59478,7 @@ sub_806CF80: @ 0x0806CF80
 	str r0, [r1]
 	ldr r0, _0806CFBC  @ gUnknown_085D8F5C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -59613,7 +59613,7 @@ _0806D090:
 	bl ClearBG1Setup
 	ldr r0, _0806D0C8  @ gUnknown_085D8F94
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	strh r5, [r4, #0x2c]
@@ -59728,7 +59728,7 @@ sub_806D1B4: @ 0x0806D1B4
 	str r0, [r1]
 	ldr r0, _0806D1EC  @ gUnknown_085D8FAC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	movs r0, #0
@@ -59905,7 +59905,7 @@ sub_806D320: @ 0x0806D320
 	bne _0806D342
 	ldr r0, _0806D34C  @ gUnknown_085D901C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	strh r4, [r0, #0x2c]
 	adds r0, r5, #0
@@ -59942,7 +59942,7 @@ sub_806D35C: @ 0x0806D35C
 	str r0, [r1]
 	ldr r0, _0806D3C8  @ gUnknown_085D9034
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -60140,7 +60140,7 @@ sub_806D570: @ 0x0806D570
 	bne _0806D58E
 	ldr r0, _0806D598  @ gUnknown_085D904C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	strh r4, [r0, #0x2c]
 	adds r0, r5, #0
@@ -60175,7 +60175,7 @@ sub_806D5A8: @ 0x0806D5A8
 	str r0, [r1]
 	ldr r0, _0806D5F8  @ gUnknown_085D9064
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r7, #0
@@ -60262,7 +60262,7 @@ sub_806D65C: @ 0x0806D65C
 	adds r4, r0, #0
 	ldr r0, _0806D674  @ gUnknown_085D907C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -60339,7 +60339,7 @@ sub_806D6E8: @ 0x0806D6E8
 	adds r4, r0, #0
 	ldr r0, _0806D700  @ gUnknown_085D9094
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -60412,7 +60412,7 @@ sub_806D764: @ 0x0806D764
 	str r0, [r1]
 	ldr r0, _0806D7C8  @ gUnknown_085D90AC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -60508,7 +60508,7 @@ sub_806D828: @ 0x0806D828
 	str r0, [r1]
 	ldr r0, _0806D88C  @ gUnknown_085D90C4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -60645,7 +60645,7 @@ _0806D950: .4byte gUnknown_02000000
 _0806D954:
 	ldr r0, _0806D97C  @ gUnknown_085D90DC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -60682,7 +60682,7 @@ sub_806D98C: @ 0x0806D98C
 	bl ClearBG1Setup
 	ldr r0, _0806D9A8  @ gUnknown_085D90F4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -60757,7 +60757,7 @@ sub_806DA1C: @ 0x0806DA1C
 	adds r5, r0, #0
 	ldr r0, _0806DA58  @ gUnknown_085D910C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -60812,7 +60812,7 @@ sub_806DA90: @ 0x0806DA90
 	push {lr}
 	ldr r0, _0806DAAC  @ gUnknown_085D9124
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	strh r1, [r0, #0x2e]
@@ -60904,7 +60904,7 @@ sub_806DB34: @ 0x0806DB34
 	adds r4, r0, #0
 	ldr r0, _0806DB50  @ gUnknown_085D913C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	movs r1, #0x28
@@ -60933,7 +60933,7 @@ sub_806DB54: @ 0x0806DB54
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r5, #0x44]
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -60963,7 +60963,7 @@ sub_806DB9C: @ 0x0806DB9C
 	bl ClearBG1Setup
 	ldr r0, _0806DBB8  @ gUnknown_085D9244
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -61026,7 +61026,7 @@ sub_806DC08: @ 0x0806DC08
 	str r0, [r1]
 	ldr r0, _0806DC8C  @ gUnknown_085D925C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -61316,7 +61316,7 @@ _0806DF10:
 _0806DF14:
 	ldr r0, _0806DF78  @ gUnknown_085D9284
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r7, [r6, #0x5c]
 	movs r0, #0
@@ -61446,7 +61446,7 @@ sub_806E014: @ 0x0806E014
 	bl ClearBG1Setup
 	ldr r0, _0806E030  @ gUnknown_085D92A4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -61506,7 +61506,7 @@ sub_806E078: @ 0x0806E078
 	str r0, [r1]
 	ldr r0, _0806E0C0  @ gUnknown_085D92BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -61588,7 +61588,7 @@ sub_806E128: @ 0x0806E128
 	adds r4, r0, #0
 	ldr r0, _0806E14C  @ gUnknown_085D92E0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -61702,7 +61702,7 @@ sub_806E1F0: @ 0x0806E1F0
 _0806E202:
 	ldr r0, _0806E264  @ gUnknown_085D9300
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r6, [r5, #0x5c]
 	movs r0, #0
@@ -61839,7 +61839,7 @@ sub_806E310: @ 0x0806E310
 	adds r4, r0, #0
 	ldr r0, _0806E364  @ gUnknown_085D9318
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	str r4, [r7, #0x5c]
 	movs r0, #0
@@ -62138,7 +62138,7 @@ sub_806E58C: @ 0x0806E58C
 	lsrs r5, r5, #0x18
 	ldr r0, _0806E5E8  @ gUnknown_085D93F0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	movs r0, #0
@@ -62945,7 +62945,7 @@ sub_806EB7C: @ 0x0806EB7C
 	adds r4, r0, #0
 	ldr r0, _0806EB98  @ gUnknown_085D9454
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	bl sub_806E93C
 	str r4, [r5, #0x5c]
@@ -62984,7 +62984,7 @@ sub_806EBBC: @ 0x0806EBBC
 	adds r6, r0, #0
 	ldr r0, _0806EC08  @ gUnknown_085D947C
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -63065,7 +63065,7 @@ sub_806EC68: @ 0x0806EC68
 	adds r7, r0, #0
 	ldr r0, _0806ECA4  @ gUnknown_085D94C4
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r5, [r6, #0x5c]
 	movs r0, #0
@@ -63146,7 +63146,7 @@ sub_806ED0C: @ 0x0806ED0C
 	adds r4, r0, #0
 	ldr r0, _0806ED28  @ gUnknown_085D94DC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	bl sub_806E93C
 	str r4, [r5, #0x5c]
@@ -63187,7 +63187,7 @@ sub_806ED54: @ 0x0806ED54
 	adds r6, r0, #0
 	ldr r0, _0806ED9C  @ gUnknown_085D9504
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -63293,7 +63293,7 @@ sub_806EE34: @ 0x0806EE34
 	adds r5, r0, #0
 	ldr r0, _0806EE5C  @ gUnknown_085D9524
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	bl sub_806E948
 	str r5, [r4, #0x5c]
@@ -63356,7 +63356,7 @@ sub_806EEA8: @ 0x0806EEA8
 	adds r7, r0, #0
 	ldr r0, _0806EEE4  @ gUnknown_085D9544
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r5, [r6, #0x5c]
 	movs r0, #0
@@ -63435,7 +63435,7 @@ sub_806EF48: @ 0x0806EF48
 	adds r4, r0, #0
 	ldr r0, _0806EF60  @ gUnknown_085D955C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -63495,7 +63495,7 @@ sub_806EFB8: @ 0x0806EFB8
 	adds r6, r0, #0
 	ldr r0, _0806EFFC  @ gUnknown_085D9584
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	bl sub_806E93C
 	str r5, [r4, #0x5c]
@@ -63570,7 +63570,7 @@ sub_806F058: @ 0x0806F058
 	adds r5, r0, #0
 	ldr r0, _0806F080  @ gUnknown_085D95A0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	bl sub_806E948
 	str r5, [r4, #0x5c]
@@ -63636,7 +63636,7 @@ sub_806F0CC: @ 0x0806F0CC
 	mov r8, r3
 	ldr r0, _0806F0F8  @ gUnknown_085D95C0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	strh r5, [r0, #0x2c]
 	strh r6, [r0, #0x2e]
@@ -63699,7 +63699,7 @@ _0806F132:
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	b _0806F166
 _0806F152:
 	movs r2, #0x2c
@@ -63710,7 +63710,7 @@ _0806F152:
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 _0806F166:
 	lsls r1, r0, #0x18
 	lsrs r1, r1, #0x18
@@ -63737,7 +63737,7 @@ sub_806F184: @ 0x0806F184
 	adds r6, r0, #0
 	ldr r0, _0806F1D8  @ gUnknown_085D95E0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -63805,7 +63805,7 @@ sub_806F210: @ 0x0806F210
 	adds r4, r0, #0
 	ldr r0, _0806F22C  @ gUnknown_085D95F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	bl sub_806E93C
 	str r4, [r5, #0x5c]
@@ -63841,7 +63841,7 @@ sub_806F248: @ 0x0806F248
 	adds r6, r0, #0
 	ldr r0, _0806F28C  @ gUnknown_085D9620
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -63931,7 +63931,7 @@ sub_806F304: @ 0x0806F304
 	adds r6, r0, #0
 	ldr r0, _0806F34C  @ gUnknown_085D97C4
 	adds r1, r5, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r1, #0
@@ -63994,7 +63994,7 @@ sub_806F38C: @ 0x0806F38C
 	adds r6, r0, #0
 	ldr r0, _0806F3E4  @ gUnknown_085D97C4
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -64083,7 +64083,7 @@ sub_806F450: @ 0x0806F450
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, _0806F474  @ gUnknown_085D9924
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	ldr r3, _0806F478  @ gUnknown_085D4F90
@@ -64106,7 +64106,7 @@ sub_806F47C: @ 0x0806F47C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r0, _0806F4AC  @ gUnknown_085D996C
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _0806F4B0  @ gUnknown_085D4F90
@@ -64282,7 +64282,7 @@ sub_806F5BC: @ 0x0806F5BC
 	adds r5, r0, #0
 	ldr r0, _0806F5DC  @ gUnknown_085D999C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	bl sub_806E93C
 	str r5, [r4, #0x5c]
@@ -64357,7 +64357,7 @@ sub_806F648: @ 0x0806F648
 	adds r4, r0, #0
 	ldr r0, _0806F664  @ gUnknown_085D99C4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	bl sub_806E93C
 	str r4, [r5, #0x5c]
@@ -64411,7 +64411,7 @@ sub_806F6B4: @ 0x0806F6B4
 	adds r4, r0, #0
 	ldr r0, _0806F6D0  @ gUnknown_085D99EC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	bl sub_806E93C
 	str r4, [r5, #0x5c]
@@ -64462,7 +64462,7 @@ sub_806F704: @ 0x0806F704
 	adds r6, r0, #0
 	ldr r0, _0806F748  @ gUnknown_085D9A1C
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -64550,7 +64550,7 @@ sub_806F7C0: @ 0x0806F7C0
 	bl sub_806E954
 	ldr r0, _0806F80C  @ gUnknown_085D9B64
 	adds r1, r5, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #0
@@ -64613,7 +64613,7 @@ sub_806F844: @ 0x0806F844
 	adds r4, r0, #0
 	ldr r0, _0806F860  @ gUnknown_085D9B74
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	bl sub_806E93C
 	str r4, [r5, #0x5c]
@@ -64664,7 +64664,7 @@ sub_806F894: @ 0x0806F894
 	adds r6, r0, #0
 	ldr r0, _0806F8DC  @ gUnknown_085D9BA4
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -64762,7 +64762,7 @@ sub_806F968: @ 0x0806F968
 	bl sub_806E954
 	ldr r0, _0806F9C8  @ gUnknown_085D9C4C
 	adds r1, r5, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r6, #0
@@ -65196,7 +65196,7 @@ sub_806FC50: @ 0x0806FC50
 	movs r0, #1
 	movs r1, #4
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	bl sub_807168C
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -65419,7 +65419,7 @@ _0806FE16:
 	ldrb r0, [r4, #4]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	movs r1, #0x2e
 	ldrsh r0, [r7, r1]
@@ -65435,7 +65435,7 @@ _0806FE16:
 	ldrb r0, [r4, #4]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	ldr r0, _0806FEA0  @ gUnknown_0201FB0C
 	ldr r0, [r0]
@@ -65617,7 +65617,7 @@ _0806FFC4:
 	movs r0, #4
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _08070004  @ gUnknown_08791D5C
 	ldr r4, _08070008  @ gPal+0xC0
@@ -65753,7 +65753,7 @@ _080700EA:
 	movs r0, #4
 	movs r1, #0x10
 	movs r2, #4
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	bl sub_807168C
 	ldr r0, [r5, #0x5c]
@@ -65767,7 +65767,7 @@ _080700EA:
 	movs r0, #4
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08070134  @ gUnknown_0203E120
 	movs r1, #0
@@ -65854,7 +65854,7 @@ sub_80701B8: @ 0x080701B8
 	adds r6, r0, #0
 	ldr r0, _080701E4  @ gUnknown_08758670
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r4, [r6, #4]
 	adds r0, r5, #0
@@ -66134,7 +66134,7 @@ sub_807038C: @ 0x0807038C
 	adds r5, r2, #0
 	adds r1, r3, #0
 	ldr r0, _080703C0  @ gUnknown_087586D8
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x5c]
 	adds r0, r5, #0
@@ -66360,7 +66360,7 @@ sub_8070568: @ 0x08070568
 	adds r6, r2, #0
 	ldr r0, _080705A0  @ gUnknown_087586F0
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	str r4, [r0, #0x44]
@@ -66399,7 +66399,7 @@ sub_80705A8: @ 0x080705A8
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08070610  @ gPal
 	ldr r4, _08070614  @ gUnknown_020165C8
@@ -66498,7 +66498,7 @@ sub_8070670: @ 0x08070670
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _080706D8  @ gPal
 	ldr r4, _080706DC  @ gUnknown_020165C8
@@ -66767,7 +66767,7 @@ sub_8070874: @ 0x08070874
 	cmp r0, #3
 	beq _08070898
 	ldr r0, _0807089C  @ gUnknown_08758720
-	bl Proc_EndEach
+	bl EndEachProc
 	movs r0, #0
 	bl sub_807032C
 	movs r0, #0
@@ -66791,7 +66791,7 @@ sub_80708A0: @ 0x080708A0
 	beq _080708BE
 	ldr r0, _080708C4  @ gUnknown_08758720
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	ldr r1, _080708C8  @ gUnknown_08758740
 	str r1, [r0, #0x38]
 _080708BE:
@@ -66811,7 +66811,7 @@ sub_80708CC: @ 0x080708CC
 	adds r6, r0, #0
 	ldr r0, _080708F8  @ gUnknown_08758754
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r4, [r6, #4]
 	adds r0, r5, #0
@@ -68090,7 +68090,7 @@ _080711F6:
 	str r7, [sp]
 	movs r0, #0
 	mov r3, sl
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	lsls r5, r5, #0x10
 	lsrs r5, r5, #0x10
@@ -68099,7 +68099,7 @@ _080711F6:
 	adds r1, r6, #0
 	adds r2, r4, #0
 	mov r3, sl
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
@@ -68108,7 +68108,7 @@ _080711F6:
 	mov r1, r9
 	mov r2, r8
 	mov r3, sl
-	bl sub_8012DCC
+	bl Interpolate
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	movs r1, #0xf8
@@ -68724,7 +68724,7 @@ _080716AC: .4byte gPal
 sub_80716B0: @ 0x080716B0
 	push {r4, lr}
 	adds r4, r0, #0
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	adds r4, #1
 	adds r1, r4, #0
 	bl DivRem
@@ -68746,7 +68746,7 @@ sub_80716C8: @ 0x080716C8
 	ldr r7, [sp, #0x18]
 	ldr r1, [sp, #0x20]
 	ldr r0, _08071710  @ gUnknown_08758A30
-	bl Proc_Start
+	bl SpawnProc
 	movs r2, #0
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -69146,7 +69146,7 @@ _080719D4: .4byte gRAMChapterData
 _080719D8:
 	ldr r0, _080719EC  @ gUnknown_08758A48
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x44]
 	str r6, [r0, #0x48]
 	strh r4, [r0, #0x2c]
@@ -69225,9 +69225,9 @@ sub_8071A54: @ 0x08071A54
 	cmp r0, #0
 	bne _08071A72
 	adds r0, r2, #0
-	bl Sound_SetVolume80022EC
+	bl SetBgmVolume
 	adds r0, r4, #0
-	bl sub_8002620
+	bl OverrideBgm
 _08071A72:
 	pop {r4}
 	pop {r0}
@@ -70952,13 +70952,13 @@ sub_807289C: @ 0x0807289C
 	cmp r0, #0
 	bne _080728C8
 _080728BA:
-	bl sub_800270C
+	bl MakeBgmOverridePersist
 	b _080728CC
 	.align 2, 0
 _080728C0: .4byte gUnknown_0202BCB0
 _080728C4: .4byte gUnknown_020200A8
 _080728C8:
-	bl sub_8002670
+	bl RestoreBgm
 _080728CC:
 	pop {r0}
 	bx r0
@@ -71158,7 +71158,7 @@ NewEkrClassChg: @ 0x08072A14
 	ldr r4, _08072A3C  @ gUnknown_020200B0
 	ldr r0, _08072A40  @ gUnknown_08758FC0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4]
 	str r5, [r0, #0x5c]
 	movs r2, #0
@@ -71630,7 +71630,7 @@ sub_8072DC0: @ 0x08072DC0
 EndEfxStatusUnit: @ 0x08072DC8
 	push {lr}
 	ldr r0, _08072DD4  @ gUnknown_085B9A34
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -71644,7 +71644,7 @@ sub_8072DD8: @ 0x08072DD8
 	adds r4, r0, #0
 	ldr r0, _08072E08  @ gUnknown_08758FE8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -71677,7 +71677,7 @@ sub_8072E1C: @ 0x08072E1C
 	adds r4, r0, #0
 	ldr r0, _08072E4C  @ gUnknown_08758FE8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -71769,7 +71769,7 @@ sub_8072ED8: @ 0x08072ED8
 	adds r4, r0, #0
 	ldr r0, _08072EF0  @ gUnknown_087591BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -71841,7 +71841,7 @@ sub_8072F58: @ 0x08072F58
 	adds r4, r0, #0
 	ldr r0, _08072F70  @ gUnknown_087591D4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -71872,7 +71872,7 @@ sub_8072F84: @ 0x08072F84
 	adds r4, r0, #0
 	ldr r0, _08072FC0  @ gUnknown_087591EC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	ldr r3, _08072FC4  @ gUnknown_08792928
@@ -71922,7 +71922,7 @@ sub_8072FE8: @ 0x08072FE8
 	adds r4, r0, #0
 	ldr r0, _08073024  @ gUnknown_0875920C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	ldr r3, _08073028  @ gUnknown_08792958
@@ -71974,7 +71974,7 @@ sub_807304C: @ 0x0807304C
 	lsrs r4, r4, #0x18
 	ldr r0, _08073068  @ gUnknown_0875922C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	cmp r4, #0
 	bne _0807306C
@@ -72037,7 +72037,7 @@ sub_80730C4: @ 0x080730C4
 	adds r4, r1, #0
 	ldr r0, _080731AC  @ gUnknown_0875924C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x5c]
 	movs r1, #0
 	mov r9, r1
@@ -72198,7 +72198,7 @@ sub_8073220: @ 0x08073220
 	adds r5, r1, #0
 	ldr r0, _0807323C  @ gUnknown_08759264
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -72278,7 +72278,7 @@ sub_80732A8: @ 0x080732A8
 	adds r6, r2, #0
 	ldr r0, _080732D0  @ gUnknown_08759284
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r2, #0
@@ -72318,7 +72318,7 @@ sub_80732E0: @ 0x080732E0
 	ldrsh r0, [r5, r4]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, [r5, #0x5c]
 	bl GetAISSubjectId
@@ -72389,7 +72389,7 @@ sub_8073388: @ 0x08073388
 	adds r6, r2, #0
 	ldr r0, _080733B0  @ gUnknown_0875929C
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r2, #0
@@ -72429,7 +72429,7 @@ sub_80733C0: @ 0x080733C0
 	ldrsh r0, [r5, r4]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, [r5, #0x5c]
 	bl GetAISSubjectId
@@ -72508,7 +72508,7 @@ sub_8073468: @ 0x08073468
 	str r0, [r1]
 	ldr r0, _080734A8  @ gUnknown_087592B4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -72542,7 +72542,7 @@ sub_80734AC: @ 0x080734AC
 	ldrsh r0, [r5, r6]
 	str r0, [sp]
 	movs r0, #4
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r4, #0x4c]
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -73119,7 +73119,7 @@ NewEkrLevelup: @ 0x08073988
 	ldr r5, _080739B8  @ gUnknown_020200B4
 	ldr r0, _080739BC  @ gUnknown_0875932C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r6, r0, #0
 	str r6, [r5]
 	str r4, [r6, #0x5c]
@@ -73769,14 +73769,14 @@ _08073EE2:
 	str r4, [sp]
 	movs r0, #0
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	mov r8, r0
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
 	movs r2, #8
 	adds r3, r5, #0
-	bl sub_8012DCC
+	bl Interpolate
 	mov sl, r0
 	ldr r5, _08073FA0  @ gUnknown_02020134
 	str r4, [sp]
@@ -73784,7 +73784,7 @@ _08073EE2:
 	movs r1, #0x90
 	movs r2, #0
 	adds r3, r6, #0
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r5]
 	ldr r5, _08073FA4  @ gUnknown_02020136
 	str r4, [sp]
@@ -73792,7 +73792,7 @@ _08073EE2:
 	movs r1, #0x90
 	movs r2, #0
 	mov r3, r9
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r5]
 	ldr r0, _08073FA8  @ gUnknown_03004980
 	ldr r1, [r0]
@@ -73940,7 +73940,7 @@ _08074056:
 	str r0, [sp]
 	movs r0, #1
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r4]
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -74006,7 +74006,7 @@ _080740DE:
 	str r0, [sp]
 	movs r0, #4
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r4]
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -74288,7 +74288,7 @@ sub_80742F8: @ 0x080742F8
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x90
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r5]
 	ldr r5, _080743B0  @ gUnknown_02020136
 	movs r0, #0x2c
@@ -74297,7 +74297,7 @@ sub_80742F8: @ 0x080742F8
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x90
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r5]
 	movs r2, #0x50
 	negs r2, r2
@@ -74306,7 +74306,7 @@ sub_80742F8: @ 0x080742F8
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	movs r0, #0x2c
 	ldrsh r3, [r7, r0]
@@ -74314,7 +74314,7 @@ sub_80742F8: @ 0x080742F8
 	movs r0, #0
 	movs r1, #8
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _080743B4  @ gUnknown_03004980
 	ldr r1, [r0]
@@ -74577,7 +74577,7 @@ sub_8074580: @ 0x08074580
 	push {lr}
 	ldr r0, _08074594  @ gUnknown_087593DC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	strh r1, [r0, #0x2e]
@@ -74671,7 +74671,7 @@ sub_807461C: @ 0x0807461C
 	push {lr}
 	ldr r0, _08074630  @ gUnknown_087593FC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	strh r1, [r0, #0x2e]
@@ -74836,7 +74836,7 @@ _08074722:
 	str r0, [r1]
 	ldr r0, _08074788  @ gUnknown_0875945C
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	strh r4, [r0, #0x2c]
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -75031,7 +75031,7 @@ sub_80748C4: @ 0x080748C4
 	adds r4, r0, #0
 	ldr r0, _080748F8  @ gUnknown_08759484
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -75110,7 +75110,7 @@ sub_8074964: @ 0x08074964
 	adds r4, r0, #0
 	ldr r0, _0807499C  @ gUnknown_087594F4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -75187,7 +75187,7 @@ sub_80749F4: @ 0x080749F4
 	mov r8, r2
 	ldr r0, _08074A44  @ gUnknown_08759524
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	ldr r3, _08074A48  @ gUnknown_085C71E4
@@ -75237,7 +75237,7 @@ sub_8074A60: @ 0x08074A60
 	adds r4, r0, #0
 	ldr r0, _08074A88  @ gUnknown_08759544
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	strh r2, [r0, #0x2c]
@@ -75424,7 +75424,7 @@ sub_8074B90: @ 0x08074B90
 	bl ApplyPaletteExt
 	ldr r0, _08074BEC  @ gUnknown_08759564
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r5, [r0, #0x2c]
 	ldr r0, _08074BF0  @ gUnknown_02020138
@@ -75446,7 +75446,7 @@ _08074BF0: .4byte gUnknown_02020138
 sub_8074BF4: @ 0x08074BF4
 	push {lr}
 	ldr r0, _08074C08  @ gUnknown_08759564
-	bl Proc_EndEach
+	bl EndEachProc
 	ldr r1, _08074C0C  @ gUnknown_02020138
 	movs r0, #1
 	str r0, [r1]
@@ -75668,7 +75668,7 @@ sub_8074D58: @ 0x08074D58
 	beq _08074E52
 	ldr r0, _08074DDC  @ gUnknown_0875957C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	ldr r1, [sp, #0x40]
 	cmp r1, #0
@@ -75902,7 +75902,7 @@ NewEkrTriangle: @ 0x08074F5C
 	adds r4, r0, #0
 	ldr r0, _08074F78  @ gUnknown_087595A4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	ldr r1, _08074F7C  @ gUnknown_0202013C
 	movs r0, #0
@@ -76205,7 +76205,7 @@ sub_8075184: @ 0x08075184
 	ldr r7, [sp, #0x18]
 	ldr r0, _080751B8  @ gUnknown_087595BC
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -76330,7 +76330,7 @@ sub_807527C: @ 0x0807527C
 	adds r7, r3, #0
 	ldr r0, _080752A4  @ gUnknown_087595D4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	str r4, [r1, #0x5c]
 	movs r0, #0
@@ -76438,7 +76438,7 @@ sub_8075350: @ 0x08075350
 	mov r9, r3
 	ldr r0, _08075384  @ gUnknown_08759604
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r7, [r5, #0x5c]
 	movs r0, #0
@@ -76541,7 +76541,7 @@ sub_8075424: @ 0x08075424
 	ldr r7, [sp, #0x18]
 	ldr r0, _08075458  @ gUnknown_0875961C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -76683,7 +76683,7 @@ sub_8075538: @ 0x08075538
 	adds r6, r3, #0
 	ldr r0, _08075570  @ gUnknown_08759634
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	mov r0, r8
 	str r0, [r5, #0x5c]
@@ -76854,7 +76854,7 @@ sub_80756BC: @ 0x080756BC
 	movs r0, #0
 	movs r1, #0x20
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r2, [r4, #0x60]
 	ldr r1, [r4, #0x5c]
 	ldrh r1, [r1, #2]
@@ -76901,7 +76901,7 @@ sub_8075718: @ 0x08075718
 	adds r7, r3, #0
 	ldr r0, _08075754  @ gUnknown_0875964C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	mov r0, r8
 	str r0, [r4, #0x5c]
@@ -77037,7 +77037,7 @@ sub_8075828: @ 0x08075828
 	ldrsh r0, [r4, r5]
 	str r0, [sp]
 	movs r0, #1
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, [r4, #0x60]
 	strh r0, [r1, #2]
 	ldrh r0, [r4, #0x2c]
@@ -77098,7 +77098,7 @@ sub_807589C: @ 0x0807589C
 	str r0, [r1]
 	ldr r0, _080758D0  @ gUnknown_0875966C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	movs r0, #0
@@ -77898,7 +77898,7 @@ Battle_MakePopups: @ 0x08075F18
 	ldr r4, _08075F70  @ gUnknown_02020140
 	ldr r0, _08075F74  @ gUnknown_0878D588
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r5, [r4]
 	ldr r1, _08075F78  @ gUnknown_02020144
@@ -77949,13 +77949,13 @@ _08075F86:
 	cmp r1, r0
 	beq _0807603C
 	movs r0, #0x80
-	bl Sound_SetVolume80022EC
+	bl SetBgmVolume
 	b _08076066
 _08075F9E:
 	ldr r4, _08076048  @ gUnknown_02020140
 	ldr r0, _0807604C  @ gUnknown_0878D520
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r5, [r4]
 	ldr r1, _08076050  @ gUnknown_02020144
@@ -78045,7 +78045,7 @@ _08076058: .4byte gUnknown_0203E188
 _0807605C: .4byte gUnknown_0203E18C
 _08076060:
 	movs r0, #0x80
-	bl Sound_SetVolume80022EC
+	bl SetBgmVolume
 _08076066:
 	pop {r4, r5}
 	pop {r0}
@@ -78310,7 +78310,7 @@ ekrPopup_MarkEnd: @ 0x0807621C
 	str r1, [r0]
 	movs r0, #0x80
 	lsls r0, r0, #1
-	bl Sound_SetVolume80022EC
+	bl SetBgmVolume
 	adds r0, r4, #0
 	bl Proc_Break
 _08076242:
@@ -78491,7 +78491,7 @@ NewEkrHenseiInitPROC: @ 0x0807636C
 	push {lr}
 	ldr r0, _0807637C  @ gUnknown_0878D5F0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -78570,7 +78570,7 @@ sub_8076400: @ 0x08076400
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _0807645C  @ gUnknown_020165C8
 	ldr r4, _08076460  @ gPal
@@ -78621,7 +78621,7 @@ sub_8076470: @ 0x08076470
 	push {lr}
 	ldr r0, _08076480  @ gUnknown_0878D620
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -78666,7 +78666,7 @@ sub_80764B0: @ 0x080764B0
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _0807650C  @ gUnknown_020165C8
 	ldr r4, _08076510  @ gPal
@@ -78732,7 +78732,7 @@ sub_8076540: @ 0x08076540
 	adds r6, r0, #0
 	ldr r0, _0807658C  @ gUnknown_087F4324
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r4, [r6, #4]
 	adds r0, r5, #0
@@ -78827,7 +78827,7 @@ sub_80765E4: @ 0x080765E4
 	movs r0, #1
 	movs r1, #4
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	bl sub_807168C
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -78882,7 +78882,7 @@ sub_8076640: @ 0x08076640
 	str r4, [sp]
 	movs r0, #5
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	movs r1, #0x50
 	negs r1, r1
@@ -78891,7 +78891,7 @@ sub_8076640: @ 0x08076640
 	str r4, [sp]
 	movs r0, #5
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	ldr r0, _0807668C  @ gUnknown_0201FB0C
 	ldr r0, [r0]
@@ -79178,7 +79178,7 @@ _080768BE:
 	movs r0, #4
 	movs r1, #0x10
 	movs r2, #4
-	bl sub_8012DCC
+	bl Interpolate
 	bl sub_807168C
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -79222,7 +79222,7 @@ sub_8076910: @ 0x08076910
 	adds r4, r0, #0
 	ldr r0, _08076930  @ gUnknown_087F4394
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	adds r2, r0, #0
 	adds r2, #0x29
@@ -79249,7 +79249,7 @@ sub_8076934: @ 0x08076934
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _08076994  @ gUnknown_02020148
 	ldr r4, _08076998  @ gPal+0x80
@@ -79305,7 +79305,7 @@ sub_80769A8: @ 0x080769A8
 	adds r4, r0, #0
 	ldr r0, _080769FC  @ gUnknown_087F43B4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	adds r0, #0x29
@@ -79357,7 +79357,7 @@ sub_8076A10: @ 0x08076A10
 	movs r0, #1
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _08076A70  @ gUnknown_02020148
 	ldr r4, _08076A74  @ gPal+0x80
@@ -79430,7 +79430,7 @@ sub_8076AA4: @ 0x08076AA4
 	adds r4, r0, #0
 	ldr r0, _08076ACC  @ gUnknown_087F43D4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -79716,7 +79716,7 @@ _08076CE8:
 	str r4, [sp]
 	movs r0, #5
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, _08076D44  @ gUnknown_03004FA8
 	str r0, [r1]
 	ldr r3, [r6, #0x54]
@@ -79724,7 +79724,7 @@ _08076CE8:
 	movs r0, #5
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, _08076D48  @ gUnknown_03004FB0
 _08076D0C:
 	str r0, [r1]
@@ -79780,7 +79780,7 @@ sub_8076D60: @ 0x08076D60
 	str r4, [sp]
 	movs r0, #0
 	movs r2, #8
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r5, _08076DC8  @ gUnknown_03004FA8
 	str r0, [r5]
 	movs r2, #8
@@ -79789,7 +79789,7 @@ sub_8076D60: @ 0x08076D60
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r4, _08076DCC  @ gUnknown_03004FB0
 	str r0, [r4]
 	ldr r0, _08076DD0  @ gUnknown_0201FB0C
@@ -79860,7 +79860,7 @@ sub_8076E00: @ 0x08076E00
 	movs r0, #5
 	movs r1, #8
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r5, _08076E64  @ gUnknown_03004FA8
 	str r0, [r5]
 	movs r1, #8
@@ -79869,7 +79869,7 @@ sub_8076E00: @ 0x08076E00
 	str r4, [sp]
 	movs r0, #5
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r4, _08076E68  @ gUnknown_03004FB0
 	str r0, [r4]
 	ldr r0, _08076E6C  @ gUnknown_0201FB0C
@@ -79924,7 +79924,7 @@ sub_8076E84: @ 0x08076E84
 	movs r0, #5
 	movs r1, #0
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r5, _08076EE8  @ gUnknown_03004FA8
 	str r0, [r5]
 	ldr r3, [r6, #0x54]
@@ -79932,7 +79932,7 @@ sub_8076E84: @ 0x08076E84
 	movs r0, #5
 	movs r1, #0
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r4, _08076EEC  @ gUnknown_03004FB0
 	str r0, [r4]
 	ldr r0, _08076EF0  @ gUnknown_0201FB0C
@@ -80026,7 +80026,7 @@ sub_8076F48: @ 0x08076F48
 	str r4, [sp]
 	movs r0, #5
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r5, _08076FB0  @ gUnknown_03004FA8
 	str r0, [r5]
 	movs r2, #0xa
@@ -80035,7 +80035,7 @@ sub_8076F48: @ 0x08076F48
 	str r4, [sp]
 	movs r0, #5
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r4, _08076FB4  @ gUnknown_03004FB0
 	str r0, [r4]
 	ldr r0, _08076FB8  @ gUnknown_0201FB0C
@@ -80097,7 +80097,7 @@ sub_8076FD4: @ 0x08076FD4
 	str r4, [sp]
 	movs r0, #5
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r5, _0807703C  @ gUnknown_03004FA8
 	str r0, [r5]
 	movs r1, #0xa
@@ -80106,7 +80106,7 @@ sub_8076FD4: @ 0x08076FD4
 	str r4, [sp]
 	movs r0, #5
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r4, _08077040  @ gUnknown_03004FB0
 	str r0, [r4]
 	ldr r0, _08077044  @ gUnknown_0201FB0C
@@ -80157,7 +80157,7 @@ sub_807705C: @ 0x0807705C
 	cmp r0, #2
 	bne _08077072
 	ldr r0, _08077078  @ gUnknown_087F43D4
-	bl Proc_Find
+	bl FindProc
 	movs r1, #1
 	negs r1, r1
 	str r1, [r0, #0x54]
@@ -80284,7 +80284,7 @@ _08077168:
 	cmp r0, #1
 	bne _080771C2
 	ldr r0, _08077178  @ gUnknown_087F44B0
-	bl Proc_BreakEach
+	bl BreakEachProc
 	b _080771B6
 	.align 2, 0
 _08077178: .4byte gUnknown_087F44B0
@@ -80301,7 +80301,7 @@ _0807717C:
 	beq _080771C2
 	ldr r0, _0807719C  @ gUnknown_087F44B0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x4c]
 	b _080771B6
 	.align 2, 0
@@ -80340,7 +80340,7 @@ sub_80771C8: @ 0x080771C8
 	adds r4, r1, #0
 	ldr r0, _080771E0  @ gUnknown_087F44E0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x44]
 	str r5, [r0, #0x5c]
 	pop {r4, r5}
@@ -80369,7 +80369,7 @@ _080771FC:
 	adds r0, r5, #0
 	bl Proc_Break
 	ldr r0, _08077224  @ gUnknown_087F43D4
-	bl Proc_Find
+	bl FindProc
 	adds r4, r0, #0
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -80412,7 +80412,7 @@ _08077268:
 	str r0, [r4, #0x48]
 	ldr r0, _0807727C  @ gUnknown_087F4458
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x4c]
 	b _080772B0
 	.align 2, 0
@@ -80435,7 +80435,7 @@ _0807729C:
 	str r0, [r4, #0x48]
 	ldr r0, _080772BC  @ gUnknown_087F43F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x4c]
 	ldr r0, [r5, #0x5c]
 	bl sub_8078044
@@ -80455,7 +80455,7 @@ sub_80772C0: @ 0x080772C0
 	adds r4, r0, #0
 	ldr r0, _080772E0  @ gUnknown_087F44F8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r2, #0
 	movs r1, #0
@@ -80507,7 +80507,7 @@ sub_8077310: @ 0x08077310
 	movs r0, #4
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _08077388  @ gUnknown_087F85DC
 	ldr r4, _0807738C  @ gPal+0xC0
@@ -80650,7 +80650,7 @@ sub_80773E4: @ 0x080773E4
 	bl sub_8013928
 _08077436:
 	ldr r0, _0807745C  @ gUnknown_08801810
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0807744E
 	movs r0, #0
@@ -80806,11 +80806,11 @@ sub_8077560: @ 0x08077560
 	adds r4, r0, #0
 	ldr r0, _08077580  @ gUnknown_087F4518
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	movs r0, #1
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 	adds r0, r5, #0
 	pop {r4, r5}
 	pop {r1}
@@ -80826,7 +80826,7 @@ sub_8077584: @ 0x08077584
 	adds r4, r0, #0
 	ldr r0, _08077598  @ gUnknown_087F4548
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	pop {r4}
 	pop {r1}
@@ -81112,7 +81112,7 @@ sub_8077790: @ 0x08077790
 	adds r4, r0, #0
 	ldr r0, _080777BC  @ gUnknown_087F4578
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r4, [r5, #0x5c]
 	adds r1, r5, #0
@@ -81137,7 +81137,7 @@ _080777C8:
 _080777CA:
 	strh r0, [r5, #0x32]
 	movs r0, #1
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 	adds r0, r5, #0
 	pop {r4, r5}
 	pop {r1}
@@ -81496,7 +81496,7 @@ sub_8077AAC: @ 0x08077AAC
 	adds r6, r2, #0
 	ldr r0, _08077AE4  @ gUnknown_087F45A0
 	movs r1, #0
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0
 	strh r1, [r0, #0x2c]
 	str r4, [r0, #0x44]
@@ -81535,7 +81535,7 @@ sub_8077AEC: @ 0x08077AEC
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08077B54  @ gPal
 	ldr r4, _08077B58  @ gUnknown_020165C8
@@ -81634,7 +81634,7 @@ sub_8077BB4: @ 0x08077BB4
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r6, r0, #0
 	ldr r0, _08077C1C  @ gPal
 	ldr r4, _08077C20  @ gUnknown_020165C8
@@ -82053,7 +82053,7 @@ sub_8077EEC: @ 0x08077EEC
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08077F00  @ gUnknown_08801840
-	bl Proc_Start
+	bl SpawnProc
 	adds r0, #0x64
 	strh r4, [r0]
 	pop {r4}
@@ -82262,7 +82262,7 @@ sub_8078044: @ 0x08078044
 	bl ClearBG1Setup
 	ldr r0, _08078074  @ gUnknown_08801868
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	movs r1, #0
 	strh r1, [r0, #0x2c]
@@ -82371,7 +82371,7 @@ sub_8078124: @ 0x08078124
 	adds r4, r0, #0
 	ldr r0, _0807813C  @ gUnknown_08801880
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x5c]
 	bl sub_80551B0
 	pop {r4}

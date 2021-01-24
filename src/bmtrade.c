@@ -13,7 +13,7 @@
 #include "bmunit.h"
 
 #include "m4a.h"
-#include "soundwrapper.h"
+#include "sound.h"
 #include "event.h"
 
 enum
@@ -154,7 +154,7 @@ static struct Vec2 sItemDisplayTileLocation[2][UNIT_ITEM_COUNT] = {
 };
 
 CONST_DATA
-static struct ProcCmd sProcScr_TradeMenu_HighlightUpdater[] = {
+static struct ProcScr sProcScr_TradeMenu_HighlightUpdater[] = {
     PROC_CALL(TradeMenu_HighlightUpdater_OnInit),
     PROC_REPEAT(TradeMenu_HighlightUpdater_OnLoop),
 
@@ -162,9 +162,9 @@ static struct ProcCmd sProcScr_TradeMenu_HighlightUpdater[] = {
 };
 
 CONST_DATA
-static struct ProcCmd sProcScr_TradeMenu[] = {
+static struct ProcScr sProcScr_TradeMenu[] = {
     PROC_CALL(AddSkipThread2),
-    PROC_YIELD,
+    PROC_SLEEP(0),
 
     PROC_WHILE_EXISTS(gUnknown_0859A548),
 
@@ -176,7 +176,7 @@ static struct ProcCmd sProcScr_TradeMenu[] = {
 PROC_LABEL(L_TRADEMENU_LOADFORCED),
     PROC_CALL(TradeMenu_InitTradeTutorial),
     PROC_CALL_2(TradeMenu_LoadForcedInitialHover),
-    PROC_YIELD,
+    PROC_SLEEP(0),
 
 PROC_LABEL(L_TRADEMENU_UNSELECTED),
     PROC_CALL(TradeMenu_OnInitUnselected),
@@ -200,7 +200,7 @@ PROC_LABEL(L_TRADEMENU_END),
 };
 
 CONST_DATA
-static struct ProcCmd sProcScr_TradeMenu_HelpBox[] = {
+static struct ProcScr sProcScr_TradeMenu_HelpBox[] = {
     PROC_CALL(TradeMenu_HelpBox_OnInit),
     PROC_REPEAT(TradeMenu_HelpBox_OnLoop),
 
@@ -210,23 +210,23 @@ static struct ProcCmd sProcScr_TradeMenu_HelpBox[] = {
 };
 
 CONST_DATA
-static struct ProcCmd sProcScr_TradeMenu_TutorialHandCursor[] = {
-    PROC_SET_END_CB(TradeMenu_TutorialHandCursor_Update),
+static struct ProcScr sProcScr_TradeMenu_TutorialHandCursor[] = {
+    PROC_ONEND(TradeMenu_TutorialHandCursor_Update),
     PROC_REPEAT(TradeMenu_TutorialHandCursor_Update),
 
     PROC_END
 };
 
 CONST_DATA
-static struct ProcCmd sProcScr_TradeMenu_DoubleTutorialHandCursor[] = {
-    PROC_SET_END_CB(TradeMenu_DoubleTutorialHandCursor_Update),
+static struct ProcScr sProcScr_TradeMenu_DoubleTutorialHandCursor[] = {
+    PROC_ONEND(TradeMenu_DoubleTutorialHandCursor_Update),
     PROC_REPEAT(TradeMenu_DoubleTutorialHandCursor_Update),
 
     PROC_END
 };
 
 CONST_DATA
-static struct ProcCmd sProcScr_TradeMenu_TutorialWait[] = {
+static struct ProcScr sProcScr_TradeMenu_TutorialWait[] = {
     PROC_CALL(TradeMenu_TutorialWait_OnInit),
     PROC_REPEAT(TradeMenu_TutorialWait_OnLoop),
 
@@ -234,7 +234,7 @@ static struct ProcCmd sProcScr_TradeMenu_TutorialWait[] = {
 };
 
 CONST_DATA
-static struct ProcCmd sProcScr_TradeMenu_TutorialEventLock[] = {
+static struct ProcScr sProcScr_TradeMenu_TutorialEventLock[] = {
     PROC_WHILE(EventEngineExists),
     PROC_WHILE(AreKeysHeld),
 
@@ -396,7 +396,7 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
         changedSelection = TRUE;
 
         // TODO: SONG IDS
-        PlaySoundEffect(0x67);
+        PlaySe(0x67);
     }
 
     if ((gKeySt->repeated & DPAD_RIGHT) && proc->hoverColumn == TRADEMENU_UNIT_LEFT)
@@ -412,7 +412,7 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
         changedSelection = TRUE;
 
         // TODO: SONG IDS
-        PlaySoundEffect(0x67);
+        PlaySe(0x67);
     }
 
     if ((gKeySt->repeated & DPAD_UP))
@@ -430,7 +430,7 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
         changedSelection = TRUE;
 
         // TODO: SONG IDS
-        PlaySoundEffect(0x66);
+        PlaySe(0x66);
     }
 
     if ((gKeySt->repeated & DPAD_DOWN))
@@ -448,7 +448,7 @@ s8 TradeMenu_UpdateSelection(struct TradeMenuProc* proc)
         changedSelection = TRUE;
 
         // TODO: SONG IDS
-        PlaySoundEffect(0x66);
+        PlaySe(0x66);
     }
 
 end:
@@ -522,16 +522,16 @@ void TradeMenu_OnLoopUnselected(struct TradeMenuProc* proc)
         if (gKeySt->pressed & A_BUTTON)
         {
             Proc_Goto(proc, L_TRADEMENU_SELECTED);
-            PlaySoundEffect(0x6A); // TODO: SONG ID DEFINITIONS
+            PlaySe(0x6A); // TODO: SONG ID DEFINITIONS
         }
         else if (gKeySt->pressed & B_BUTTON)
         {
             Proc_Goto(proc, L_TRADEMENU_END);
-            PlaySoundEffect(0x6B); // TODO: SONG ID DEFINITIONS
+            PlaySe(0x6B); // TODO: SONG ID DEFINITIONS
         }
         else if (gKeySt->pressed & R_BUTTON)
         {
-            Proc_StartBlocking(sProcScr_TradeMenu_HelpBox, proc);
+            SpawnProcLocking(sProcScr_TradeMenu_HelpBox, proc);
         }
     }
 }
@@ -587,17 +587,17 @@ void TradeMenu_OnLoopSelected(struct TradeMenuProc* proc)
         {
             TradeMenu_ApplyItemSwap(proc);
 
-            PlaySoundEffect(0x6A); // TODO: SONG ID DEFINITIONS
+            PlaySe(0x6A); // TODO: SONG ID DEFINITIONS
             Proc_Break(proc);
         }
         else if (gKeySt->pressed & B_BUTTON)
         {
-            PlaySoundEffect(0x6B); // TODO: SONG ID DEFINITIONS
+            PlaySe(0x6B); // TODO: SONG ID DEFINITIONS
             Proc_Break(proc);
         }
         else if (gKeySt->pressed & R_BUTTON)
         {
-            Proc_StartBlocking(sProcScr_TradeMenu_HelpBox, proc);
+            SpawnProcLocking(sProcScr_TradeMenu_HelpBox, proc);
         }
     }
 }
@@ -721,7 +721,7 @@ struct Proc* StartTradeMenu(struct Unit* lUnit, struct Unit* rUnit, int unused)
 {
     int itemCount;
 
-    struct TradeMenuProc* proc = Proc_Start(sProcScr_TradeMenu, PROC_TREE_3);
+    struct TradeMenuProc* proc = SpawnProc(sProcScr_TradeMenu, PROC_TREE_3);
 
     proc->units[0] = lUnit;
     proc->units[1] = rUnit;
@@ -771,22 +771,22 @@ void TradeMenu_DoubleTutorialHandCursor_Update(void)
 
 void StartTradeMenuTutorialHandCursor(void)
 {
-    Proc_Start(sProcScr_TradeMenu_TutorialHandCursor, PROC_TREE_3);
+    SpawnProc(sProcScr_TradeMenu_TutorialHandCursor, PROC_TREE_3);
 }
 
 void StartDoubleTradeMenuTutorialHandCursor(void)
 {
-    Proc_Start(sProcScr_TradeMenu_DoubleTutorialHandCursor, PROC_TREE_3);
+    SpawnProc(sProcScr_TradeMenu_DoubleTutorialHandCursor, PROC_TREE_3);
 }
 
 void EndTradeMenuTutorialHandCursor(void)
 {
-    Proc_EndEach(sProcScr_TradeMenu_TutorialHandCursor);
+    EndEachProc(sProcScr_TradeMenu_TutorialHandCursor);
 }
 
 void EndDoubleTradeMenuTutorialHandCursor(void)
 {
-    Proc_EndEach(sProcScr_TradeMenu_DoubleTutorialHandCursor);
+    EndEachProc(sProcScr_TradeMenu_DoubleTutorialHandCursor);
 }
 
 void TradeMenu_TutorialWait_OnInit(struct TradeMenuProc* proc)
@@ -806,7 +806,7 @@ void sub_802DEDC(struct Proc* ee)
 {
     if (sTradeMenuProc->tradeTutorialState != 3 && sTradeMenuProc->tradeTutorialState != 5 && sTradeMenuProc->tradeTutorialState != 8)
     {
-        Proc_StartBlocking(sProcScr_TradeMenu_TutorialWait, ee);
+        SpawnProcLocking(sProcScr_TradeMenu_TutorialWait, ee);
     }
 }
 
@@ -827,7 +827,7 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
             return FALSE;
         }
 
-        PlaySoundEffect(0x6C); // TODO: SONG ID DEFINITIONS
+        PlaySe(0x6C); // TODO: SONG ID DEFINITIONS
 
         Proc_Goto(proc, L_TRADEMENU_LOADFORCED);
 
@@ -851,7 +851,7 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
             }
         }
 
-        PlaySoundEffect(0x6C); // TODO: SONG ID DEFINITIONS
+        PlaySe(0x6C); // TODO: SONG ID DEFINITIONS
 
         sub_802E168(proc);
 
@@ -865,7 +865,7 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
             return FALSE;
         }
 
-        PlaySoundEffect(0x6C); // TODO: SONG ID DEFINITIONS
+        PlaySe(0x6C); // TODO: SONG ID DEFINITIONS
 
         sub_802E188(proc);
 
@@ -885,7 +885,7 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
             return FALSE;
         }
 
-        PlaySoundEffect(0x6C); // TODO: SONG ID DEFINITIONS
+        PlaySe(0x6C); // TODO: SONG ID DEFINITIONS
 
         sub_802E1A8(proc);
 
@@ -942,7 +942,7 @@ s8 AreKeysHeld(void)
 
 void TradeMenu_StartTutorialEventLock(struct TradeMenuProc* proc)
 {
-    Proc_StartBlocking(sProcScr_TradeMenu_TutorialEventLock, proc);
+    SpawnProcLocking(sProcScr_TradeMenu_TutorialEventLock, proc);
 }
 
 void TradeMenu_InitTradeTutorial(struct TradeMenuProc* proc)

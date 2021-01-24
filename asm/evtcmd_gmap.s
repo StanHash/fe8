@@ -345,7 +345,7 @@ _0800BB92:
 sub_800BB98: @ 0x0800BB98
 	push {lr}
 	ldr r0, _0800BBB0  @ gUnknown_0859E520
-	bl Proc_Find
+	bl FindProc
 	negs r1, r0
 	orrs r1, r0
 	cmp r1, #0
@@ -1211,7 +1211,7 @@ Event91_WM_DRAWPATH_Silent: @ 0x0800C164
 	adds r1, #0xa4
 	bl SetupNewWMRoute
 	ldr r0, _0800C194  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x44]
 	ldr r1, [r0, #0x4c]
 	adds r1, #0x31
@@ -1238,7 +1238,7 @@ Event92_REMOVEPATH: @ 0x0800C198
 	adds r1, #0xa4
 	bl WM_RemovePath
 	ldr r0, _0800C1C8  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x44]
 	ldr r1, [r0, #0x4c]
 	adds r1, #0x31
@@ -1441,12 +1441,12 @@ Event97_: @ 0x0800C2DC
 	strb r0, [r1]
 	ldr r4, _0800C338  @ gUnknown_08A3D748
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x48]
 	adds r0, #0x33
 	strb r6, [r0]
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	ldr r1, [r0, #0x48]
 	adds r1, #0x32
 	ldrb r0, [r1]
@@ -1545,12 +1545,12 @@ _0800C3BA:
 	strb r0, [r1]
 	ldr r4, _0800C404  @ gUnknown_08A3D748
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x48]
 	adds r0, #0x33
 	strb r6, [r0]
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	ldr r1, [r0, #0x48]
 	adds r1, #0x32
 	ldrb r0, [r1]
@@ -1635,12 +1635,12 @@ Event9A_: @ 0x0800C468
 	strb r1, [r0]
 	ldr r4, _0800C4B8  @ gUnknown_08A3D748
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x48]
 	adds r0, #0x33
 	strb r5, [r0]
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	ldr r1, [r0, #0x48]
 	adds r1, #0x32
 	ldrb r0, [r1]
@@ -1708,7 +1708,7 @@ Event9C_: @ 0x0800C4E4
 	orrs r0, r2
 	strb r0, [r1]
 	ldr r0, _0800C524  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x48]
 	adds r0, #0x33
 	strb r4, [r0]
@@ -1833,7 +1833,7 @@ EventA3_: @ 0x0800C5BC
 	cmp r0, #0
 	bne _0800C5E8
 	ldr r0, _0800C5E4  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x54]
 	lsls r2, r5, #0x10
 	asrs r2, r2, #0x10
@@ -1866,7 +1866,7 @@ EventA4_: @ 0x0800C5F8
 	cmp r0, #0
 	bne _0800C624
 	ldr r0, _0800C620  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x54]
 	lsls r2, r5, #0x10
 	asrs r2, r2, #0x10
@@ -1922,7 +1922,7 @@ EventA6_: @ 0x0800C65C
 	adds r0, r0, r1
 	strb r5, [r0, #0x11]
 	ldr r0, _0800C688  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x54]
 	adds r1, r4, #0
 	adds r2, r5, #0
@@ -1945,7 +1945,7 @@ EventA7_: @ 0x0800C68C
 	ldrh r5, [r0, #8]
 	ldrh r6, [r0, #0xa]
 	ldr r0, _0800C6BC  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x54]
 	lsls r4, r4, #0x10
 	asrs r4, r4, #0x10
@@ -1993,7 +1993,7 @@ EventA8_: @ 0x0800C6C0
 	cmp r1, #0
 	beq _0800C720
 	ldr r0, _0800C71C  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x54]
 	lsls r1, r5, #0x10
 	asrs r5, r1, #0x10
@@ -2106,7 +2106,7 @@ EventAA_: @ 0x0800C7B4
 	cmp r0, #0
 	bne _0800C7D6
 	ldr r0, _0800C7E0  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x54]
 	lsls r1, r4, #0x10
 	asrs r1, r1, #0x10
@@ -2133,7 +2133,7 @@ EventAB_: @ 0x0800C7E4
 	cmp r0, #0
 	bne _0800C806
 	ldr r0, _0800C810  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	ldr r0, [r0, #0x54]
 	lsls r1, r4, #0x10
 	asrs r1, r1, #0x10
@@ -2703,10 +2703,10 @@ EventBF_: @ 0x0800CBAC
 	adds r5, r0, #0
 	ldr r4, _0800CBD4  @ gUnknown_08A3D748
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	bl sub_80B9FD4
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	bl sub_80B9810
 	adds r0, r5, #0
 	bl Make6C_savemenu2
@@ -2723,7 +2723,7 @@ _0800CBD4: .4byte gUnknown_08A3D748
 EventC0_: @ 0x0800CBD8
 	push {lr}
 	ldr r0, _0800CBEC  @ gUnknown_08A3D748
-	bl Proc_Find
+	bl FindProc
 	bl sub_80B9154
 	movs r0, #2
 	pop {r1}

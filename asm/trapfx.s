@@ -110,7 +110,7 @@ sub_801F600: @ 0x0801F600
 	mov r8, r3
 	ldr r0, _0801F62C  @ gUnknown_0859AFC8
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r5, [r0, #0x2c]
 	str r6, [r0, #0x30]
 	adds r0, #0x4a
@@ -184,7 +184,7 @@ sub_801F68C: @ 0x0801F68C
 	bl ApplyPaletteExt
 	ldr r0, _0801F6B8  @ gUnknown_0859AFE8
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r5, [r0, #0x2c]
 	str r6, [r0, #0x30]
 	pop {r4, r5, r6}
@@ -209,7 +209,7 @@ sub_801F6BC: @ 0x0801F6BC
 	bl ApplyPaletteExt
 	ldr r0, _0801F6E8  @ gUnknown_0859AFE8
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r5, [r0, #0x2c]
 	str r6, [r0, #0x30]
 	pop {r4, r5, r6}
@@ -323,7 +323,7 @@ sub_801F780: @ 0x0801F780
 	bl ApplyPaletteExt
 	ldr r0, _0801F7D4  @ gUnknown_0859B008
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r5, [r0, #0x58]
 	str r6, [r0, #0x5c]
 	mov r1, r8
@@ -401,7 +401,7 @@ sub_801F844: @ 0x0801F844
 	adds r4, r1, #0
 	ldr r0, _0801F85C  @ gUnknown_0859B048
 	adds r1, r2, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r4, [r0, #0x2c]
 	pop {r4}
 	pop {r0}
@@ -471,7 +471,7 @@ sub_801F8C8: @ 0x0801F8C8
 	adds r1, r0, #0
 	adds r4, r2, #0
 	ldr r0, _0801F8F0  @ gUnknown_0859B070
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r5, r0, #0
 	adds r0, r4, #0
 	bl GetTrap
@@ -561,7 +561,7 @@ sub_801F978: @ 0x0801F978
 	adds r7, r3, #0
 	ldr r0, _0801F99C  @ gUnknown_0859B0A0
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r5, [r0, #0x2c]
 	str r6, [r0, #0x30]
 	cmp r7, #1

@@ -2,7 +2,7 @@
 
 #include "hardware.h"
 #include "m4a.h"
-#include "soundwrapper.h"
+#include "sound.h"
 #include "fontgrp.h"
 #include "proc.h"
 #include "bmio.h"
@@ -14,7 +14,7 @@
 // data
 
 static CONST_DATA
-struct ProcCmd sProc_MenuMain[] =
+struct ProcScr sProc_MenuMain[] =
 {
     PROC_REPEAT(Menu_OnIdle),
 
@@ -23,7 +23,7 @@ struct ProcCmd sProc_MenuMain[] =
 };
 
 static CONST_DATA
-struct ProcCmd sProc_Menu[] =
+struct ProcScr sProc_Menu[] =
 {
     PROC_NAME("E_Menu"),
     PROC_SLEEP(0),
@@ -35,12 +35,12 @@ struct ProcCmd sProc_Menu[] =
 
     PROC_CALL(Menu_OnInit),
 
-    PROC_JUMP(sProc_MenuMain),
+    PROC_GOTO_SCR(sProc_MenuMain),
     PROC_END
 };
 
 static CONST_DATA
-struct ProcCmd sProc_MenuItem[] =
+struct ProcScr sProc_MenuItem[] =
 {
     PROC_BLOCK
 };
@@ -49,7 +49,7 @@ static void Menu_AutoHelpBox_OnInit(struct MenuProc* proc);
 static void Menu_AutoHelpBox_OnLoop(struct MenuProc* proc);
 
 static CONST_DATA
-struct ProcCmd sProc_MenuAutoHelpBox[] =
+struct ProcScr sProc_MenuAutoHelpBox[] =
 {
     PROC_CALL(Menu_AutoHelpBox_OnInit),
     PROC_REPEAT(Menu_AutoHelpBox_OnLoop),
@@ -59,7 +59,7 @@ struct ProcCmd sProc_MenuAutoHelpBox[] =
 static void Menu_FrozenHelpBox_OnLoop(struct MenuProc* proc);
 
 static CONST_DATA
-struct ProcCmd sProc_MenuFrozenHelpBox[] =
+struct ProcScr sProc_MenuFrozenHelpBox[] =
 {
     PROC_REPEAT(Menu_FrozenHelpBox_OnLoop),
     PROC_END
@@ -68,7 +68,7 @@ struct ProcCmd sProc_MenuFrozenHelpBox[] =
 static void Menu_Frozen_OnLoop(struct MenuProc* proc);
 
 static CONST_DATA
-struct ProcCmd sProc_MenuFrozen[] =
+struct ProcScr sProc_MenuFrozen[] =
 {
     PROC_REPEAT(Menu_Frozen_OnLoop),
     PROC_END
@@ -181,18 +181,18 @@ struct MenuProc* StartMenuCore(
     SetBgOffset(frontBg, 0, 0);
     SetBgOffset(backBg, 0, 0);
 
-    PlaySoundEffect(0x68); /* TODO: song ids! */
+    PlaySe(0x68); /* TODO: song ids! */
 
     if (parent)
     {
-        proc = Proc_StartBlocking(sProc_Menu, parent);
+        proc = SpawnProcLocking(sProc_Menu, parent);
         proc->state = 0;
     }
     else
     {
         AddSkipThread2();
 
-        proc = Proc_Start(sProc_Menu, PROC_TREE_3);
+        proc = SpawnProc(sProc_Menu, PROC_TREE_3);
         proc->state = MENU_STATE_GAMELOCKING;
     }
 
@@ -208,7 +208,7 @@ struct MenuProc* StartMenuCore(
 
         if (availability != MENU_NOTSHOWN)
         {
-            struct MenuItemProc* item = Proc_Start(sProc_MenuItem, proc);
+            struct MenuItemProc* item = SpawnProc(sProc_MenuItem, proc);
             proc->menuItems[itemCount++] = item;
 
             item->def = &def->menuItems[i];
@@ -269,7 +269,7 @@ struct Proc* EndMenu(struct MenuProc* proc)
 
 void EndAllMenus(void)
 {
-    Proc_ForEach(sProc_Menu, (ProcFunc) EndMenu);
+    ForEachProc(sProc_Menu, (ProcFunc) EndMenu);
 }
 
 inline
@@ -398,10 +398,10 @@ void Menu_OnIdle(struct MenuProc* proc)
         EndMenu(proc);
 
     if (actions & MENU_ACT_SND6A)
-        PlaySoundEffect(0x6A); // TODO: song ids!
+        PlaySe(0x6A); // TODO: song ids!
 
     if (actions & MENU_ACT_SND6B)
-        PlaySoundEffect(0x6B); // TODO: song ids!
+        PlaySe(0x6B); // TODO: song ids!
 
     if (actions & MENU_ACT_CLEAR)
         ClearMenuBgs(proc);
@@ -465,7 +465,7 @@ void ProcessMenuDpadInput(struct MenuProc* proc)
         DrawMenuItemHover(proc, proc->itemPrevious, FALSE);
         DrawMenuItemHover(proc, proc->itemCurrent, TRUE);
 
-        PlaySoundEffect(0x66); // TODO: song ids!
+        PlaySe(0x66); // TODO: song ids!
     }
 
     // Call def's switch in/out funcs
@@ -631,7 +631,7 @@ u8 MenuFrozen(struct MenuProc* proc)
 
 void FreezeMenu(void)
 {
-    struct MenuProc* proc = Proc_Find(sProc_Menu);
+    struct MenuProc* proc = FindProc(sProc_Menu);
 
     if (proc)
         proc->state |= MENU_STATE_FROZEN;
@@ -639,7 +639,7 @@ void FreezeMenu(void)
 
 void ResumeMenu(void)
 {
-    struct MenuProc* proc = Proc_Find(sProc_Menu);
+    struct MenuProc* proc = FindProc(sProc_Menu);
 
     if (proc)
         proc->state &= ~MENU_STATE_FROZEN;

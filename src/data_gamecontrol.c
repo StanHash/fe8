@@ -43,11 +43,11 @@ void sub_8048850(ProcPtr);
 void sub_8013D68(ProcPtr);
 void EndBG3Slider(ProcPtr);
 
-extern struct ProcCmd CONST_DATA gUnknown_08AA7680[]; // pre-intro cutscene
-extern struct ProcCmd CONST_DATA gUnknown_08AA71C8[]; // intro cutscene
-extern struct ProcCmd CONST_DATA gUnknown_08A3DD50[]; // world map wrapper
+extern struct ProcScr CONST_DATA gUnknown_08AA7680[]; // pre-intro cutscene
+extern struct ProcScr CONST_DATA gUnknown_08AA71C8[]; // intro cutscene
+extern struct ProcScr CONST_DATA gUnknown_08A3DD50[]; // world map wrapper
 
-struct ProcCmd CONST_DATA gUnused_085916BC[] =
+struct ProcScr CONST_DATA gUnused_085916BC[] =
 {
     PROC_CALL(sub_8009A58),
     PROC_REPEAT(Null6CCallback),
@@ -55,7 +55,7 @@ struct ProcCmd CONST_DATA gUnused_085916BC[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_085916D4[] =
+struct ProcScr CONST_DATA gUnknown_085916D4[] =
 {
     PROC_NAME("GAMECTRL"),
     PROC_MARK(PROC_MARK_B),
@@ -70,13 +70,13 @@ struct ProcCmd CONST_DATA gUnknown_085916D4[] =
     // fallthrough
 
 PROC_LABEL(0),
-    PROC_START_CHILD_BLOCKING(gUnknown_08AA7680),
+    PROC_START_CHILD_LOCKING(gUnknown_08AA7680),
 
     // fallthrough
 
 PROC_LABEL(1),
     PROC_CALL(ForceEnableSoundEffects),
-    PROC_START_CHILD_BLOCKING(gUnknown_08AA71C8),
+    PROC_START_CHILD_LOCKING(gUnknown_08AA71C8),
     PROC_CALL(sub_8009AEC),
     PROC_SLEEP(0),
 
@@ -150,7 +150,7 @@ PROC_LABEL(7),
     PROC_CALL(sub_8009E00),
     PROC_SLEEP(0),
 
-    PROC_START_CHILD_BLOCKING(gUnknown_08A3DD50),
+    PROC_START_CHILD_LOCKING(gUnknown_08A3DD50),
     PROC_CALL(EndWM),
 
     PROC_CALL(sub_8009E28),

@@ -62,8 +62,8 @@ struct KeySt* CONST_DATA gKeySt = &sKeyStObj;
 
 extern struct DispIo gDispIo; // COMMON
 
-extern InterruptHandler gOnHBlankA; // COMMON
-extern InterruptHandler gOnHBlankB; // COMMON
+extern IrqFunc gOnHBlankA; // COMMON
+extern IrqFunc gOnHBlankB; // COMMON
 
 void EnableSoftReset(void)
 {
@@ -383,12 +383,12 @@ void SetBlankChr(int chr)
     RegisterDataFill(0, (void *)(VRAM + chr * 32), 32);
 }
 
-void SetOnVBlank(InterruptHandler handler)
+void SetOnVBlank(IrqFunc handler)
 {
     if (handler != NULL)
     {
         gDispIo.dispStat.vblankIrqEnable = TRUE;
-        SetIRQHandler(0, handler);
+        SetIrqFunc(0, handler);
         REG_IE |= INTR_FLAG_VBLANK;
     }
     else
@@ -398,12 +398,12 @@ void SetOnVBlank(InterruptHandler handler)
     }
 }
 
-void SetOnVMatch(InterruptHandler handler)
+void SetOnVMatch(IrqFunc handler)
 {
     if (handler != NULL)
     {
         gDispIo.dispStat.vcountIrqEnable = TRUE;
-        SetIRQHandler(2, handler);
+        SetIrqFunc(2, handler);
         REG_IE |= INTR_FLAG_VCOUNT;
     }
     else
@@ -533,7 +533,7 @@ static void KeySimulation_SetKeySt(ProcPtr proc)
     gKeySt->held = kproc->unk64;
 }
 
-static struct ProcCmd ProcScr_KeySimulation[] =
+static struct ProcScr ProcScr_KeySimulation[] =
 {
     PROC_SLEEP(1),
     PROC_CALL(KeySimulation_SetKeySt),
@@ -544,7 +544,7 @@ void StartKeySimulation(int keys)
 {
     struct KeyProc* kproc;
 
-    kproc = Proc_Start(ProcScr_KeySimulation, PROC_TREE_1);
+    kproc = SpawnProc(ProcScr_KeySimulation, PROC_TREE_1);
     kproc->unk64 = keys;
 }
 
@@ -1185,7 +1185,7 @@ static void RefreshOnHBlank(void)
 
         gDispIo.dispStat.hblankIrqEnable = 1;
 
-        SetIRQHandler(1, gOnHBlankA);
+        SetIrqFunc(1, gOnHBlankA);
         REG_IE |= INTR_FLAG_HBLANK;
 
         break;
@@ -1195,7 +1195,7 @@ static void RefreshOnHBlank(void)
 
         gDispIo.dispStat.hblankIrqEnable = 1;
 
-        SetIRQHandler(1, gOnHBlankB);
+        SetIrqFunc(1, gOnHBlankB);
         REG_IE |= INTR_FLAG_HBLANK;
 
         break;
@@ -1205,7 +1205,7 @@ static void RefreshOnHBlank(void)
 
         gDispIo.dispStat.hblankIrqEnable = 1;
 
-        SetIRQHandler(1, OnHBlankBoth);
+        SetIrqFunc(1, OnHBlankBoth);
         REG_IE |= INTR_FLAG_HBLANK;
 
         break;
@@ -1213,13 +1213,13 @@ static void RefreshOnHBlank(void)
     }
 }
 
-void SetOnHBlankA(InterruptHandler func)
+void SetOnHBlankA(IrqFunc func)
 {
     gOnHBlankA = func;
     RefreshOnHBlank();
 }
 
-void SetOnHBlankB(InterruptHandler func)
+void SetOnHBlankB(IrqFunc func)
 {
     gOnHBlankB = func;
     RefreshOnHBlank();

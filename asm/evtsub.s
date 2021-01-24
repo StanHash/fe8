@@ -389,7 +389,7 @@ sub_8011A48: @ 0x08011A48
 	movs r0, #1
 	bl SetBlendBackdropB
 	ldr r0, _08011A9C  @ gUnknown_085924D8
-	bl Proc_Find
+	bl FindProc
 	movs r1, #1
 	bl sub_8011A1C
 	add sp, #4
@@ -431,7 +431,7 @@ sub_8011AA0: @ 0x08011AA0
 	movs r3, #0
 	bl SetBlendConfig
 	ldr r0, _08011AF0  @ gUnknown_085924D8
-	bl Proc_Find
+	bl FindProc
 	movs r1, #0
 	bl sub_8011A1C
 _08011AE8:
@@ -472,7 +472,7 @@ sub_8011AF4: @ 0x08011AF4
 	movs r0, #1
 	bl SetBlendBackdropB
 	ldr r0, _08011B48  @ gUnknown_085924D8
-	bl Proc_Find
+	bl FindProc
 	movs r1, #1
 	bl sub_8011A1C
 	add sp, #4
@@ -507,7 +507,7 @@ sub_8011B4C: @ 0x08011B4C
 	cmp r4, #0x10
 	bne _08011B86
 	ldr r0, _08011B8C  @ gUnknown_085924D8
-	bl Proc_Find
+	bl FindProc
 	bl Proc_End
 	adds r0, r5, #0
 	bl Proc_Break
@@ -548,7 +548,7 @@ sub_8011BA4: @ 0x08011BA4
 	ldr r1, [sp, #0x44]
 	movs r6, #0
 	ldr r0, _08011C7C  @ gUnknown_085924D8
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	adds r0, r4, #0
 	bl GetStringFromIndex
@@ -660,7 +660,7 @@ sub_8011C94: @ 0x08011C94
 	bl sub_8011BA4
 	ldr r0, _08011CC8  @ gUnknown_08592530
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	add sp, #8
 	pop {r4, r5}
 	pop {r0}

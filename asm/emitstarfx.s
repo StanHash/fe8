@@ -12,7 +12,7 @@ sub_8021FB8: @ 0x08021FB8
 	str r0, [r4, #0x34]
 	str r0, [r4, #0x38]
 	str r0, [r4, #0x3c]
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	ldr r1, _08021FE8  @ 0x000003FF
 	ands r1, r0
 	ldr r0, [r4, #0x14]
@@ -114,7 +114,7 @@ sub_8022060: @ 0x08022060
 	str r4, [sp]
 	movs r0, #0
 	adds r3, r6, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r5]
 	mov r0, r8
 	ldr r1, [r0]
@@ -122,7 +122,7 @@ sub_8022060: @ 0x08022060
 	movs r0, #0
 	mov r2, r9
 	adds r3, r6, #0
-	bl sub_8012DCC
+	bl Interpolate
 	mov r1, r8
 	str r0, [r1]
 	add sp, #4
@@ -169,9 +169,9 @@ _080220D8:
 _080220E0:
 	ldr r0, _080221A4  @ gUnknown_0859B510
 	adds r1, r6, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	ldr r1, [r6, #0x34]
 	lsls r1, r1, #0x10
 	ldr r4, _080221A8  @ 0x0000FFFF
@@ -179,7 +179,7 @@ _080220E0:
 	lsls r0, r0, #4
 	adds r1, r1, r0
 	str r1, [r5, #0x2c]
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	ldr r1, [r6, #0x38]
 	adds r1, #8
 	lsls r1, r1, #0x10
@@ -226,9 +226,9 @@ _0802214E:
 	bgt _080221EE
 	ldr r0, _080221A4  @ gUnknown_0859B510
 	adds r1, r6, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	ldr r1, [r6, #0x34]
 	subs r1, #8
 	lsls r1, r1, #0x10
@@ -237,7 +237,7 @@ _0802214E:
 	lsls r0, r0, #5
 	adds r1, r1, r0
 	str r1, [r5, #0x2c]
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	ldr r1, [r6, #0x38]
 	adds r1, #8
 	lsls r1, r1, #0x10
@@ -369,7 +369,7 @@ sub_8022250: @ 0x08022250
 	bl RegisterDataMove
 	ldr r0, _080222B0  @ gUnknown_0859B528
 	adds r1, r6, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r3, r0, #0
 	mov r0, r8
 	str r0, [r3, #0x34]
@@ -408,7 +408,7 @@ _080222B4: .4byte 0x0000FFFF
 sub_80222B8: @ 0x080222B8
 	push {lr}
 	ldr r0, _080222CC  @ gUnknown_0859B528
-	bl Proc_Find
+	bl FindProc
 	adds r0, #0x64
 	movs r1, #0
 	strh r1, [r0]
@@ -423,7 +423,7 @@ _080222CC: .4byte gUnknown_0859B528
 sub_80222D0: @ 0x080222D0
 	push {lr}
 	ldr r0, _080222DC  @ gUnknown_0859B528
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0

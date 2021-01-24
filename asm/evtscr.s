@@ -264,7 +264,7 @@ Event04_CheckRandom: @ 0x0800D754
 _0800D764: .4byte gEventSlots
 _0800D768:
 	adds r0, r1, #1
-	bl NextRN_N
+	bl RandNext
 	ldr r1, _0800D778  @ gEventSlots
 	str r0, [r1, #0x30]
 _0800D772:
@@ -1140,7 +1140,7 @@ _0800DD98:
 	asrs r0, r0, #0x10
 	movs r1, #3
 	movs r2, #0
-	bl Sound_PlaySong80024E4
+	bl StartBgmExt
 	movs r0, #2
 _0800DDA6:
 	pop {r1}
@@ -1186,7 +1186,7 @@ _0800DDEC:
 	adds r0, r3, #0
 	adds r1, r4, #0
 	movs r2, #0
-	bl Sound_PlaySong8002574
+	bl StartBgmFadeIn
 	b _0800DE0C
 _0800DDF8:
 	ldrh r0, [r2, #0x3c]
@@ -1198,7 +1198,7 @@ _0800DDF8:
 	movs r4, #1
 _0800DE06:
 	adds r0, r4, #0
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 _0800DE0C:
 	movs r0, #2
 _0800DE0E:
@@ -1246,12 +1246,12 @@ _0800DE46:
 _0800DE50:
 	lsls r0, r4, #0x10
 	asrs r0, r0, #0x10
-	bl sub_8002620
+	bl OverrideBgm
 	b _0800DE6A
 	.align 2, 0
 _0800DE5C: .4byte gEventSlots
 _0800DE60:
-	bl DeleteAll6CWaitMusicRelated
+	bl CancelDelaySong
 	adds r0, r4, #0
 	bl sub_80026BC
 _0800DE6A:
@@ -1290,7 +1290,7 @@ _0800DE9A:
 	lsls r0, r0, #1
 	movs r1, #0x90
 	movs r2, #0xa
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 	b _0800DECC
 _0800DEA8:
 	ldrh r0, [r3, #0x3c]
@@ -1301,7 +1301,7 @@ _0800DEA8:
 	beq _0800DEC0
 	movs r0, #0x80
 	lsls r0, r0, #1
-	bl Sound_SetVolume80022EC
+	bl SetBgmVolume
 	movs r0, #0
 	b _0800DECE
 _0800DEC0:
@@ -1309,7 +1309,7 @@ _0800DEC0:
 	lsls r1, r1, #1
 	movs r0, #0x90
 	movs r2, #0xa
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 _0800DECC:
 	movs r0, #2
 _0800DECE:
@@ -2236,7 +2236,7 @@ _0800E5B6:
 	cmp r0, #0
 	bne _0800E5CA
 	ldr r0, _0800E5FC  @ gUnknown_08A016E0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0800E5CC
 _0800E5CA:
@@ -2316,7 +2316,7 @@ sub_800E640: @ 0x0800E640
 	beq _0800E668
 	bl sub_80081A8
 	ldr r0, _0800E664  @ gUnknown_08591154
-	bl Proc_EndEach
+	bl EndEachProc
 	bl ResetFaces
 	bl sub_80067E8
 	b _0800E686
@@ -2330,10 +2330,10 @@ _0800E668:
 	bl sub_80081A8
 	ldr r0, _0800E68C  @ gUnknown_08591154
 	ldr r1, _0800E690  @ sub_8005F38
-	bl Proc_ForEach
+	bl ForEachProc
 	ldr r0, _0800E694  @ gUnknown_08591DE8
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _0800E686:
 	pop {r4}
 	pop {r0}
@@ -2560,7 +2560,7 @@ _0800E834:
 	cmp r6, #0x37
 	bne _0800E842
 	movs r0, #0x35
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
 _0800E842:
@@ -2584,7 +2584,7 @@ _0800E842:
 	ldr r1, [r1]
 	movs r2, #0x80
 	lsls r2, r2, #8
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	adds r5, #8
 	adds r4, r4, r5
 	ldr r0, [r4]
@@ -2756,7 +2756,7 @@ _0800E9CE:
 _0800E9D4:
 	ldr r0, _0800E9E8  @ gUnknown_08591EB0
 	adds r1, r5, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	mov ip, r0
 	mov r1, ip
 	adds r1, #0x29
@@ -2775,7 +2775,7 @@ _0800E9EC:
 	ldr r0, _0800EA1C  @ gUnknown_08591E00
 _0800E9FA:
 	adds r1, r5, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	mov ip, r0
 	adds r0, #0x29
 	strb r4, [r0]
@@ -3110,7 +3110,7 @@ _0800EC86:
 	cmp r0, #0x37
 	bne _0800EC94
 	movs r0, #0x35
-	bl NextRN_N
+	bl RandNext
 	strh r0, [r6, #0x2c]
 _0800EC94:
 	ldr r5, _0800ECF4  @ gUnknown_0895DD1C
@@ -3137,7 +3137,7 @@ _0800EC94:
 	adds r1, r1, r2
 	ldr r1, [r1]
 	movs r2, #0
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	ldrh r1, [r6, #0x2c]
 	lsls r0, r1, #1
 	adds r0, r0, r1
@@ -3228,7 +3228,7 @@ _0800ED86:
 	cmp r0, #0x37
 	bne _0800ED94
 	movs r0, #0x35
-	bl NextRN_N
+	bl RandNext
 	strh r0, [r6, #0x2c]
 _0800ED94:
 	ldr r5, _0800EDF8  @ gUnknown_0895DD1C
@@ -3256,7 +3256,7 @@ _0800ED94:
 	ldr r1, [r1]
 	movs r2, #0x80
 	lsls r2, r2, #8
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	ldrh r1, [r6, #0x2c]
 	lsls r0, r1, #1
 	adds r0, r0, r1
@@ -3639,7 +3639,7 @@ Event22_: @ 0x0800F0C8
 	bl EnableBgSync
 	bl sub_80081A8
 	ldr r0, _0800F120  @ gUnknown_08591154
-	bl Proc_EndEach
+	bl EndEachProc
 	bl ResetFaces
 	bl sub_80067E8
 	adds r0, r4, #0
@@ -4166,9 +4166,9 @@ _0800F4E8:
 	adds r0, r2, #0
 	orrs r0, r1
 	strh r0, [r4, #0x3c]
-	bl DeleteAll6CWaitMusicRelated
+	bl CancelDelaySong
 	movs r0, #4
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 	movs r0, #0
 	pop {r4}
 	pop {r1}
@@ -4814,7 +4814,7 @@ _0800F994:
 _0800F9B2:
 	mov r0, r8
 	str r3, [sp, #0x50]
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x10
 	lsrs r2, r0, #0x10
 	mov r5, sp
@@ -5232,7 +5232,7 @@ TryPrepareEventUnitMovement: @ 0x0800FC90
 	cmp r0, #0
 	beq _0800FCBE
 	ldr r0, _0800FCCC  @ gUnknown_0859A548
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0800FCD0
 	adds r0, r4, #0
@@ -6284,7 +6284,7 @@ _0801044C:
 	b _080104A8
 _0801047C:
 	ldr r0, _08010490  @ gProcScr_MUDeathFade
-	bl Proc_Find
+	bl FindProc
 	negs r1, r0
 	orrs r1, r0
 	cmp r1, #0
@@ -6738,7 +6738,7 @@ Event3B_: @ 0x0801079C
 	cmp r0, #0
 	beq _080107B8
 	ldr r0, _080107B4  @ gUnknown_08591F08
-	bl Proc_EndEach
+	bl EndEachProc
 	b _08010844
 	.align 2, 0
 _080107B4: .4byte gUnknown_08591F08
@@ -6792,7 +6792,7 @@ _08010808:
 	b _0801081C
 _0801080E:
 	ldr r0, _08010818  @ gUnknown_08591F08
-	bl Proc_EndEach
+	bl EndEachProc
 	movs r0, #2
 	b _08010846
 	.align 2, 0
@@ -6800,7 +6800,7 @@ _08010818: .4byte gUnknown_08591F08
 _0801081C:
 	ldr r0, _0801084C  @ gUnknown_08591F08
 	adds r1, r6, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r3, r0, #0
 	lsls r0, r5, #0x18
 	asrs r0, r0, #0x18
@@ -6984,7 +6984,7 @@ Event3E_PrepScreenCall: @ 0x08010968
 	bl UnsetEventId
 	ldr r0, _08010988  @ gUnknown_0859DBBC
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	movs r0, #2
 	pop {r4}
 	pop {r1}
@@ -7181,7 +7181,7 @@ _08010AE4:
 	movs r5, #1
 	ldr r0, _08010B28  @ gUnknown_08591F18
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r4, r0, #0
 	str r6, [r4, #0x58]
 	bl GetThread2SkipStack
@@ -7269,7 +7269,7 @@ Event40_: @ 0x08010B78
 	mov r9, r0
 	ldr r0, _08010BE8  @ gUnknown_08591F28
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r4, r0, #0
 	str r6, [r4, #0x58]
 	bl GetThread2SkipStack

@@ -536,7 +536,7 @@ sub_8033620: @ 0x08033620
 	push {lr}
 	adds r1, r0, #0
 	ldr r0, _08033630  @ gUnknown_0859DBA4
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -549,7 +549,7 @@ sub_8033634: @ 0x08033634
 	push {lr}
 	bl EndHelpPromptSprite
 	ldr r0, _08033644  @ gUnknown_0859DBA4
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -1262,7 +1262,7 @@ _08033BF4: .4byte gUnknown_0202BCB0
 sub_8033BF8: @ 0x08033BF8
 	push {lr}
 	ldr r0, _08033C0C  @ gUnknown_0859DBBC
-	bl Proc_Find
+	bl FindProc
 	movs r1, #0x33
 	bl Proc_Goto
 	movs r0, #0x17
@@ -1622,7 +1622,7 @@ sub_8033EC0: @ 0x08033EC0
 	push {lr}
 	adds r1, r0, #0
 	ldr r0, _08033ED0  @ gUnknown_08A2ED88
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -1939,7 +1939,7 @@ _08034146:
 	movs r1, #0x80
 	movs r2, #0x20
 	movs r3, #0
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 	bl sub_801240C
 	adds r0, r6, #0
 	bl Make6C_savemenu2
@@ -1959,7 +1959,7 @@ sub_8034168: @ 0x08034168
 	movs r0, #0x80
 	movs r2, #0x20
 	movs r3, #0
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 	ldr r2, _08034190  @ gRAMChapterData
 	adds r2, #0x4a
 	ldrb r1, [r2]
@@ -2136,7 +2136,7 @@ _080342BA:
 	ble _0803427C
 	bl ShrinkPlayerUnits
 	ldr r0, _080342F0  @ gUnknown_0859DBBC
-	bl Proc_EndEach
+	bl EndEachProc
 	ldr r3, _080342F4  @ gUnknown_0202BCB0
 	ldrb r2, [r3, #4]
 	movs r1, #0xef
@@ -2166,7 +2166,7 @@ _080342F8: .4byte gRAMChapterData
 sub_80342FC: @ 0x080342FC
 	push {lr}
 	ldr r0, _08034310  @ gUnknown_0859DBBC
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0803430A
 	movs r0, #1

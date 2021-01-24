@@ -535,7 +535,7 @@ ExecWarpStaff: @ 0x0802EFAC
 	bl BeginBattleAnimations
 	ldr r0, _0802F00C  @ gUnknown_0859BDF0
 	adds r1, r5, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -570,7 +570,7 @@ ExecStatusStaff: @ 0x0802F010
 	adds r1, r4, #0
 	adds r1, #0x64
 	strh r0, [r1]
-	bl Roll1RN
+	bl RandRoll
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0802F07C
@@ -812,7 +812,7 @@ _0802F222:
 	bl GetUnit
 	adds r1, r4, #0
 	bl GetOffensiveStaffAccuracy
-	bl Roll1RN
+	bl RandRoll
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -1700,7 +1700,7 @@ _0802F984:
 	cmp r4, #4
 	bls _0802F984
 	adds r0, r1, #0
-	bl NextRN_N
+	bl RandNext
 	adds r2, r0, #0
 	movs r4, #0
 	ldr r0, _0802F9DC  @ gUnknown_080D7C44
@@ -2326,7 +2326,7 @@ _0802FF76:
 	bne _0802FF8C
 	ldr r0, _0802FF88  @ gUnknown_0859BE28
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _0802FFA2
 	.align 2, 0
 _0802FF88: .4byte gUnknown_0859BE28
@@ -2340,7 +2340,7 @@ _0802FF8C:
 	blt _0802FFA2
 	ldr r0, _0802FFB0  @ gUnknown_0859BE10
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _0802FFA2:
 	pop {r3}
 	mov r8, r3
@@ -2390,7 +2390,7 @@ _0802FFEC:
 	blt _08030002
 	ldr r0, _08030018  @ gUnknown_0859BE10
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _08030002:
 	pop {r4, r5, r6}
 	pop {r0}

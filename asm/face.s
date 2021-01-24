@@ -206,7 +206,7 @@ _08005660: .4byte gUnknown_03004980
 _08005664:
 	ldr r0, _080056A4  @ gUnknown_08591154
 	movs r1, #5
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r4, [r5]
 	mov r0, r8
@@ -276,11 +276,11 @@ _080056F8: .4byte gUnknown_0202A68C
 _080056FC:
 	ldr r0, _08005730  @ gUnknown_0859124C
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4, #0x44]
 	ldr r0, _08005734  @ gUnknown_08591264
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r0, [r4, #0x48]
 _08005710:
 	ldr r1, [sp, #0x24]
@@ -857,7 +857,7 @@ sub_8005B04: @ 0x08005B04
 	bl sub_80059CC
 	ldr r0, _08005B4C  @ gUnknown_085911D8
 	adds r1, r7, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r1, r0, #0
 	mov r0, r8
 	strh r0, [r1, #0x34]
@@ -894,7 +894,7 @@ _08005B64: .4byte gUnknown_085911E8
 sub_8005B68: @ 0x08005B68
 	push {lr}
 	ldr r0, _08005B74  @ gUnknown_085911D8
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -913,7 +913,7 @@ sub_8005B78: @ 0x08005B78
 	ldr r1, _08005BC8  @ gUnknown_085A0838
 	lsls r2, r7, #0x10
 	lsrs r2, r2, #0x10
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	lsls r4, r4, #5
 	adds r4, r4, r5
 	lsls r4, r4, #1
@@ -960,7 +960,7 @@ sub_8005BCC: @ 0x08005BCC
 	ldr r1, _08005C20  @ gUnknown_085A08F0
 	lsls r2, r7, #0x10
 	lsrs r2, r2, #0x10
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	lsls r4, r4, #5
 	adds r4, r4, r5
 	lsls r4, r4, #1
@@ -1302,7 +1302,7 @@ sub_8005E98: @ 0x08005E98
 	adds r5, r3, #0
 	ldr r6, [sp, #0x14]
 	ldr r0, _08005EC8  @ gUnknown_08591204
-	bl Proc_EndEach
+	bl EndEachProc
 	adds r0, r4, #0
 	mov r1, r8
 	adds r2, r5, #0
@@ -1336,7 +1336,7 @@ sub_8005ED8: @ 0x08005ED8
 	adds r4, r0, #0
 	ldr r0, _08005EEC  @ gUnknown_08591234
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x54]
 	pop {r4}
 	pop {r0}
@@ -1534,7 +1534,7 @@ _08006034:
 	bne _08006052
 	movs r5, #0x18
 _08006052:
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	lsrs r0, r0, #0x10
 	movs r1, #7
 	ands r0, r1
@@ -2097,7 +2097,7 @@ _0800646C: .4byte gUnknown_03004980
 sub_8006470: @ 0x08006470
 	push {r4, lr}
 	adds r4, r0, #0
-	bl AdvanceGetLCGRNValue
+	bl RandNextB
 	adds r1, r0, #0
 	lsrs r2, r1, #0x10
 	ldrh r1, [r4, #0x30]
@@ -2195,7 +2195,7 @@ _08006518: .4byte gUnknown_03004980
 _0800651C:
 	ldr r0, _0800655C  @ gUnknown_0859118C
 	movs r1, #5
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	str r5, [r4]
 	mov r0, r9
@@ -2439,7 +2439,7 @@ sub_80066E0: @ 0x080066E0
 	adds r5, r1, #0
 	ldr r0, _080066F8  @ gUnknown_08591304
 	adds r1, r4, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x2c]
 	str r5, [r0, #0x34]
 	pop {r4, r5}

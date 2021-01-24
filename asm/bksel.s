@@ -453,13 +453,13 @@ sub_8036818: @ 0x08036818
 	ldr r1, _080368A0  @ gUnknown_085A09A8
 	movs r2, #0x80
 	lsls r2, r2, #5
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	ldr r4, _080368A4  @ gBmFrameTmap0
 	adds r0, r4, #0
 	movs r1, #0xa
 	movs r2, #0xf
 	movs r3, #0
-	bl TileMap_FillRect
+	bl TmFillRect_t
 	adds r0, r4, #0
 	adds r0, #0x46
 	adds r5, r6, #0
@@ -725,13 +725,13 @@ sub_8036A70: @ 0x08036A70
 	ldr r1, _08036B08  @ gUnknown_085A0AEC
 	movs r2, #0x80
 	lsls r2, r2, #5
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	ldr r4, _08036B0C  @ gBmFrameTmap0
 	adds r0, r4, #0
 	movs r1, #0xa
 	movs r2, #0x13
 	movs r3, #0
-	bl TileMap_FillRect
+	bl TmFillRect_t
 	adds r0, r4, #0
 	adds r0, #0x46
 	adds r5, r6, #0
@@ -1187,12 +1187,12 @@ _08036E3C:
 	ldr r1, _08036E68  @ gBg0Tm
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _08036E6C  @ gUnknown_0200422C
 	ldr r1, _08036E70  @ gBg1Tm
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	b _08036E8C
 	.align 2, 0
 _08036E64: .4byte gBmFrameTmap0
@@ -1204,12 +1204,12 @@ _08036E74:
 	ldr r1, _08036E9C  @ gBg0Tm+0x28
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _08036EA0  @ gUnknown_0200422C
 	ldr r1, _08036EA4  @ gBg1Tm+0x28
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 _08036E8C:
 	movs r0, #3
 	bl EnableBgSync
@@ -1601,14 +1601,14 @@ _08037128:
 	mov r1, r8
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _0803719C  @ gUnknown_0200422C
 	adds r4, r4, r0
 	adds r0, r4, #0
 	mov r1, sl
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	b _080371C2
 	.align 2, 0
 _0803718C: .4byte gBg0Tm
@@ -1625,13 +1625,13 @@ _080371A0:
 	adds r1, r4, r2
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _080371EC  @ gUnknown_0200422C
 	add r4, sl
 	adds r1, r4, #0
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 _080371C2:
 	ldrb r0, [r6]
 	adds r0, #1
@@ -1710,14 +1710,14 @@ _0803720C:
 	mov r1, r8
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _08037280  @ gUnknown_0200422C
 	adds r4, r4, r0
 	adds r0, r4, #0
 	mov r1, sl
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	b _080372A6
 	.align 2, 0
 _08037270: .4byte gBg0Tm
@@ -1734,13 +1734,13 @@ _08037284:
 	adds r1, r4, r2
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _080372D0  @ gUnknown_0200422C
 	add r4, sl
 	adds r1, r4, #0
 	adds r2, r5, #0
 	mov r3, r9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 _080372A6:
 	ldrb r0, [r6]
 	adds r0, #1
@@ -1817,7 +1817,7 @@ _08037324: .4byte gRAMChapterData
 _08037328:
 	ldr r0, _08037360  @ gUnknown_0859E520
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r1, r5, #0
 	adds r1, #0x33
@@ -1872,7 +1872,7 @@ _08037388: .4byte gBmMapMovement
 sub_803738C: @ 0x0803738C
 	push {lr}
 	ldr r0, _080373B0  @ gUnknown_0859E520
-	bl Proc_Find
+	bl FindProc
 	adds r1, r0, #0
 	cmp r1, #0
 	beq _080373AC
@@ -1897,7 +1897,7 @@ _080373B0: .4byte gUnknown_0859E520
 sub_80373B4: @ 0x080373B4
 	push {r4, lr}
 	ldr r0, _080373DC  @ gUnknown_0859E520
-	bl Proc_Find
+	bl FindProc
 	adds r4, r0, #0
 	cmp r4, #0
 	beq _080373E8
@@ -1929,7 +1929,7 @@ sub_80373F0: @ 0x080373F0
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	ldr r0, _0803743C  @ gUnknown_0859E520
-	bl Proc_Find
+	bl FindProc
 	adds r4, r0, #0
 	cmp r4, #0
 	beq _08037460

@@ -59,7 +59,7 @@ enum {
 extern char gUnknown_02028E44[9];
 
 // ??? SetupDebugFontForBG(???);
-void PrintDebugStringToBG(u16 *bg, const char *asciiStr);
+void DebugPutStr(u16 *bg, const char *asciiStr);
 // ??? sub_800384C(???);
 // ??? sub_8003870(???);
 // ??? sub_80038B4(???);

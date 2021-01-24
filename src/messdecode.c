@@ -1,5 +1,6 @@
 #include "global.h"
 
+#include "armfunc.h"
 #include "proc.h"
 #include "bmio.h"
 #include "bmitem.h"
@@ -80,7 +81,7 @@ char *GetStringFromIndex(int index)
 {
     if (index == gUnknown_0202B6AC)
         return gUnknown_0202A6AC.buffer0202A6AC;
-    CallARM_DecompText(gUnknown_0815D48C[index], gUnknown_0202A6AC.buffer0202A6AC);
+    DecodeString(gUnknown_0815D48C[index], gUnknown_0202A6AC.buffer0202A6AC);
     SomethingRelatedToText(gUnknown_0202A6AC.buffer0202A6AC);
     gUnknown_0202B6AC = index;
     return gUnknown_0202A6AC.buffer0202A6AC;
@@ -88,7 +89,7 @@ char *GetStringFromIndex(int index)
 
 char *GetStringFromIndexInBuffer(int index, char *buffer)
 {
-    CallARM_DecompText(gUnknown_0815D48C[index], buffer);
+    DecodeString(gUnknown_0815D48C[index], buffer);
     SomethingRelatedToText(buffer);
     return buffer;
 }

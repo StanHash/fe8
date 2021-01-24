@@ -1971,7 +1971,7 @@ _080274E6:
 	lsls r4, r4, #4
 _080274EC:
 	adds r3, r3, r4
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	b _0802751E
 	.align 2, 0
 _080274F4: .4byte gObject_16x32
@@ -1993,7 +1993,7 @@ _080274F8:
 	movs r4, #0xc0
 	lsls r4, r4, #4
 	adds r3, r3, r4
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 _0802751E:
 	ldr r6, [r6]
 	cmp r6, #0
@@ -2081,7 +2081,7 @@ _0802755C:
 	ands r1, r2
 	ldr r2, _080275E0  @ gObject_8x8
 	ldr r3, _080275E4  @ 0x00000C51
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 _080275C6:
 	pop {r4, r5}
 	pop {r0}
@@ -2389,7 +2389,7 @@ _0802783C:
 	adds r2, r2, r3
 	ldr r2, [r2]
 	movs r3, #0
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	b _080278A6
 	.align 2, 0
 _0802784C: .4byte gUnknown_0202BCB0
@@ -2434,7 +2434,7 @@ _08027862:
 	ands r1, r2
 	ldr r2, _0802791C  @ gUnknown_0859B968
 	movs r3, #0
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 _080278A6:
 	cmp r6, #0
 	bne _080278AC
@@ -2491,7 +2491,7 @@ _080278E8:
 	lsls r3, r3, #0xc
 	ldr r4, _0802792C  @ 0x00000803
 	adds r3, r3, r4
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	b _080279FC
 	.align 2, 0
 _08027914: .4byte gUnknown_0202BCB0
@@ -2552,7 +2552,7 @@ _08027930:
 	ldr r2, _080279AC  @ gObject_8x8
 	movs r3, #0x81
 	lsls r3, r3, #4
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	b _080279FC
 	.align 2, 0
 _0802799C: .4byte gUnknown_0202BCB0
@@ -2597,7 +2597,7 @@ _080279B0:
 	ands r1, r2
 	ldr r2, _08027A28  @ gObject_8x8
 	ldr r3, _08027A2C  @ 0x00000811
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 _080279FC:
 	movs r4, #1
 	add r8, r4

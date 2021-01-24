@@ -8,7 +8,7 @@
 
 void TargetSelection_Loop();
 
-struct ProcCmd CONST_DATA gUnknown_085B655C[] =
+struct ProcScr CONST_DATA gUnknown_085B655C[] =
 {
 PROC_LABEL(0),
     PROC_REPEAT(TargetSelection_Loop),

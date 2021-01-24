@@ -929,7 +929,7 @@ sub_80381E0: @ 0x080381E0
 	push {lr}
 	adds r1, r0, #0
 	ldr r0, _080381F0  @ gUnknown_0859E64C
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -942,7 +942,7 @@ sub_80381F4: @ 0x080381F4
 	push {lr}
 	adds r1, r0, #0
 	ldr r0, _08038204  @ gUnknown_0859E6EC
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -981,7 +981,7 @@ sub_8038230: @ 0x08038230
 	push {lr}
 	movs r0, #0x40
 	movs r1, #0
-	bl Sound_PlaySong80024D4
+	bl StartBgm
 	pop {r0}
 	bx r0
 
@@ -1104,7 +1104,7 @@ sub_8038240: @ 0x08038240
 	movs r2, #0x80
 	lsls r2, r2, #8
 	mov r0, r9
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	ldr r4, _08038418  @ gUnknown_08A26380
 	movs r0, #2
 	bl GetBgChrOffset
@@ -1124,7 +1124,7 @@ sub_8038240: @ 0x08038240
 	ldr r2, _0803842C  @ 0x00007260
 	mov r0, sl
 	adds r1, r4, #0
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	ldr r4, _08038430  @ gUnknown_089A234C
 	movs r0, #1
 	bl GetBgChrOffset
@@ -2887,14 +2887,14 @@ sub_80391D0: @ 0x080391D0
 	cmp r1, #0
 	beq _080391E8
 	ldr r0, _080391E4  @ gUnknown_0859E804
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _080391F0
 	.align 2, 0
 _080391E4: .4byte gUnknown_0859E804
 _080391E8:
 	ldr r0, _080391FC  @ gUnknown_0859E804
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _080391F0:
 	str r4, [r0, #0x2c]
 	str r5, [r0, #0x30]

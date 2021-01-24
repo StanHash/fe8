@@ -61,7 +61,7 @@ _080225F4: .4byte 0x00000864
 CommandEffectEndPlayerPhase: @ 0x080225F8
 	push {lr}
 	ldr r0, _08022608  @ gUnknown_0859AAD8
-	bl Proc_EndEach
+	bl EndEachProc
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -74,7 +74,7 @@ _08022608: .4byte gUnknown_0859AAD8
 MapMenu_UnitCommand: @ 0x0802260C
 	push {lr}
 	ldr r0, _08022624  @ gUnknown_0859AAD8
-	bl Proc_Find
+	bl FindProc
 	movs r1, #0xa
 	bl Proc_Goto
 	bl sub_80920C4
@@ -91,7 +91,7 @@ MapMenu_OptionsCommand: @ 0x08022628
 	push {lr}
 	ldr r0, _08022638  @ gUnknown_08A2ECE0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -203,7 +203,7 @@ Make6CE_Guide: @ 0x080226E4
 	push {lr}
 	ldr r0, _080226F4  @ gUnknown_08B12C64
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -222,7 +222,7 @@ sub_80226F8: @ 0x080226F8
 	adds r0, #0x3e
 	strb r1, [r0]
 	ldr r0, _08022720  @ gUnknown_0859AAD8
-	bl Proc_Find
+	bl FindProc
 	movs r1, #0xc
 	bl Proc_Goto
 	movs r0, #0x17
@@ -324,7 +324,7 @@ sub_80227A4: @ 0x080227A4
 	movs r4, #0x11
 	ldrsb r4, [r0, r4]
 	ldr r0, _08022800  @ gUnknown_0859A548
-	bl Proc_EndEach
+	bl EndEachProc
 	lsls r0, r4, #4
 	bl GetSomeAdjustedCameraY
 	lsls r0, r0, #0x10
@@ -390,7 +390,7 @@ GenericSelection_BackToUM_CamWait: @ 0x0802282C
 	bl sub_8003D20
 	ldr r0, _0802285C  @ gProcScr_0859B600
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r0, #0x19
 	pop {r1}
 	bx r1
@@ -1165,7 +1165,7 @@ _08022E04:
 	strb r0, [r1, #0x15]
 _08022E22:
 	ldr r0, _08022E34  @ gUnknown_0859E520
-	bl Proc_EndEach
+	bl EndEachProc
 	movs r0, #0x17
 _08022E2A:
 	pop {r4}
@@ -1216,7 +1216,7 @@ sub_8022E64: @ 0x08022E64
 	beq _08022E84
 	ldr r0, _08022E80  @ gUnknown_0859B630
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r0, #0xb
 	b _08022E86
 	.align 2, 0
@@ -2074,12 +2074,12 @@ sub_80234AC: @ 0x080234AC
 	ldr r1, _080234E4  @ gBmFrameTmap0
 	movs r2, #9
 	movs r3, #0x13
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _080234E8  @ gBg1Tm+0x56
 	ldr r1, _080234EC  @ gUnknown_0200422C
 	movs r2, #9
 	movs r3, #0x13
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -2111,12 +2111,12 @@ MenuCommand_SelectNo: @ 0x080234FC
 	ldr r1, _0802352C  @ gBg0Tm+0x56
 	movs r2, #9
 	movs r3, #0x13
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _08023530  @ gUnknown_0200422C
 	ldr r1, _08023534  @ gBg1Tm+0x56
 	movs r2, #9
 	movs r3, #0x13
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	movs r0, #3
 	bl EnableBgSync
 	movs r0, #0xb
@@ -2198,25 +2198,25 @@ sub_80235A8: @ 0x080235A8
 	adds r1, r5, #0
 	movs r2, #9
 	movs r3, #0x13
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	ldr r0, _0802363C  @ gUnknown_0200422C
 	ldr r4, _08023640  @ gBg1Tm+0x56
 	adds r1, r4, #0
 	movs r2, #9
 	movs r3, #0x13
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	subs r5, #0x14
 	adds r0, r5, #0
 	movs r1, #0xe
 	movs r2, #0xc
 	movs r3, #0
-	bl TileMap_FillRect
+	bl TmFillRect_t
 	subs r4, #0x14
 	adds r0, r4, #0
 	movs r1, #0xd
 	movs r2, #0xc
 	movs r3, #0
-	bl TileMap_FillRect
+	bl TmFillRect_t
 	movs r0, #3
 	bl EnableBgSync
 	ldr r0, _08023644  @ gItemSelectMenuDef
@@ -3953,7 +3953,7 @@ sub_8024260: @ 0x08024260
 	ldr r1, _080242FC  @ gUnknown_085A0D4C
 	movs r2, #0x80
 	lsls r2, r2, #5
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	ldrb r0, [r6, #0xd]
 	bl GetUnit
 	ldr r0, [r0]

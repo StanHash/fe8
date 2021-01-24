@@ -18,7 +18,7 @@
 
 struct DebugPrintProc
 {
-    PROC_HEADER
+    PROC_HEADER;
     int x; // unit: tile
     int y; // unit: tile
     int unk_34;

@@ -22,9 +22,9 @@ struct APProc
 static void APProc_OnUpdate(struct APProc* proc);
 static void APProc_OnEnd(struct APProc* proc);
 
-static struct ProcCmd CONST_DATA sProcScr_ApProc[] =
+static struct ProcScr CONST_DATA sProcScr_ApProc[] =
 {
-    PROC_SET_END_CB(APProc_OnEnd),
+    PROC_ONEND(APProc_OnEnd),
     PROC_REPEAT(APProc_OnUpdate),
 
     PROC_END,
@@ -50,7 +50,7 @@ static u8 CONST_DATA sOamTileSizeLut[] =
 
 static struct APHandle sAPArray[AP_MAX_COUNT];
 
-void AP_ClearAll(void) {
+void InitAnims(void) {
     struct APHandle* it;
 
     const struct APHandle* base = sAPArray;
@@ -347,7 +347,7 @@ struct APProc* APProc_Create(const void* apDefinition, int xPos, int yPos, int t
     handle->tileBase = tileBase;
 
     // Making Proc
-    proc = Proc_Start(sProcScr_ApProc, PROC_TREE_3);
+    proc = SpawnProc(sProcScr_ApProc, PROC_TREE_3);
 
     // Setting up proc
     proc->pHandle = handle;
@@ -386,9 +386,9 @@ void APProc_Delete(struct APProc* proc) {
 
 void APProc_DeleteAll(void) {
     // delet all
-    Proc_EndEach(sProcScr_ApProc);
+    EndEachProc(sProcScr_ApProc);
 }
 
 int APProc_Exists(void) {
-    return Proc_Find(sProcScr_ApProc) ? TRUE : FALSE;
+    return FindProc(sProcScr_ApProc) ? TRUE : FALSE;
 }

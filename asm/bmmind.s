@@ -8,7 +8,7 @@
 StoreRNStateToActionStruct: @ 0x08031FEC
 	push {lr}
 	ldr r0, _08031FF8  @ gActionData
-	bl StoreRNState
+	bl RandGetSt
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -20,7 +20,7 @@ _08031FF8: .4byte gActionData
 LoadRNStateFromActionStruct: @ 0x08031FFC
 	push {lr}
 	ldr r0, _08032008  @ gActionData
-	bl LoadRNState
+	bl RandSetSt
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -282,7 +282,7 @@ ActionDrop: @ 0x080321E0
 	bl UnitDrop
 	ldr r0, _08032250  @ gUnknown_0859DA6C
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r5, [r0, #0x54]
 	b _08032262
 	.align 2, 0
@@ -396,7 +396,7 @@ _08032324:
 _08032330:
 	ldr r0, _08032340  @ gUnknown_0859DABC
 	adds r1, r7, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	movs r0, #0
 	pop {r4, r5, r6, r7}
 	pop {r1}
@@ -411,7 +411,7 @@ ActionArena: @ 0x08032344
 	push {lr}
 	adds r1, r0, #0
 	ldr r0, _08032354  @ gUnknown_0859DB24
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	movs r0, #0
 	pop {r1}
 	bx r1
@@ -723,7 +723,7 @@ sub_80325AC: @ 0x080325AC
 	ldrsh r0, [r5, r4]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	mov r8, r0
 	movs r0, #0x3a
 	ldrsh r1, [r6, r0]
@@ -735,7 +735,7 @@ sub_80325AC: @ 0x080325AC
 	ldrsh r0, [r5, r4]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r2, r0, #0
 	adds r1, r6, #0
 	adds r1, #0x40
@@ -826,7 +826,7 @@ sub_8032674: @ 0x08032674
 	beq _08032716
 	ldr r0, _0803271C  @ gUnknown_0859DA94
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r4, r0, #0
 	ldrb r0, [r5, #0x1b]
 	bl GetUnit
@@ -1003,7 +1003,7 @@ BATTLE_ProbablyMakesTheDeadUnitDissapear: @ 0x080327C8
 	cmp r0, #0
 	beq _080327F2
 	ldr r0, _08032854  @ gProcScr_MoveUnit
-	bl Proc_Find
+	bl FindProc
 	adds r4, r0, #0
 	bl MU_StartDeathFade
 	str r4, [r6, #0x54]
@@ -1106,13 +1106,13 @@ sub_80328B0: @ 0x080328B0
 	push {r4, lr}
 	bl GetCurrentMapMusicIndex
 	adds r4, r0, #0
-	bl Sound_GetCurrentSong
+	bl GetCurrentBgmSong
 	cmp r0, r4
 	beq _080328CA
 	adds r0, r4, #0
 	movs r1, #6
 	movs r2, #0
-	bl Sound_PlaySong80024E4
+	bl StartBgmExt
 _080328CA:
 	pop {r4}
 	pop {r0}

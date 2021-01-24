@@ -48,7 +48,7 @@ C_SUBDIR = src
 ASM_SUBDIR = asm
 DATA_ASM_SUBDIR = data
 
-ROM          := fireemblem8.gba
+ROM          := fe8.gba
 ELF          := $(ROM:.gba=.elf)
 MAP          := $(ROM:.gba=.map)
 LDSCRIPT     := ldscript.txt

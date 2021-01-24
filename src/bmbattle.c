@@ -5,7 +5,7 @@
 #include "constants/characters.h"
 #include "constants/terrains.h"
 
-#include "rng.h"
+#include "random.h"
 #include "bmitem.h"
 #include "bmunit.h"
 #include "bmmap.h"
@@ -13,7 +13,7 @@
 #include "chapterdata.h"
 #include "bmtrick.h"
 #include "m4a.h"
-#include "soundwrapper.h"
+#include "sound.h"
 #include "hardware.h"
 #include "proc.h"
 #include "mu.h"
@@ -50,7 +50,7 @@ static CONST_DATA struct WeaponTriangleRule sWeaponTriangleRules[] = {
 
 static void UpdateActorFromBattle(void);
 
-static CONST_DATA struct ProcCmd sProcScr_BattleAnimSimpleLock[] = {
+static CONST_DATA struct ProcScr sProcScr_BattleAnimSimpleLock[] = {
     PROC_SLEEP(1),
     PROC_CALL(UpdateActorFromBattle),
     PROC_END
@@ -73,8 +73,8 @@ static EWRAM_DATA struct {
 static void BattleGenerateSimulationInternal(struct Unit* actor, struct Unit* target, int x, int y, int actorWpnSlot);
 static void BattleGenerateRealInternal(struct Unit* actor, struct Unit* target);
 
-static s8 BattleRoll1RN(u16 threshold, s8 simResult);
-static s8 BattleRoll2RN(u16 threshold, s8 simResult);
+static s8 BattleRandRoll(u16 threshold, s8 simResult);
+static s8 BattleRandRoll2Rn(u16 threshold, s8 simResult);
 
 static void ComputeBattleUnitStats(struct BattleUnit* attacker, struct BattleUnit* defender);
 static void ComputeBattleUnitEffectiveStats(struct BattleUnit* attacker, struct BattleUnit* defender);
@@ -309,18 +309,18 @@ void BattleGenerateUiStats(struct Unit* unit, s8 itemSlot) {
     }
 }
 
-s8 BattleRoll1RN(u16 threshold, s8 simResult) {
+s8 BattleRandRoll(u16 threshold, s8 simResult) {
     if (gBattleStats.config & BATTLE_CONFIG_SIMULATE)
         return simResult;
 
-    return Roll1RN(threshold);
+    return RandRoll(threshold);
 }
 
-s8 BattleRoll2RN(u16 threshold, s8 simResult) {
+s8 BattleRandRoll2Rn(u16 threshold, s8 simResult) {
     if (gBattleStats.config & BATTLE_CONFIG_SIMULATE)
         return simResult;
 
-    return Roll2RN(threshold);
+    return RandRoll2Rn(threshold);
 }
 
 void InitBattleUnit(struct BattleUnit* bu, struct Unit* unit) {
@@ -965,7 +965,7 @@ void BattleCheckSureShot(struct BattleUnit* attacker) {
             break;
 
         default:
-            if (BattleRoll1RN(attacker->unit.level, FALSE) == TRUE)
+            if (BattleRandRoll(attacker->unit.level, FALSE) == TRUE)
                 gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_SURESHOT;
 
             break;
@@ -991,7 +991,7 @@ void BattleCheckPierce(struct BattleUnit* attacker, struct BattleUnit* defender)
 
     case CLASS_WYVERN_KNIGHT:
     case CLASS_WYVERN_KNIGHT_F:
-        if (BattleRoll1RN(attacker->unit.level, FALSE) == TRUE)
+        if (BattleRandRoll(attacker->unit.level, FALSE) == TRUE)
             gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_PIERCE;
 
         break;
@@ -1022,7 +1022,7 @@ void BattleCheckGreatShield(struct BattleUnit* attacker, struct BattleUnit* defe
 
     case CLASS_GENERAL:
     case CLASS_GENERAL_F:
-        if (BattleRoll1RN(attacker->unit.level, FALSE) == TRUE)
+        if (BattleRandRoll(attacker->unit.level, FALSE) == TRUE)
             gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_GREATSHLD;
 
         break;
@@ -1045,7 +1045,7 @@ s8 BattleCheckSilencer(struct BattleUnit* attacker, struct BattleUnit* defender)
 
     } // switch (defender->unit.pClassData->number)
 
-    if (BattleRoll1RN(gBattleStats.silencerRate, FALSE) == TRUE)
+    if (BattleRandRoll(gBattleStats.silencerRate, FALSE) == TRUE)
         return TRUE;
 
     return FALSE;
@@ -1064,7 +1064,7 @@ void BattleGenerateHitAttributes(struct BattleUnit* attacker, struct BattleUnit*
     BattleCheckSureShot(attacker);
 
     if (!(gBattleHitIterator->attributes & BATTLE_HIT_ATTR_SURESHOT)) {
-        if (!BattleRoll2RN(gBattleStats.hitRate, TRUE)) {
+        if (!BattleRandRoll2Rn(gBattleStats.hitRate, TRUE)) {
             gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_MISS;
             return;
         }
@@ -1086,7 +1086,7 @@ void BattleGenerateHitAttributes(struct BattleUnit* attacker, struct BattleUnit*
     if (gBattleHitIterator->attributes & BATTLE_HIT_ATTR_GREATSHLD)
         gBattleStats.damage = 0;
 
-    if (BattleRoll1RN(gBattleStats.critRate, FALSE) == TRUE) {
+    if (BattleRandRoll(gBattleStats.critRate, FALSE) == TRUE) {
         if (BattleCheckSilencer(attacker, defender)) {
             gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_SILENCER;
 
@@ -1162,7 +1162,7 @@ void BattleGenerateHitEffects(struct BattleUnit* attacker, struct BattleUnit* de
             } // switch (GetItemWeaponEffect(attacker->weapon))
         }
 
-        if ((GetItemWeaponEffect(attacker->weapon) == WPN_EFFECT_DEVIL) && (BattleRoll1RN(31 - attacker->unit.lck, FALSE))) {
+        if ((GetItemWeaponEffect(attacker->weapon) == WPN_EFFECT_DEVIL) && (BattleRandRoll(31 - attacker->unit.lck, FALSE))) {
             gBattleHitIterator->attributes |= BATTLE_HIT_ATTR_DEVIL;
 
             attacker->unit.curHP -= gBattleStats.damage;
@@ -1291,14 +1291,14 @@ int GetStatIncrease(int growth) {
         growth -= 100;
     }
 
-    if (Roll1RN(growth))
+    if (RandRoll(growth))
         result++;
 
     return result;
 }
 
 int GetAutoleveledStatIncrease(int growth, int levelCount) {
-    return GetStatIncrease((growth * levelCount) + (NextRN_N((growth * levelCount) / 4) - (growth * levelCount) / 8));
+    return GetStatIncrease((growth * levelCount) + (RandNext((growth * levelCount) / 4) - (growth * levelCount) / 8));
 }
 
 s8 CanBattleUnitGainLevels(struct BattleUnit* bu) {
@@ -2060,7 +2060,7 @@ void UpdateObstacleFromBattle(struct BattleUnit* bu) {
         int mapChangeId = GetMapChangeIdAt(bu->unit.xPos, bu->unit.yPos);
 
         if (gBmMapTerrain[bu->unit.yPos][bu->unit.xPos] == TERRAIN_SNAG)
-            PlaySoundEffect(0x2D7); // TODO: Sound id constants
+            PlaySe(0x2D7); // TODO: Sound id constants
 
         RenderBmMapOnBg2();
 
@@ -2207,7 +2207,7 @@ void UpdateActorFromBattle(void) {
 
 void BattleApplyMiscAction(struct Proc* proc) {
     BattleApplyMiscActionExpGains();
-    Proc_StartBlocking(sProcScr_BattleAnimSimpleLock, proc);
+    SpawnProcLocking(sProcScr_BattleAnimSimpleLock, proc);
 }
 
 void BattleApplyItemEffect(struct Proc* proc) {
@@ -2226,7 +2226,7 @@ void BattleApplyItemEffect(struct Proc* proc) {
             gBattleActor.weaponBroke = FALSE;
     }
 
-    Proc_StartBlocking(sProcScr_BattleAnimSimpleLock, proc);
+    SpawnProcLocking(sProcScr_BattleAnimSimpleLock, proc);
 }
 
 int GetOffensiveStaffAccuracy(struct Unit* actor, struct Unit* target) {

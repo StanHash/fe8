@@ -1835,7 +1835,7 @@ ClearActiveUnit: @ 0x0801D75C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r0, _0801D7D8  @ gUnknown_0859AAD8
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0801D7D2
 	movs r1, #9
@@ -1898,7 +1898,7 @@ _0801D7E4: .4byte gActiveUnitMoveOrigin
 sub_801D7E8: @ 0x0801D7E8
 	push {lr}
 	ldr r0, _0801D80C  @ gUnknown_0859AAD8
-	bl Proc_Find
+	bl FindProc
 	adds r2, r0, #0
 	cmp r2, #0
 	beq _0801D806
@@ -1908,7 +1908,7 @@ sub_801D7E8: @ 0x0801D7E8
 	bne _0801D806
 	ldr r1, _0801D814  @ sub_801D818
 	adds r0, r2, #0
-	bl Proc_SetRepeatCb
+	bl Proc_SetRepeatFunc
 _0801D806:
 	pop {r0}
 	bx r0
@@ -2249,7 +2249,7 @@ DisplayMoveRangeGraphics: @ 0x0801DA98
 	adds r5, r0, #0
 	ldr r4, _0801DAB4  @ gUnknown_0859AD50
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0801DAB8
 	bl Setup6CRangeDisplayGfx
@@ -2261,7 +2261,7 @@ _0801DAB4: .4byte gUnknown_0859AD50
 _0801DAB8:
 	adds r0, r4, #0
 	movs r1, #4
-	bl Proc_Start
+	bl SpawnProc
 	adds r0, #0x4a
 	strh r5, [r0]
 _0801DAC4:
@@ -2275,7 +2275,7 @@ _0801DAC4:
 HideMoveRangeGraphics: @ 0x0801DACC
 	push {lr}
 	ldr r0, _0801DAD8  @ gUnknown_0859AD50
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -2314,11 +2314,11 @@ _0801DB0A:
 _0801DB10: .4byte 0x00010007
 _0801DB14:
 	ldr r0, _0801DB44  @ gUnknown_0859AAD8
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0801DB24
 	ldr r0, _0801DB48  @ gUnknown_0859DBBC
-	bl Proc_Find
+	bl FindProc
 _0801DB24:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]

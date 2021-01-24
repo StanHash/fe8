@@ -1,55 +1,86 @@
-#ifndef GUARD_PROC_H
-#define GUARD_PROC_H
+
+#pragma once
+
+#include "global.h"
 
 struct Proc;
 
 typedef void* ProcPtr;
 typedef void(*ProcFunc)(ProcPtr proc);
 
-struct ProcCmd
+struct ProcScr
 {
-    short opcode;
-    short dataImm;
-    const void* dataPtr;
+    short cmd;
+    short imm;
+    void const* ptr;
 };
 
-#define PROC_END                                     { 0x00, 0x0000, 0 }
-#define PROC_NAME(aName)                             { 0x01, 0x0000, aName }
-#define PROC_CALL(apRoutine)                         { 0x02, 0x0000, (apRoutine) }
-#define PROC_REPEAT(apRoutine)                       { 0x03, 0x0000, (apRoutine) }
-#define PROC_SET_END_CB(apRoutine)                   { 0x04, 0x0000, (apRoutine) }
-#define PROC_START_CHILD(ap6CChild)                  { 0x05, 0x0000, (ap6CChild) }
-#define PROC_START_CHILD_BLOCKING(ap6CChild)         { 0x06, 0x0001, (ap6CChild) }
-#define PROC_START_MAIN_BUGGED(ap6CMain)             { 0x07, 0x0000, (ap6CMain) }
-#define PROC_WHILE_EXISTS(ap6CToCheck)               { 0x08, 0x0000, (ap6CToCheck) }
-#define PROC_END_EACH(ap6CToCheck)                   { 0x09, 0x0000, (ap6CToCheck) }
-#define PROC_BREAK_EACH(ap6CToCheck)                 { 0x0A, 0x0000, (ap6CToCheck) }
-#define PROC_LABEL(aLabelId)                         { 0x0B, aLabelId, 0 }
-#define PROC_GOTO(aLabelId)                          { 0x0C, aLabelId, 0 }
-#define PROC_JUMP(ap6CCode)                          { 0x0D, 0x0000, (ap6CCode) }
-#define PROC_SLEEP(aTime)                            { 0x0E, aTime,  0 }
-#define PROC_MARK(aMark)                             { 0x0F, aMark,  0 }
-#define PROC_BLOCK                                   { 0x10, 0x0000, 0 }
-#define PROC_END_IF_DUPLICATE                        { 0x11, 0x0000, 0 }
-#define PROC_SET_BIT4                                { 0x12, 0x0000, 0 }
-#define PROC_13                                      { 0x13, 0x0000, 0 }
-#define PROC_WHILE(aprRoutine)                       { 0x14, 0x0000, (aprRoutine) }
-#define PROC_15                                      { 0x15, 0x0000, 0 }
-#define PROC_CALL_2(aprRoutine)                      { 0x16, 0x0000, (aprRoutine) }
-#define PROC_END_DUPLICATES                          { 0x17, 0x0000, 0 }
-#define PROC_CALL_ARG(aprRoutine, aArgument)         { 0x18, (aArgument), (aprRoutine) }
-#define PROC_19                                      { 0x19, 0x0000, 0 }
-#define PROC_YIELD                                   PROC_SLEEP(0)
+enum
+{
+    PROC_CMD_END,
+    PROC_CMD_NAME,
+    PROC_CMD_CALL,
+    PROC_CMD_REPEAT,
+    PROC_CMD_ONEND,
+    PROC_CMD_START_CHILD,
+    PROC_CMD_START_CHILD_BLOCKING,
+    PROC_CMD_START_BUGGED,
+    PROC_CMD_WHILE_EXISTS,
+    PROC_CMD_END_EACH,
+    PROC_CMD_BREAK_EACH,
+    PROC_CMD_LABEL,
+    PROC_CMD_GOTO,
+    PROC_CMD_GOTO_SCR,
+    PROC_CMD_SLEEP,
+    PROC_CMD_MARK,
+    PROC_CMD_BLOCK,
+    PROC_CMD_END_IF_DUP,
+    PROC_CMD_SET_FLAG2,
+    PROC_CMD_13,
+    PROC_CMD_WHILE,
+    PROC_CMD_15,
+    PROC_CMD_CALL_2,
+    PROC_CMD_END_DUPS,
+    PROC_CMD_CALL_ARG,
+    PROC_CMD_19,
+};
+
+#define PROC_END                          { PROC_CMD_END, 0, 0 }
+#define PROC_NAME(nameStr)                { PROC_CMD_NAME, 0, (nameStr) }
+#define PROC_CALL(func)                   { PROC_CMD_CALL, 0, (func) }
+#define PROC_REPEAT(func)                 { PROC_CMD_REPEAT, 0, (func) }
+#define PROC_ONEND(func)                  { PROC_CMD_ONEND, 0, (func) }
+#define PROC_START_CHILD(procScr)         { PROC_CMD_START_CHILD, 0, (procScr) }
+#define PROC_START_CHILD_LOCKING(procScr) { PROC_CMD_START_CHILD_BLOCKING, 1, (procScr) }
+#define PROC_START_BUGGED(procScr)        { PROC_CMD_START_BUGGED, 0, (procScr) }
+#define PROC_WHILE_EXISTS(procScr)        { PROC_CMD_WHILE_EXISTS, 0, (procScr) }
+#define PROC_END_EACH(procScr)            { PROC_CMD_END_EACH, 0, (procScr) }
+#define PROC_BREAK_EACH(procScr)          { PROC_CMD_BREAK_EACH, 0, (procScr) }
+#define PROC_LABEL(label)                 { PROC_CMD_LABEL, (label), 0 }
+#define PROC_GOTO(label)                  { PROC_CMD_GOTO, (label), 0 }
+#define PROC_GOTO_SCR(procScr)            { PROC_CMD_GOTO_SCR, 0, (procScr) }
+#define PROC_SLEEP(duration)              { PROC_CMD_SLEEP, (duration), 0 }
+#define PROC_MARK(mark)                   { PROC_CMD_MARK, (mark), 0 }
+#define PROC_BLOCK                        { PROC_CMD_BLOCK, 0, 0 }
+#define PROC_END_IF_DUP                   { PROC_CMD_END_IF_DUP, 0, 0 }
+#define PROC_SET_FLAG2                    { PROC_CMD_SET_FLAG2, 0, 0 }
+#define PROC_13                           { PROC_CMD_13, 0, 0 }
+#define PROC_WHILE(func)                  { PROC_CMD_WHILE, 0, (func) }
+#define PROC_15                           { PROC_CMD_15, 0, 0 }
+#define PROC_CALL_2(func)                 { PROC_CMD_CALL_2, 0, (func) }
+#define PROC_END_DUPS                     { PROC_CMD_END_DUPS, 0, 0 }
+#define PROC_CALL_ARG(func, arg)          { PROC_CMD_CALL_ARG, (arg), (func) }
+#define PROC_19                           { PROC_CMD_19, 0, 0 }
 
 // allows local Proc structs to invoke the general Proc
 // fields when creating local Proc definitions.
 #define PROC_HEADER                                                                        \
-    const struct ProcCmd* proc_script; /* pointer to proc script */                        \
-    const struct ProcCmd* proc_scrCur; /* pointer to currently executing script command */ \
-    ProcFunc proc_endCb; /* callback to run upon delegint the process */                   \
-    ProcFunc proc_idleCb; /* callback to run once each frame. */                           \
+    struct ProcScr const* proc_script; /* pointer to proc script */                        \
+    struct ProcScr const* proc_scrCur; /* pointer to currently executing script command */ \
+    ProcFunc proc_endFunc; /* callback to run upon delegint the process */                 \
+    ProcFunc proc_repeatFunc; /* callback to run once each frame. */                       \
                           /* disables script execution when not null */                    \
-    const char* proc_name;                                                                 \
+    char const* proc_name;                                                                 \
     ProcPtr proc_parent; /* pointer to parent proc. If this proc is a root proc, */        \
                          /* this member is an integer which is the root index. */          \
     ProcPtr proc_child; /* pointer to most recently added child */                         \
@@ -58,20 +89,45 @@ struct ProcCmd
     s16 proc_sleepTime;                                                                    \
     u8 proc_mark;                                                                          \
     u8 proc_flags;                                                                         \
-    u8 proc_lockCnt; /* wait semaphore. Process execution */                               \
+    u8 proc_lockCnt  /* wait semaphore. Process execution */                               \
                      /* is blocked when this is nonzero. */                                \
 
-// general Proc struct for use in proc.c when initializing and using the proc.
+// Proc struct for general useage.
 struct Proc
 {
     /* 00 */ PROC_HEADER;
-    /* 2C */ u32 data[0x10];
+
+    /* 2C */ int i32_2C;
+    /* 30 */ int i32_30;
+    /* 34 */ int i32_34;
+    /* 38 */ int i32_38;
+    /* 3C */ int i32_3C;
+    /* 40 */ int i32_40;
+
+    /* 44 */ u8 pad_38[0x4A - 0x44];
+
+    /* 4A */ short i16_4A;
+    /* 4C */ short i16_4C; 
+    /* 4E */ short i16_4E;
+    /* 50 */ short i16_50;
+    /* 52 */ short i16_52;
+
+    /* 54 */ void* ptr_54;
+    /* 58 */ int i32_58;
+    /* 5C */ int i32_5C;
+
+    /* 60 */ u8 pad_60[0x64 - 0x60];
+
+    /* 64 */ short i16_64;
+    /* 66 */ short i16_66;
+    /* 68 */ short i16_68;
+    /* 6A */ short i16_6A;
 };
 
 struct ProcFindIterator
 {
     /* 00 */ struct Proc* proc;
-    /* 04 */ const struct ProcCmd* script;
+    /* 04 */ struct ProcScr const* script;
     /* 08 */ int count;
 };
 
@@ -100,33 +156,33 @@ enum
 
 #define ROOT_PROC(treenum) (*(gProcTreeRootArray + (treenum)))
 
-extern struct Proc* gProcTreeRootArray[8];
+extern ProcPtr gProcTreeRootArray[8];
 
-void Proc_Init(void);
-ProcPtr Proc_Start(const struct ProcCmd* script, ProcPtr parent);
-ProcPtr Proc_StartBlocking(const struct ProcCmd* script, ProcPtr parent);
+void InitProcs(void);
+ProcPtr SpawnProc(struct ProcScr const* script, ProcPtr parent);
+ProcPtr SpawnProcLocking(struct ProcScr const* script, ProcPtr parent);
 void Proc_End(ProcPtr proc);
 void Proc_Run(ProcPtr proc);
 void Proc_Break(ProcPtr proc);
-ProcPtr Proc_Find(const struct ProcCmd* script);
+ProcPtr FindProc(struct ProcScr const* script);
 void Proc_Goto(ProcPtr proc, int label);
-void Proc_GotoScript(ProcPtr proc, const struct ProcCmd* script);
+void Proc_GotoScript(ProcPtr proc, const struct ProcScr* script);
 void Proc_SetMark(ProcPtr proc, int mark);
 void Proc_SetEndCb(ProcPtr proc, ProcFunc func);
-void Proc_ForAll(ProcFunc func);
-void Proc_ForEach(const struct ProcCmd *script, ProcFunc func);
-void Proc_ForEachMarked(int mark, ProcFunc func);
-void Proc_BlockEachMarked(int mark);
-void Proc_UnblockEachMarked(int mark);
-void Proc_EndEachMarked(int mark);
-void Proc_EndEach(const struct ProcCmd *script);
-void Proc_BreakEach(const struct ProcCmd* script);
-void Proc_SetRepeatCb(ProcPtr proc, ProcFunc func);
+void ForEveryProc(ProcFunc func);
+void ForEachProc(struct ProcScr const* script, ProcFunc func);
+void ForEachMarkedProc(int mark, ProcFunc func);
+void LockEachMarkedProc(int mark);
+void ReleaseEachMarkedProc(int mark);
+void EndEachMarkedProc(int mark);
+void EndEachProc(struct ProcScr const* script);
+void BreakEachProc(struct ProcScr const* script);
+void Proc_SetRepeatFunc(ProcPtr proc, ProcFunc func);
+void Proc_Lock(ProcPtr proc);
+void Proc_Release(ProcPtr proc);
 // ??? Proc_FindAfter(???);
 // ??? Proc_FindAfterWithParent(???);
 // ??? sub_80034D4(???);
 // ??? sub_80034FC(???);
-void Proc_FindBegin(struct ProcFindIterator* it, const struct ProcCmd* script);
-ProcPtr Proc_FindNext(struct ProcFindIterator* it);
-
-#endif  // GUARD_PROC_H
+void BeginFindProc(struct ProcFindIterator* it, struct ProcScr const* script);
+ProcPtr NextFindProc(struct ProcFindIterator* it);

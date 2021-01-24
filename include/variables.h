@@ -465,8 +465,6 @@ extern struct MapAnimState gUnknown_0203E1F0;
 // extern ??? gUnknown_0203EF68
 // extern ??? gUnknown_0203EFB4
 // extern ??? end
-// extern ??? gUnknown_03000000
-// extern ??? gLCGRNValue
 
 // extern ??? gUnknown_030000D0
 // extern ??? gUnknown_030000D8
@@ -561,16 +559,15 @@ extern u8 gUnknown_03003060;
 // extern ??? gUnknown_030030C8
 // extern ??? gUnknown_030030D8
 // extern ??? gUnknown_030030F0
-// extern ??? gUnknown_03003128
-// extern ??? gUnknown_03003130
+// extern ??? MapFloodCoreRamFunc
+// extern ??? PutOamHiRamFunc
 extern u32 gUnknown_03003240[];
 // extern ??? gUnknown_03003540
-// extern ??? gUnknown_03003740
-// extern ??? gUnknown_03003750
-// extern ??? gUnknown_03004150
-// extern ??? gUnknown_03004154
+// extern ??? DrawGlyphRamFunc
+// extern ??? DecodeStringRamFunc
+// extern ??? PutOamLoRamFunc
 // extern ??? gUnknown_03004160
-// extern ??? gUnknown_03004960
+// extern ??? MapFloodCoreStepRamFunc
 // extern ??? gUnknown_03004980
 // extern ??? gUnknown_03004990
 // extern ??? gStatGainSimUnit
@@ -626,8 +623,6 @@ extern struct MusicPlayerInfo gUnknown_03006760;
 
 // const data
 // extern ??? gUnknown_08000540
-extern const char gBuildDateTime[]; // "2005/02/04(FRI) 16:55:40...."
-extern const char gYearProjectCreated[]; // "_2003..."
 // extern ??? gUnknown_080D74F4
 extern const u16 gUnknown_080D7504[];
 // extern ??? gUnknown_080D77BC
@@ -1059,7 +1054,7 @@ extern void *gUnknown_08587938[];
 extern struct BgCnt *gUnknown_08587948[];
 // extern ??? sMusicProc1Script
 // extern ??? sMusicProc2Script
-// extern ??? gMusicProc3Script
+// extern ??? ProcScr_DelaySong
 // extern ??? sMusicProc4Script
 // extern ??? gProcCmdFuncs
 extern u8 debug_font_4bpp[];
@@ -1204,7 +1199,7 @@ extern const u16 gUnknown_0859A1C0[];
 // extern ??? gUnknown_0859A4C0
 // extern ??? gUnknown_0859A530
 // extern ??? gUnknown_0859A53C
-extern const struct ProcCmd gUnknown_0859A548[]; // this is GENS/Camera Movement proc
+extern const struct ProcScr gUnknown_0859A548[]; // this is GENS/Camera Movement proc
 // extern ??? gUnknown_0859A570
 // extern ??? gUnknown_0859A580
 // extern ??? gStatusNameTextIdLookup

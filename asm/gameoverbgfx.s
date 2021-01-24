@@ -146,7 +146,7 @@ sub_80212C0: @ 0x080212C0
 	bl BMapDispSuspend
 	movs r0, #0x3e
 	movs r1, #0
-	bl Sound_PlaySong80024D4
+	bl StartBgm
 	ldr r3, _080213C8  @ gDispIo
 	ldrb r2, [r3, #0xc]
 	movs r1, #4
@@ -197,7 +197,7 @@ sub_80212C0: @ 0x080212C0
 	ldr r0, _080213E4  @ gBg0Tm+0x24E
 	ldr r1, _080213E8  @ gUnknown_08A0AE84
 	movs r2, #0x80
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	bl sub_801FEE8
 	bl sub_801FE14
 	movs r0, #0xc
@@ -240,7 +240,7 @@ sub_80212C0: @ 0x080212C0
 	strh r0, [r5]
 	movs r4, #9
 _080213B0:
-	bl sub_80D74B0
+	bl sub_8000234_t
 	subs r4, #1
 	cmp r4, #0
 	bge _080213B0
@@ -273,7 +273,7 @@ sub_80213F4: @ 0x080213F4
 	ands r1, r0
 	cmp r1, #0
 	bne _08021422
-	bl sub_80D74B0
+	bl sub_8000234_t
 	bl EnablePalSync
 	adds r1, r4, #0
 	adds r1, #0x4c
@@ -357,7 +357,7 @@ sub_8021470: @ 0x08021470
 	adds r3, r5, #0
 	bl sub_800172C
 	movs r0, #4
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -370,7 +370,7 @@ _080214A4: .4byte gPal
 sub_80214A8: @ 0x080214A8
 	push {r4, lr}
 	adds r4, r0, #0
-	bl sub_80D74B0
+	bl sub_8000234_t
 	bl EnablePalSync
 	adds r1, r4, #0
 	adds r1, #0x4c
@@ -431,14 +431,14 @@ sub_8021518: @ 0x08021518
 	cmp r1, #0
 	beq _0802152C
 	ldr r0, _08021528  @ gUnknown_0859B358
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _08021534
 	.align 2, 0
 _08021528: .4byte gUnknown_0859B358
 _0802152C:
 	ldr r0, _08021538  @ gUnknown_0859B358
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _08021534:
 	pop {r0}
 	bx r0

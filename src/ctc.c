@@ -1,4 +1,6 @@
 #include "global.h"
+
+#include "armfunc.h"
 #include "proc.h"
 #include "oam.h"
 #include "ctc.h"
@@ -122,7 +124,7 @@ u16 CONST_DATA gObject_16x16_VFlipped[] =
     1, OAM0_SHAPE_16x16, OAM1_SIZE_16x16 + OAM1_VFLIP, 0,
 };
 
-static struct ProcCmd CONST_DATA sProcSrc_SpriteRefresher[] =
+static struct ProcScr CONST_DATA sProcSrc_SpriteRefresher[] =
 {
     PROC_REPEAT(SpriteRefresher_OnIdle),
     PROC_END,
@@ -186,7 +188,7 @@ void PushSpriteLayerObjects(int layer)
     while (it)
     {
         if (it->object)
-            CallARM_PushToSecondaryOAM(it->oam1, it->oam0, it->object, it->oam2);
+            PutOamHi(it->oam1, it->oam0, it->object, it->oam2);
 
         it = it->next;
     }
@@ -202,9 +204,9 @@ struct SpriteProc* StartSpriteRefresher(ProcPtr parent, int layer, int x, int y,
     struct SpriteProc* proc;
 
     if (parent)
-        proc = Proc_Start(sProcSrc_SpriteRefresher, parent);
+        proc = SpawnProc(sProcSrc_SpriteRefresher, parent);
     else
-        proc = Proc_Start(sProcSrc_SpriteRefresher, PROC_TREE_3);
+        proc = SpawnProc(sProcSrc_SpriteRefresher, PROC_TREE_3);
 
     proc->x = x;
     proc->y = y;
@@ -218,7 +220,7 @@ struct SpriteProc* StartSpriteRefresher(ProcPtr parent, int layer, int x, int y,
 void MoveSpriteRefresher(struct SpriteProc* proc, int x, int y)
 {
     if (proc == NULL)
-        proc = Proc_Find(sProcSrc_SpriteRefresher);
+        proc = FindProc(sProcSrc_SpriteRefresher);
 
     proc->x = x;
     proc->y = y;

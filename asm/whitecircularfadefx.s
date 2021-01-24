@@ -204,7 +204,7 @@ _08021F34:
 	bl SetBgChrOffset
 	ldr r0, _08021FB4  @ gUnknown_0859B4F8
 	adds r1, r5, #0
-	bl Proc_Start
+	bl SpawnProc
 	str r6, [r0, #0x2c]
 	str r7, [r0, #0x30]
 	adds r0, #0x4c

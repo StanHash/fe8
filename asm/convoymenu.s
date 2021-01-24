@@ -210,7 +210,7 @@ _0801E11A:
 	bl sub_8008A0C
 	ldr r0, _0801E134  @ gUnknown_0859AE38
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _0801E128:
 	add sp, #4
 	pop {r4, r5, r6}

@@ -1,5 +1,5 @@
-#ifndef GUARD_GLOBAL_H
-#define GUARD_GLOBAL_H
+
+#pragma once
 
 #include <stdlib.h>
 
@@ -18,5 +18,3 @@
 #define ABS(aValue) ((aValue) >= 0 ? (aValue) : -(aValue))
 
 #define RECT_DISTANCE(aXA, aYA, aXB, aYB) (ABS((aXA) - (aXB)) + ABS((aYA) - (aYB)))
-
-#endif  // GUARD_GLOBAL_H

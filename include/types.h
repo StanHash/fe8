@@ -33,8 +33,6 @@ struct Struct02024CD4
     int unk4;
 };
 
-typedef void (*InterruptHandler)(void);
-
 struct Vec2 { short x, y; };
 struct Vec2u { u16 x, y; };
 
@@ -114,8 +112,8 @@ struct RAMChapterData { // Chapter Data Struct
     u32 unk40_5:1; // 1
     u32 cfgTextSpeed:2;
     u32 unk40_8:1; // 1
-    u32 unk41_1:1; // 1
-    u32 unk41_2:1; // 1
+    u32 configBgmDisable:1; // 1
+    u32 configSeDisable:1; // 1
     u32 cfgWindowColor:2;
     u32 unk41_5:1; // 1
     u32 unk41_6:1; // unk
@@ -308,7 +306,7 @@ struct MapAnimState
     /* 00 */ struct MapAnimActorState actors[4];
 
     /* 50 */ u32* pCurrentRound;
-    /* 54 */ const struct ProcCmd* pItemMapAnimProcScript;
+    /* 54 */ const struct ProcScr* pItemMapAnimProcScript;
     /* 58 */ u8 subjectActorId;
     /* 59 */ u8 targetActorId;
     /* 5A */ u16 roundBits;

@@ -51,14 +51,14 @@ sub_801EA64: @ 0x0801EA64
 	str r6, [sp]
 	movs r0, #0
 	adds r3, r5, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r4, #0x44]
 	str r6, [sp]
 	movs r0, #0
 	movs r1, #0xc
 	movs r2, #0x30
 	adds r3, r5, #0
-	bl sub_8012DCC
+	bl Interpolate
 	strh r0, [r4, #0x3e]
 	mov r3, r8
 	strh r3, [r4, #0x3c]
@@ -89,7 +89,7 @@ sub_801EAE8: @ 0x0801EAE8
 	str r0, [sp]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [sp, #4]
 	movs r2, #0x34
 	ldrsh r6, [r7, r2]
@@ -235,7 +235,7 @@ sub_801EC10: @ 0x0801EC10
 	adds r5, r3, #0
 	ldr r0, _0801EC44  @ gUnknown_0859AEA0
 	adds r1, r6, #0
-	bl Proc_Start
+	bl SpawnProc
 	mov r1, r8
 	str r1, [r0, #0x2c]
 	lsls r4, r4, #4
@@ -258,7 +258,7 @@ _0801EC44: .4byte gUnknown_0859AEA0
 sub_801EC48: @ 0x0801EC48
 	push {lr}
 	ldr r0, _0801EC58  @ gUnknown_0859AEA0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0801EC5C
 	movs r0, #0

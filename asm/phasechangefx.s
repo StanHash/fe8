@@ -128,13 +128,13 @@ _0801ED54: .4byte 0x00005140
 sub_801ED58: @ 0x0801ED58
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl Sound_GetCurrentSong
+	bl GetCurrentBgmSong
 	adds r4, r0, #0
 	bl GetCurrentMapMusicIndex
 	cmp r4, r0
 	beq _0801ED70
 	movs r0, #4
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 _0801ED70:
 	ldr r0, _0801ED90  @ gRAMChapterData
 	adds r0, #0x41
@@ -182,7 +182,7 @@ _0801EDB2:
 	movs r0, #0x10
 	str r0, [sp]
 	movs r0, #5
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	lsls r1, r1, #0x10
 	lsrs r1, r1, #0x10
@@ -245,7 +245,7 @@ _0801EE28:
 	movs r0, #0x10
 	str r0, [sp]
 	movs r0, #2
-	bl sub_8012DCC
+	bl Interpolate
 	adds r1, r0, #0
 	lsls r1, r1, #0x10
 	lsrs r1, r1, #0x10
@@ -344,7 +344,7 @@ _0801EED2:
 	str r0, [sp]
 	movs r0, #4
 	movs r1, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r7, r0, #0
 	ldrh r1, [r4]
 	movs r2, #0
@@ -389,7 +389,7 @@ _0801EF28:
 	str r0, [sp]
 	movs r0, #2
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r7, r0, #0
 	ldrh r1, [r4]
 	movs r3, #0
@@ -729,7 +729,7 @@ sub_801F1A0: @ 0x0801F1A0
 	movs r0, #5
 	movs r1, #0x10
 	movs r2, #0x3c
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r3, _0801F220  @ gDispIo
 	adds r2, r3, #0
 	adds r2, #0x2d
@@ -755,7 +755,7 @@ sub_801F1A0: @ 0x0801F1A0
 	movs r0, #0
 	movs r1, #0
 	movs r2, #7
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r2, _0801F224  @ gUnknown_0202BCB0
 	adds r1, r2, #0
 	adds r1, #0x3a
@@ -798,7 +798,7 @@ sub_801F228: @ 0x0801F228
 	movs r0, #5
 	movs r1, #0
 	movs r2, #0x3c
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r3, _0801F2A4  @ gDispIo
 	adds r2, r3, #0
 	adds r2, #0x2d
@@ -824,7 +824,7 @@ sub_801F228: @ 0x0801F228
 	movs r0, #0
 	movs r1, #0
 	movs r2, #7
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r2, _0801F2A8  @ gUnknown_0202BCB0
 	adds r1, r2, #0
 	adds r1, #0x3a
@@ -1095,15 +1095,15 @@ sub_801F490: @ 0x0801F490
 	movs r3, #0
 	bl SetBlendConfig
 	ldr r0, _0801F500  @ gUnknown_0859AEF8
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0801F4F4
 	ldr r0, _0801F504  @ gUnknown_0859AF40
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0801F4F4
 	ldr r0, _0801F508  @ gUnknown_0859AF60
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0801F4F4
 	bl ClearBg0Bg1

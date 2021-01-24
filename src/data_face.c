@@ -167,7 +167,7 @@ u16 CONST_DATA gUnknown_08591122[] =
 };
 
 // face proc
-struct ProcCmd CONST_DATA gUnknown_08591154[] =
+struct ProcScr CONST_DATA gUnknown_08591154[] =
 {
     PROC_NAME("E_FACE"),
 
@@ -183,7 +183,7 @@ struct ProcCmd CONST_DATA gUnknown_08591154[] =
 };
 
 // other face proc. This one waits an extra frame before displaying anything
-struct ProcCmd CONST_DATA gUnknown_0859118C[] =
+struct ProcScr CONST_DATA gUnknown_0859118C[] =
 {
     PROC_NAME("E_FACE"),
 
@@ -208,7 +208,7 @@ u8 CONST_DATA gUnknown_085911C4[] =
     0x0C, 0x0D, 0x0E, 0x0F,
 };
 
-struct ProcCmd CONST_DATA gUnknown_085911D8[] =
+struct ProcScr CONST_DATA gUnknown_085911D8[] =
 {
     PROC_REPEAT(sub_8005AD4),
     PROC_END,
@@ -228,7 +228,7 @@ u16 CONST_DATA gUnknown_085911F6[] =
     OAM0_SHAPE_32x16 + OAM0_Y(16), OAM1_SIZE_32x16 + OAM1_HFLIP, OAM2_CHR(4),
 };
 
-struct ProcCmd CONST_DATA gUnknown_08591204[] =
+struct ProcScr CONST_DATA gUnknown_08591204[] =
 {
     PROC_CALL(sub_8005D64),
 
@@ -241,7 +241,7 @@ PROC_LABEL(0),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_08591234[] =
+struct ProcScr CONST_DATA gUnknown_08591234[] =
 {
     PROC_SLEEP(8),
     PROC_CALL(sub_8005ECC),
@@ -249,7 +249,7 @@ struct ProcCmd CONST_DATA gUnknown_08591234[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_0859124C[] =
+struct ProcScr CONST_DATA gUnknown_0859124C[] =
 {
     PROC_CALL(sub_8005FD4),
     PROC_REPEAT(sub_8005FE0),
@@ -257,7 +257,7 @@ struct ProcCmd CONST_DATA gUnknown_0859124C[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_08591264[] =
+struct ProcScr CONST_DATA gUnknown_08591264[] =
 {
 PROC_LABEL(0),
     PROC_CALL(sub_800623C),

@@ -259,7 +259,7 @@ sub_8012890: @ 0x08012890
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
 	ldr r0, _080128C4  @ gUnknown_08592568
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r1, r0, #0
 	cmp r5, #0
 	bne _080128C8
@@ -566,7 +566,7 @@ sub_8012AE0: @ 0x08012AE0
 	lsrs r5, r5, #0x10
 	ldr r0, _08012B1C  @ gUnknown_08592580
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	lsls r4, r4, #0x10
 	asrs r4, r4, #0xc
 	ldr r2, _08012B20  @ gUnknown_0202BCB0
@@ -594,7 +594,7 @@ _08012B20: .4byte gUnknown_0202BCB0
 sub_8012B24: @ 0x08012B24
 	push {lr}
 	ldr r0, _08012B38  @ gUnknown_08592580
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08012B32
 	movs r0, #1
@@ -612,7 +612,7 @@ sub_8012B3C: @ 0x08012B3C
 	adds r4, r0, #0
 	ldr r0, _08012B7C  @ gUnknown_085925D0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x2c]
 	movs r2, #0x10
 	ldrsb r2, [r4, r2]
@@ -648,7 +648,7 @@ _08012B80: .4byte gUnknown_0202BCB0
 sub_8012B84: @ 0x08012B84
 	push {lr}
 	ldr r0, _08012B98  @ gUnknown_085925D0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08012B92
 	movs r0, #1
@@ -753,7 +753,7 @@ sub_8012C34: @ 0x08012C34
 	lsls r2, r2, #0x18
 	lsrs r4, r2, #0x18
 	ldr r0, _08012C7C  @ gUnknown_085925F0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _08012C6A
 	cmp r4, #1
@@ -769,7 +769,7 @@ sub_8012C34: @ 0x08012C34
 _08012C62:
 	ldr r0, _08012C7C  @ gUnknown_085925F0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _08012C6A:
 	adds r1, r0, #0
 	adds r1, #0x29
@@ -790,7 +790,7 @@ _08012C84: .4byte 0x0000026A
 sub_8012C88: @ 0x08012C88
 	push {lr}
 	ldr r0, _08012CA4  @ gUnknown_085925F0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08012CDA
 	adds r0, #0x29
@@ -823,7 +823,7 @@ _08012CC4:
 	bl SetBgOffset
 _08012CCE:
 	ldr r0, _08012CE0  @ gUnknown_085925F0
-	bl Proc_EndEach
+	bl EndEachProc
 	movs r0, #4
 	bl SoundStuff_80023E0
 _08012CDA:
@@ -855,7 +855,7 @@ sub_8012CFC: @ 0x08012CFC
 	adds r5, r0, #0
 	adds r6, r1, #0
 	ldr r0, _08012DB4  @ gUnknown_08592608
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r6, r0, #0
 	ldr r3, _08012DB8  @ gDispIo
 	ldrb r1, [r3, #0xc]
@@ -947,8 +947,8 @@ _08012DC8: .4byte 0x000002D6
 
 	THUMB_FUNC_END sub_8012CFC
 
-	THUMB_FUNC_START sub_8012DCC
-sub_8012DCC: @ 0x08012DCC
+	THUMB_FUNC_START Interpolate
+Interpolate: @ 0x08012DCC
 	push {r4, r5, r6, lr}
 	adds r6, r1, #0
 	ldr r5, [sp, #0x10]
@@ -1056,7 +1056,7 @@ _08012E8E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8012DCC
+	THUMB_FUNC_END Interpolate
 
 	THUMB_FUNC_START sub_8012E94
 sub_8012E94: @ 0x08012E94
@@ -2500,7 +2500,7 @@ sub_8013800: @ 0x08013800
 	ldr r4, [sp, #0x28]
 	ldr r1, [sp, #0x2c]
 	ldr r0, _08013840  @ gUnknown_08599FD4
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x2c]
 	str r6, [r0, #0x30]
 	mov r1, r8
@@ -2528,7 +2528,7 @@ _08013840: .4byte gUnknown_08599FD4
 sub_8013844: @ 0x08013844
 	push {lr}
 	ldr r0, _08013854  @ gUnknown_08599FD4
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _08013858
 	movs r0, #0
@@ -2621,7 +2621,7 @@ sub_80138D8: @ 0x080138D8
 	push {lr}
 	ldr r0, _080138E8  @ gUnknown_08599FF4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -2687,7 +2687,7 @@ sub_8013928: @ 0x08013928
 	ldr r0, _0801397C  @ gUnknown_0202B6B0
 	adds r4, r4, r0
 	ldr r0, _08013980  @ gUnknown_0859A00C
-	bl Proc_Start
+	bl SpawnProc
 	mov r8, r0
 	lsls r5, r5, #5
 	ldr r0, _08013984  @ gPal
@@ -2724,7 +2724,7 @@ _08013984: .4byte gPal
 sub_8013988: @ 0x08013988
 	push {lr}
 	ldr r0, _08013994  @ gUnknown_0859A00C
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -2804,7 +2804,7 @@ _080139D4:
 	ldrh r0, [r0, #0x2a]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, [r7, #0x2c]
 	ldrh r3, [r0, #0x28]
@@ -2813,7 +2813,7 @@ _080139D4:
 	movs r0, #0
 	adds r1, r6, #0
 	adds r2, r4, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	ldr r0, [r7, #0x2c]
 	ldrh r3, [r0, #0x28]
@@ -2822,7 +2822,7 @@ _080139D4:
 	movs r0, #0
 	mov r1, r9
 	mov r2, r8
-	bl sub_8012DCC
+	bl Interpolate
 	movs r1, #0xf8
 	lsls r1, r1, #7
 	ands r0, r1
@@ -3154,19 +3154,19 @@ sub_8013C70: @ 0x08013C70
 sub_8013C88: @ 0x08013C88
 	push {lr}
 	ldr r0, _08013CB8  @ gUnknown_0859A044
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _08013CC8
 	ldr r0, _08013CBC  @ gUnknown_0859A024
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _08013CC8
 	ldr r0, _08013CC0  @ gUnknown_0859A084
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _08013CC8
 	ldr r0, _08013CC4  @ gUnknown_0859A064
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _08013CC8
 	movs r0, #0
@@ -3190,7 +3190,7 @@ sub_8013CD0: @ 0x08013CD0
 	adds r4, r0, #0
 	ldr r0, _08013CE8  @ gUnknown_0859A024
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r0, #0x64
 	strh r4, [r0]
 	pop {r4}
@@ -3207,7 +3207,7 @@ sub_8013CEC: @ 0x08013CEC
 	adds r4, r0, #0
 	ldr r0, _08013D04  @ gUnknown_0859A044
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r0, #0x64
 	strh r4, [r0]
 	pop {r4}
@@ -3223,7 +3223,7 @@ sub_8013D08: @ 0x08013D08
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08013D1C  @ gUnknown_0859A024
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r0, #0x64
 	strh r4, [r0]
 	pop {r4}
@@ -3239,7 +3239,7 @@ sub_8013D20: @ 0x08013D20
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08013D34  @ gUnknown_0859A044
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r0, #0x64
 	strh r4, [r0]
 	pop {r4}
@@ -3255,7 +3255,7 @@ sub_8013D38: @ 0x08013D38
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08013D4C  @ gUnknown_0859A064
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r0, #0x64
 	strh r4, [r0]
 	pop {r4}
@@ -3271,7 +3271,7 @@ sub_8013D50: @ 0x08013D50
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08013D64  @ gUnknown_0859A084
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r0, #0x64
 	strh r4, [r0]
 	pop {r4}
@@ -3866,7 +3866,7 @@ _080140E0: .4byte gUnknown_0859A0A4
 sub_80140E4: @ 0x080140E4
 	push {lr}
 	ldr r0, _080140F0  @ gUnknown_0859A0A4
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -3929,7 +3929,7 @@ _08014142:
 	subs r0, #0x10
 	str r0, [r4, #0x58]
 _08014148:
-	bl sub_80D74B0
+	bl sub_8000234_t
 	ldr r1, _08014168  @ gPal
 	movs r0, #0
 	strh r0, [r1]
@@ -3977,7 +3977,7 @@ sub_8014184: @ 0x08014184
 sub_8014194: @ 0x08014194
 	push {lr}
 	ldr r0, _080141AC  @ gUnknown_0859A0A4
-	bl Proc_Find
+	bl FindProc
 	adds r1, r0, #0
 	cmp r1, #0
 	beq _080141A6
@@ -4066,7 +4066,7 @@ NewBlockingTimer: @ 0x08014238
 	adds r4, r1, #0
 	ldr r0, _08014250  @ gUnknown_0859A0D4
 	adds r1, r2, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r4, [r0, #0x58]
 	pop {r4}
 	pop {r0}
@@ -4380,7 +4380,7 @@ _0801447C: .4byte gUnknown_03000800
 DeleteAllPaletteAnimator: @ 0x08014480
 	push {lr}
 	ldr r0, _0801448C  @ gUnknown_0859A0F8
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -4399,7 +4399,7 @@ NewPaletteAnimator: @ 0x08014490
 	adds r6, r3, #0
 	ldr r1, [sp, #0x14]
 	ldr r0, _080144C8  @ gUnknown_0859A0F8
-	bl Proc_Start
+	bl SpawnProc
 	str r5, [r0, #0x2c]
 	movs r2, #0
 	mov r1, r8
@@ -5004,7 +5004,7 @@ SetupFutureCall2: @ 0x080148C8
 	adds r5, r1, #0
 	ldr r0, _080148E0  @ gUnknown_0859A100
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x2c]
 	str r5, [r0, #0x34]
 	pop {r4, r5}
@@ -5023,7 +5023,7 @@ SetupFutureCall: @ 0x080148E4
 	adds r6, r2, #0
 	ldr r0, _08014900  @ gUnknown_0859A110
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	str r4, [r0, #0x2c]
 	str r5, [r0, #0x30]
 	str r6, [r0, #0x34]
@@ -5092,7 +5092,7 @@ sub_8014944: @ 0x08014944
 	push {r4, lr}
 	adds r1, r0, #0
 	ldr r0, _08014964  @ gUnknown_0859A1E0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r4, r0, #0
 	bl GetThread2SkipStack
 	lsls r0, r0, #0x18
@@ -5459,7 +5459,7 @@ sub_8014BC0: @ 0x08014BC0
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	movs r1, #0
-	bl Sound_PlaySong80024D4
+	bl StartBgm
 	pop {r0}
 	bx r0
 
@@ -5470,7 +5470,7 @@ sub_8014BD0: @ 0x08014BD0
 	push {lr}
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 	pop {r0}
 	bx r0
 
@@ -6698,14 +6698,14 @@ _0801547C:
 	ldr r0, _08015488  @ gProcScr_CpPhase
 _0801547E:
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _08015494
 	.align 2, 0
 _08015488: .4byte gProcScr_CpPhase
 _0801548C:
 	ldr r0, _080154A0  @ gProcScr_CpPhase
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _08015494:
 	adds r0, r4, #0
 	bl Proc_Break
@@ -6723,7 +6723,7 @@ NewPlayerPhase6C: @ 0x080154A4
 	adds r4, r0, #0
 	ldr r0, _080154C4  @ gUnknown_0859AAD8
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	movs r1, #7
 	bl Proc_Goto
 	adds r0, r4, #0
@@ -6745,7 +6745,7 @@ sub_80154C8: @ 0x080154C8
 	cmp r0, #0x40
 	bne _080154EC
 	ldr r0, _080154E8  @ gUnknown_0859BDA0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	bl DecayTraps
 	movs r0, #0
 	b _080154EE
@@ -6795,7 +6795,7 @@ sub_801550C: @ 0x0801550C
 _0801552C:
 	ldr r0, _08015540  @ gUnknown_0859B1B0
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _08015534:
 	pop {r4}
 	pop {r0}
@@ -6852,15 +6852,15 @@ GotoChapterWithoutSave: @ 0x08015588
 	ldr r1, _080155B0  @ gRAMChapterData
 	strb r0, [r1, #0xe]
 	ldr r0, _080155B4  @ gProc_BMapMain
-	bl Proc_Find
+	bl FindProc
 	movs r1, #2
 	bl Proc_Goto
 	ldr r0, _080155B8  @ gUnknown_0859AAD8
-	bl Proc_EndEach
+	bl EndEachProc
 	ldr r0, _080155BC  @ gProcScr_CpPhase
-	bl Proc_EndEach
+	bl EndEachProc
 	ldr r0, _080155C0  @ gProcScr_BerserkCpPhase
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0

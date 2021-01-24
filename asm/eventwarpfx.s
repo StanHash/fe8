@@ -164,7 +164,7 @@ _08021CDC:
 	ldr r1, _08021D00  @ gBg0Tm
 	movs r2, #4
 	movs r3, #7
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	movs r0, #1
 	bl EnableBgSync
 _08021CF6:
@@ -218,7 +218,7 @@ sub_8021D34: @ 0x08021D34
 	lsrs r5, r5, #0x18
 	ldr r0, _08021D9C  @ gUnknown_0859B4D0
 	adds r1, r6, #0
-	bl Proc_Start
+	bl SpawnProc
 	lsls r4, r4, #0x18
 	asrs r4, r4, #0x18
 	adds r1, r0, #0
@@ -273,7 +273,7 @@ sub_8021DA4: @ 0x08021DA4
 	lsrs r4, r4, #0x18
 	ldr r0, _08021DF4  @ gUnknown_0859B4D0
 	mov r1, r8
-	bl Proc_Start
+	bl SpawnProc
 	adds r3, r0, #0
 	lsls r4, r4, #0x18
 	asrs r4, r4, #0x18
@@ -309,7 +309,7 @@ _08021DF4: .4byte gUnknown_0859B4D0
 sub_8021DF8: @ 0x08021DF8
 	push {lr}
 	ldr r0, _08021E0C  @ gUnknown_0859B4D0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08021E06
 	movs r0, #1

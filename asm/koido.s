@@ -115,7 +115,7 @@ Make6CKOIDO: @ 0x0801DC7C
 	mov r8, r2
 	adds r1, r3, #0
 	ldr r0, _0801DCCC  @ gUnknown_0859AD88
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	adds r7, r0, #0
 	str r6, [r7, #0x30]
 	str r4, [r7, #0x2c]
@@ -156,7 +156,7 @@ Make6CKOIDOAMM: @ 0x0801DCD0
 	adds r4, r1, #0
 	ldr r0, _0801DD18  @ gUnknown_0859ADA0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r7, r0, #0
 	str r6, [r7, #0x30]
 	str r4, [r7, #0x2c]

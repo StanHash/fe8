@@ -415,7 +415,7 @@ _0802006A:
 _08020076:
 	adds r0, r6, #0
 	adds r1, r7, #0
-	bl Proc_Start
+	bl SpawnProc
 	pop {r4, r5, r6, r7}
 	pop {r1}
 	bx r1
@@ -617,7 +617,7 @@ sub_80200F0: @ 0x080200F0
 	movs r1, #2
 	movs r2, #0x40
 	bl sub_80017B4
-	bl sub_80D74B0
+	bl sub_8000234_t
 	bl EnablePalSync
 	ldrb r1, [r7, #0x15]
 	movs r0, #0x3f
@@ -744,7 +744,7 @@ sub_80202F8: @ 0x080202F8
 	ldrsh r0, [r5, r4]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r7, #0x2c]
 	ldr r2, _08020494  @ gUnknown_0859B132
 	ldr r5, [sp, #4]
@@ -763,7 +763,7 @@ sub_80202F8: @ 0x080202F8
 	ldrsh r0, [r4, r5]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	str r0, [r7, #0x30]
 	movs r0, #0x64
 	adds r0, r0, r7
@@ -781,7 +781,7 @@ sub_80202F8: @ 0x080202F8
 	str r0, [sp]
 	movs r0, #4
 	movs r2, #0x40
-	bl sub_8012DCC
+	bl Interpolate
 	mov r8, r0
 	ldr r4, _08020498  @ gSinLut
 	movs r5, #0x80
@@ -844,7 +844,7 @@ _080203EE:
 	ldr r6, _080204A0  @ gObject_32x32
 	ldr r3, _080204A4  @ 0x00002210
 	adds r2, r6, #0
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	ldr r1, [r7, #0x2c]
 	movs r0, #0xe0
 	subs r0, r0, r1
@@ -856,7 +856,7 @@ _080203EE:
 	orrs r1, r5
 	ldr r3, _080204A8  @ 0x00002214
 	adds r2, r6, #0
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	ldr r4, [sp, #8]
 	ldrh r0, [r4]
 	adds r0, #1
@@ -883,7 +883,7 @@ _080203EE:
 	movs r0, #0
 	movs r1, #3
 	movs r2, #8
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, [sp, #0xc]
 	strh r0, [r1]
 	ldrh r0, [r4]
@@ -971,7 +971,7 @@ sub_80204E4: @ 0x080204E4
 	str r5, [sp]
 	movs r0, #5
 	movs r1, #0x78
-	bl sub_8012DCC
+	bl Interpolate
 	adds r7, r0, #0
 	movs r2, #0
 	ldrsh r3, [r4, r2]
@@ -979,7 +979,7 @@ sub_80204E4: @ 0x080204E4
 	movs r0, #5
 	movs r1, #0x50
 	mov r2, r8
-	bl sub_8012DCC
+	bl Interpolate
 	mov sl, r0
 	adds r0, r7, #0
 	subs r0, #8
@@ -998,7 +998,7 @@ sub_80204E4: @ 0x080204E4
 	mov r9, r2
 	mov r2, r8
 	mov r3, r9
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	movs r0, #0xe8
 	subs r0, r0, r7
 	ands r0, r4
@@ -1010,7 +1010,7 @@ sub_80204E4: @ 0x080204E4
 	orrs r1, r5
 	mov r2, r8
 	mov r3, r9
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	add sp, #4
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -1051,7 +1051,7 @@ sub_8020578: @ 0x08020578
 	str r0, [sp]
 	movs r0, #4
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r7, r0, #0
 	ldr r4, _08020774  @ gSinLut
 	movs r1, #0x80
@@ -1120,7 +1120,7 @@ _08020614:
 	str r0, [sp]
 	movs r0, #4
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r7, r0, #0
 	ldr r4, _08020774  @ gSinLut
 	movs r1, #0x80
@@ -1189,7 +1189,7 @@ _080206AA:
 	str r0, [sp]
 	movs r0, #4
 	movs r2, #0x10
-	bl sub_8012DCC
+	bl Interpolate
 	adds r7, r0, #0
 	ldr r4, _08020774  @ gSinLut
 	movs r1, #0x80
@@ -1315,12 +1315,12 @@ sub_80207C8: @ 0x080207C8
 	movs r1, #0x40
 	adds r2, r4, #0
 	adds r3, r5, #0
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	movs r0, #0
 	movs r1, #0x40
 	adds r2, r4, #0
 	adds r3, r5, #0
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -1451,7 +1451,7 @@ _080208CC:
 	movs r3, #0
 	bl SetBlendConfig
 	ldr r0, _080208F4  @ gUnknown_0859B180
-	bl Proc_EndEach
+	bl EndEachProc
 	adds r0, r7, #0
 	bl Proc_Break
 _080208EC:
@@ -1553,7 +1553,7 @@ sub_8020944: @ 0x08020944
 	movs r2, #0x80
 	lsls r2, r2, #7
 	adds r1, r4, #0
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	movs r0, #4
 	bl EnableBgSync
 	add sp, #4
@@ -1675,7 +1675,7 @@ sub_8020A8C: @ 0x08020A8C
 	ands r4, r0
 	cmp r4, #0
 	bne _08020AE8
-	bl sub_80D74B0
+	bl sub_8000234_t
 	bl EnablePalSync
 	adds r1, r5, #0
 	adds r1, #0x4c
@@ -1886,7 +1886,7 @@ sub_8020C2C: @ 0x08020C2C
 	movs r2, #1
 	movs r3, #1
 	bl sub_800172C
-	bl sub_80D74B0
+	bl sub_8000234_t
 	bl EnablePalSync
 	adds r4, #0x4c
 	movs r0, #0x1e
@@ -1922,7 +1922,7 @@ sub_8020CA4: @ 0x08020CA4
 	beq _08020CB8
 	b _08020DAE
 _08020CB8:
-	bl sub_80D74B0
+	bl sub_8000234_t
 	ldr r5, _08020D30  @ gRAMChapterData
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
@@ -1955,7 +1955,7 @@ _08020CE8:
 	bl GetROMChapterStruct
 	ldrh r0, [r0, #0x28]
 	movs r1, #0
-	bl Sound_PlaySong80024D4
+	bl StartBgm
 _08020D08:
 	adds r3, r6, #0
 	adds r3, #0x4c
@@ -2025,7 +2025,7 @@ _08020D6C:
 	bl GetROMChapterStruct
 	ldrh r0, [r0, #0x28]
 	movs r1, #0
-	bl Sound_PlaySong80024D4
+	bl StartBgm
 _08020D9C:
 	movs r1, #0
 	ldrsh r0, [r4, r1]
@@ -2084,7 +2084,7 @@ sub_8020DE8: @ 0x08020DE8
 	movs r0, #5
 	movs r1, #0
 	movs r2, #0x78
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r3, _08020E44  @ gDispIo
 	movs r1, #0x78
 	subs r1, r1, r0
@@ -2127,7 +2127,7 @@ sub_8020E48: @ 0x08020E48
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	movs r0, #4
-	bl Sound_FadeOut800231C
+	bl FadeBgmOut
 	bl sub_8001710
 	ldr r6, _08020EA8  @ gPal
 	movs r4, #2
@@ -2174,7 +2174,7 @@ _08020EA8: .4byte gPal
 sub_8020EAC: @ 0x08020EAC
 	push {r4, lr}
 	adds r4, r0, #0
-	bl sub_80D74B0
+	bl sub_8000234_t
 	bl EnablePalSync
 	adds r1, r4, #0
 	adds r1, #0x4c
@@ -2243,11 +2243,11 @@ sub_8020F00: @ 0x08020F00
 	movs r0, #7
 	bl EnableBgSync
 	ldr r0, _08020FE0  @ gUnknown_0859B0E0
-	bl Proc_EndEach
+	bl EndEachProc
 	ldr r0, _08020FE4  @ gUnknown_0859B108
-	bl Proc_EndEach
+	bl EndEachProc
 	ldr r0, _08020FE8  @ gUnknown_0859B160
-	bl Proc_EndEach
+	bl EndEachProc
 	bl sub_8001710
 	ldr r5, _08020FEC  @ gPal+0xC0
 	adds r0, r5, #0
@@ -2276,7 +2276,7 @@ sub_8020F00: @ 0x08020F00
 	movs r2, #1
 	movs r3, #2
 	bl sub_800172C
-	bl sub_80D74B0
+	bl sub_8000234_t
 	bl EnablePalSync
 	adds r4, #0x4c
 	movs r0, #0xe
@@ -2294,7 +2294,7 @@ sub_8020F00: @ 0x08020F00
 	bl GetROMChapterStruct
 	ldrh r0, [r0, #0x28]
 	movs r1, #0
-	bl Sound_PlaySong80024D4
+	bl StartBgm
 _08020FC4:
 	add sp, #4
 	pop {r4, r5}
@@ -2319,7 +2319,7 @@ _08020FF4: .4byte 0x0000FFFF
 sub_8020FF8: @ 0x08020FF8
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	bl sub_80D74B0
+	bl sub_8000234_t
 	ldr r5, _08021054  @ gRAMChapterData
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
@@ -2540,7 +2540,7 @@ sub_8021188: @ 0x08021188
 	ands r1, r0
 	cmp r1, #0
 	bne _080211BC
-	bl sub_80D74B0
+	bl sub_8000234_t
 	ldr r0, _080211C4  @ gRAMChapterData
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18

@@ -36,15 +36,15 @@ extern unsigned gEventSlotCounter;
 // TODO: better
 extern struct EnqueuedEventCall gEventCallQueue[]; // gEventCallQueue
 
-extern struct ProcCmd gUnknown_030005B0[4];
+extern struct ProcScr gUnknown_030005B0[4];
 
-extern const struct ProcCmd gProc_StdEventEngine[]; // map event engine proc
-extern const struct ProcCmd gProc_BattleEventEngine[]; // battle (?) event engine proc
+extern const struct ProcScr gProc_StdEventEngine[]; // map event engine proc
+extern const struct ProcScr gProc_BattleEventEngine[]; // battle (?) event engine proc
 
 extern const EventFuncType gEventLoCmdTable[]; // regular event functions
 extern const EventFuncType gEventHiCmdTable[]; // gmap event functions
 
-extern const struct ProcCmd gUnknown_08591DD8[]; // map event engine "witness lock" (alive while map event engine is)
+extern const struct ProcScr gUnknown_08591DD8[]; // map event engine "witness lock" (alive while map event engine is)
 
 // TODO: actual events
 
@@ -150,7 +150,7 @@ extern const u16 gEvent_GameOver[]; /* Game Over Events?
     0120 0000           | ENDA
 */
 
-extern const struct ProcCmd gUnknown_08591540[]; // extern
+extern const struct ProcScr gUnknown_08591540[]; // extern
 
 void _MarkSomethingInMenu(void) {
     FreezeMenu();
@@ -287,7 +287,7 @@ void CallNextQueuedEvent(void) {
 }
 
 void CallEvent(const u16* events, u8 execType) {
-    bool found = Proc_Find(gProc_StdEventEngine) != 0;
+    bool found = FindProc(gProc_StdEventEngine) != 0;
 
     if (found)
         EnqueueEventCall(events, execType);
@@ -296,7 +296,7 @@ void CallEvent(const u16* events, u8 execType) {
 }
 
 struct EventEngineProc* EventEngine_Create(const u16* events, u8 execType) {
-    struct EventEngineProc* proc = Proc_Start(gProc_StdEventEngine, PROC_TREE_3);
+    struct EventEngineProc* proc = SpawnProc(gProc_StdEventEngine, PROC_TREE_3);
 
     proc->pCallback      = NULL;
 
@@ -336,7 +336,7 @@ struct EventEngineProc* EventEngine_Create(const u16* events, u8 execType) {
 }
 
 void EventEngine_CreateBattle(const u16* events) {
-    struct EventEngineProc* proc = Proc_Start(gProc_BattleEventEngine, PROC_TREE_3);
+    struct EventEngineProc* proc = SpawnProc(gProc_BattleEventEngine, PROC_TREE_3);
 
     proc->pCallback     = NULL;
 
@@ -361,20 +361,20 @@ void EventEngine_CreateBattle(const u16* events) {
 }
 
 int EventEngineExists(void) {
-    return Proc_Find(gProc_StdEventEngine) ? TRUE : FALSE;
+    return FindProc(gProc_StdEventEngine) ? TRUE : FALSE;
 }
 
 int BattleEventEngineExists(void) {
-    return Proc_Find(gProc_BattleEventEngine) ? TRUE : FALSE;
+    return FindProc(gProc_BattleEventEngine) ? TRUE : FALSE;
 }
 
 void DeleteEventEngines(void) {
-    Proc_EndEach(gProc_StdEventEngine);
-    Proc_EndEach(gProc_BattleEventEngine);
+    EndEachProc(gProc_StdEventEngine);
+    EndEachProc(gProc_BattleEventEngine);
 }
 
 void sub_800D1E4(struct Proc* proc) {
-    Proc_StartBlocking(gUnknown_08591DD8, proc);
+    SpawnProcLocking(gUnknown_08591DD8, proc);
 }
 
 void SetEventSlotC(unsigned value) {
@@ -386,8 +386,8 @@ void sub_800D204(void) {} // nullsub
 int sub_800D208(void) {
     struct EventEngineProc* proc;
 
-    if (!(proc = Proc_Find(gProc_StdEventEngine)))
-        if (!(proc = Proc_Find(gProc_BattleEventEngine)))
+    if (!(proc = FindProc(gProc_StdEventEngine)))
+        if (!(proc = FindProc(gProc_BattleEventEngine)))
             return FALSE;
     
     switch (proc->activeTextType) {
@@ -493,7 +493,7 @@ bool EventEngine_CanStartSkip(struct EventEngineProc* proc) { // Events_CanSkip
     if (IsBattleDeamonActive())
         return FALSE;
 
-    if (Proc_Find(gProcScr_MUDeathFade))
+    if (FindProc(gProcScr_MUDeathFade))
         return FALSE;
 
     return TRUE;
@@ -502,8 +502,8 @@ bool EventEngine_CanStartSkip(struct EventEngineProc* proc) { // Events_CanSkip
 void sub_800D3E4(void) {
     struct EventEngineProc* proc;
 
-    if (!(proc = Proc_Find(gProc_StdEventEngine)))
-        if (!(proc = Proc_Find(gProc_BattleEventEngine)))
+    if (!(proc = FindProc(gProc_StdEventEngine)))
+        if (!(proc = FindProc(gProc_BattleEventEngine)))
             return;
     
     proc->evStateBits |= EV_STATE_0008;
@@ -528,12 +528,12 @@ void EventEngine_StartSkip(struct EventEngineProc* proc) {
     if (proc->execType == EV_EXEC_WORLDMAP)
         sub_80BA424();
     
-    Proc_BlockEachMarked(5);
+    LockEachMarkedProc(5);
 }
 
 void sub_800D488(struct EventEngineProc* unused) {
     sub_80141B0(); // disables layers
-    Proc_EndEach(gUnknown_08591540);
+    EndEachProc(gUnknown_08591540);
 }
 
 void SetEventTriggerState(u16 triggerId, bool value) {
@@ -550,15 +550,15 @@ int GetEventTriggerState(u16 triggerId) {
 }
 
 struct Proc* sub_800D4D4(struct Proc* parent, ProcFunc init, ProcFunc loop, ProcFunc dest) {
-    struct ProcCmd code[] = {
-        PROC_SET_END_CB(dest),
+    struct ProcScr code[] = {
+        PROC_ONEND(dest),
         PROC_CALL(init),
         PROC_REPEAT(loop),
         PROC_END
     };
     
     memcpy(gUnknown_030005B0, code, sizeof code);
-    return Proc_Start(gUnknown_030005B0, parent);
+    return SpawnProc(gUnknown_030005B0, parent);
 }
 
 void sub_800D524(void) {} // nullsub

@@ -621,7 +621,7 @@ _0803ABA2:
 	lsls r0, r0, #1
 	str r2, [sp, #0xc]
 	str r3, [sp, #0x10]
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldr r2, [sp, #0xc]
@@ -4670,7 +4670,7 @@ sub_803C974: @ 0x0803C974
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	movs r0, #0x64
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldr r5, _0803C9C4  @ gUnknown_030017D0
@@ -4747,7 +4747,7 @@ sub_803CA0C: @ 0x0803CA0C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	movs r0, #0x64
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldr r1, _0803CA40  @ gUnknown_030017D0
@@ -4813,7 +4813,7 @@ sub_803CA84: @ 0x0803CA84
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	movs r0, #0x64
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldr r1, _0803CAC0  @ gUnknown_030017D0
@@ -4862,7 +4862,7 @@ sub_803CAE4: @ 0x0803CAE4
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	movs r0, #0x64
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldr r1, _0803CB14  @ gUnknown_030017D0
@@ -10837,7 +10837,7 @@ sub_803F790: @ 0x0803F790
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #0x64
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldr r3, _0803F7C4  @ gAiState
@@ -10878,7 +10878,7 @@ sub_803F7DC: @ 0x0803F7DC
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #0x64
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldrb r1, [r4]
@@ -10889,7 +10889,7 @@ sub_803F7DC: @ 0x0803F7DC
 	cmp r0, #0
 	bne _0803F820
 	movs r0, #0x64
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	ldrb r4, [r4, #1]

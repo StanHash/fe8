@@ -4,13 +4,14 @@
 
 #include "constants/classes.h"
 
+#include "armfunc.h"
 #include "proc.h"
 #include "hardware.h"
 #include "oam.h"
 #include "fontgrp.h"
 #include "uiutils.h"
 #include "chapterdata.h"
-#include "rng.h"
+#include "random.h"
 #include "ctc.h"
 #include "bmunit.h"
 #include "bmmap.h"
@@ -24,7 +25,7 @@
 // General Battle Map System Stuff, mostly low level hardware stuff but also more
 
 // TODO: move to where appropriate
-extern const struct ProcCmd gProc_BMapMain[]; // gProc_BMapMain
+extern const struct ProcScr gProc_BMapMain[]; // gProc_BMapMain
 
 struct WeatherParticle {
     /* 00 */ short xPosition;
@@ -115,9 +116,9 @@ static void InitMoreBMapGraphics(void);
 static EWRAM_DATA union WeatherEffectData sWeatherEffect = {};
 static EWRAM_DATA union GradientEffectData sGradientEffect = {};
 
-static CONST_DATA struct ProcCmd sProc_BMVSync[] = { // gProc_VBlankHandler
+static CONST_DATA struct ProcScr sProc_BMVSync[] = { // gProc_VBlankHandler
     PROC_MARK(PROC_MARK_1),
-    PROC_SET_END_CB(BMapVSync_OnEnd),
+    PROC_ONEND(BMapVSync_OnEnd),
 
     PROC_SLEEP(0),
 
@@ -133,9 +134,9 @@ PROC_LABEL(0),
     PROC_END
 };
 
-CONST_DATA struct ProcCmd gProc_MapTask[] = { // gProc_MapTask
+CONST_DATA struct ProcScr gProc_MapTask[] = { // gProc_MapTask
     PROC_NAME("MAPTASK"),
-    PROC_END_DUPLICATES,
+    PROC_END_DUPS,
     PROC_MARK(PROC_MARK_1),
 
     PROC_SLEEP(0),
@@ -187,7 +188,7 @@ static CONST_DATA u16 sObj_BackgroundClouds[] = { // Obj Data
     0x40A0, 0xC0B0, 0,
 };
 
-static CONST_DATA struct ProcCmd sProc_DelayedBMapDispResume[] = { // gProc_GameGfxUnblocker
+static CONST_DATA struct ProcScr sProc_DelayedBMapDispResume[] = { // gProc_GameGfxUnblocker
     PROC_SLEEP(0),
 
     PROC_CALL(BMapDispResume),
@@ -285,14 +286,14 @@ void BMapVSync_OnLoop(struct BMVSyncProc* proc) {
 
 void BMapVSync_Start(void) {
     BMapVSync_InitMapAnimations(
-        Proc_Start(sProc_BMVSync, PROC_TREE_VSYNC));
+        SpawnProc(sProc_BMVSync, PROC_TREE_VSYNC));
 
     WfxInit();
     gUnknown_0202BCB0.gameGfxSemaphore = 0;
 }
 
 void BMapVSync_End(void) {
-    Proc_EndEach(sProc_BMVSync);
+    EndEachProc(sProc_BMVSync);
 }
 
 void BMapDispSuspend(void) {
@@ -302,7 +303,7 @@ void BMapDispSuspend(void) {
     SetOnHBlankB(NULL);
     gPal[0] = 0;
     EnablePalSync();
-    Proc_BlockEachMarked(1);
+    LockEachMarkedProc(1);
 }
 
 void BMapDispResume(void) {
@@ -314,9 +315,9 @@ void BMapDispResume(void) {
     if (--gUnknown_0202BCB0.gameGfxSemaphore)
         return; // still blocked
 
-    Proc_UnblockEachMarked(1);
+    ReleaseEachMarkedProc(1);
 
-    proc = Proc_Find(sProc_BMVSync);
+    proc = FindProc(sProc_BMVSync);
 
     if (proc) {
         // restart vblank proc
@@ -365,8 +366,8 @@ void WfxSnow_Init(void) {
     for (i = 0; i < 0x40; ++i) {
         unsigned templateIndex = (i & 0xF) * 3;
 
-        sWeatherEffect.particles[i].xPosition = AdvanceGetLCGRNValue();
-        sWeatherEffect.particles[i].yPosition = AdvanceGetLCGRNValue();
+        sWeatherEffect.particles[i].xPosition = RandNextB();
+        sWeatherEffect.particles[i].yPosition = RandNextB();
 
         sWeatherEffect.particles[i].xSpeed = sInitialParticleConfigTemplates[templateIndex + 0] * 2;
         sWeatherEffect.particles[i].ySpeed = sInitialParticleConfigTemplates[templateIndex + 1] * 2;
@@ -396,7 +397,7 @@ void WfxSnow_VSync(void) {
             it->xPosition += it->xSpeed;
             it->yPosition += it->ySpeed;
 
-            CallARM_PushToPrimaryOAM(
+            PutOamLo(
                 ((it->xPosition >> 8) - origins[it->typeId].x) & 0xFF,
                 ((it->yPosition >> 8) - origins[it->typeId].y) & 0xFF,
                 gObject_8x8,
@@ -416,8 +417,8 @@ void WfxRain_Init(void) {
     for (i = 0; i < 0x40; ++i) {
         unsigned templateIndex = (i & 0xF) * 3;
 
-        sWeatherEffect.particles[i].xPosition = AdvanceGetLCGRNValue();
-        sWeatherEffect.particles[i].yPosition = AdvanceGetLCGRNValue();
+        sWeatherEffect.particles[i].xPosition = RandNextB();
+        sWeatherEffect.particles[i].yPosition = RandNextB();
 
         sWeatherEffect.particles[i].xSpeed   = sInitialParticleConfigTemplates[templateIndex + 0] * 6;
         sWeatherEffect.particles[i].ySpeed   = sInitialParticleConfigTemplates[templateIndex + 1] * 16;
@@ -435,7 +436,7 @@ void WfxRain_VSync(void) {
             it->xPosition += it->xSpeed;
             it->yPosition += it->ySpeed;
 
-            CallARM_PushToPrimaryOAM(
+            PutOamLo(
                 ((it->xPosition >> 8) - gUnknown_0202BCB0.camera.x) & 0xFF,
                 ((it->yPosition >> 8) - gUnknown_0202BCB0.camera.y) & 0xFF,
                 sRainParticleObjLookup[it->gfxIndex],
@@ -456,10 +457,10 @@ void WfxSandStorm_Init(void) {
     CopyTileGfxForObj(gBuf, OBJ_VRAM0 + 0x1C * 0x20, 4, 4);
 
     for (i = 0; i < 0x40; ++i) {
-        sWeatherEffect.particles[i].xPosition = AdvanceGetLCGRNValue();
-        sWeatherEffect.particles[i].yPosition = (AdvanceGetLCGRNValue() % 160 + 240) & 0xFF;
+        sWeatherEffect.particles[i].xPosition = RandNextB();
+        sWeatherEffect.particles[i].yPosition = (RandNextB() % 160 + 240) & 0xFF;
 
-        sWeatherEffect.particles[i].xSpeed = (AdvanceGetLCGRNValue() & 0x7) - 32;
+        sWeatherEffect.particles[i].xSpeed = (RandNextB() & 0x7) - 32;
         sWeatherEffect.particles[i].ySpeed = 0;
     }
 }
@@ -473,7 +474,7 @@ void WfxSandStorm_VSync(void) {
         for (i = 0; i < 0x20; ++i) {
             it->xPosition += it->xSpeed;
 
-            CallARM_PushToPrimaryOAM(
+            PutOamLo(
                 ((it->xPosition & 0xFF) - 0x10) & 0x1FF,
                 it->yPosition,
                 gObject_32x32,
@@ -498,20 +499,20 @@ void WfxSnowStorm_Init(void) {
     for (i = 0; i < 0x40; ++i) {
         unsigned type = typeLookup[i & 7];
 
-        sWeatherEffect.particles[i].xPosition = AdvanceGetLCGRNValue();
-        sWeatherEffect.particles[i].yPosition = AdvanceGetLCGRNValue();
+        sWeatherEffect.particles[i].xPosition = RandNextB();
+        sWeatherEffect.particles[i].yPosition = RandNextB();
 
-        sWeatherEffect.particles[i].ySpeed    = (AdvanceGetLCGRNValue() & 0x3FF) - 0x100;
+        sWeatherEffect.particles[i].ySpeed    = (RandNextB() & 0x3FF) - 0x100;
         sWeatherEffect.particles[i].gfxIndex  = type;
 
         switch (type) {
 
         case 0:
-            sWeatherEffect.particles[i].xSpeed = 0x700 + (AdvanceGetLCGRNValue() & 0x1FF);
+            sWeatherEffect.particles[i].xSpeed = 0x700 + (RandNextB() & 0x1FF);
             break;
 
         case 1:
-            sWeatherEffect.particles[i].xSpeed = 0xA00 + (AdvanceGetLCGRNValue() & 0x1FF);
+            sWeatherEffect.particles[i].xSpeed = 0xA00 + (RandNextB() & 0x1FF);
             break;
 
         } // switch(type)
@@ -528,7 +529,7 @@ void WfxSnowStorm_VSync(void) {
             it->xPosition += it->xSpeed;
             it->yPosition += it->ySpeed;
 
-            CallARM_PushToPrimaryOAM(
+            PutOamLo(
                 ((it->xPosition >> 8) - gUnknown_0202BCB0.camera.x) & 0xFF,
                 ((it->yPosition >> 8) - gUnknown_0202BCB0.camera.y) & 0xFF,
                 gObject_32x32,
@@ -651,8 +652,8 @@ void WfxFlamesInitParticles(void) {
     ApplyPaletteExt(gUnknown_085A3AC0, 0x340, 0x20);
 
     for (i = 0; i < 0x10; ++i) {
-        sWeatherEffect.particles[i].xPosition = AdvanceGetLCGRNValue();
-        sWeatherEffect.particles[i].yPosition = AdvanceGetLCGRNValue();
+        sWeatherEffect.particles[i].xPosition = RandNextB();
+        sWeatherEffect.particles[i].yPosition = RandNextB();
 
         sWeatherEffect.particles[i].xSpeed = -sInitialParticleConfigTemplates[i*3 + 0];
         sWeatherEffect.particles[i].ySpeed = -sInitialParticleConfigTemplates[i*3 + 1];
@@ -720,7 +721,7 @@ void WfxFlamesUpdateParticles(void) {
             if (objTile < 24)
                 objTile = 24;
 
-            CallARM_PushToPrimaryOAM(
+            PutOamLo(
                 ((it->xPosition >> 8) - gUnknown_0202BCB0.camera.x) & 0xFF,
                 yDisplay,
                 gObject_8x8,
@@ -897,14 +898,14 @@ void WfxUpdate(void) {
 }
 
 void DisableMapPaletteAnimations(void) {
-    struct BMVSyncProc* proc = Proc_Find(sProc_BMVSync);
+    struct BMVSyncProc* proc = FindProc(sProc_BMVSync);
 
     if (proc)
         proc->tilePalAnimStart = NULL;
 }
 
 void ResetMapPaletteAnimations(void) {
-    struct BMVSyncProc* proc = Proc_Find(sProc_BMVSync);
+    struct BMVSyncProc* proc = FindProc(sProc_BMVSync);
 
     if (proc)
         proc->tilePalAnimStart = proc->tilePalAnimCurrent =
@@ -949,8 +950,8 @@ void InitPlaythroughState(int isDifficult, s8 unk) {
     gRAMChapterData.unk40_5 = 0;
     gRAMChapterData.cfgTextSpeed = 1; // TODO: (DEFAULT?) TEXT SPEED DEFINITIONS
     gRAMChapterData.unk40_8 = 0;
-    gRAMChapterData.unk41_1 = 0;
-    gRAMChapterData.unk41_2 = 0;
+    gRAMChapterData.configBgmDisable = 0;
+    gRAMChapterData.configSeDisable = 0;
     gRAMChapterData.cfgWindowColor = 0;
     gRAMChapterData.unk41_7 = 0;
     gRAMChapterData.unk41_8 = 0;
@@ -990,7 +991,7 @@ void StartBattleMap(struct GameCtrlProc* gameCtrl) {
     // TODO: BATTLE MAP/CHAPTER/OBJECTIVE TYPE DEFINITION (STORY/TOWER/SKIRMISH)
     if (GetChapterThing() == 2) {
         if (!(gRAMChapterData.chapterStateBits & CHAPTER_FLAG_PREPSCREEN))
-            gRAMChapterData.chapterVisionRange = 3 * (NextRN_100() & 1);
+            gRAMChapterData.chapterVisionRange = 3 * (RandNext_100() & 1);
     } else {
         gRAMChapterData.chapterVisionRange =
             GetROMChapterStruct(gRAMChapterData.chapterIndex)->initialFogLevel;
@@ -1062,7 +1063,7 @@ void RestartBattleMap(void) {
     BMapVSync_End();
     BMapVSync_Start();
 
-    Proc_Start(gProc_MapTask, PROC_TREE_4);
+    SpawnProc(gProc_MapTask, PROC_TREE_4);
 
     // TODO: MACRO?
     gPal[0] = 0;
@@ -1160,7 +1161,7 @@ void BMapDispResume_FromBattleDelayed(void) {
     MU_Create(&gBattleActor.unit);
     MU_SetDefaultFacing_Auto();
 
-    Proc_Start(sProc_DelayedBMapDispResume, PROC_TREE_3);
+    SpawnProc(sProc_DelayedBMapDispResume, PROC_TREE_3);
 }
 
 void InitMoreBMapGraphics(void) {
@@ -1181,13 +1182,13 @@ void RefreshBMapGraphics(void) {
 }
 
 struct BMapMainProc* StartBMapMain(struct GameCtrlProc* gameCtrl) {
-    struct BMapMainProc* mapMain = Proc_Start(gProc_BMapMain, PROC_TREE_2);
+    struct BMapMainProc* mapMain = SpawnProc(gProc_BMapMain, PROC_TREE_2);
 
     mapMain->gameCtrl = gameCtrl;
     gameCtrl->proc_lockCnt++;
 
     BMapVSync_Start();
-    Proc_Start(gProc_MapTask, PROC_TREE_4);
+    SpawnProc(gProc_MapTask, PROC_TREE_4);
 
     return mapMain;
 }
@@ -1195,9 +1196,9 @@ struct BMapMainProc* StartBMapMain(struct GameCtrlProc* gameCtrl) {
 void EndBMapMain(void) {
     struct BMapMainProc* mapMain;
 
-    Proc_EndEachMarked(PROC_MARK_1);
+    EndEachMarkedProc(PROC_MARK_1);
 
-    mapMain = Proc_Find(gProc_BMapMain);
+    mapMain = FindProc(gProc_BMapMain);
     mapMain->gameCtrl->proc_lockCnt--;
 
     Proc_End(mapMain);

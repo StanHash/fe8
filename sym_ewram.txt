@@ -298,7 +298,7 @@
 
 . = ALIGN(4); src/hardware.o(ewram_data);
 . = ALIGN(4); src/dma.o(ewram_data);
-. = ALIGN(4); src/soundwrapper.o(ewram_data);
+. = ALIGN(4); src/sound.o(ewram_data);
 . = ALIGN(4); src/proc.o(ewram_data);
 . = ALIGN(4); src/icon.o(ewram_data);
 . = ALIGN(4); src/fontgrp.o(ewram_data);

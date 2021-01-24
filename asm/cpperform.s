@@ -51,7 +51,7 @@ sub_8039ECC: @ 0x08039ECC
 	adds r6, r2, #0
 	adds r1, r3, #0
 	ldr r0, _08039EF0  @ gUnknown_085A8004
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	str r4, [r0, #0x2c]
 	str r5, [r0, #0x30]
 	str r6, [r0, #0x58]
@@ -69,8 +69,8 @@ _08039EF0: .4byte gUnknown_085A8004
 	THUMB_FUNC_START sub_8039EF4
 sub_8039EF4: @ 0x08039EF4
 	push {lr}
-	ldr r0, _08039F08  @ gMusicProc3Script
-	bl Proc_Find
+	ldr r0, _08039F08  @ ProcScr_DelaySong
+	bl FindProc
 	cmp r0, #0
 	bne _08039F04
 	bl sub_80160D0
@@ -78,7 +78,7 @@ _08039F04:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08039F08: .4byte gMusicProc3Script
+_08039F08: .4byte ProcScr_DelaySong
 
 	THUMB_FUNC_END sub_8039EF4
 

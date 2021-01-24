@@ -221,12 +221,12 @@ sub_801E684: @ 0x0801E684
 	mov r8, r3
 	ldr r4, _0801E73C  @ gUnknown_0859AE88
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	bne _0801E732
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	str r6, [r4, #0x2c]
 	adds r0, #0x30
@@ -314,7 +314,7 @@ sub_801E748: @ 0x0801E748
 	sub sp, #0xc
 	adds r5, r0, #0
 	ldr r0, _0801E7C4  @ gUnknown_0859AE88
-	bl Proc_Find
+	bl FindProc
 	adds r7, r0, #0
 	movs r0, #0
 	bl GetBgTilemap
@@ -667,7 +667,7 @@ _0801EA50: .4byte gBg0Tm
 sub_801EA54: @ 0x0801EA54
 	push {lr}
 	ldr r0, _0801EA60  @ gUnknown_0859AE88
-	bl Proc_EndEach
+	bl EndEachProc
 	pop {r0}
 	bx r0
 	.align 2, 0

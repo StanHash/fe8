@@ -342,7 +342,7 @@ sub_8009A84: @ 0x08009A84
 	bl CpuFastSet
 	bl EnablePalSync
 	ldr r0, _08009AB4  @ Delete6CIfNotMarkedB
-	bl Proc_ForAll
+	bl ForEveryProc
 	ldr r0, _08009AB8  @ SomeUpdateRoutine
 	bl SetMainFunc
 	add sp, #4
@@ -361,12 +361,12 @@ sub_8009ABC: @ 0x08009ABC
 	push {lr}
 	movs r0, #0x43
 	movs r1, #0
-	bl Sound_PlaySong8002448
+	bl StartBgmCore
 	movs r0, #0
 	movs r1, #0xc0
 	movs r2, #0x3c
 	movs r3, #0
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 	pop {r0}
 	bx r0
 
@@ -380,7 +380,7 @@ sub_8009AD8: @ 0x08009AD8
 	movs r1, #0xc0
 	movs r2, #0x20
 	movs r3, #0
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 	pop {r0}
 	bx r0
 
@@ -778,12 +778,12 @@ sub_8009D98: @ 0x08009D98
 	adds r5, r0, #0
 	movs r4, #2
 _08009D9E:
-	bl NextRN
+	bl NextRn
 	subs r4, #1
 	cmp r4, #0
 	bge _08009D9E
 	ldr r0, _08009DD8  @ gUnknown_0300534E
-	bl StoreRNState
+	bl RandGetSt
 	movs r0, #3
 	bl CheckEventId
 	lsls r0, r0, #0x18
@@ -987,7 +987,7 @@ NewGameControl: @ 0x08009F08
 	bl SetOnVBlank
 	ldr r0, _08009F3C  @ gUnknown_085916D4
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r2, r0, #0
 	adds r2, #0x29
 	movs r1, #0
@@ -1009,7 +1009,7 @@ _08009F3C: .4byte gUnknown_085916D4
 GetGameControl6C: @ 0x08009F40
 	push {lr}
 	ldr r0, _08009F4C  @ gUnknown_085916D4
-	bl Proc_Find
+	bl FindProc
 	pop {r1}
 	bx r1
 	.align 2, 0
@@ -1062,10 +1062,10 @@ RestartGameAndGoto8: @ 0x08009F8C
 	push {r4, lr}
 	ldr r4, _08009FAC  @ gUnknown_085916D4
 	adds r0, r4, #0
-	bl Proc_EndEach
+	bl EndEachProc
 	adds r0, r4, #0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #8
 	bl Proc_Goto
 	pop {r4}
@@ -1081,10 +1081,10 @@ RestartGameAndGoto12: @ 0x08009FB0
 	push {r4, lr}
 	ldr r4, _08009FD0  @ gUnknown_085916D4
 	adds r0, r4, #0
-	bl Proc_EndEach
+	bl EndEachProc
 	adds r0, r4, #0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r1, #0x12
 	bl Proc_Goto
 	pop {r4}

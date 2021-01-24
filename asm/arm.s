@@ -2,8 +2,8 @@
 
 	.SYNTAX UNIFIED
 
-	.global ARMCodeToCopy_Start
-ARMCodeToCopy_Start:
+	.global ArmCodeStart
+ArmCodeStart:
 
 _08000228: .4byte gPal @ pool
 _0800022C: .4byte gUnknown_020222A8 @ pool
@@ -75,8 +75,8 @@ _080002F4:
 
 	ARM_FUNC_END sub_8000234
 
-	ARM_FUNC_START ARM_MoveOBJsOffscreen
-ARM_MoveOBJsOffscreen: @ 0x08000304
+	ARM_FUNC_START ClearOam
+ClearOam: @ 0x08000304
 	@ r0 = dest
 	@ r1 = count
 	lsr r1, r1, #4
@@ -106,10 +106,10 @@ ARM_MoveOBJsOffscreen: @ 0x08000304
 	bpl 1b
 	bx lr
 
-	ARM_FUNC_END ARM_MoveOBJsOffscreen
+	ARM_FUNC_END ClearOam
 
-	ARM_FUNC_START ARM_CalcSomeChecksum
-ARM_CalcSomeChecksum: @ 0x08000360
+	ARM_FUNC_START GetChecksum32
+GetChecksum32: @ 0x08000360
 	push {r4, r5, r6, r7}
 	sub r1, r1, #2
 	mov r2, #0
@@ -130,10 +130,10 @@ _08000370:
 	pop {r4, r5, r6, r7}
 	bx lr
 
-	ARM_FUNC_END ARM_CalcSomeChecksum
+	ARM_FUNC_END GetChecksum32
 
-	ARM_FUNC_START ARM_FillRect
-ARM_FillRect: @ 0x080003A8
+	ARM_FUNC_START TmFillRect
+TmFillRect: @ 0x080003A8
 	@ r0 = destination
 	@ r1 = width
 	@ r2 = height
@@ -155,10 +155,10 @@ ARM_FillRect: @ 0x080003A8
 	pop {r4, r5, r6, r7}
 	bx lr
 
-	ARM_FUNC_END ARM_FillRect
+	ARM_FUNC_END TmFillRect
 
-	ARM_FUNC_START ARM_CopyRect
-ARM_CopyRect: @ 0x080003E0
+	ARM_FUNC_START TmCopyRect
+TmCopyRect: @ 0x080003E0
 	push {r4, r5, r6, r7}
 	tst r2, r2
 	beq _08000434
@@ -186,10 +186,10 @@ _08000434:
 	pop {r4, r5, r6, r7}
 	bx lr
 
-	ARM_FUNC_END ARM_CopyRect
+	ARM_FUNC_END TmCopyRect
 
-	ARM_FUNC_START ARM_FillTileRect
-ARM_FillTileRect: @ 0x0800043C
+	ARM_FUNC_START TmApplyTsa
+TmApplyTsa: @ 0x0800043C
 	push {r4, r5, r6, r7}
 	ldrb r3, [r1]
 	ldrb r4, [r1, #1]
@@ -217,10 +217,10 @@ _0800045C:
 	.align 2, 0
 _08000490: .4byte gOamHiPutIt @ pool
 
-	ARM_FUNC_END ARM_FillTileRect
+	ARM_FUNC_END TmApplyTsa
 
-	ARM_FUNC_START IRAMARM_CopyToSecondaryOAM
-IRAMARM_CopyToSecondaryOAM: @ 0x08000494
+	ARM_FUNC_START PutOamHi
+PutOamHi: @ 0x08000494
 	push {r4, r5, r6, r7}
 	ldr r7, _08000490
 _0800049C:
@@ -266,10 +266,10 @@ _08000528:
 	.align 2, 0
 _08000530: .4byte gOamLoPutIt @ pool
 
-	ARM_FUNC_END IRAMARM_CopyToSecondaryOAM
+	ARM_FUNC_END PutOamHi
 
-	ARM_FUNC_START IRAMARM_CopyToPrimaryOAM
-IRAMARM_CopyToPrimaryOAM: @ 0x08000534
+	ARM_FUNC_START PutOamLo
+PutOamLo: @ 0x08000534
 	push {r4, r5, r6, r7}
 	ldr r7, _08000530
 	b _0800049C
@@ -286,10 +286,10 @@ bitTable:
 
 lt_bitTable: .4byte bitTable @ pool
 
-	ARM_FUNC_END IRAMARM_CopyToPrimaryOAM
+	ARM_FUNC_END PutOamLo
 
-	ARM_FUNC_START IRAMARM_Func3_DrawGlyph
-IRAMARM_Func3_DrawGlyph: @ 0x08000564
+	ARM_FUNC_START DrawGlyph
+DrawGlyph: @ 0x08000564
 	push {r4, r5, r6, r7, r8, r9, sl}
 	mov r9, #0xf
 	mov sl, #0x10000
@@ -339,7 +339,7 @@ _08000574:
 	pop {r4, r5, r6, r7, r8, r9, sl}
 	bx lr
 
-	ARM_FUNC_END IRAMARM_Func3_DrawGlyph
+	ARM_FUNC_END DrawGlyph
 
 	ARM_FUNC_START sub_8000620
 sub_8000620: @ 0x08000620
@@ -397,8 +397,8 @@ _080006E0: .4byte gUnknown_0815A72C
 
 	ARM_FUNC_END sub_8000620
 
-	ARM_FUNC_START IRAMARM_DecompText
-IRAMARM_DecompText: @ 0x080006E4
+	ARM_FUNC_START DecodeString
+DecodeString: @ 0x080006E4
 	push {r4, r5, r6, r7}
 	sub r3, r3, r3
 	ldr r5, _080006E0
@@ -448,10 +448,10 @@ _08000778: .4byte gWorkingBmMap @ pool
 _0800077C: .4byte gBmMapTerrain @ pool
 _08000780: .4byte gBmMapUnit @ pool
 
-	ARM_FUNC_END IRAMARM_DecompText
+	ARM_FUNC_END DecodeString
 
-	ARM_FUNC_START IRAMARM_Func5
-IRAMARM_Func5: @ 0x08000784
+	ARM_FUNC_START MapFloodCoreStep
+MapFloodCoreStep: @ 0x08000784
 	push {r4, r5, r6, r7, r8, r9, sl}
 	ldr r3, _08000774
 	ldr r4, [r3]
@@ -519,10 +519,10 @@ _08000858:
 
 	.4byte _08000858
 
-	ARM_FUNC_END IRAMARM_Func5
+	ARM_FUNC_END MapFloodCoreStep
 
-	ARM_FUNC_START IRAMARM_FillMovementMap
-IRAMARM_FillMovementMap: @ 0x08000874
+	ARM_FUNC_START MapFloodCore
+MapFloodCore: @ 0x08000874
 	push {r4, r5, r6, lr}
 	mov r4, #0
 	ldr r5, _08000774  @ gMovMapFillState
@@ -560,75 +560,75 @@ _080008E8:
 	mov r0, #3
 	mov r1, #0
 	mvn r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #2
 	mov r1, #0
 	mov r2, #1
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #0
 	mvn r1, #0
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #1
 	mov r1, #1
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	b _080009F8
 _0800092C:
 	mov r0, #3
 	mov r1, #0
 	mvn r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #0
 	mvn r1, #0
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #1
 	mov r1, #1
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	b _080009F8
 _08000960:
 	mov r0, #2
 	mov r1, #0
 	mov r2, #1
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #0
 	mvn r1, #0
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #1
 	mov r1, #1
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	b _080009F8
 _08000994:
 	mov r0, #3
 	mov r1, #0
 	mvn r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #2
 	mov r1, #0
 	mov r2, #1
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #0
 	mvn r1, #0
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	b _080009F8
 _080009C8:
 	mov r0, #3
 	mov r1, #0
 	mvn r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #2
 	mov r1, #0
 	mov r2, #1
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 	mov r0, #1
 	mov r1, #1
 	mov r2, #0
-	bl IRAMARM_Func5
+	bl MapFloodCoreStep
 _080009F8:
 	ldr r6, [r5, #4]
 	mov r0, #4
@@ -643,6 +643,6 @@ _08000A18:
 	pop {r4, r5, r6, lr}
 	bx lr
 
-	.global ARMCodeToCopy_End
-ARMCodeToCopy_End:
-	ARM_FUNC_END IRAMARM_FillMovementMap
+	.global ArmCodeEnd
+ArmCodeEnd:
+	ARM_FUNC_END MapFloodCore

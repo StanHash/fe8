@@ -12,12 +12,12 @@ static void AiPhaseBerserkInit(struct Proc* proc);
 static void AiPhaseCleanup(struct Proc* proc);
 
 CONST_DATA
-struct ProcCmd gProcScr_CpPhase[] =
+struct ProcScr gProcScr_CpPhase[] =
 {
     PROC_NAME("E_CPPHASE"),
 
     PROC_CALL(AiPhaseInit),
-    PROC_YIELD,
+    PROC_SLEEP(0),
 
     PROC_CALL(AiPhaseCleanup),
 
@@ -25,12 +25,12 @@ struct ProcCmd gProcScr_CpPhase[] =
 };
 
 CONST_DATA
-struct ProcCmd gProcScr_BerserkCpPhase[] =
+struct ProcScr gProcScr_BerserkCpPhase[] =
 {
     PROC_NAME("E_BSKPHASE"),
 
     PROC_CALL(AiPhaseBerserkInit),
-    PROC_YIELD,
+    PROC_SLEEP(0),
 
     PROC_CALL(AiPhaseCleanup),
 
@@ -55,7 +55,7 @@ static void AiPhaseInit(struct Proc* proc)
     UpdateAllPhaseHealingAIStatus();
     SetupUnitInventoryAIFlags();
 
-    Proc_StartBlocking(gProcScr_CpOrder, proc);
+    SpawnProcLocking(gProcScr_CpOrder, proc);
 }
 
 static void AiPhaseBerserkInit(struct Proc* proc)
@@ -73,7 +73,7 @@ static void AiPhaseBerserkInit(struct Proc* proc)
     UpdateAllPhaseHealingAIStatus();
     SetupUnitInventoryAIFlags();
 
-    Proc_StartBlocking(gProcScr_BerserkCpOrder, proc);
+    SpawnProcLocking(gProcScr_BerserkCpOrder, proc);
 }
 
 static void AiPhaseCleanup(struct Proc* proc)

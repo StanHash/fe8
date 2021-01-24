@@ -12,7 +12,7 @@ sub_801BB98: @ 0x0801BB98
 	adds r6, #0x3c
 	movs r0, #0
 	strb r0, [r6]
-	bl Sound_GetCurrentSong
+	bl GetCurrentBgmSong
 	movs r1, #0
 	cmp r1, r4
 	bge _0801BBCC
@@ -179,7 +179,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	push {r4, r5, r6, lr}
 	adds r5, r1, #0
 	ldr r0, _0801BD4C  @ gUnknown_0859AA5C
-	bl Proc_Find
+	bl FindProc
 	adds r4, r0, #0
 	adds r6, r5, #0
 	adds r6, #0x34
@@ -234,7 +234,7 @@ DebugMapMenu_DisplayInfoIdle: @ 0x0801BD58
 	adds r4, r0, #0
 	adds r5, r1, #0
 	ldr r0, _0801BD98  @ gUnknown_0859AA5C
-	bl Proc_Find
+	bl FindProc
 	adds r2, r0, #0
 	ldr r0, _0801BD9C  @ gKeySt
 	ldr r0, [r0]
@@ -283,7 +283,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	movs r2, #0xe
 	bl memcpy
 	ldr r0, _0801BE20  @ gUnknown_0859AA5C
-	bl Proc_Find
+	bl FindProc
 	adds r6, r0, #0
 	adds r4, r5, #0
 	adds r4, #0x34
@@ -338,7 +338,7 @@ DebugMenu_WeatherIdle: @ 0x0801BE28
 	adds r6, r0, #0
 	adds r7, r1, #0
 	ldr r0, _0801BE94  @ gUnknown_0859AA5C
-	bl Proc_Find
+	bl FindProc
 	adds r4, r0, #0
 	ldr r5, _0801BE98  @ gKeySt
 	ldr r0, [r5]
@@ -639,7 +639,7 @@ DebugMenuInit: @ 0x0801C05C
 	bl GetROMChapterStruct
 	ldr r1, [r0]
 	adds r0, r4, #0
-	bl PrintDebugStringToBG
+	bl DebugPutStr
 	movs r0, #1
 	bl EnableBgSync
 	pop {r4}
@@ -681,7 +681,7 @@ DEBUGONLY_Startup: @ 0x0801C090
 	ands r0, r1
 	strb r0, [r4, #4]
 	ldr r0, _0801C0F8  @ gBg2Tm+0x40
-	bl PrintDebugBuildDateAndTime
+	bl PutBuildInfo
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -812,7 +812,7 @@ _0801C1D8: .4byte gPal
 sub_801C1DC: @ 0x0801C1DC
 	push {lr}
 	bl GetGameTime
-	bl InitRN
+	bl RandInit
 	bl ClearUnits
 	movs r3, #1
 	negs r3, r3
@@ -866,7 +866,7 @@ sub_801C248: @ 0x0801C248
 	push {r4, lr}
 	adds r4, r1, #0
 	bl GetGameTime
-	bl InitRN
+	bl RandInit
 	bl ClearUnits
 	ldr r0, _0801C278  @ gKeySt
 	ldr r0, [r0]
@@ -1013,7 +1013,7 @@ DebugContinueMenu_ManualContinue: @ 0x0801C340
 	b _0801C368
 _0801C34E:
 	ldr r0, _0801C36C  @ gProc_BMapMain
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0801C35C
 	bl EndBMapMain
@@ -1041,7 +1041,7 @@ DebugContinueMenu_InitializeFile: @ 0x0801C370
 	b _0801C392
 _0801C37E:
 	ldr r0, _0801C398  @ gProc_BMapMain
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0801C38C
 	bl EndBMapMain
@@ -1420,7 +1420,7 @@ sub_801C63C: @ 0x0801C63C
 	push {lr}
 	ldr r0, _0801C64C  @ gUnknown_0859AA84
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -1626,7 +1626,7 @@ _0801C81C:
 	mov r8, r0
 	adds r0, r5, #0
 	mov r1, r8
-	bl PrintDebugStringToBG
+	bl DebugPutStr
 	adds r4, #1
 	lsls r4, r4, #5
 	adds r4, r4, r7
@@ -1634,13 +1634,13 @@ _0801C81C:
 	adds r4, r4, r6
 	adds r0, r4, #0
 	mov r1, r8
-	bl PrintDebugStringToBG
+	bl DebugPutStr
 	adds r0, r5, #0
 	mov r1, sl
-	bl PrintDebugStringToBG
+	bl DebugPutStr
 	adds r0, r4, #0
 	mov r1, r9
-	bl PrintDebugStringToBG
+	bl DebugPutStr
 	movs r0, #1
 	bl EnableBgSync
 	bl EnablePalSync

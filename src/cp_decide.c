@@ -38,7 +38,7 @@ static DecideFunc CONST_DATA sUnused_085A7FB4[] =
     NULL, NULL,
 };
 
-struct ProcCmd CONST_DATA gProcScr_CpDecide[] =
+struct ProcScr CONST_DATA gProcScr_CpDecide[] =
 {
     PROC_NAME("E_CPDECIDE"),
 
@@ -110,7 +110,7 @@ next_unit:
         else
         {
             gAiState.unitIt++;
-            Proc_StartBlocking(gProcScr_CpPerform, proc);
+            SpawnProcLocking(gProcScr_CpPerform, proc);
         }
     }
     else
@@ -231,7 +231,7 @@ void CpDecide_Main(ProcPtr proc)
         str r1, [r0, #0x74]\n\
         ldr r0, _08039BF0  @ gProcScr_CpPerform\n\
         adds r1, r7, #0\n\
-        bl Proc_StartBlocking\n\
+        bl SpawnProcLocking\n\
         b _08039BFA\n\
         .align 2, 0\n\
     _08039BEC: .4byte gAiState\n\

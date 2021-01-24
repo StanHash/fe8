@@ -4,10 +4,11 @@
 #include <stdlib.h>
 
 #include "oam.h"
+#include "armfunc.h"
 #include "proc.h"
 #include "hardware.h"
 #include "m4a.h"
-#include "soundwrapper.h"
+#include "sound.h"
 #include "ctc.h"
 #include "icon.h"
 #include "fontgrp.h"
@@ -266,7 +267,7 @@ s8 CONST_DATA sPageSlideOffsetLut[] = // stat screen page transition draw offset
     INT8_MIN, // end
 };
 
-struct ProcCmd CONST_DATA gProcScr_SSPageSlide[] =
+struct ProcScr CONST_DATA gProcScr_SSPageSlide[] =
 {
     PROC_REPEAT(PageSlide_OnLoop),
     PROC_CALL(PageSlide_OnEnd),
@@ -274,7 +275,7 @@ struct ProcCmd CONST_DATA gProcScr_SSPageSlide[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_SSGlowyBlendCtrl[] =
+struct ProcScr CONST_DATA gProcScr_SSGlowyBlendCtrl[] =
 {
     PROC_SLEEP(0),
 
@@ -284,7 +285,7 @@ struct ProcCmd CONST_DATA gProcScr_SSGlowyBlendCtrl[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_SSUnitSlide[] =
+struct ProcScr CONST_DATA gProcScr_SSUnitSlide[] =
 {
     PROC_SLEEP(0),
 
@@ -350,7 +351,7 @@ static u16 const* CONST_DATA sPageNameSpriteLut[] =
 
 static u16 CONST_DATA sPageNameChrOffsetLut[] = { 0, 64, 14 }; // tile offsets within an image
 
-struct ProcCmd CONST_DATA gProcScr_SSPageNameCtrl[] =
+struct ProcScr CONST_DATA gProcScr_SSPageNameCtrl[] =
 {
     PROC_CALL(PageNameCtrl_OnInit),
 
@@ -367,7 +368,7 @@ PROC_LABEL(0),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_SSPageNumCtrl[] =
+struct ProcScr CONST_DATA gProcScr_SSPageNumCtrl[] =
 {
     PROC_CALL(PageNumCtrl_OnInit),
 
@@ -385,13 +386,13 @@ PROC_LABEL(0),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_SSBgOffsetCtrl[] =
+struct ProcScr CONST_DATA gProcScr_SSBgOffsetCtrl[] =
 {
     PROC_REPEAT(BgOffCtrl_OnLoop),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_StatScreen[] =
+struct ProcScr CONST_DATA gProcScr_StatScreen[] =
 {
     PROC_CALL(StatScreen_BlackenScreen),
     PROC_CALL(BMapDispSuspend),
@@ -434,7 +435,7 @@ PROC_LABEL(10),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_HelpBox[] =
+struct ProcScr CONST_DATA gProcScr_HelpBox[] =
 {
     PROC_SLEEP(0),
 
@@ -448,7 +449,7 @@ PROC_LABEL(0x63),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_HelpBoxMoveCtrl[] =
+struct ProcScr CONST_DATA gProcScr_HelpBoxMoveCtrl[] =
 {
     PROC_SLEEP(1),
 
@@ -460,7 +461,7 @@ PROC_LABEL(0),
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_HelpBoxLock[] =
+struct ProcScr CONST_DATA gProcScr_HelpBoxLock[] =
 {
     PROC_REPEAT(HbLock_OnIdle),
     PROC_END,
@@ -474,7 +475,7 @@ u16 CONST_DATA sSprite_MetaHelp[] = // 'R is info'
     0x8000, 0x0020, TILE(15, 0),
 };
 
-struct ProcCmd CONST_DATA gProcScr_HelpPromptSpr[] = // proc displaying 'R is Info'
+struct ProcScr CONST_DATA gProcScr_HelpPromptSpr[] = // proc displaying 'R is Info'
 {
     PROC_SLEEP(0),
 
@@ -844,7 +845,7 @@ void DisplayPage1(void)
         gUnknown_08A02204,
         gBuf);
 
-    CallARM_FillTileRect(
+    TmApplyTsa(
         gBmFrameTmap1 + TM_OFFSET(1, 11),
         gBuf, TILE(0x40, STATSCREEN_BGPAL_3));
 
@@ -881,7 +882,7 @@ void DisplayPage1(void)
                 gBmFrameTmap0 + TM_OFFSET(16, 1 + i*2),
                 0, 0x35);
 
-            CallARM_FillTileRect(
+            TmApplyTsa(
                 gBmFrameTmap1 + TM_OFFSET(1, 2 + i*2),
                 gUnknown_08A02250, TILE(0x40, STATSCREEN_BGPAL_3));
 
@@ -1117,8 +1118,8 @@ void PageSlide_OnLoop(struct StatScreenEffectProc* proc)
     int len, dstOff, srcOff;
 
     // clear bg0, bg2 page area
-    TileMap_FillRect(gBg0Tm + TM_OFFSET(12, 2), 18, 18, 0);
-    TileMap_FillRect(gBg2Tm + TM_OFFSET(12, 2), 18, 18, 0);
+    TmFillRect(gBg0Tm + TM_OFFSET(12, 2), 18, 18, 0);
+    TmFillRect(gBg2Tm + TM_OFFSET(12, 2), 18, 18, 0);
 
     off = sPageSlideOffsetLut[proc->timer];
 
@@ -1153,12 +1154,12 @@ void PageSlide_OnLoop(struct StatScreenEffectProc* proc)
         srcOff = 0;
     }
 
-    TileMap_CopyRect(
+    TmCopyRect(
         gBmFrameTmap0 + srcOff,
         gBg0Tm + dstOff + TM_OFFSET(12, 2),
         len, 18);
 
-    TileMap_CopyRect(
+    TmCopyRect(
         gBmFrameTmap1 + srcOff,
         gBg2Tm + dstOff + TM_OFFSET(12, 2),
         len, 18);
@@ -1183,12 +1184,12 @@ void StartPageSlide(u16 key, int newPage, struct Proc* parent)
 {
     struct StatScreenEffectProc* proc;
 
-    if (Proc_Find(gProcScr_SSPageSlide))
+    if (FindProc(gProcScr_SSPageSlide))
         return;
 
-    PlaySoundEffect(0x6F); // TODO: song ids
+    PlaySe(0x6F); // TODO: song ids
 
-    proc = (void*) Proc_StartBlocking(gProcScr_SSPageSlide, parent);
+    proc = (void*) SpawnProcLocking(gProcScr_SSPageSlide, parent);
 
     proc->timer = 0;
     proc->newItem = newPage;
@@ -1233,13 +1234,13 @@ void GlowBlendCtrl_OnLoop(struct StatScreenEffectProc* proc)
 static
 void StartGlowBlendCtrl(void)
 {
-    Proc_Start(gProcScr_SSGlowyBlendCtrl, PROC_TREE_3);
+    SpawnProc(gProcScr_SSGlowyBlendCtrl, PROC_TREE_3);
 }
 
 static
 void EndGlowBlendCtrl(struct StatScreenEffectProc* proc)
 {
-    Proc_EndEach(gProcScr_SSGlowyBlendCtrl);
+    EndEachProc(gProcScr_SSGlowyBlendCtrl);
 
     SetDispEnable(1, 0, 1, 1, 1);
 }
@@ -1281,7 +1282,7 @@ void UnitSlide_FadeOutLoop(struct StatScreenEffectProc* proc)
     MU_SetDisplayPosition(gStatScreen.mu,
         80, 138 + gStatScreen.yDispOff);
 
-    gStatScreen.yDispOff = sub_8012DCC(2, proc->yDispInit, proc->yDispFinal, proc->timer, 0x10);
+    gStatScreen.yDispOff = Interpolate(2, proc->yDispInit, proc->yDispFinal, proc->timer, 0x10);
 
     proc->timer += 3;
 
@@ -1322,7 +1323,7 @@ void UnitSlide_FadeInLoop(struct StatScreenEffectProc* proc)
     MU_SetDisplayPosition(gStatScreen.mu,
         80, 138 + gStatScreen.yDispOff);
 
-    gStatScreen.yDispOff = sub_8012DCC(5, proc->yDispInit, proc->yDispFinal, proc->timer, 0x10);
+    gStatScreen.yDispOff = Interpolate(5, proc->yDispInit, proc->yDispFinal, proc->timer, 0x10);
 
     proc->timer += 3;
 
@@ -1335,7 +1336,7 @@ void UnitSlide_SetNewUnit(struct StatScreenEffectProc* proc)
 {
     gStatScreen.unit = GetUnit(proc->newItem);
 
-    StatScreen_Display(Proc_Find(gProcScr_StatScreen));
+    StatScreen_Display(FindProc(gProcScr_StatScreen));
     Proc_Break(proc);
 }
 
@@ -1359,12 +1360,12 @@ void ClearSlide(struct Proc* proc)
 static
 void StartUnitSlide(struct Unit* unit, int direction, struct Proc* parent)
 {
-    struct StatScreenEffectProc* proc = (void*) Proc_StartBlocking(gProcScr_SSUnitSlide, parent);
+    struct StatScreenEffectProc* proc = (void*) SpawnProcLocking(gProcScr_SSUnitSlide, parent);
 
     proc->newItem = unit->index;
     proc->direction = direction;
 
-    PlaySoundEffect(0xC8); // TODO: song ids
+    PlaySe(0xC8); // TODO: song ids
 }
 
 enum
@@ -1688,7 +1689,7 @@ void StatScreen_InitDisplay(struct Proc* proc)
     CopyDataWithPossibleUncomp(
         gUnknown_08A071FC, gBuf);
 
-    CallARM_FillTileRect(gBg1Tm + TM_OFFSET(12, 0),
+    TmApplyTsa(gBg1Tm + TM_OFFSET(12, 0),
         gBuf, TILE(0x220, STATSCREEN_BGPAL_HALO));
 
     // Load and display Background
@@ -1700,7 +1701,7 @@ void StatScreen_InitDisplay(struct Proc* proc)
 
     CopyDataWithPossibleUncomp(gUnknown_08A05F10, gBuf);
 
-    CallARM_FillTileRect(gBg3Tm, gBuf,
+    TmApplyTsa(gBg3Tm, gBuf,
         TILE(0x180, 12));
 
     // Load object graphics
@@ -1772,8 +1773,8 @@ void StatScreen_Display(struct Proc* proc)
 
     DisplayPage(gStatScreen.page);
 
-    TileMap_CopyRect(gBmFrameTmap0, gBg0Tm + TM_OFFSET(12, 2), 18, 18);
-    TileMap_CopyRect(gBmFrameTmap1, gBg2Tm + TM_OFFSET(12, 2), 18, 18);
+    TmCopyRect(gBmFrameTmap0, gBg0Tm + TM_OFFSET(12, 2), 18, 18);
+    TmCopyRect(gBmFrameTmap1, gBg2Tm + TM_OFFSET(12, 2), 18, 18);
 
     EnableBgSync(BG0_SYNC_BIT | BG1_SYNC_BIT | BG2_SYNC_BIT);
 }
@@ -1798,7 +1799,7 @@ void StatScreen_OnIdle(struct Proc* proc)
 
         Proc_Break(proc);
 
-        PlaySoundEffect(0x6B); // TODO: song ids
+        PlaySe(0x6B); // TODO: song ids
     }
 
     else if (gKeySt->repeated & DPAD_LEFT)
@@ -1877,9 +1878,9 @@ void StartStatScreen(struct Unit* unit, struct Proc* parent)
 
     BWL_IncrementStatScreenViews(unit->pCharacterData->number);
 
-    PlaySoundEffect(0x6A); // TODO: song ids
+    PlaySe(0x6A); // TODO: song ids
 
-    Proc_StartBlocking(gProcScr_StatScreen, parent);
+    SpawnProcLocking(gProcScr_StatScreen, parent);
 }
 
 void StartStatScreenHelp(int pageid, struct Proc* proc)
@@ -2031,10 +2032,10 @@ void HbRedirect_SSSupports(struct HelpBoxProc* proc)
 
 void UpdateHelpBoxDisplay(struct HelpBoxProc* proc, int arg1)
 {
-    proc->xBox = sub_8012DCC(arg1, proc->xBoxInit, proc->xBoxFinal, proc->timer, proc->timerMax);
-    proc->yBox = sub_8012DCC(arg1, proc->yBoxInit, proc->yBoxFinal, proc->timer, proc->timerMax);
-    proc->wBox = sub_8012DCC(arg1, proc->wBoxInit, proc->wBoxFinal, proc->timer, proc->timerMax);
-    proc->hBox = sub_8012DCC(arg1, proc->hBoxInit, proc->hBoxFinal, proc->timer, proc->timerMax);
+    proc->xBox = Interpolate(arg1, proc->xBoxInit, proc->xBoxFinal, proc->timer, proc->timerMax);
+    proc->yBox = Interpolate(arg1, proc->yBoxInit, proc->yBoxFinal, proc->timer, proc->timerMax);
+    proc->wBox = Interpolate(arg1, proc->wBoxInit, proc->wBoxFinal, proc->timer, proc->timerMax);
+    proc->hBox = Interpolate(arg1, proc->hBoxInit, proc->hBoxFinal, proc->timer, proc->timerMax);
 
     sub_8089980(proc->xBox, proc->yBox, proc->wBox, proc->hBox, proc->unk52);
 }
@@ -2042,13 +2043,13 @@ void UpdateHelpBoxDisplay(struct HelpBoxProc* proc, int arg1)
 static
 void HelpBox_OnOpen(struct HelpBoxProc* proc)
 {
-    struct Proc* found = Proc_Find(gProcScr_HelpPromptSpr);
+    struct Proc* found = FindProc(gProcScr_HelpPromptSpr);
 
     if (found)
         found->proc_lockCnt = 1; // lock (disabled) proc
 
     if (proc->unk52 == 0)
-        PlaySoundEffect(0x70); // TODO: song ids
+        PlaySe(0x70); // TODO: song ids
 }
 
 static
@@ -2063,14 +2064,14 @@ void HelpBox_OnLoop(struct HelpBoxProc* proc)
 static
 void HelpBox_OnClose(struct HelpBoxProc* proc)
 {
-    struct Proc* found = Proc_Find(gProcScr_HelpPromptSpr);
+    struct Proc* found = FindProc(gProcScr_HelpPromptSpr);
 
     if (found)
         found->proc_lockCnt = 0; // unlock (enable) proc
 
     if (proc->unk52 == 0)
     {
-        PlaySoundEffect(0x71); // TODO: song ids
+        PlaySe(0x71); // TODO: song ids
 
         ResetHelpBoxInitSize(proc);
         SetHelpBoxInitPosition(proc, proc->info->xDisplay, proc->info->yDisplay);
@@ -2159,11 +2160,11 @@ void StartHelpBoxExt(const struct HelpBoxInfo* info, int unk)
     struct HelpBoxProc* proc;
     int wContent, hContent;
 
-    proc = (void*) Proc_Find(gProcScr_HelpBox);
+    proc = (void*) FindProc(gProcScr_HelpBox);
 
     if (!proc)
     {
-        proc = (void*) Proc_Start(gProcScr_HelpBox, PROC_TREE_3);
+        proc = (void*) SpawnProc(gProcScr_HelpBox, PROC_TREE_3);
 
         proc->unk52 = unk;
 
@@ -2208,7 +2209,7 @@ void StartHelpBoxExt_Unk(int x, int y, int mid)
     struct HelpBoxProc* proc;
     int wContent, hContent;
 
-    proc = (void*) Proc_Start(gProcScr_HelpBox, PROC_TREE_3);
+    proc = (void*) SpawnProc(gProcScr_HelpBox, PROC_TREE_3);
 
     proc->unk52 = TRUE;
 
@@ -2243,7 +2244,7 @@ void StartHelpBoxExt_Unk(int x, int y, int mid)
 
 void CloseHelpBox(void)
 {
-    struct HelpBoxProc* proc = (void*) Proc_Find(gProcScr_HelpBox);
+    struct HelpBoxProc* proc = (void*) FindProc(gProcScr_HelpBox);
 
     if (proc)
     {
@@ -2254,7 +2255,7 @@ void CloseHelpBox(void)
 
 void EndHelpBox(void)
 {
-    struct HelpBoxProc* proc = (void*) Proc_Find(gProcScr_HelpBox);
+    struct HelpBoxProc* proc = (void*) FindProc(gProcScr_HelpBox);
 
     if (proc)
     {
@@ -2303,7 +2304,7 @@ void HbMoveCtrl_OnIdle(struct HelpBoxProc* proc)
 
     if (boxMoved)
     {
-        PlaySoundEffect(0x67);
+        PlaySe(0x67);
         Proc_Goto((void*) proc, 0); // TODO: label constants?
     }
 }
@@ -2317,7 +2318,7 @@ void HbMoveCtrl_OnEnd(struct HelpBoxProc* proc)
 
 void StartMovingHelpBox(const struct HelpBoxInfo* info, struct Proc* parent)
 {
-    struct HelpBoxProc* proc = (void*) Proc_StartBlocking(gProcScr_HelpBoxMoveCtrl, parent);
+    struct HelpBoxProc* proc = (void*) SpawnProcLocking(gProcScr_HelpBoxMoveCtrl, parent);
 
     sHbOrigin.x = 0;
     sHbOrigin.y = 0;
@@ -2327,7 +2328,7 @@ void StartMovingHelpBox(const struct HelpBoxInfo* info, struct Proc* parent)
 
 void StartMovingHelpBoxExt(const struct HelpBoxInfo* info, struct Proc* parent, int x, int y)
 {
-    struct HelpBoxProc* proc = (void*) Proc_StartBlocking(gProcScr_HelpBoxMoveCtrl, parent);
+    struct HelpBoxProc* proc = (void*) SpawnProcLocking(gProcScr_HelpBoxMoveCtrl, parent);
 
     sHbOrigin.x = x;
     sHbOrigin.y = y;
@@ -2513,7 +2514,7 @@ int StartLockingHelpBox_Unused(int mid, struct Proc* parent)
     LoadDialogueBoxGfx(NULL, -1);
 
     StartHelpBox(GetUiHandPrevDisplayX(), GetUiHandPrevDisplayY(), mid);
-    Proc_StartBlocking(gProcScr_HelpBoxLock, parent);
+    SpawnProcLocking(gProcScr_HelpBoxLock, parent);
 
     return TRUE;
 }
@@ -2527,10 +2528,10 @@ void HelpPrompt_OnIdle(struct HelpPromptSprProc* proc)
 
 struct Proc* StartHelpPromptSprite_Unused(int x, int y, struct Proc* parent)
 {
-    struct HelpPromptSprProc* proc = (void*) Proc_Find(gProcScr_HelpPromptSpr);
+    struct HelpPromptSprProc* proc = (void*) FindProc(gProcScr_HelpPromptSpr);
 
     if (!proc)
-        proc = (void*) Proc_Start(gProcScr_HelpPromptSpr, parent);
+        proc = (void*) SpawnProc(gProcScr_HelpPromptSpr, parent);
 
     proc->xDisplay = x;
     proc->yDisplay = y;
@@ -2541,12 +2542,12 @@ struct Proc* StartHelpPromptSprite_Unused(int x, int y, struct Proc* parent)
 
 struct Proc* StartHelpPromptSprite(int x, int y, int palid, struct Proc* parent)
 {
-    struct HelpPromptSprProc* proc = (void*) Proc_Find(gProcScr_HelpPromptSpr);
+    struct HelpPromptSprProc* proc = (void*) FindProc(gProcScr_HelpPromptSpr);
 
     ApplyPalette(gUnknown_08A1D79C, palid + 0x10);
 
     if (!proc)
-        proc = (void*) Proc_Start(gProcScr_HelpPromptSpr, parent);
+        proc = (void*) SpawnProc(gProcScr_HelpPromptSpr, parent);
 
     proc->xDisplay = x;
     proc->yDisplay = y;
@@ -2557,10 +2558,10 @@ struct Proc* StartHelpPromptSprite(int x, int y, int palid, struct Proc* parent)
 
 struct Proc* StartHelpPromptSprite_Unused2(int x, int y, struct Proc* parent)
 {
-    struct HelpPromptSprProc* proc = (void*) Proc_Find(gProcScr_HelpPromptSpr);
+    struct HelpPromptSprProc* proc = (void*) FindProc(gProcScr_HelpPromptSpr);
 
     if (!proc)
-        proc = (void*) Proc_StartBlocking(gProcScr_HelpPromptSpr, parent);
+        proc = (void*) SpawnProcLocking(gProcScr_HelpPromptSpr, parent);
 
     proc->xDisplay = x;
     proc->yDisplay = y;
@@ -2571,7 +2572,7 @@ struct Proc* StartHelpPromptSprite_Unused2(int x, int y, struct Proc* parent)
 
 void EndHelpPromptSprite(void)
 {
-    struct Proc* proc = Proc_Find(gProcScr_HelpPromptSpr);
+    struct Proc* proc = FindProc(gProcScr_HelpPromptSpr);
 
     if (proc)
         Proc_End(proc);
@@ -2579,7 +2580,7 @@ void EndHelpPromptSprite(void)
 
 void MoveHelpPromptSprite(int x, int y)
 {
-    struct HelpPromptSprProc* proc = (void*) Proc_Find(gProcScr_HelpPromptSpr);
+    struct HelpPromptSprProc* proc = (void*) FindProc(gProcScr_HelpPromptSpr);
 
     if (proc)
     {

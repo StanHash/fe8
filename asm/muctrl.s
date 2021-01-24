@@ -114,7 +114,7 @@ sub_8079D74: @ 0x08079D74
 	lsrs r7, r3, #0x10
 	ldr r0, _08079DAC  @ gUnknown_089A2DB0
 	movs r1, #5
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	lsls r0, r6, #0x10
 	asrs r0, r0, #0x10
@@ -182,7 +182,7 @@ sub_8079DDC: @ 0x08079DDC
 	mov r8, r1
 	ldr r0, _08079E6C  @ gUnknown_089A2DB0
 	movs r1, #5
-	bl Proc_Start
+	bl SpawnProc
 	adds r2, r0, #0
 	adds r2, #0x44
 	lsls r4, r4, #0x18
@@ -375,7 +375,7 @@ _08079F80: .4byte gBmMapUnk
 MuCtrExists: @ 0x08079F84
 	push {lr}
 	ldr r0, _08079F98  @ gUnknown_089A2DB0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08079F92
 	movs r0, #1
@@ -805,7 +805,7 @@ _0807A2A6:
 	ldr r6, _0807A2EC  @ gUnknown_089A2DB0
 	ldr r1, _0807A2F0  @ sub_807A300
 	adds r0, r6, #0
-	bl Proc_ForEach
+	bl ForEachProc
 	movs r1, #0
 	ldrsb r1, [r4, r1]
 	cmp r1, #0
@@ -818,7 +818,7 @@ _0807A2A6:
 	strb r1, [r4]
 	ldr r1, _0807A2FC  @ sub_807A324
 	adds r0, r6, #0
-	bl Proc_ForEach
+	bl ForEachProc
 _0807A2D6:
 	ldr r0, _0807A2E8  @ gUnknown_03001C34
 	ldrb r0, [r0]
@@ -1220,7 +1220,7 @@ _0807A5B6:
 	cmp r3, #0
 	beq _0807A62E
 	mov r0, r8
-	bl NextRN_N
+	bl RandNext
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x16
 	mov r2, sp

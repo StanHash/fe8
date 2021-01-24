@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include "global.h"
+#include "irq.h"
+
 struct KeySt
 {
     u8 repeatDelay;     // initial delay before generating auto-repeat presses
@@ -78,8 +81,8 @@ void SetBgBpp(int bg, int bpp);
 void SyncBgsAndPal(void);
 void TmFill(u16* tm, int tile);
 void SetBlankChr(int chr);
-void SetOnVBlank(InterruptHandler handler);
-void SetOnVMatch(InterruptHandler handler);
+void SetOnVBlank(IrqFunc handler);
+void SetOnVMatch(IrqFunc handler);
 void SetNextVCount(int vcount);
 void SetVCount(int vcount);
 void SetMainFunc(void(*)(void));
@@ -113,8 +116,8 @@ void SetHealthSafetySkipEnable(bool val);
 bool IsHealthSafetySkipEnabled(void);
 void SoftResetIfKeyCombo(void);
 void sub_8001CB0(int unk);
-void SetOnHBlankA(InterruptHandler func);
-void SetOnHBlankB(InterruptHandler func);
+void SetOnHBlankA(IrqFunc func);
+void SetOnHBlankB(IrqFunc func);
 int GetBgFromTm(u16* tm);
 void SetBgPriority(int bg, int priority);
 int GetBgPriority(int bg);

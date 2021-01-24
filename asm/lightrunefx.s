@@ -130,7 +130,7 @@ _0802163C:
 	ldr r1, _08021664  @ gBg0Tm
 	movs r2, #8
 	movs r3, #9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	movs r0, #1
 	bl EnableBgSync
 _08021656:
@@ -168,7 +168,7 @@ sub_8021684: @ 0x08021684
 	adds r5, r2, #0
 	ldr r0, _080216C8  @ gUnknown_0859B3B0
 	adds r1, r3, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	lsls r0, r4, #4
 	ldr r2, _080216CC  @ gUnknown_0202BCB0
 	movs r3, #0xc
@@ -325,7 +325,7 @@ _080217D0:
 	ldr r1, _080217F8  @ gBg0Tm
 	movs r2, #8
 	movs r3, #9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	movs r0, #1
 	bl EnableBgSync
 _080217EA:
@@ -363,7 +363,7 @@ sub_8021818: @ 0x08021818
 	adds r5, r2, #0
 	ldr r0, _0802185C  @ gUnknown_0859B3D0
 	adds r1, r3, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	lsls r0, r4, #4
 	ldr r2, _08021860  @ gUnknown_0202BCB0
 	movs r3, #0xc
@@ -520,7 +520,7 @@ _08021964:
 	ldr r1, _0802198C  @ gBg0Tm
 	movs r2, #8
 	movs r3, #9
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	movs r0, #1
 	bl EnableBgSync
 _0802197E:
@@ -558,7 +558,7 @@ sub_80219AC: @ 0x080219AC
 	adds r5, r2, #0
 	ldr r0, _080219F0  @ gUnknown_0859B3F0
 	adds r1, r3, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	lsls r0, r4, #4
 	ldr r2, _080219F4  @ gUnknown_0202BCB0
 	movs r3, #0xc

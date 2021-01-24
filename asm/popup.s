@@ -43,7 +43,7 @@ sub_8010DC0: @ 0x08010DC0
 	ldr r1, [r1]
 	movs r2, #0x80
 	lsls r2, r2, #8
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	adds r5, #8
 	adds r4, r4, r5
 	ldr r0, [r4]
@@ -71,7 +71,7 @@ sub_8010E50: @ 0x08010E50
 	push {lr}
 	bl sub_80081A8
 	ldr r0, _08010E68  @ gUnknown_08591154
-	bl Proc_EndEach
+	bl EndEachProc
 	bl ResetFaces
 	bl sub_80067E8
 	pop {r0}
@@ -110,7 +110,7 @@ sub_8010E6C: @ 0x08010E6C
 	ands r1, r2
 	ldr r2, _08010EC0  @ gUnknown_085921AC
 	ldr r3, _08010EC4  @ 0x00002822
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	cmp r4, #0xf
 	bhi _08010EC8
 	lsrs r2, r5, #0x11
@@ -157,7 +157,7 @@ sub_8010EE8: @ 0x08010EE8
 	movs r0, #1
 	adds r1, r4, #0
 	adds r2, r5, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r5, r0, #0
 	ldr r0, _08010F2C  @ gUnknown_085A7EE8
 	ldr r4, _08010F30  @ gPal+0x240
@@ -534,7 +534,7 @@ sub_80111F4: @ 0x080111F4
 	lsls r0, r0, #1
 	movs r1, #0x80
 	movs r2, #0x10
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 _0801120C:
 	pop {r0}
 	bx r0
@@ -577,7 +577,7 @@ sub_8011238: @ 0x08011238
 	lsls r1, r1, #1
 	movs r0, #0x80
 	movs r2, #0x10
-	bl ISuspectThisToBeMusicRelated_8002730
+	bl StartBgmVolumeChange
 _08011250:
 	pop {r0}
 	bx r0
@@ -593,7 +593,7 @@ IconOAMUpdater_Loop: @ 0x08011254
 	adds r0, #0x4a
 	ldrh r3, [r0]
 	adds r0, r4, #0
-	bl CallARM_PushToSecondaryOAM
+	bl PutOamHiRam
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -728,7 +728,7 @@ _0801134C:
 	beq _080113A4
 	ldr r0, _080113BC  @ gUnknown_08592228
 	adds r1, r5, #0
-	bl Proc_Start
+	bl SpawnProc
 	mov r3, sl
 	ldrb r1, [r3]
 	adds r1, #1
@@ -823,7 +823,7 @@ LongPopup_Clear: @ 0x080113F8
 	adds r4, #0x3a
 	ldrb r2, [r4]
 	movs r3, #0
-	bl TileMap_FillRect
+	bl TmFillRect_t
 	ldrb r0, [r5]
 	lsls r0, r0, #5
 	ldrb r7, [r7]
@@ -834,7 +834,7 @@ LongPopup_Clear: @ 0x080113F8
 	ldrb r1, [r6]
 	ldrb r2, [r4]
 	movs r3, #0
-	bl TileMap_FillRect
+	bl TmFillRect_t
 	movs r0, #3
 	bl EnableBgSync
 	pop {r4, r5, r6, r7}
@@ -905,14 +905,14 @@ NewPopup: @ 0x08011490
 	cmp r1, #0
 	beq _080114AC
 	ldr r0, _080114A8  @ gUnknown_085921C8
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _080114B4
 	.align 2, 0
 _080114A8: .4byte gUnknown_085921C8
 _080114AC:
 	ldr r0, _080114D8  @ gUnknown_085921C8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _080114B4:
 	adds r1, r0, #0
 	str r4, [r1, #0x30]
@@ -1016,14 +1016,14 @@ NewItemGot: @ 0x08011554
 	bhi _08011570
 	ldr r0, _0801156C  @ gUnknown_085922D0
 	adds r1, r3, #0
-	bl Proc_Start
+	bl SpawnProc
 	b _08011578
 	.align 2, 0
 _0801156C: .4byte gUnknown_085922D0
 _08011570:
 	ldr r0, _08011598  @ gUnknown_085922D0
 	adds r1, r3, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 _08011578:
 	str r5, [r0, #0x58]
 	str r4, [r0, #0x54]

@@ -83,7 +83,7 @@ void sub_8009250(ProcPtr);
 void sub_8009198(ProcPtr);
 void sub_8009200(ProcPtr);
 
-struct ProcCmd CONST_DATA gUnknown_08591304[] =
+struct ProcScr CONST_DATA gUnknown_08591304[] =
 {
     PROC_SLEEP(0),
     PROC_CALL(sub_800662C),
@@ -100,7 +100,7 @@ struct ProcCmd CONST_DATA gUnknown_08591304[] =
 static struct SceneState sSceneStateCore;
 struct SceneState* CONST_DATA gUnknown_0859133C = &sSceneStateCore;
 
-struct ProcCmd CONST_DATA gUnknown_08591340[] =
+struct ProcScr CONST_DATA gUnknown_08591340[] =
 {
     PROC_MARK(PROC_MARK_5),
     PROC_REPEAT(sub_8006B4C),
@@ -108,10 +108,10 @@ struct ProcCmd CONST_DATA gUnknown_08591340[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_08591358[] =
+struct ProcScr CONST_DATA gUnknown_08591358[] =
 {
     PROC_MARK(PROC_MARK_5),
-    PROC_SET_END_CB(sub_8007C0C),
+    PROC_ONEND(sub_8007C0C),
 
     PROC_SLEEP(1),
 
@@ -121,7 +121,7 @@ struct ProcCmd CONST_DATA gUnknown_08591358[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_08591388[] =
+struct ProcScr CONST_DATA gUnknown_08591388[] =
 {
     PROC_BLOCK,
 };
@@ -153,7 +153,7 @@ struct FaceVramEntry CONST_DATA gUnknown_08591390[4] =
     },
 };
 
-struct ProcCmd CONST_DATA gUnknown_085913B0[] =
+struct ProcScr CONST_DATA gUnknown_085913B0[] =
 {
     PROC_SLEEP(1),
 
@@ -163,7 +163,7 @@ struct ProcCmd CONST_DATA gUnknown_085913B0[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_085913D0[] =
+struct ProcScr CONST_DATA gUnknown_085913D0[] =
 {
     PROC_MARK(PROC_MARK_5),
 
@@ -173,7 +173,7 @@ struct ProcCmd CONST_DATA gUnknown_085913D0[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_085913F0[] =
+struct ProcScr CONST_DATA gUnknown_085913F0[] =
 {
     PROC_MARK(PROC_MARK_5),
 
@@ -222,7 +222,7 @@ const u16* CONST_DATA gUnknown_08591430[] =
     sObj_PressKeyArrow1,
 };
 
-struct ProcCmd CONST_DATA gUnknown_08591470[] =
+struct ProcScr CONST_DATA gUnknown_08591470[] =
 {
     PROC_MARK(PROC_MARK_5),
 
@@ -244,7 +244,7 @@ struct ChoiceEntryInfo CONST_DATA gUnknown_085914A0[2] =
     { 0x846, sub_80B4308 }, // Sell
 };
 
-struct ProcCmd CONST_DATA gUnknown_085914B0[] =
+struct ProcScr CONST_DATA gUnknown_085914B0[] =
 {
     PROC_SLEEP(8),
     PROC_REPEAT(sub_8007E9C),
@@ -252,7 +252,7 @@ struct ProcCmd CONST_DATA gUnknown_085914B0[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_085914C8[] =
+struct ProcScr CONST_DATA gUnknown_085914C8[] =
 {
     PROC_MARK(PROC_MARK_5),
 
@@ -264,7 +264,7 @@ struct ProcCmd CONST_DATA gUnknown_085914C8[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_085914F0[] =
+struct ProcScr CONST_DATA gUnknown_085914F0[] =
 {
     PROC_MARK(PROC_MARK_5),
 
@@ -279,7 +279,7 @@ struct ProcCmd CONST_DATA gUnknown_085914F0[] =
 
 int CONST_DATA gUnknown_08591520[4] = { 8, 16, 32, 64 };
 
-struct ProcCmd CONST_DATA gUnknown_08591530[] =
+struct ProcScr CONST_DATA gUnknown_08591530[] =
 {
     PROC_REPEAT(sub_80083F8),
     PROC_END,
@@ -290,10 +290,10 @@ void sub_80087A8(ProcPtr);
 void sub_800880C(ProcPtr);
 void sub_8008840(ProcPtr);
 
-struct ProcCmd CONST_DATA gUnknown_08591540[] =
+struct ProcScr CONST_DATA gUnknown_08591540[] =
 {
     PROC_MARK(PROC_MARK_5),
-    PROC_SET_END_CB(sub_80087A4),
+    PROC_ONEND(sub_80087A4),
 
     PROC_CALL(sub_80087A8),
     PROC_REPEAT(sub_800880C),
@@ -330,23 +330,23 @@ u16 CONST_DATA gUnknown_085915AA[] =
     OAM0_SHAPE_32x16 + OAM0_Y(32), OAM1_SIZE_32x16 + OAM1_X(224), OAM2_CHR(0x9C),
 };
 
-struct ProcCmd CONST_DATA gUnusued_085915F4[] =
+struct ProcScr CONST_DATA gUnusued_085915F4[] =
 {
-    PROC_SET_END_CB(sub_8008B30),
+    PROC_ONEND(sub_8008B30),
     PROC_REPEAT(sub_8008AA8),
 
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_0859160C[] =
+struct ProcScr CONST_DATA gUnknown_0859160C[] =
 {
-    PROC_SET_END_CB(sub_8008F54),
+    PROC_ONEND(sub_8008F54),
     PROC_WHILE(sub_8008F3C),
 
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_08591624[] =
+struct ProcScr CONST_DATA gUnknown_08591624[] =
 {
     PROC_CALL(sub_8008FAC),
     PROC_REPEAT(sub_8008FB4),
@@ -354,7 +354,7 @@ struct ProcCmd CONST_DATA gUnknown_08591624[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnknown_0859163C[] =
+struct ProcScr CONST_DATA gUnknown_0859163C[] =
 {
     PROC_SLEEP(0),
 
@@ -365,11 +365,11 @@ struct ProcCmd CONST_DATA gUnknown_0859163C[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gUnused_0859166C[] =
+struct ProcScr CONST_DATA gUnused_0859166C[] =
 {
     PROC_SLEEP(0),
 
-    PROC_SET_END_CB(sub_8009250),
+    PROC_ONEND(sub_8009250),
 
     PROC_CALL(sub_8009198),
     PROC_REPEAT(sub_8009200),

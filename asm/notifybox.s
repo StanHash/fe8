@@ -95,7 +95,7 @@ _0801FA5A:
 	bl DrawTextInline
 	ldr r0, _0801FA88  @ gUnknown_0859B0C0
 	adds r1, r7, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	add sp, #8
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -228,7 +228,7 @@ _0801FB7E:
 	bl Text_Draw
 	ldr r0, _0801FBA8  @ gUnknown_0859B0C0
 	mov r1, sl
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	add sp, #0xc
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -315,7 +315,7 @@ _0801FC18:
 	bl Text_Draw
 	ldr r0, _0801FC64  @ gUnknown_0859B0C0
 	mov r1, r8
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	add sp, #0xc
 	pop {r3}
 	mov r8, r3
@@ -437,7 +437,7 @@ _0801FD1A:
 	bl DrawIcon
 	ldr r0, _0801FD6C  @ gUnknown_0859B0C0
 	mov r1, r8
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	add sp, #0xc
 	pop {r3}
 	mov r8, r3

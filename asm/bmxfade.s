@@ -100,7 +100,7 @@ NewBMXFADE: @ 0x0801DDC4
 	lsrs r4, r4, #0x18
 	ldr r0, _0801DDEC  @ gUnknown_0859ADC8
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	lsls r4, r4, #0x18
 	asrs r4, r4, #0x18
 	adds r0, #0x4e
@@ -124,7 +124,7 @@ MakeNew6CBMXFADE2: @ 0x0801DDF0
 	lsls r4, r4, #0x18
 	lsrs r4, r4, #0x18
 	ldr r0, _0801DE14  @ gUnknown_0859ADC8
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	lsls r4, r4, #0x18
 	asrs r4, r4, #0x18
 	adds r0, #0x4e
@@ -145,7 +145,7 @@ _0801DE14: .4byte gUnknown_0859ADC8
 DoesBMXFADEExist: @ 0x0801DE18
 	push {lr}
 	ldr r0, _0801DE2C  @ gUnknown_0859ADC8
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0801DE26
 	movs r0, #1

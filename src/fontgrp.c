@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 #include "global.h"
+#include "armfunc.h"
 #include "proc.h"
 #include "hardware.h"
 #include "dma.h"
@@ -60,7 +61,7 @@ void SetupDebugFontForBG(int bg, int tileDataOffset)
     gUnknown_02026E30.tileIndex = GetBgChrId(bg, tileDataOffset);
 }
 
-void PrintDebugStringToBG(u16 *dest, const char *str)
+void DebugPutStr(u16 *dest, const char *str)
 {
     int i;
 
@@ -92,7 +93,7 @@ void sub_800384C(u16 *dest, const char *fmt, ...)
     vsprintf(buffer, fmt, args);
     va_end(args);
 
-    PrintDebugStringToBG(dest, buffer);
+    DebugPutStr(dest, buffer);
 }
 
 void sub_8003870(void)
@@ -293,7 +294,7 @@ void PrintDebugStringAsOBJ(int a, int b, const char *str)
         else
             c = *str - 0x20;
 
-        CallARM_PushToSecondaryOAM(a, b, gObject_8x8, c + gUnknown_02028E50 + gUnknown_02028E54);
+        PutOamHi(a, b, gObject_8x8, c + gUnknown_02028E50 + gUnknown_02028E54);
 
         a += 8;
         str++;
@@ -824,7 +825,7 @@ void Font_StandardGlyphDrawer(struct TextHandle *th, struct Glyph *glyph)
     u32 *bitmap = glyph->bitmap;
     void *r0 = GetGlyphColorLUT(th->colorId);
 
-    CallARM_Func3(r0, r8, bitmap, r4);
+    DrawGlyph(r0, r8, bitmap, r4);
     th->x += glyph->width;
 }
 
@@ -1057,7 +1058,7 @@ void sub_8004700(struct TextHandle *th, struct Glyph *glyph)
 
 struct SomeTextRelatedProc
 {
-    PROC_HEADER
+    PROC_HEADER;
 
     struct TextHandle *unk2C;
     const char *unk30;
@@ -1095,7 +1096,7 @@ void sub_80048B0(struct SomeTextRelatedProc *proc)
     }
 }
 
-struct ProcCmd gUnknown_08588274[] =
+struct ProcScr gUnknown_08588274[] =
 {
     PROC_REPEAT(sub_80048B0),
     PROC_END,
@@ -1109,7 +1110,7 @@ char *sub_8004924(struct TextHandle *th, char *b, int c, int d)
         Text_AppendString(th, b);
     if (d == 0)
         d = 1;
-    proc = Proc_Start(gUnknown_08588274, PROC_TREE_3);
+    proc = SpawnProc(gUnknown_08588274, PROC_TREE_3);
     proc->unk2C = th;
     proc->unk30 = b;
     proc->unk36 = d;
@@ -1127,7 +1128,7 @@ s8 sub_800496C(struct TextHandle *th)
 
 void sub_8004974(void)
 {
-    Proc_EndEach(gUnknown_08588274);
+    EndEachProc(gUnknown_08588274);
 }
 
 void sub_8004984(void)
@@ -1139,9 +1140,9 @@ void sub_8004984(void)
     EnablePalSync();
 }
 
-struct ProcCmd gUnknown_08588284[] =
+struct ProcScr gUnknown_08588284[] =
 {
-	PROC_END_IF_DUPLICATE,
+	PROC_END_IF_DUP,
 	PROC_REPEAT(sub_8004984),
 	PROC_END,
 };
@@ -1149,14 +1150,14 @@ struct ProcCmd gUnknown_08588284[] =
 void NewGreenTextColorManager(struct Proc *parent)
 {
     if (parent != NULL)
-        Proc_Start(gUnknown_08588284, parent);
+        SpawnProc(gUnknown_08588284, parent);
     else
-        Proc_Start(gUnknown_08588284, PROC_TREE_3);
+        SpawnProc(gUnknown_08588284, PROC_TREE_3);
 }
 
 void EndGreenTextColorManager(void)
 {
-    Proc_EndEach(gUnknown_08588284);
+    EndEachProc(gUnknown_08588284);
 }
 
 void sub_80049E0(struct TextHandle *th, u16 *b, int c)

@@ -80,7 +80,7 @@ NewUnitInfoWindow: @ 0x080347A8
 	push {r4, lr}
 	adds r1, r0, #0
 	ldr r0, _080347D0  @ gUnknown_0859E13C
-	bl Proc_Start
+	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, #0x30
 	movs r1, #6
@@ -173,7 +173,7 @@ UnitInfoWindow_DrawBase: @ 0x0803483C
 	cmp r0, #0
 	bne _08034862
 	ldr r0, _080349C0  @ gUnknown_0859E13C
-	bl Proc_Find
+	bl FindProc
 	mov r8, r0
 	bl ClearBg0Bg1
 _08034862:
@@ -207,7 +207,7 @@ _08034862:
 	ldr r1, _080349C8  @ gUnknown_08A173EC
 	movs r2, #0x80
 	lsls r2, r2, #5
-	bl CallARM_FillTileRect
+	bl TmApplyTsa_t
 	str r5, [sp, #0x14]
 	str r4, [sp, #0x18]
 	mov r2, r9

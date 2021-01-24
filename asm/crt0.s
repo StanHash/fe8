@@ -13,7 +13,7 @@ crt0:
 	msr cpsr_fc, r0
 	ldr sp, unk_3007E00
 	ldr r1, =0x03007FFC
-	adr r0, GlobalIRQHandler
+	adr r0, IrqMain
 	str r0, [r1]
 	ldr r1, =0x08000A20+1
 	mov lr, pc
@@ -24,8 +24,8 @@ unk_3007E00:
 IRQStackBottom: 
 	.4byte gUnknown_03007FA0 @ pool
 
-.global GlobalIRQHandler
-GlobalIRQHandler:
+.global IrqMain
+IrqMain:
 	mov r3, #0x4000000
 	add r3, r3, #0x200
 	ldr r2, [r3]

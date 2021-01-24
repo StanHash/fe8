@@ -1592,7 +1592,7 @@ _08025A00:
 	movs r6, #0xb
 	ldrsb r6, [r2, r6]
 	movs r0, #3
-	bl NextRN_N
+	bl RandNext
 	adds r3, r0, #0
 	adds r3, #1
 	adds r0, r4, #0

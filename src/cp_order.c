@@ -20,7 +20,7 @@ static void CpOrderFunc_End(ProcPtr proc);
 static
 u32* CONST_DATA sUnitPriorityArray = (void*) gBuf;
 
-struct ProcCmd CONST_DATA gProcScr_CpOrder[] =
+struct ProcScr CONST_DATA gProcScr_CpOrder[] =
 {
     PROC_NAME("E_CPORDER"),
 
@@ -29,7 +29,7 @@ struct ProcCmd CONST_DATA gProcScr_CpOrder[] =
     PROC_END,
 };
 
-struct ProcCmd CONST_DATA gProcScr_BerserkCpOrder[] =
+struct ProcScr CONST_DATA gProcScr_BerserkCpOrder[] =
 {
     PROC_NAME("E_BSKORDER"),
 
@@ -82,7 +82,7 @@ void CpOrderBerserkInit(ProcPtr proc)
 
         AiDecideMainFunc = AiDecideMain;
 
-        Proc_StartBlocking(gProcScr_CpDecide, proc);
+        SpawnProcLocking(gProcScr_CpDecide, proc);
     }
 }
 
@@ -99,7 +99,7 @@ void CpOrderFunc_BeginDecide(ProcPtr proc)
 
         AiDecideMainFunc = AiDecideMain;
 
-        Proc_StartBlocking(gProcScr_CpDecide, proc);
+        SpawnProcLocking(gProcScr_CpDecide, proc);
     }
 }
 

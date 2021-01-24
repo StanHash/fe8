@@ -114,7 +114,7 @@ PrepareArena: @ 0x08031874
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _0803188C  @ gUnknown_0203A95E
-	bl StoreRNState
+	bl RandGetSt
 	adds r0, r4, #0
 	bl PrepareArenaStruct
 	pop {r4}
@@ -131,12 +131,12 @@ PrepareArena2: @ 0x08031890
 	adds r5, r0, #0
 	ldr r4, _080318B0  @ gUnknown_0203A95E
 	adds r0, r4, #0
-	bl LoadRNState
+	bl RandSetSt
 	adds r0, r5, #0
 	bl PrepareArenaStruct
 	subs r4, #6
 	adds r0, r4, #0
-	bl LoadRNState
+	bl RandSetSt
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -276,7 +276,7 @@ _08031992:
 	bne _0803197E
 _0803199A:
 	adds r0, r6, #0
-	bl NextRN_N
+	bl RandNext
 	adds r7, r0, #0
 	movs r6, #0
 	mov r4, r8
@@ -335,7 +335,7 @@ GetNearLevel: @ 0x080319F8
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #9
-	bl NextRN_N
+	bl RandNext
 	adds r4, r4, r0
 	subs r0, r4, #4
 	cmp r0, #0

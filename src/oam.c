@@ -3,6 +3,7 @@
 
 #include "oam.h"
 #include "hardware.h"
+#include "armfunc.h"
 
 struct OamSection
 {
@@ -39,7 +40,7 @@ inline int GetOamSplice(void)
 void SyncHiOam(void)
 {
     CpuFastCopy(sOamHi.buf, sOamHi.oam, sOamHi.count * 8);
-    ClearOAMBuffer(sOamHi.buf, sOamHi.count);
+    ClearOam(sOamHi.buf, sOamHi.count);
 
     gOamHiPutIt = sOamHi.buf;
 
@@ -53,7 +54,7 @@ void SyncLoOam(void)
         return;
 
     CpuFastCopy(sOamLo.buf, sOamLo.oam, sOamLo.count * 8);
-    ClearOAMBuffer(sOamLo.buf, sOamLo.count);
+    ClearOam(sOamLo.buf, sOamLo.count);
 
     gOamLoPutIt = sOamLo.buf;
 }

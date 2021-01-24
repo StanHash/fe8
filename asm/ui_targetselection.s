@@ -233,7 +233,7 @@ NewTargetSelection: @ 0x0804FA3C
 	bl AddSkipThread2
 	ldr r0, _0804FA9C  @ gUnknown_085B655C
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	adds r5, r0, #0
 	adds r1, r5, #0
 	adds r1, #0x34
@@ -444,7 +444,7 @@ _0804FBB4:
 sub_804FBBC: @ 0x0804FBBC
 	push {lr}
 	ldr r0, _0804FBD8  @ gUnknown_085B655C
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0804FBD4
 	adds r2, r0, #0
@@ -465,7 +465,7 @@ _0804FBD8: .4byte gUnknown_085B655C
 sub_804FBDC: @ 0x0804FBDC
 	push {lr}
 	ldr r0, _0804FBF8  @ gUnknown_085B655C
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _0804FBF4
 	adds r2, r0, #0

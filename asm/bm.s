@@ -1018,7 +1018,7 @@ sub_8015D84: @ 0x08015D84
 _08015DB8:
 	ldr r4, _08015DCC  @ gUnknown_0859A548
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08015DD0
 _08015DC4:
@@ -1032,12 +1032,12 @@ _08015DD0:
 	beq _08015DDE
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _08015DE6
 _08015DDE:
 	adds r0, r4, #0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _08015DE6:
 	adds r2, r0, #0
 	ldr r1, _08015E08  @ gUnknown_0202BCB0
@@ -1092,7 +1092,7 @@ EnsureCameraOntoPosition: @ 0x08015E0C
 _08015E42:
 	ldr r4, _08015E58  @ gUnknown_0859A548
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08015E5C
 _08015E4E:
@@ -1106,12 +1106,12 @@ _08015E5C:
 	beq _08015E6A
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _08015E72
 _08015E6A:
 	adds r0, r4, #0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _08015E72:
 	adds r2, r0, #0
 	ldr r0, _08015E98  @ gUnknown_0202BCB0
@@ -1187,7 +1187,7 @@ sub_8015EDC: @ 0x08015EDC
 	ble _08015EFA
 	ldr r4, _08015F04  @ gUnknown_0859A548
 	adds r0, r4, #0
-	bl Proc_Find
+	bl FindProc
 	cmp r0, #0
 	beq _08015F08
 _08015EFA:
@@ -1201,12 +1201,12 @@ _08015F08:
 	beq _08015F16
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _08015F1E
 _08015F16:
 	adds r0, r4, #0
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _08015F1E:
 	adds r2, r0, #0
 	ldr r1, _08015F3C  @ gUnknown_0202BCB0
@@ -1277,7 +1277,7 @@ sub_8015F90: @ 0x08015F90
 	adds r6, r2, #0
 	ldr r0, _08015FC0  @ gUnknown_0859A570
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 	ldr r2, _08015FC4  @ gUnknown_0202BCB0
 	ldrh r1, [r2, #0x14]
 	lsls r1, r1, #4
@@ -1440,7 +1440,7 @@ sub_80160D0: @ 0x080160D0
 	push {lr}
 	bl GetCurrentMapMusicIndex
 	movs r1, #0
-	bl Sound_PlaySong80024D4
+	bl StartBgm
 	pop {r0}
 	bx r0
 
@@ -1460,7 +1460,7 @@ sub_80160E0: @ 0x080160E0
 	ldrsh r0, [r5, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	adds r4, r0, #0
 	movs r0, #0x32
 	ldrsh r1, [r5, r0]
@@ -1471,7 +1471,7 @@ sub_80160E0: @ 0x080160E0
 	ldrsh r0, [r5, r6]
 	str r0, [sp]
 	movs r0, #0
-	bl sub_8012DCC
+	bl Interpolate
 	ldr r1, _08016138  @ gUnknown_0202BCB0
 	strh r4, [r1, #0xc]
 	strh r0, [r1, #0xe]
@@ -1511,14 +1511,14 @@ sub_8016140: @ 0x08016140
 	beq _0801615C
 	ldr r0, _08016158  @ gUnknown_0859A580
 	adds r1, r4, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	b _08016164
 	.align 2, 0
 _08016158: .4byte gUnknown_0859A580
 _0801615C:
 	ldr r0, _08016184  @ gUnknown_0859A580
 	movs r1, #3
-	bl Proc_Start
+	bl SpawnProc
 _08016164:
 	adds r3, r0, #0
 	ldr r1, _08016188  @ gUnknown_0202BCB0

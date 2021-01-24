@@ -17,7 +17,7 @@ EWRAM_DATA static struct Proc sProcArray[MAX_PROC_COUNT] = {0};
 EWRAM_DATA static struct Proc *sProcAllocList[MAX_PROC_COUNT + 1] = {0};
 EWRAM_DATA static struct Proc **sProcAllocListHead = NULL; // pointer to next entry in sProcAllocList
 
-EWRAM_DATA struct Proc *gProcTreeRootArray[8] = {0};
+ProcPtr EWRAM_DATA gProcTreeRootArray[8] = {0};
 
 static struct Proc* AllocateProcess(void);
 static void FreeProcess(struct Proc *proc);
@@ -26,7 +26,7 @@ static void InsertChildProcess(struct Proc *proc, struct Proc *parent);
 static void UnlinkProcess(struct Proc *proc);
 static void RunProcessScript(struct Proc *proc);
 
-void Proc_Init(void)
+void InitProcs(void)
 {
     int i;
 
@@ -36,8 +36,8 @@ void Proc_Init(void)
 
         proc->proc_script = NULL;
         proc->proc_scrCur = NULL;
-        proc->proc_endCb = NULL;
-        proc->proc_idleCb = NULL;
+        proc->proc_endFunc = NULL;
+        proc->proc_repeatFunc = NULL;
         proc->proc_name = NULL;
         proc->proc_parent = NULL;
         proc->proc_child = NULL;
@@ -58,14 +58,14 @@ void Proc_Init(void)
         ROOT_PROC(i) = NULL;
 }
 
-ProcPtr Proc_Start(const struct ProcCmd* script, ProcPtr parent)
+ProcPtr SpawnProc(const struct ProcScr* script, ProcPtr parent)
 {
     struct Proc* proc = AllocateProcess();
 
     proc->proc_script = script;
     proc->proc_scrCur = script;
-    proc->proc_endCb = NULL;
-    proc->proc_idleCb = NULL;
+    proc->proc_endFunc = NULL;
+    proc->proc_repeatFunc = NULL;
     proc->proc_parent = NULL;
     proc->proc_child = NULL;
     proc->proc_next = NULL;
@@ -89,9 +89,9 @@ ProcPtr Proc_Start(const struct ProcCmd* script, ProcPtr parent)
 }
 
 // Creates a child process and puts the parent into a wait state
-ProcPtr Proc_StartBlocking(const struct ProcCmd *script, ProcPtr parent)
+ProcPtr SpawnProcLocking(const struct ProcScr *script, ProcPtr parent)
 {
-    struct Proc *proc = Proc_Start(script, parent);
+    struct Proc *proc = SpawnProc(script, parent);
 
     if (proc->proc_script == NULL)
         return NULL;
@@ -113,13 +113,13 @@ static void DeleteProcessRecursive(struct Proc *proc)
     if (proc->proc_flags & PROC_FLAG_ENDED)
         return;
 
-    if (proc->proc_endCb)
-        proc->proc_endCb(proc);
+    if (proc->proc_endFunc)
+        proc->proc_endFunc(proc);
 
     FreeProcess(proc);
 
     proc->proc_script = NULL;
-    proc->proc_idleCb = NULL;
+    proc->proc_repeatFunc = NULL;
     proc->proc_flags |= PROC_FLAG_ENDED;
 
     if (proc->proc_flags & PROC_FLAG_BLOCKING)
@@ -217,10 +217,10 @@ static void RunProcessRecursive(struct Proc* proc)
     // Run this process
     if (proc->proc_lockCnt == 0 && !(proc->proc_flags & PROC_FLAG_STARTING))
     {
-        if (proc->proc_idleCb == NULL)
+        if (proc->proc_repeatFunc == NULL)
             RunProcessScript(proc);
-        if (proc->proc_idleCb != NULL)
-            proc->proc_idleCb(proc);
+        if (proc->proc_repeatFunc != NULL)
+            proc->proc_repeatFunc(proc);
         if (proc->proc_flags & PROC_FLAG_ENDED)
             return;
     }
@@ -238,10 +238,10 @@ void Proc_Run(ProcPtr proc)
 void Proc_Break(ProcPtr proc)
 {
     struct Proc* casted = (struct Proc*) proc;
-    casted->proc_idleCb = NULL;
+    casted->proc_repeatFunc = NULL;
 }
 
-ProcPtr Proc_Find(const struct ProcCmd* script)
+ProcPtr FindProc(const struct ProcScr* script)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -256,7 +256,7 @@ ProcPtr Proc_Find(const struct ProcCmd* script)
 }
 
 // unreferenced
-static ProcPtr Proc_FindNonBlocked(struct ProcCmd* script)
+static ProcPtr Proc_FindNonBlocked(struct ProcScr* script)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -288,26 +288,26 @@ static ProcPtr Proc_FindWithMark(u32 mark)
 void Proc_Goto(ProcPtr proc, int label)
 {
     struct Proc* casted = (struct Proc*) proc;
-    const struct ProcCmd* cmd;
+    const struct ProcScr* cmd;
 
-    for (cmd = casted->proc_script; cmd->opcode != 0; cmd++)
+    for (cmd = casted->proc_script; cmd->cmd != 0; cmd++)
     {
-        if (cmd->opcode == 11 && cmd->dataImm == label)
+        if (cmd->cmd == 11 && cmd->imm == label)
         {
             casted->proc_scrCur = cmd;
-            casted->proc_idleCb = NULL;
+            casted->proc_repeatFunc = NULL;
 
             return;
         }
     }
 }
 
-void Proc_GotoScript(ProcPtr proc, const struct ProcCmd* script)
+void Proc_GotoScript(ProcPtr proc, const struct ProcScr* script)
 {
     struct Proc* casted = (struct Proc*) proc;
 
     casted->proc_scrCur = script;
-    casted->proc_idleCb = NULL;
+    casted->proc_repeatFunc = NULL;
 }
 
 void Proc_SetMark(ProcPtr proc, int mark)
@@ -321,10 +321,10 @@ void Proc_SetEndCb(ProcPtr proc, ProcFunc func)
 {
     struct Proc* casted = (struct Proc*) proc;
 
-    casted->proc_endCb = func;
+    casted->proc_endFunc = func;
 }
 
-void Proc_ForAll(ProcFunc func)
+void ForEveryProc(ProcFunc func)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -336,7 +336,7 @@ void Proc_ForAll(ProcFunc func)
     }
 }
 
-void Proc_ForEach(const struct ProcCmd* script, ProcFunc func)
+void ForEachProc(const struct ProcScr* script, ProcFunc func)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -348,7 +348,7 @@ void Proc_ForEach(const struct ProcCmd* script, ProcFunc func)
     }
 }
 
-void Proc_ForEachMarked(int mark, ProcFunc func)
+void ForEachMarkedProc(int mark, ProcFunc func)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -360,7 +360,7 @@ void Proc_ForEachMarked(int mark, ProcFunc func)
     }
 }
 
-void Proc_BlockEachMarked(int mark)
+void LockEachMarkedProc(int mark)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -372,7 +372,7 @@ void Proc_BlockEachMarked(int mark)
     }
 }
 
-void Proc_UnblockEachMarked(int mark)
+void ReleaseEachMarkedProc(int mark)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -384,7 +384,7 @@ void Proc_UnblockEachMarked(int mark)
     }
 }
 
-void Proc_EndEachMarked(int mark)
+void EndEachMarkedProc(int mark)
 {
     int i;
     struct Proc* proc = sProcArray;
@@ -401,9 +401,9 @@ static void Delete(ProcPtr proc)
     Proc_End(proc);
 }
 
-void Proc_EndEach(const struct ProcCmd* script)
+void EndEachProc(const struct ProcScr* script)
 {
-    Proc_ForEach(script, Delete);
+    ForEachProc(script, Delete);
 }
 
 static void ClearNativeCallback(ProcPtr proc)
@@ -411,9 +411,9 @@ static void ClearNativeCallback(ProcPtr proc)
     Proc_Break(proc);
 }
 
-void Proc_BreakEach(const struct ProcCmd* script)
+void BreakEachProc(const struct ProcScr* script)
 {
-    Proc_ForEach(script, ClearNativeCallback);
+    ForEachProc(script, ClearNativeCallback);
 }
 
 static void ForAllFollowingProcs(struct Proc* proc, ProcFunc func)
@@ -447,7 +447,7 @@ static s8 ProcCmd_DELETE(struct Proc *proc)
 
 static s8 ProcCmd_SET_NAME(struct Proc *proc)
 {
-    proc->proc_name = proc->proc_scrCur->dataPtr;
+    proc->proc_name = proc->proc_scrCur->ptr;
     proc->proc_scrCur++;
 
     return TRUE;
@@ -455,7 +455,7 @@ static s8 ProcCmd_SET_NAME(struct Proc *proc)
 
 static s8 ProcCmd_CALL_ROUTINE(struct Proc *proc)
 {
-    ProcFunc func = proc->proc_scrCur->dataPtr;
+    ProcFunc func = proc->proc_scrCur->ptr;
 
     proc->proc_scrCur++;
     func(proc);
@@ -465,7 +465,7 @@ static s8 ProcCmd_CALL_ROUTINE(struct Proc *proc)
 
 static s8 ProcCmd_CALL_ROUTINE_2(struct Proc *proc)
 {
-    s8(*func)(ProcPtr) = proc->proc_scrCur->dataPtr;
+    s8(*func)(ProcPtr) = proc->proc_scrCur->ptr;
 
     proc->proc_scrCur++;
     return func(proc);
@@ -473,8 +473,8 @@ static s8 ProcCmd_CALL_ROUTINE_2(struct Proc *proc)
 
 static s8 ProcCmd_CALL_ROUTINE_ARG(struct Proc *proc)
 {
-    short arg = proc->proc_scrCur->dataImm;
-    s8(*func)(short, ProcPtr) = proc->proc_scrCur->dataPtr;
+    short arg = proc->proc_scrCur->imm;
+    s8(*func)(short, ProcPtr) = proc->proc_scrCur->ptr;
 
     proc->proc_scrCur++;
     return func(arg, proc);
@@ -482,7 +482,7 @@ static s8 ProcCmd_CALL_ROUTINE_ARG(struct Proc *proc)
 
 static s8 ProcCmd_WHILE_ROUTINE(struct Proc *proc)
 {
-    s8(*func)(ProcPtr) = proc->proc_scrCur->dataPtr;
+    s8(*func)(ProcPtr) = proc->proc_scrCur->ptr;
 
     proc->proc_scrCur++;
 
@@ -497,7 +497,7 @@ static s8 ProcCmd_WHILE_ROUTINE(struct Proc *proc)
 
 static s8 ProcCmd_LOOP_ROUTINE(struct Proc *proc)
 {
-    proc->proc_idleCb = proc->proc_scrCur->dataPtr;
+    proc->proc_repeatFunc = proc->proc_scrCur->ptr;
     proc->proc_scrCur++;
 
     return FALSE;
@@ -505,7 +505,7 @@ static s8 ProcCmd_LOOP_ROUTINE(struct Proc *proc)
 
 static s8 ProcCmd_SET_DESTRUCTOR(struct Proc *proc)
 {
-    Proc_SetEndCb(proc, proc->proc_scrCur->dataPtr);
+    Proc_SetEndCb(proc, proc->proc_scrCur->ptr);
     proc->proc_scrCur++;
 
     return TRUE;
@@ -513,7 +513,7 @@ static s8 ProcCmd_SET_DESTRUCTOR(struct Proc *proc)
 
 static s8 ProcCmd_NEW_CHILD(struct Proc* proc)
 {
-    Proc_Start(proc->proc_scrCur->dataPtr, proc);
+    SpawnProc(proc->proc_scrCur->ptr, proc);
     proc->proc_scrCur++;
 
     return TRUE;
@@ -521,7 +521,7 @@ static s8 ProcCmd_NEW_CHILD(struct Proc* proc)
 
 static s8 ProcCmd_NEW_CHILD_BLOCKING(struct Proc* proc)
 {
-    Proc_StartBlocking(proc->proc_scrCur->dataPtr, proc);
+    SpawnProcLocking(proc->proc_scrCur->ptr, proc);
     proc->proc_scrCur++;
 
     return FALSE;
@@ -529,7 +529,7 @@ static s8 ProcCmd_NEW_CHILD_BLOCKING(struct Proc* proc)
 
 static s8 ProcCmd_NEW_MAIN_BUGGED(struct Proc *proc)
 {
-    Proc_Start(proc->proc_scrCur->dataPtr, (struct Proc *)(u32) proc->proc_sleepTime);  // Why are we using sleepTime here?
+    SpawnProc(proc->proc_scrCur->ptr, (struct Proc *)(u32) proc->proc_sleepTime);  // Why are we using sleepTime here?
     proc->proc_scrCur++;
 
     return TRUE;
@@ -537,7 +537,7 @@ static s8 ProcCmd_NEW_MAIN_BUGGED(struct Proc *proc)
 
 static s8 ProcCmd_WHILE_EXISTS(struct Proc *proc)
 {
-    s8 exists = (Proc_Find(proc->proc_scrCur->dataPtr) != NULL);
+    s8 exists = (FindProc(proc->proc_scrCur->ptr) != NULL);
 
     if (exists)
         return FALSE;
@@ -549,7 +549,7 @@ static s8 ProcCmd_WHILE_EXISTS(struct Proc *proc)
 
 static s8 ProcCmd_END_ALL(struct Proc *proc)
 {
-    Proc_EndEach(proc->proc_scrCur->dataPtr);
+    EndEachProc(proc->proc_scrCur->ptr);
     proc->proc_scrCur++;
 
     return TRUE;
@@ -557,7 +557,7 @@ static s8 ProcCmd_END_ALL(struct Proc *proc)
 
 static s8 ProcCmd_BREAK_ALL_LOOP(struct Proc *proc)
 {
-    Proc_BreakEach(proc->proc_scrCur->dataPtr);
+    BreakEachProc(proc->proc_scrCur->ptr);
     proc->proc_scrCur++;
 
     return TRUE;
@@ -572,14 +572,14 @@ static s8 ProcCmd_NOP(struct Proc *proc)
 
 static s8 ProcCmd_JUMP(struct Proc *proc)
 {
-    Proc_GotoScript(proc, proc->proc_scrCur->dataPtr);
+    Proc_GotoScript(proc, proc->proc_scrCur->ptr);
 
     return TRUE;
 }
 
 static s8 ProcCmd_GOTO(struct Proc *proc)
 {
-    Proc_Goto(proc, proc->proc_scrCur->dataImm);
+    Proc_Goto(proc, proc->proc_scrCur->imm);
 
     return TRUE;
 }
@@ -594,10 +594,10 @@ static void UpdateSleep(ProcPtr proc)
 
 static s8 ProcCmd_SLEEP(struct Proc *proc)
 {
-    if (proc->proc_scrCur->dataImm != 0)
+    if (proc->proc_scrCur->imm != 0)
     {
-        proc->proc_sleepTime = proc->proc_scrCur->dataImm;
-        proc->proc_idleCb = UpdateSleep;
+        proc->proc_sleepTime = proc->proc_scrCur->imm;
+        proc->proc_repeatFunc = UpdateSleep;
     }
 
     proc->proc_scrCur++;
@@ -607,7 +607,7 @@ static s8 ProcCmd_SLEEP(struct Proc *proc)
 
 static s8 ProcCmd_SET_MARK(struct Proc *proc)
 {
-    proc->proc_mark = proc->proc_scrCur->dataImm;
+    proc->proc_mark = proc->proc_scrCur->imm;
     proc->proc_scrCur++;
 
     return TRUE;
@@ -719,10 +719,10 @@ static void RunProcessScript(struct Proc* proc)
     if (proc->proc_lockCnt > 0)
         return;
 
-    if (proc->proc_idleCb != NULL)
+    if (proc->proc_repeatFunc != NULL)
         return;
 
-    while (sProcessCmdTable[proc->proc_scrCur->opcode](proc))
+    while (sProcessCmdTable[proc->proc_scrCur->cmd](proc))
     {
         if (proc->proc_script == NULL)
             return;
@@ -771,26 +771,24 @@ static void sub_800344C(void)
 {
 }
 
-void Proc_SetRepeatCb(ProcPtr proc, ProcFunc func)
+void Proc_SetRepeatFunc(ProcPtr proc, ProcFunc func)
 {
     struct Proc* casted = (struct Proc*) proc;
 
-    casted->proc_idleCb = func;
+    casted->proc_repeatFunc = func;
 }
 
-// unreferenced
-static void Proc_BlockSemaphore(struct Proc *proc)
+void Proc_Lock(ProcPtr proc)
 {
-    proc->proc_lockCnt++;
+    ((struct Proc*) proc)->proc_lockCnt++;
 }
 
-// unreferenced
-static void Proc_WakeSemaphore(struct Proc *proc)
+void Proc_Release(ProcPtr proc)
 {
-    proc->proc_lockCnt--;
+    ((struct Proc*) proc)->proc_lockCnt--;
 }
 
-ProcPtr Proc_FindAfter(struct ProcCmd* script, struct Proc* proc)
+ProcPtr Proc_FindAfter(struct ProcScr* script, struct Proc* proc)
 {
     if (proc == NULL)
         proc = sProcArray;
@@ -840,7 +838,7 @@ static int sub_80034D4(void)
     return result;
 }
 
-int sub_80034FC(const struct ProcCmd* script)
+int sub_80034FC(const struct ProcScr* script)
 {
     struct Proc* proc = sProcArray;
     int i, result = 0;
@@ -862,14 +860,14 @@ int sub_80034FC(const struct ProcCmd* script)
     return result;
 }
 
-void Proc_FindBegin(struct ProcFindIterator* it, const struct ProcCmd* script)
+void BeginFindProc(struct ProcFindIterator* it, const struct ProcScr* script)
 {
     it->proc = sProcArray;
     it->script = script;
     it->count = 0;
 }
 
-ProcPtr Proc_FindNext(struct ProcFindIterator* it)
+ProcPtr NextFindProc(struct ProcFindIterator* it)
 {
     struct Proc* result = NULL;
 

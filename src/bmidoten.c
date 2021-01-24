@@ -2,7 +2,8 @@
 
 #include "constants/terrains.h"
 
-#include "rng.h"
+#include "random.h"
+#include "armfunc.h"
 #include "bmitem.h"
 #include "bmunit.h"
 #include "bmmap.h"
@@ -104,12 +105,12 @@ void GenerateMovementMap(int x, int y, int movement, int unitId)
     gMovMapFillState.pUnk04++;
     gMovMapFillState.pUnk04->connexion = 4;
 
-    CallARM_FillMovementMap();
+    MapFloodCore();
 }
 
 void sub_801A570(int connexion, int x, int y)
 {
-    // This is a C implementation of the ARM (asm) function IRAMARM_Func5
+    // This is a C implementation of the ARM (asm) function MapFloodCoreStep
     // Probably used during testing before switching to the a more "optimal" version.
 
     short tileMovementCost;
@@ -212,15 +213,15 @@ void GenerateBestMovementScript(int x, int y, u8 output[])
             break;
 
         case 2:
-            nextDirection = bestDirections[NextRN_N(2)];
+            nextDirection = bestDirections[RandNext(2)];
             break;
 
         case 3:
-            nextDirection = bestDirections[NextRN_N(3)];
+            nextDirection = bestDirections[RandNext(3)];
             break;
 
         case 4:
-            nextDirection = bestDirections[NextRN_N(4)];
+            nextDirection = bestDirections[RandNext(4)];
             break;
 
         } // switch (bestDirectionCount)

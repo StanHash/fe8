@@ -113,7 +113,7 @@ _08021AD0:
 	ldr r1, _08021AF8  @ gBg0Tm
 	movs r2, #6
 	movs r3, #6
-	bl TileMap_CopyRect
+	bl TmCopyRect_t
 	movs r0, #1
 	bl EnableBgSync
 _08021AEA:
@@ -182,7 +182,7 @@ sub_8021B30: @ 0x08021B30
 	ldrsb r5, [r0, r5]
 	ldr r0, _08021B94  @ gUnknown_0859B410
 	adds r1, r6, #0
-	bl Proc_StartBlocking
+	bl SpawnProcLocking
 	lsls r0, r4, #4
 	ldr r2, _08021B98  @ gUnknown_0202BCB0
 	movs r3, #0xc

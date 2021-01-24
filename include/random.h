@@ -1,0 +1,19 @@
+
+#pragma once
+
+#include "global.h"
+
+int NextRn(void);
+
+void RandInit(int seed);
+
+void RandSetSt(u16 const* st);
+void RandGetSt(u16* st);
+
+int RandNext_100(void);
+int RandNext(int max);
+bool RandRoll(int threshold);
+bool RandRoll2Rn(int threshold);
+
+void RandInitB(s32 Seed);
+unsigned RandNextB(void);
