@@ -1058,25 +1058,24 @@ extern struct BgCnt *gUnknown_08587948[];
 // extern ??? sMusicProc4Script
 // extern ??? gProcCmdFuncs
 extern u8 debug_font_4bpp[];
-extern u16 *gUnknown_08588240[];
-// extern ??? gUnknown_08588274
-// extern ??? gUnknown_08588284
-extern u16 gUnknown_0858829C[];
-extern u16 gUnknown_0858849C[];
-extern u16 gUnknown_0858869C[];
-extern u16 gUnknown_0858889C[];
-extern u16 gUnknown_08588A9C[];
-extern u16 gUnknown_08588C9C[];
-extern u16 gUnknown_08588E9C[];
-extern u16 gUnknown_0858909C[];
-extern u16 gUnknown_0858929C[];
-extern u16 gUnknown_0858949C[];
-extern u16 gUnknown_0858969C[];
-extern u16 gUnknown_0858989C[];
-extern u16 gUnknown_08589A9C[];
-extern struct Glyph *gUnknown_0858C7EC[];
-extern struct Glyph *gUnknown_0858F6F4[];
-extern struct Glyph *gUnknown_08590B44[];
+// extern ??? ProcScr_TextPrint
+// extern ??? ProcScr_GreenTextColor
+extern u16 TextColorLut_0123[];
+extern u16 TextColorLut_0456[];
+extern u16 TextColorLut_0789[];
+extern u16 TextColorLut_0ABC[];
+extern u16 TextColorLut_0DEF[];
+extern u16 TextColorLut_0030[];
+extern u16 TextColorLut_4DEF[];
+extern u16 TextColorLut_456F[];
+extern u16 TextColorLut_47CF[];
+extern u16 TextColorLut_Mask[];
+extern u16 TextColorLut_4567[];
+extern u16 TextColorLut_4DEF_B[];
+extern u16 TextColorLut_4567_B[];
+extern struct Glyph const* TextGlyphs_System[];
+extern struct Glyph const* TextGlyphs_Talk[];
+extern struct Glyph const* gUnknown_08590B44[];
 // extern ??? gUnknown_08590FEC
 // extern ??? gUnknown_0859100C
 // extern ??? gUnknown_08591026
@@ -1361,12 +1360,12 @@ extern const struct ProcScr gUnknown_0859A548[]; // this is GENS/Camera Movement
 // extern ??? gUnknown_0859EEA0
 // extern ??? gUnknown_0859EEC0
 // extern ??? gUnknown_0859EEE0
-extern u8 gUnknown_0859EF00[];
-extern u8 gUnknown_0859EF20[];
+extern u8 Pal_SystemText[];
+extern u8 Pal_TalkText[];
 // extern ??? gUnknown_0859EF40
 // extern ??? gUnknown_0859EF60
 // extern ??? gUnknown_0859EF80
-extern u16 gUnknown_0859EFC0[];
+extern u16 Pal_GreenTextColors[];
 // extern ??? gUnknown_0859EFE0
 // extern ??? gUnknown_0859F000
 // extern ??? gUnknown_0859F020

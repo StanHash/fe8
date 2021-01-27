@@ -1,30 +1,31 @@
 
 #include "global.h"
 
+#include "random.h"
+#include "hardware.h"
+#include "sound.h"
 #include "armfunc.h"
 #include "ap.h"
-#include "fontgrp.h"
-#include "hardware.h"
+#include "debug-text.h"
+#include "text.h"
 #include "proc.h"
-#include "random.h"
 #include "mu.h"
-#include "sound.h"
 
-u16 const gUninitializedMemory[] = { 0x4641, 0x464A, 0x4653, 0x465C };
+static u16 const _[] = { 0x4641, 0x464A, 0x4653, 0x465C };
 
 void AgbMain(void)
 {
-    int waitCnt;
+    bool hasWaitCnt;
 
     // clear RAM
     DmaFill32(3, 0, (void *)IWRAM_START, 0x7F80); // reset the area for the IWRAM ARM section.
-    CpuFastFill(0, (void *)EWRAM_START, 0x40000);    
+    CpuFastFill(0, (void *)EWRAM_START, 0x40000);
 
-    waitCnt = (REG_WAITCNT != 0);
+    hasWaitCnt = (REG_WAITCNT != 0);
 
-    SetHealthSafetySkipEnable(waitCnt);
+    SetHealthSafetySkipEnable(hasWaitCnt);
 
-    if (waitCnt == TRUE)
+    if (hasWaitCnt == TRUE)
         RegisterRamReset(~2);
 
     REG_WAITCNT = 0x45B4;
@@ -55,12 +56,13 @@ void AgbMain(void)
     m4aSoundInit();
     Sound_SetDefaultMaxNumChannels();
 
-    SetOnVBlank(GeneralVBlankHandler);
+    SetOnVBlank(OnVSync);
     sub_80BC81C();
-    SetSomeByte(1);
-    Font_InitForUIDefault();
 
-    NewGameControl();
+    SetLang(LANG_ENGLISH);
+    ResetText();
+
+    StartGame();
 
     while (TRUE)
     {

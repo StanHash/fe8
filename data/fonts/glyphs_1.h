@@ -1,6 +1,6 @@
 struct Glyph gUnknown_08589C9C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 0,
     .bitmap =
@@ -26,7 +26,7 @@ struct Glyph gUnknown_08589C9C =
 
 struct Glyph gUnknown_08589CE4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -52,7 +52,7 @@ struct Glyph gUnknown_08589CE4 =
 
 struct Glyph gUnknown_08589D2C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -78,7 +78,7 @@ struct Glyph gUnknown_08589D2C =
 
 struct Glyph gUnknown_08589D74 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -104,7 +104,7 @@ struct Glyph gUnknown_08589D74 =
 
 struct Glyph gUnknown_08589DBC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -130,7 +130,7 @@ struct Glyph gUnknown_08589DBC =
 
 struct Glyph gUnknown_08589E04 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -156,7 +156,7 @@ struct Glyph gUnknown_08589E04 =
 
 struct Glyph gUnknown_08589E4C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -182,7 +182,7 @@ struct Glyph gUnknown_08589E4C =
 
 struct Glyph gUnknown_08589E94 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -208,7 +208,7 @@ struct Glyph gUnknown_08589E94 =
 
 struct Glyph gUnknown_08589EDC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -234,7 +234,7 @@ struct Glyph gUnknown_08589EDC =
 
 struct Glyph gUnknown_08589F24 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -260,7 +260,7 @@ struct Glyph gUnknown_08589F24 =
 
 struct Glyph gUnknown_08589F6C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -286,7 +286,7 @@ struct Glyph gUnknown_08589F6C =
 
 struct Glyph gUnknown_08589FB4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -312,7 +312,7 @@ struct Glyph gUnknown_08589FB4 =
 
 struct Glyph gUnknown_08589FFC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -338,7 +338,7 @@ struct Glyph gUnknown_08589FFC =
 
 struct Glyph gUnknown_0858A044 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -364,7 +364,7 @@ struct Glyph gUnknown_0858A044 =
 
 struct Glyph gUnknown_0858A08C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -390,7 +390,7 @@ struct Glyph gUnknown_0858A08C =
 
 struct Glyph gUnknown_0858A0D4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -416,7 +416,7 @@ struct Glyph gUnknown_0858A0D4 =
 
 struct Glyph gUnknown_0858A11C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -442,7 +442,7 @@ struct Glyph gUnknown_0858A11C =
 
 struct Glyph gUnknown_0858A164 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -468,7 +468,7 @@ struct Glyph gUnknown_0858A164 =
 
 struct Glyph gUnknown_0858A1AC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -494,7 +494,7 @@ struct Glyph gUnknown_0858A1AC =
 
 struct Glyph gUnknown_0858A1F4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -520,7 +520,7 @@ struct Glyph gUnknown_0858A1F4 =
 
 struct Glyph gUnknown_0858A23C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -546,7 +546,7 @@ struct Glyph gUnknown_0858A23C =
 
 struct Glyph gUnknown_0858A284 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -572,7 +572,7 @@ struct Glyph gUnknown_0858A284 =
 
 struct Glyph gUnknown_0858A2CC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -598,7 +598,7 @@ struct Glyph gUnknown_0858A2CC =
 
 struct Glyph gUnknown_0858A314 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -624,7 +624,7 @@ struct Glyph gUnknown_0858A314 =
 
 struct Glyph gUnknown_0858A35C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -650,7 +650,7 @@ struct Glyph gUnknown_0858A35C =
 
 struct Glyph gUnknown_0858A3A4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -676,7 +676,7 @@ struct Glyph gUnknown_0858A3A4 =
 
 struct Glyph gUnknown_0858A3EC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -702,7 +702,7 @@ struct Glyph gUnknown_0858A3EC =
 
 struct Glyph gUnknown_0858A434 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -728,7 +728,7 @@ struct Glyph gUnknown_0858A434 =
 
 struct Glyph gUnknown_0858A47C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -754,7 +754,7 @@ struct Glyph gUnknown_0858A47C =
 
 struct Glyph gUnknown_0858A4C4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -780,7 +780,7 @@ struct Glyph gUnknown_0858A4C4 =
 
 struct Glyph gUnknown_0858A50C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -806,7 +806,7 @@ struct Glyph gUnknown_0858A50C =
 
 struct Glyph gUnknown_0858A554 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -832,7 +832,7 @@ struct Glyph gUnknown_0858A554 =
 
 struct Glyph gUnknown_0858A59C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -858,7 +858,7 @@ struct Glyph gUnknown_0858A59C =
 
 struct Glyph gUnknown_0858A5E4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -884,7 +884,7 @@ struct Glyph gUnknown_0858A5E4 =
 
 struct Glyph gUnknown_0858A62C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -910,7 +910,7 @@ struct Glyph gUnknown_0858A62C =
 
 struct Glyph gUnknown_0858A674 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -936,7 +936,7 @@ struct Glyph gUnknown_0858A674 =
 
 struct Glyph gUnknown_0858A6BC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -962,7 +962,7 @@ struct Glyph gUnknown_0858A6BC =
 
 struct Glyph gUnknown_0858A704 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -988,7 +988,7 @@ struct Glyph gUnknown_0858A704 =
 
 struct Glyph gUnknown_0858A74C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1014,7 +1014,7 @@ struct Glyph gUnknown_0858A74C =
 
 struct Glyph gUnknown_0858A794 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1040,7 +1040,7 @@ struct Glyph gUnknown_0858A794 =
 
 struct Glyph gUnknown_0858A7DC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1066,7 +1066,7 @@ struct Glyph gUnknown_0858A7DC =
 
 struct Glyph gUnknown_0858A824 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1092,7 +1092,7 @@ struct Glyph gUnknown_0858A824 =
 
 struct Glyph gUnknown_0858A86C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -1118,7 +1118,7 @@ struct Glyph gUnknown_0858A86C =
 
 struct Glyph gUnknown_0858A8B4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1144,7 +1144,7 @@ struct Glyph gUnknown_0858A8B4 =
 
 struct Glyph gUnknown_0858A8FC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1170,7 +1170,7 @@ struct Glyph gUnknown_0858A8FC =
 
 struct Glyph gUnknown_0858A944 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1196,7 +1196,7 @@ struct Glyph gUnknown_0858A944 =
 
 struct Glyph gUnknown_0858A98C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1222,7 +1222,7 @@ struct Glyph gUnknown_0858A98C =
 
 struct Glyph gUnknown_0858A9D4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1248,7 +1248,7 @@ struct Glyph gUnknown_0858A9D4 =
 
 struct Glyph gUnknown_0858AA1C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1274,7 +1274,7 @@ struct Glyph gUnknown_0858AA1C =
 
 struct Glyph gUnknown_0858AA64 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1300,7 +1300,7 @@ struct Glyph gUnknown_0858AA64 =
 
 struct Glyph gUnknown_0858AAAC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1326,7 +1326,7 @@ struct Glyph gUnknown_0858AAAC =
 
 struct Glyph gUnknown_0858AAF4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1352,7 +1352,7 @@ struct Glyph gUnknown_0858AAF4 =
 
 struct Glyph gUnknown_0858AB3C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1378,7 +1378,7 @@ struct Glyph gUnknown_0858AB3C =
 
 struct Glyph gUnknown_0858AB84 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1404,7 +1404,7 @@ struct Glyph gUnknown_0858AB84 =
 
 struct Glyph gUnknown_0858ABCC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1430,7 +1430,7 @@ struct Glyph gUnknown_0858ABCC =
 
 struct Glyph gUnknown_0858AC14 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1456,7 +1456,7 @@ struct Glyph gUnknown_0858AC14 =
 
 struct Glyph gUnknown_0858AC5C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1482,7 +1482,7 @@ struct Glyph gUnknown_0858AC5C =
 
 struct Glyph gUnknown_0858ACA4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1508,7 +1508,7 @@ struct Glyph gUnknown_0858ACA4 =
 
 struct Glyph gUnknown_0858ACEC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1534,7 +1534,7 @@ struct Glyph gUnknown_0858ACEC =
 
 struct Glyph gUnknown_0858AD34 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1560,7 +1560,7 @@ struct Glyph gUnknown_0858AD34 =
 
 struct Glyph gUnknown_0858AD7C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -1586,7 +1586,7 @@ struct Glyph gUnknown_0858AD7C =
 
 struct Glyph gUnknown_0858ADC4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1612,7 +1612,7 @@ struct Glyph gUnknown_0858ADC4 =
 
 struct Glyph gUnknown_0858AE0C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -1638,7 +1638,7 @@ struct Glyph gUnknown_0858AE0C =
 
 struct Glyph gUnknown_0858AE54 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -1664,7 +1664,7 @@ struct Glyph gUnknown_0858AE54 =
 
 struct Glyph gUnknown_0858AE9C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -1690,7 +1690,7 @@ struct Glyph gUnknown_0858AE9C =
 
 struct Glyph gUnknown_0858AEE4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -1716,7 +1716,7 @@ struct Glyph gUnknown_0858AEE4 =
 
 struct Glyph gUnknown_0858AF2C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -1742,7 +1742,7 @@ struct Glyph gUnknown_0858AF2C =
 
 struct Glyph gUnknown_0858AF74 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1768,7 +1768,7 @@ struct Glyph gUnknown_0858AF74 =
 
 struct Glyph gUnknown_0858AFBC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1794,7 +1794,7 @@ struct Glyph gUnknown_0858AFBC =
 
 struct Glyph gUnknown_0858B004 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1820,7 +1820,7 @@ struct Glyph gUnknown_0858B004 =
 
 struct Glyph gUnknown_0858B04C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1846,7 +1846,7 @@ struct Glyph gUnknown_0858B04C =
 
 struct Glyph gUnknown_0858B094 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -1872,7 +1872,7 @@ struct Glyph gUnknown_0858B094 =
 
 struct Glyph gUnknown_0858B0DC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1898,7 +1898,7 @@ struct Glyph gUnknown_0858B0DC =
 
 struct Glyph gUnknown_0858B124 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -1924,7 +1924,7 @@ struct Glyph gUnknown_0858B124 =
 
 struct Glyph gUnknown_0858B16C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -1950,7 +1950,7 @@ struct Glyph gUnknown_0858B16C =
 
 struct Glyph gUnknown_0858B1B4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -1976,7 +1976,7 @@ struct Glyph gUnknown_0858B1B4 =
 
 struct Glyph gUnknown_0858B1FC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2002,7 +2002,7 @@ struct Glyph gUnknown_0858B1FC =
 
 struct Glyph gUnknown_0858B244 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -2028,7 +2028,7 @@ struct Glyph gUnknown_0858B244 =
 
 struct Glyph gUnknown_0858B28C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2054,7 +2054,7 @@ struct Glyph gUnknown_0858B28C =
 
 struct Glyph gUnknown_0858B2D4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2080,7 +2080,7 @@ struct Glyph gUnknown_0858B2D4 =
 
 struct Glyph gUnknown_0858B31C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2106,7 +2106,7 @@ struct Glyph gUnknown_0858B31C =
 
 struct Glyph gUnknown_0858B364 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2132,7 +2132,7 @@ struct Glyph gUnknown_0858B364 =
 
 struct Glyph gUnknown_0858B3AC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2158,7 +2158,7 @@ struct Glyph gUnknown_0858B3AC =
 
 struct Glyph gUnknown_0858B3F4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -2184,7 +2184,7 @@ struct Glyph gUnknown_0858B3F4 =
 
 struct Glyph gUnknown_0858B43C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2210,7 +2210,7 @@ struct Glyph gUnknown_0858B43C =
 
 struct Glyph gUnknown_0858B484 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -2236,7 +2236,7 @@ struct Glyph gUnknown_0858B484 =
 
 struct Glyph gUnknown_0858B4CC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2262,7 +2262,7 @@ struct Glyph gUnknown_0858B4CC =
 
 struct Glyph gUnknown_0858B514 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2288,7 +2288,7 @@ struct Glyph gUnknown_0858B514 =
 
 struct Glyph gUnknown_0858B55C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2314,7 +2314,7 @@ struct Glyph gUnknown_0858B55C =
 
 struct Glyph gUnknown_0858B5A4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2340,7 +2340,7 @@ struct Glyph gUnknown_0858B5A4 =
 
 struct Glyph gUnknown_0858B5EC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2366,7 +2366,7 @@ struct Glyph gUnknown_0858B5EC =
 
 struct Glyph gUnknown_0858B634 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2392,7 +2392,7 @@ struct Glyph gUnknown_0858B634 =
 
 struct Glyph gUnknown_0858B67C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -2418,7 +2418,7 @@ struct Glyph gUnknown_0858B67C =
 
 struct Glyph gUnknown_0858B6C4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -2444,7 +2444,7 @@ struct Glyph gUnknown_0858B6C4 =
 
 struct Glyph gUnknown_0858B70C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -2470,7 +2470,7 @@ struct Glyph gUnknown_0858B70C =
 
 struct Glyph gUnknown_0858B754 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2496,7 +2496,7 @@ struct Glyph gUnknown_0858B754 =
 
 struct Glyph gUnknown_0858B79C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2522,7 +2522,7 @@ struct Glyph gUnknown_0858B79C =
 
 struct Glyph gUnknown_0858B7E4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -2548,7 +2548,7 @@ struct Glyph gUnknown_0858B7E4 =
 
 struct Glyph gUnknown_0858B82C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -2574,7 +2574,7 @@ struct Glyph gUnknown_0858B82C =
 
 struct Glyph gUnknown_0858B874 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 2,
     .bitmap =
@@ -2600,7 +2600,7 @@ struct Glyph gUnknown_0858B874 =
 
 struct Glyph gUnknown_0858B8BC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2626,7 +2626,7 @@ struct Glyph gUnknown_0858B8BC =
 
 struct Glyph gUnknown_0858B904 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -2652,7 +2652,7 @@ struct Glyph gUnknown_0858B904 =
 
 struct Glyph gUnknown_0858B94C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 7,
     .bitmap =
@@ -2678,7 +2678,7 @@ struct Glyph gUnknown_0858B94C =
 
 struct Glyph gUnknown_0858B994 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -2704,7 +2704,7 @@ struct Glyph gUnknown_0858B994 =
 
 struct Glyph gUnknown_0858B9DC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2730,7 +2730,7 @@ struct Glyph gUnknown_0858B9DC =
 
 struct Glyph gUnknown_0858BA24 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2756,7 +2756,7 @@ struct Glyph gUnknown_0858BA24 =
 
 struct Glyph gUnknown_0858BA6C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -2782,7 +2782,7 @@ struct Glyph gUnknown_0858BA6C =
 
 struct Glyph gUnknown_0858BAB4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2808,7 +2808,7 @@ struct Glyph gUnknown_0858BAB4 =
 
 struct Glyph gUnknown_0858BAFC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2834,7 +2834,7 @@ struct Glyph gUnknown_0858BAFC =
 
 struct Glyph gUnknown_0858BB44 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2860,7 +2860,7 @@ struct Glyph gUnknown_0858BB44 =
 
 struct Glyph gUnknown_0858BB8C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2886,7 +2886,7 @@ struct Glyph gUnknown_0858BB8C =
 
 struct Glyph gUnknown_0858BBD4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2912,7 +2912,7 @@ struct Glyph gUnknown_0858BBD4 =
 
 struct Glyph gUnknown_0858BC1C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2938,7 +2938,7 @@ struct Glyph gUnknown_0858BC1C =
 
 struct Glyph gUnknown_0858BC64 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -2964,7 +2964,7 @@ struct Glyph gUnknown_0858BC64 =
 
 struct Glyph gUnknown_0858BCAC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -2990,7 +2990,7 @@ struct Glyph gUnknown_0858BCAC =
 
 struct Glyph gUnknown_0858BCF4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3016,7 +3016,7 @@ struct Glyph gUnknown_0858BCF4 =
 
 struct Glyph gUnknown_0858BD3C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3042,7 +3042,7 @@ struct Glyph gUnknown_0858BD3C =
 
 struct Glyph gUnknown_0858BD84 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3068,7 +3068,7 @@ struct Glyph gUnknown_0858BD84 =
 
 struct Glyph gUnknown_0858BDCC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -3094,7 +3094,7 @@ struct Glyph gUnknown_0858BDCC =
 
 struct Glyph gUnknown_0858BE14 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -3120,7 +3120,7 @@ struct Glyph gUnknown_0858BE14 =
 
 struct Glyph gUnknown_0858BE5C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -3146,7 +3146,7 @@ struct Glyph gUnknown_0858BE5C =
 
 struct Glyph gUnknown_0858BEA4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -3172,7 +3172,7 @@ struct Glyph gUnknown_0858BEA4 =
 
 struct Glyph gUnknown_0858BEEC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3198,7 +3198,7 @@ struct Glyph gUnknown_0858BEEC =
 
 struct Glyph gUnknown_0858BF34 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3224,7 +3224,7 @@ struct Glyph gUnknown_0858BF34 =
 
 struct Glyph gUnknown_0858BF7C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3250,7 +3250,7 @@ struct Glyph gUnknown_0858BF7C =
 
 struct Glyph gUnknown_0858BFC4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3276,7 +3276,7 @@ struct Glyph gUnknown_0858BFC4 =
 
 struct Glyph gUnknown_0858C00C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3302,7 +3302,7 @@ struct Glyph gUnknown_0858C00C =
 
 struct Glyph gUnknown_0858C054 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3328,7 +3328,7 @@ struct Glyph gUnknown_0858C054 =
 
 struct Glyph gUnknown_0858C09C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3354,7 +3354,7 @@ struct Glyph gUnknown_0858C09C =
 
 struct Glyph gUnknown_0858C0E4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3380,7 +3380,7 @@ struct Glyph gUnknown_0858C0E4 =
 
 struct Glyph gUnknown_0858C12C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3406,7 +3406,7 @@ struct Glyph gUnknown_0858C12C =
 
 struct Glyph gUnknown_0858C174 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -3432,7 +3432,7 @@ struct Glyph gUnknown_0858C174 =
 
 struct Glyph gUnknown_0858C1BC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -3458,7 +3458,7 @@ struct Glyph gUnknown_0858C1BC =
 
 struct Glyph gUnknown_0858C204 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -3484,7 +3484,7 @@ struct Glyph gUnknown_0858C204 =
 
 struct Glyph gUnknown_0858C24C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -3510,7 +3510,7 @@ struct Glyph gUnknown_0858C24C =
 
 struct Glyph gUnknown_0858C294 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 6,
     .bitmap =
@@ -3536,7 +3536,7 @@ struct Glyph gUnknown_0858C294 =
 
 struct Glyph gUnknown_0858C2DC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3562,7 +3562,7 @@ struct Glyph gUnknown_0858C2DC =
 
 struct Glyph gUnknown_0858C324 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3588,7 +3588,7 @@ struct Glyph gUnknown_0858C324 =
 
 struct Glyph gUnknown_0858C36C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3614,7 +3614,7 @@ struct Glyph gUnknown_0858C36C =
 
 struct Glyph gUnknown_0858C3B4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3640,7 +3640,7 @@ struct Glyph gUnknown_0858C3B4 =
 
 struct Glyph gUnknown_0858C3FC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3666,7 +3666,7 @@ struct Glyph gUnknown_0858C3FC =
 
 struct Glyph gUnknown_0858C444 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -3692,7 +3692,7 @@ struct Glyph gUnknown_0858C444 =
 
 struct Glyph gUnknown_0858C48C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 3,
     .bitmap =
@@ -3718,7 +3718,7 @@ struct Glyph gUnknown_0858C48C =
 
 struct Glyph gUnknown_0858C4D4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -3744,7 +3744,7 @@ struct Glyph gUnknown_0858C4D4 =
 
 struct Glyph gUnknown_0858C51C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 4,
     .bitmap =
@@ -3770,7 +3770,7 @@ struct Glyph gUnknown_0858C51C =
 
 struct Glyph gUnknown_0858C564 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3796,7 +3796,7 @@ struct Glyph gUnknown_0858C564 =
 
 struct Glyph gUnknown_0858C5AC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3822,7 +3822,7 @@ struct Glyph gUnknown_0858C5AC =
 
 struct Glyph gUnknown_0858C5F4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3848,7 +3848,7 @@ struct Glyph gUnknown_0858C5F4 =
 
 struct Glyph gUnknown_0858C63C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3874,7 +3874,7 @@ struct Glyph gUnknown_0858C63C =
 
 struct Glyph gUnknown_0858C684 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3900,7 +3900,7 @@ struct Glyph gUnknown_0858C684 =
 
 struct Glyph gUnknown_0858C6CC =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3926,7 +3926,7 @@ struct Glyph gUnknown_0858C6CC =
 
 struct Glyph gUnknown_0858C714 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3952,7 +3952,7 @@ struct Glyph gUnknown_0858C714 =
 
 struct Glyph gUnknown_0858C75C =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -3978,7 +3978,7 @@ struct Glyph gUnknown_0858C75C =
 
 struct Glyph gUnknown_0858C7A4 =
 {
-    .sjisNext = NULL,
+    .next = NULL,
     .sjisByte1 = 0,
     .width = 5,
     .bitmap =
@@ -4002,7 +4002,7 @@ struct Glyph gUnknown_0858C7A4 =
     },
 };
 
-struct Glyph *gUnknown_0858C7EC[] =
+struct Glyph const* TextGlyphs_System[] =
 {
     NULL,
     NULL,

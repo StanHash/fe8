@@ -12,7 +12,7 @@ sub_801DF94: @ 0x0801DF94
 	bl GetConvoyItemCount
 	strb r0, [r5]
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	bl HasConvoyAccess
 	lsls r0, r0, #0x18
 	cmp r0, #0
@@ -241,7 +241,7 @@ MenuCommand_DrawExtraItem: @ 0x0801E144
 	adds r5, #0x34
 	adds r0, r5, #0
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	movs r0, #0x2c
 	ldrsh r2, [r4, r0]
 	lsls r2, r2, #5

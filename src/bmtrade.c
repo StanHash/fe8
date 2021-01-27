@@ -5,7 +5,7 @@
 #include "proc.h"
 #include "hardware.h"
 #include "icon.h"
-#include "fontgrp.h"
+#include "text.h"
 #include "uiutils.h"
 #include "statscreen.h"
 
@@ -130,7 +130,7 @@ enum
 };
 
 // TODO: BM_OVERLAY_DATA?
-extern struct TextHandle gTradeMenuText[2][UNIT_ITEM_COUNT];
+extern struct Text gTradeMenuText[2][UNIT_ITEM_COUNT];
 
 EWRAM_DATA static struct TradeMenuProc* sTradeMenuProc = NULL;
 
@@ -271,14 +271,14 @@ void TradeMenu_InitUnitNameDisplay(struct TradeMenuProc* proc)
     // TODO: text color constants
 
     str = GetStringFromIndex(UNIT_NAME_ID(proc->units[0]));
-    xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextWidth(str)) / 2;
+    xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextLen(str)) / 2;
 
-    DrawTextInline(NULL, gBg0Tm + TM_OFFSET(0, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
+    PutDrawText(NULL, gBg0Tm + TM_OFFSET(0, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
 
     str = GetStringFromIndex(UNIT_NAME_ID(proc->units[1]));
-    xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextWidth(str)) / 2;
+    xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextLen(str)) / 2;
 
-    DrawTextInline(NULL, gBg0Tm + TM_OFFSET(24, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
+    PutDrawText(NULL, gBg0Tm + TM_OFFSET(24, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
 
     EnableBgSync(BG0_SYNC_BIT);
 }
@@ -328,7 +328,7 @@ void TradeMenu_InitItemText(struct TradeMenuProc* proc)
     {
         for (row = 0; row < UNIT_ITEM_COUNT; ++row)
         {
-            Text_Allocate(&gTradeMenuText[col][row], ITEM_PANEL_WIDTH);
+            InitTextDb(&gTradeMenuText[col][row], ITEM_PANEL_WIDTH);
         }
     }
 }
@@ -348,7 +348,7 @@ void TradeMenu_RefreshItemText(struct TradeMenuProc* proc)
         {
             int item = proc->units[col]->items[row];
 
-            Text_Clear(&gTradeMenuText[col][row]);
+            ClearText(&gTradeMenuText[col][row]);
 
             if (item)
             {
@@ -479,10 +479,10 @@ void TradeMenu_InitItemDisplay(struct TradeMenuProc* proc)
     DrawUiFrame2(1,  8, 14, 12, 0);
     DrawUiFrame2(15, 8, 14, 12, 0);
 
-    sub_8003D20();
+    ResetTextFont();
 
-    ResetIconGraphics();
-    LoadIconPalettes(4); // TODO: palette id constant
+    ClearIcons();
+    ApplyIconPalettes(4); // TODO: palette id constant
 
     TradeMenu_InitItemText(proc);
     TradeMenu_RefreshItemText(proc);

@@ -301,7 +301,8 @@
 . = ALIGN(4); src/sound.o(ewram_data);
 . = ALIGN(4); src/proc.o(ewram_data);
 . = ALIGN(4); src/icon.o(ewram_data);
-. = ALIGN(4); src/fontgrp.o(ewram_data);
+. = ALIGN(4); src/debug-text.o(ewram_data);
+. = ALIGN(4); src/text.o(ewram_data);
 . = ALIGN(4); src/animedrv.o(ewram_data);
 . = ALIGN(4); src/ctc.o(ewram_data);
 . = 0x02A68C; gUnknown_0202A68C = .;

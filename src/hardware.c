@@ -1083,7 +1083,7 @@ void SetupBackgrounds(u16 const* config)
 
     InitOam(0);
 
-    gPal[0] = 0;
+    PAL_COLOR(0, 0) = 0;
     EnablePalSync();
 
     gDispIo.dispCt.forcedBlank = 0;

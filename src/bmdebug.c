@@ -4,6 +4,9 @@
 
 #include "bmdebug.h"
 
+#include "debug-text.h"
+#include "text.h"
+
 // if current seconds is even, return 2; else return 3
 int Return2or3BySecondParity(void)
 {
@@ -83,16 +86,16 @@ void DebugPrintWithProc(struct DebugPrintProc *proc)
     int y;
     int width;
     const char *text;
-    struct TextHandle textHandler;
+    struct Text textHandler;
 
     x = proc->x;
     y = proc->y;
     width = proc->width;
     text = proc->text;
-    Text_Init(&textHandler, width);
-    Text_AppendString(&textHandler, text);
+    InitText(&textHandler, width);
+    Text_DrawString(&textHandler, text);
     DrawUiFrame2(x, y, width + 2, 4, 0);
-    Text_Draw(&textHandler, &gBg0Tm[32 * (y + 1) + (x + 1)]);
+    PutText(&textHandler, &gBg0Tm[32 * (y + 1) + (x + 1)]);
     EnableBgSync(BG0_SYNC_BIT | BG1_SYNC_BIT);
 }
 
@@ -116,7 +119,7 @@ int StartDebugMenu(struct MenuProc *menuProc)
     EndMenu(menuProc);
     ClearBg0Bg1();
     StartOrphanMenu(&gDebugMenuDef);
-    SetupDebugFontForBG(2, 0);
+    DebugInitBg(2, 0);
     return 1;
 }
 

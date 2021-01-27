@@ -2,7 +2,7 @@
 
 #include "hardware.h"
 #include "proc.h"
-#include "fontgrp.h"
+#include "text.h"
 #include "uiutils.h"
 #include "mu.h"
 #include "bmio.h"
@@ -207,8 +207,8 @@ void EventEngine_OnUpdate(struct EventEngineProc* proc) {
 }
 
 void EventEngine_OnEnd(struct EventEngineProc* proc) {
-    SetFont(NULL);
-    Font_LoadForUI();
+    SetTextFont(NULL);
+    InitSystemTextFont();
     LoadUiFrameGraphics();
 
     switch (proc->execType) {

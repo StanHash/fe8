@@ -261,7 +261,7 @@ _08010FC8:
 	ldrb r1, [r0]
 	movs r0, #1
 _08010FDE:
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	adds r4, #0x10
 	b _08011058
 	.align 2, 0
@@ -269,11 +269,11 @@ _08010FE8: .4byte gUnknown_030005F4
 _08010FEC:
 	ldr r0, [r5, #4]
 	bl GetStringFromIndex
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	b _08011056
 _08010FF8:
 	ldr r0, [r5, #4]
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	b _08011056
 _08011000:
 	ldr r0, _08011014  @ gUnknown_030005F0
@@ -281,7 +281,7 @@ _08011000:
 	ldr r0, [r0]
 	ldrh r0, [r0]
 	bl GetStringFromIndex
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
 _08011014: .4byte gUnknown_030005F0
@@ -289,7 +289,7 @@ _08011018:
 	ldr r0, _08011028  @ gUnknown_030005F4
 	ldrh r0, [r0]
 	bl GetItemName
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
 _08011028: .4byte gUnknown_030005F4
@@ -298,7 +298,7 @@ _0801102C:
 	ldrh r0, [r0]
 	movs r1, #1
 	bl GetItemNameWithArticle
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
 _0801103C: .4byte gUnknown_030005F4
@@ -307,7 +307,7 @@ _08011040:
 	ldrh r0, [r0]
 	movs r1, #0
 	bl GetItemNameWithArticle
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
 _08011050: .4byte gUnknown_030005F4
@@ -370,19 +370,19 @@ _080110BC:
 	bl String_FromNumber
 	add r0, sp, #0x10
 	mov r1, sp
-	bl Text_AppendString
+	bl Text_DrawString
 	b _08011154
 	.align 2, 0
 _080110D0: .4byte gUnknown_030005F8
 _080110D4:
 	add r0, sp, #0x10
 	movs r1, #0x10
-	bl Text_Advance
+	bl Text_Skip
 	b _08011154
 _080110DE:
 	add r0, sp, #0x10
 	ldr r1, [r5, #4]
-	bl Text_SetColorId
+	bl Text_SetColor
 	b _08011154
 _080110E8:
 	add r4, sp, #0x10
@@ -392,7 +392,7 @@ _080110E8:
 _080110F2:
 	add r0, sp, #0x10
 	ldr r1, [r5, #4]
-	bl Text_AppendString
+	bl Text_DrawString
 	b _08011154
 _080110FC:
 	add r4, sp, #0x10
@@ -430,14 +430,14 @@ _08011138:
 _0801113C:
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	b _08011154
 	.align 2, 0
 _08011148: .4byte gUnknown_030005F4
 _0801114C:
 	add r0, sp, #0x10
 	ldr r1, [r5, #4]
-	bl Text_Advance
+	bl Text_Skip
 _08011154:
 	adds r5, #8
 _08011156:
@@ -494,8 +494,8 @@ LongPopup_PrepareGfx: @ 0x0801119C
 	lsls r2, r2, #1
 	movs r0, #0
 	movs r3, #0
-	bl Font_InitForUI
-	bl ResetIconGraphics
+	bl InitTextFont
+	bl ClearIcons
 	bl LoadUiFrameGraphics
 	bl SetBlendNone
 	ldr r2, _080111F0  @ gDispIo
@@ -690,15 +690,15 @@ _080112D6:
 	strb r0, [r4]
 	add r0, sp, #4
 	adds r1, r6, #0
-	bl Text_Init
+	bl InitText
 	adds r0, r5, #0
 	adds r0, #0x3b
 	ldrb r1, [r0]
 	add r0, sp, #4
-	bl Text_SetColorId
+	bl Text_SetColor
 	add r0, sp, #4
 	mov r1, r9
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	ldr r0, [r5, #0x2c]
 	ldr r1, [sp, #4]
 	ldr r2, [sp, #8]
@@ -710,7 +710,7 @@ _080112D6:
 	adds r1, r5, #0
 	adds r1, #0x40
 	ldrh r1, [r1]
-	bl LoadIconObjectGraphics
+	bl PutIconObjImg
 _0801134C:
 	mov r1, r8
 	adds r1, #1
@@ -721,8 +721,8 @@ _0801134C:
 	ldr r0, _080113B8  @ gBg0Tm
 	adds r1, r1, r0
 	add r0, sp, #4
-	bl Text_Draw
-	bl Font_InitForUIDefault
+	bl PutText
+	bl ResetText
 	ldrh r0, [r5, #0x3e]
 	cmp r0, r6
 	beq _080113A4

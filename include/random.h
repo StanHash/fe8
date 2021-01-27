@@ -15,5 +15,5 @@ int RandNext(int max);
 bool RandRoll(int threshold);
 bool RandRoll2Rn(int threshold);
 
-void RandInitB(s32 Seed);
+void RandInitB(int seed);
 unsigned RandNextB(void);

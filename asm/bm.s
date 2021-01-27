@@ -48,12 +48,12 @@ _080156D0: .4byte gUnknown_0859ED70
 	THUMB_FUNC_START sub_80156D4
 sub_80156D4: @ 0x080156D4
 	push {lr}
-	bl Font_InitForUIDefault
+	bl ResetText
 	bl LoadLegacyUiFrameGraphics
 	bl ResetFaces
-	bl ResetIconGraphics_
+	bl InitIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	bl LoadObjUIGfx
 	pop {r0}
 	bx r0
@@ -63,12 +63,12 @@ sub_80156D4: @ 0x080156D4
 	THUMB_FUNC_START LoadGameCoreGfx
 LoadGameCoreGfx: @ 0x080156F4
 	push {lr}
-	bl Font_InitForUIDefault
+	bl ResetText
 	bl LoadUiFrameGraphics
 	bl ResetFaces
-	bl ResetIconGraphics_
+	bl InitIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	bl LoadObjUIGfx
 	pop {r0}
 	bx r0

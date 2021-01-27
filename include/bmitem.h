@@ -142,7 +142,7 @@ enum {
     WPN_EXP_S = 251,
 };
 
-struct TextHandle;
+struct Text;
 
 char* GetItemNameWithArticle(int item, s8 capitalize);
 
@@ -158,10 +158,10 @@ s8 CanUnitUseWeapon(struct Unit* unit, int item);
 s8 CanUnitUseWeaponNow(struct Unit* unit, int item);
 s8 CanUnitUseStaff(struct Unit* unit, int item);
 s8 CanUnitUseStaffNow(struct Unit* unit, int item);
-void DrawItemMenuLine(struct TextHandle* text, int item, s8 isGrayed, u16* mapOut);
-void DrawItemMenuLineLong(struct TextHandle* text, int item, s8 isGrayed, u16* mapOut);
-void DrawItemMenuLineNoColor(struct TextHandle* text, int item, u16* mapOut);
-void DrawItemStatScreenLine(struct TextHandle* text, int item, int nameColor, u16* mapOut);
+void DrawItemMenuLine(struct Text* text, int item, s8 isGrayed, u16* mapOut);
+void DrawItemMenuLineLong(struct Text* text, int item, s8 isGrayed, u16* mapOut);
+void DrawItemMenuLineNoColor(struct Text* text, int item, u16* mapOut);
+void DrawItemStatScreenLine(struct Text* text, int item, int nameColor, u16* mapOut);
 u16 GetItemAfterUse(int item);
 u16 GetUnitEquippedWeapon(struct Unit* unit);
 int GetUnitEquippedWeaponSlot(struct Unit* unit);

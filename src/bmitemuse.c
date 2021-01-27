@@ -6,7 +6,7 @@
 #include "hardware.h"
 #include "oam.h"
 #include "ctc.h"
-#include "fontgrp.h"
+#include "text.h"
 #include "ap.h"
 #include "bmitem.h"
 #include "bmunit.h"
@@ -805,7 +805,7 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
 
 void WarpSelect_OnConfirm(struct WarpSelectProc* proc)
 {
-    sub_8003D20();
+    ResetTextFont();
     HideMoveRangeGraphics();
     DeleteEach6CBB();
 
@@ -820,7 +820,7 @@ void WarpSelect_OnConfirm(struct WarpSelectProc* proc)
 
 void WarpSelect_OnCancel(struct WarpSelectProc* proc)
 {
-    sub_8003D20();
+    ResetTextFont();
     HideMoveRangeGraphics();
     DeleteEach6CBB();
 
@@ -886,7 +886,7 @@ void DoUsePutTrap(struct Unit* unit, void(*func)(struct Unit*), int msgHelp)
 
 int RepairSelectOnSelect(ProcPtr proc, struct SelectTarget* target)
 {
-    sub_8003D20();
+    ResetTextFont();
 
     gActionData.targetIndex = target->uid;
 

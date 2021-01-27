@@ -2,6 +2,7 @@
 
 #include "raw_text_jp.h"
 
+#include "text.h"
 #include "bmdebug.h"
 #include "bmitemuse.h"
 #include "bmmenu.h"

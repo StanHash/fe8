@@ -2573,13 +2573,13 @@ _0805106C:
 	ldr r1, _0805115C  @ 0x06013E00
 	adds r2, r4, #0
 	bl RegisterDataMove
-	bl ResetIconGraphics_
+	bl InitIcons
 	movs r0, #0
 	movs r1, #0x1d
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	movs r0, #0
 	movs r1, #0x1e
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	ldr r0, _08051160  @ gUnknown_0203E188
 	ldr r0, [r0]
 	adds r0, #0x4a
@@ -2587,7 +2587,7 @@ _0805106C:
 	bl GetItemIconId
 	movs r1, #0xee
 	lsls r1, r1, #1
-	bl LoadIconObjectGraphics
+	bl PutIconObjImg
 	ldr r0, _08051164  @ gUnknown_0203E18C
 	ldr r0, [r0]
 	adds r0, #0x4a
@@ -2595,7 +2595,7 @@ _0805106C:
 	bl GetItemIconId
 	movs r1, #0xef
 	lsls r1, r1, #1
-	bl LoadIconObjectGraphics
+	bl PutIconObjImg
 	ldr r0, _08051168  @ gUnknown_0859ED70
 	movs r1, #0x80
 	lsls r1, r1, #2
@@ -4475,7 +4475,7 @@ _08051F18: .4byte gUnknown_0203E102
 sub_8051F1C: @ 0x08051F1C
 	push {r4, r5, r6, lr}
 	sub sp, #8
-	ldr r4, _08051F5C  @ gUnknown_0859EF00
+	ldr r4, _08051F5C  @ Pal_SystemText
 	adds r0, r4, #0
 	movs r1, #0x40
 	movs r2, #0x20
@@ -4488,8 +4488,8 @@ sub_8051F1C: @ 0x08051F1C
 	ldr r1, _08051F64  @ 0x06001880
 	movs r2, #0xc4
 	movs r3, #2
-	bl Font_InitForUI
-	bl Font_SetSomeSpecialDrawingRoutine
+	bl InitTextFont
+	bl SetTextDrawNoClear
 	ldr r0, _08051F68  @ gUnknown_08801C14
 	ldr r1, _08051F6C  @ 0x06001000
 	bl LZ77UnCompVram
@@ -4501,7 +4501,7 @@ sub_8051F1C: @ 0x08051F1C
 	ldr r5, _08051F74  @ gUnknown_085B9354
 	b _08051F86
 	.align 2, 0
-_08051F5C: .4byte gUnknown_0859EF00
+_08051F5C: .4byte Pal_SystemText
 _08051F60: .4byte gUnknown_02017648
 _08051F64: .4byte 0x06001880
 _08051F68: .4byte gUnknown_08801C14
@@ -4519,19 +4519,19 @@ _08051F86:
 	ldr r4, _08051FC4  @ gUnknown_02017660
 	adds r0, r4, #0
 	movs r1, #7
-	bl Text_Init
+	bl InitText
 	movs r0, #0x38
 	adds r1, r5, #0
 	bl GetStringTextCenteredPos
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	ldr r0, _08051FC8  @ gUnknown_08801F7C
 	ldr r1, _08051FCC  @ 0x06001880
 	bl LZ77UnCompVram
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r0, _08051FD0  @ gUnknown_0203E104
 	movs r1, #0
 	ldrsh r0, [r0, r1]
@@ -4557,19 +4557,19 @@ _08051FE6:
 	ldr r4, _08052024  @ gUnknown_02017670
 	adds r0, r4, #0
 	movs r1, #8
-	bl Text_Init
+	bl InitText
 	movs r0, #0x40
 	adds r1, r5, #0
 	bl GetStringTextCenteredPos
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	ldr r0, _08052028  @ gUnknown_08801FF4
 	ldr r1, _0805202C  @ 0x06001A40
 	bl LZ77UnCompVram
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r0, _08052030  @ gUnknown_0203E104
 	movs r1, #2
 	ldrsh r0, [r0, r1]
@@ -4595,19 +4595,19 @@ _08052046:
 	ldr r4, _08052084  @ gUnknown_02017678
 	adds r0, r4, #0
 	movs r1, #7
-	bl Text_Init
+	bl InitText
 	movs r0, #0x38
 	adds r1, r5, #0
 	bl GetStringTextCenteredPos
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	ldr r0, _08052088  @ gUnknown_08802044
 	ldr r1, _0805208C  @ 0x06001C40
 	bl LZ77UnCompVram
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r0, _08052090  @ gUnknown_0203E104
 	movs r1, #2
 	ldrsh r0, [r0, r1]
@@ -4633,19 +4633,19 @@ _080520A6:
 	ldr r4, _08052160  @ gUnknown_02017668
 	adds r0, r4, #0
 	movs r1, #8
-	bl Text_Init
+	bl InitText
 	movs r0, #0x3e
 	adds r1, r5, #0
 	bl GetStringTextCenteredPos
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	ldr r0, _08052164  @ gUnknown_088020BC
 	ldr r1, _08052168  @ 0x06001E00
 	bl LZ77UnCompVram
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r4, _0805216C  @ gBg0Tm
 	adds r0, r4, #0
 	movs r1, #0x80
@@ -10530,7 +10530,7 @@ sub_8054F10: @ 0x08054F10
 	ldr r0, [r4, #0x50]
 	cmp r0, #1
 	beq _08054F6E
-	bl ResetIconGraphics_
+	bl InitIcons
 	adds r0, r4, #0
 	adds r0, #0x2c
 	adds r1, r4, #0
@@ -10548,7 +10548,7 @@ _08054F36:
 	beq _08054F50
 	movs r0, #0
 	movs r1, #0x1d
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	ldr r0, _08054F74  @ gPal
 	ldr r3, [r4, #0x4c]
 	movs r1, #0x1d
@@ -10560,7 +10560,7 @@ _08054F50:
 	beq _08054F6A
 	movs r0, #0
 	movs r1, #0x1e
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	ldr r0, _08054F74  @ gPal
 	ldr r3, [r4, #0x4c]
 	movs r1, #0x1e
@@ -10581,20 +10581,20 @@ _08054F74: .4byte gPal
 sub_8054F78: @ 0x08054F78
 	push {r4, lr}
 	adds r4, r0, #0
-	bl ResetIconGraphics_
+	bl InitIcons
 	ldr r0, [r4, #0x54]
 	cmp r0, #0
 	beq _08054F8E
 	movs r0, #0
 	movs r1, #0x1d
-	bl LoadIconPalette
+	bl ApplyIconPalette
 _08054F8E:
 	ldr r0, [r4, #0x58]
 	cmp r0, #0
 	beq _08054F9C
 	movs r0, #0
 	movs r1, #0x1e
-	bl LoadIconPalette
+	bl ApplyIconPalette
 _08054F9C:
 	bl EnablePalSync
 	pop {r4}
@@ -23383,7 +23383,7 @@ sub_805B320: @ 0x0805B320
 	bl EndEkrGauge
 	ldr r0, _0805B344  @ SomeUpdateRoutine
 	bl SetMainFunc
-	ldr r0, _0805B348  @ GeneralVBlankHandler
+	ldr r0, _0805B348  @ OnVSync
 	bl SetOnVBlank
 	adds r0, r4, #0
 	bl Proc_Break
@@ -23392,7 +23392,7 @@ sub_805B320: @ 0x0805B320
 	bx r0
 	.align 2, 0
 _0805B344: .4byte SomeUpdateRoutine
-_0805B348: .4byte GeneralVBlankHandler
+_0805B348: .4byte OnVSync
 
 	THUMB_FUNC_END sub_805B320
 
@@ -72853,7 +72853,7 @@ _0807371A:
 	movs r2, #0xa3
 	lsls r2, r2, #1
 	movs r3, #0
-	bl Font_InitForUI
+	bl InitTextFont
 	movs r7, #0
 	movs r0, #0
 	mov r8, r0
@@ -72886,16 +72886,16 @@ _08073762:
 	adds r4, r4, r0
 	adds r0, r4, #0
 	movs r1, #3
-	bl Text_Init
+	bl InitText
 	adds r0, r4, #0
 	movs r1, #0
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	adds r0, r4, #0
 	movs r1, #3
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r4, #0
 	adds r1, r6, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r1, _08073898  @ gUnknown_080E15CC
 	lsls r0, r7, #1
 	adds r0, r0, r1
@@ -72904,7 +72904,7 @@ _08073762:
 	ldr r0, _0807389C  @ gBg2Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	movs r0, #4
 	add r8, r0
 	adds r7, #1
@@ -72918,19 +72918,19 @@ _080737B4:
 	add r5, r8
 	adds r0, r5, #0
 	movs r1, #2
-	bl Text_Init
+	bl InitText
 	adds r0, r5, #0
 	movs r1, #8
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	adds r0, r5, #0
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	ldr r0, _080738A4  @ gUnknown_02020114
 	lsls r4, r7, #1
 	adds r0, r4, r0
 	ldrh r1, [r0]
 	adds r0, r5, #0
-	bl Text_AppendDecNumber
+	bl Text_DrawNumber
 	ldr r0, _08073898  @ gUnknown_080E15CC
 	adds r4, r4, r0
 	ldrh r1, [r4]
@@ -72938,7 +72938,7 @@ _080737B4:
 	ldr r6, _080738A8  @ gBg2Tm+0x6
 	adds r1, r1, r6
 	adds r0, r5, #0
-	bl Text_Draw
+	bl PutText
 	adds r7, #1
 	cmp r7, #7
 	ble _080737B4
@@ -72946,7 +72946,7 @@ _080737B4:
 	adds r4, #0x40
 	adds r0, r4, #0
 	movs r1, #8
-	bl Text_Init
+	bl InitText
 	ldr r0, _080738AC  @ gUnknown_02020108
 	ldr r0, [r0]
 	ldr r0, [r0, #4]
@@ -72954,49 +72954,49 @@ _080737B4:
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	movs r0, #0xe0
 	lsls r0, r0, #1
 	adds r1, r6, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	adds r4, #8
 	adds r0, r4, #0
 	movs r1, #3
-	bl Text_Init
+	bl InitText
 	adds r0, r4, #0
 	movs r1, #3
-	bl Text_SetColorId
+	bl Text_SetColor
 	ldr r0, _080738B0  @ gMid_Lv
 	ldr r0, [r0]
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	movs r0, #0xe7
 	lsls r0, r0, #1
 	adds r1, r6, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	adds r4, #8
 	adds r0, r4, #0
 	movs r1, #2
-	bl Text_Init
+	bl InitText
 	adds r0, r4, #0
 	movs r1, #8
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	adds r0, r4, #0
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	ldr r0, _080738B4  @ gUnknown_02020110
 	ldrh r1, [r0]
 	adds r0, r4, #0
-	bl Text_AppendDecNumber
+	bl Text_DrawNumber
 	movs r0, #0xea
 	lsls r0, r0, #1
 	adds r1, r6, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6, r7}
@@ -73024,19 +73024,19 @@ sub_80738B8: @ 0x080738B8
 	ldr r0, _08073900  @ gUnknown_020176A0
 	adds r5, r5, r0
 	adds r0, r5, #0
-	bl Text_Clear
+	bl ClearText
 	adds r0, r5, #0
 	movs r1, #8
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	adds r0, r5, #0
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	ldr r0, _08073904  @ gUnknown_02020114
 	lsls r4, r4, #1
 	adds r0, r4, r0
 	ldrh r1, [r0]
 	adds r0, r5, #0
-	bl Text_AppendDecNumber
+	bl Text_DrawNumber
 	ldr r0, _08073908  @ gUnknown_080E15CC
 	adds r4, r4, r0
 	ldrh r1, [r4]
@@ -73044,7 +73044,7 @@ sub_80738B8: @ 0x080738B8
 	ldr r0, _0807390C  @ gBg2Tm+0x6
 	adds r1, r1, r0
 	adds r0, r5, #0
-	bl Text_Draw
+	bl PutText
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -73061,7 +73061,7 @@ sub_8073910: @ 0x08073910
 	push {r4, lr}
 	ldr r4, _0807393C  @ gUnknown_020176E0
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, _08073940  @ gUnknown_02020108
 	ldr r0, [r0]
 	ldr r0, [r0, #4]
@@ -73069,10 +73069,10 @@ sub_8073910: @ 0x08073910
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r1, _08073944  @ gBg2Tm+0x1C4
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -73088,20 +73088,20 @@ sub_8073948: @ 0x08073948
 	push {r4, lr}
 	ldr r4, _0807397C  @ gUnknown_020176F0
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	adds r0, r4, #0
 	movs r1, #8
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	adds r0, r4, #0
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	ldr r0, _08073980  @ gUnknown_02020110
 	ldrh r1, [r0]
 	adds r0, r4, #0
-	bl Text_AppendDecNumber
+	bl Text_DrawNumber
 	ldr r1, _08073984  @ gBg2Tm+0x1DA
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -77642,8 +77642,8 @@ DrawBattlePopup: @ 0x08075CA8
 	movs r2, #0x84
 	lsls r2, r2, #1
 	movs r3, #1
-	bl Font_InitForUI
-	bl Font_SetSomeSpecialDrawingRoutine
+	bl InitTextFont
+	bl SetTextDrawNoClear
 	ldr r0, _08075D2C  @ gUnknown_08803CB0
 	ldr r1, _08075D30  @ gPal+0x20
 	movs r2, #8
@@ -77654,7 +77654,7 @@ DrawBattlePopup: @ 0x08075CA8
 	movs r0, #1
 	bl GetStringFromIndex
 	adds r4, r0, #0
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	str r0, [sp, #4]
 	adds r1, r0, #0
 	adds r1, #0x10
@@ -77662,7 +77662,7 @@ DrawBattlePopup: @ 0x08075CA8
 	movs r0, #2
 	bl GetStringFromIndex
 	adds r4, r0, #0
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	mov r2, r8
 	adds r7, r0, r2
 	b _08075D7A
@@ -77685,13 +77685,13 @@ _08075D34:
 	movs r1, #1
 	bl GetItemNameWithArticle
 	adds r4, r0, #0
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	adds r0, #0x10
 	mov r8, r0
 	movs r0, #3
 	bl GetStringFromIndex
 	adds r4, r0, #0
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	add r0, r8
 	adds r7, r0, #4
 	b _08075D7A
@@ -77703,7 +77703,7 @@ _08075D62:
 	movs r0, #0xd
 	bl GetStringFromIndex
 	adds r4, r0, #0
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	adds r7, r0, #0
 	adds r7, #0x10
 _08075D7A:
@@ -77716,14 +77716,14 @@ _08075D7A:
 	ldr r5, _08075DD8  @ gUnknown_02017660
 	adds r0, r5, #0
 	adds r1, r6, #0
-	bl Text_Init
+	bl InitText
 	lsls r0, r6, #3
 	subs r0, r0, r7
 	asrs r0, r0, #1
 	str r0, [sp, #8]
 	adds r0, r5, #0
 	ldr r1, [sp, #8]
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	ldr r0, _08075DDC  @ gUnknown_08803BD0
 	ldr r1, _08075DE0  @ 0x06002100
 	bl LZ77UnCompVram
@@ -77735,13 +77735,13 @@ _08075D7A:
 	adds r4, r0, #0
 	adds r0, r5, #0
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	adds r0, r5, #0
 	movs r1, #0x10
-	bl Text_Advance
+	bl Text_Skip
 	movs r0, #2
 	b _08075E0E
 	.align 2, 0
@@ -77759,23 +77759,23 @@ _08075DE4:
 	adds r4, r0, #0
 	adds r0, r5, #0
 	movs r1, #1
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	adds r0, r5, #0
 	movs r1, #0x14
-	bl Text_Advance
+	bl Text_Skip
 	movs r0, #3
 _08075E0E:
 	bl GetStringFromIndex
 	adds r4, r0, #0
 	adds r0, r5, #0
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	b _08075E3E
 _08075E26:
 	movs r0, #0xd
@@ -77783,10 +77783,10 @@ _08075E26:
 	adds r4, r0, #0
 	adds r0, r5, #0
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_AppendString
+	bl Text_DrawString
 _08075E3E:
 	adds r1, r6, #2
 	lsls r1, r1, #3
@@ -77801,18 +77801,18 @@ _08075E3E:
 	bl SetBgOffset
 	movs r0, #2
 	bl EnableBgSync
-	bl ResetIconGraphics_
+	bl InitIcons
 	mov r0, r9
 	cmp r0, #0
 	bne _08075E84
 	movs r0, #1
 	movs r1, #0x12
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	mov r0, sl
 	bl GetItemType
 	adds r0, #0x70
 	movs r1, #0x40
-	bl LoadIconObjectGraphics
+	bl PutIconObjImg
 	b _08075EC0
 	.align 2, 0
 _08075E80: .4byte 0x0000FFD0
@@ -77822,11 +77822,11 @@ _08075E84:
 	bne _08075EA8
 	movs r0, #0
 	movs r1, #0x12
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	mov r0, sl
 	bl GetItemIconId
 	movs r1, #0x40
-	bl LoadIconObjectGraphics
+	bl PutIconObjImg
 	adds r0, r4, #0
 	subs r0, #0xe
 	mov r2, r8
@@ -77835,11 +77835,11 @@ _08075E84:
 _08075EA8:
 	movs r0, #1
 	movs r1, #0x12
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	mov r0, sl
 	adds r0, #0x70
 	movs r1, #0x40
-	bl LoadIconObjectGraphics
+	bl PutIconObjImg
 	adds r0, r4, #0
 	subs r0, #0x10
 	adds r4, r0, r7
@@ -78711,7 +78711,7 @@ sub_8076514: @ 0x08076514
 	bl EndEkrGauge
 	ldr r0, _08076538  @ SomeUpdateRoutine
 	bl SetMainFunc
-	ldr r0, _0807653C  @ GeneralVBlankHandler
+	ldr r0, _0807653C  @ OnVSync
 	bl SetOnVBlank
 	adds r0, r4, #0
 	bl Proc_Break
@@ -78720,7 +78720,7 @@ sub_8076514: @ 0x08076514
 	bx r0
 	.align 2, 0
 _08076538: .4byte SomeUpdateRoutine
-_0807653C: .4byte GeneralVBlankHandler
+_0807653C: .4byte OnVSync
 
 	THUMB_FUNC_END sub_8076514
 

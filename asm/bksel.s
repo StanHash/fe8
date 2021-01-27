@@ -45,7 +45,7 @@ sub_803650C: @ 0x0803650C
 	push {r6, r7}
 	movs r0, #0
 	movs r1, #3
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	movs r1, #1
 	ldr r0, _0803658C  @ gPal
 	mov r9, r0
@@ -122,7 +122,7 @@ _08036598:
 	adds r5, r5, r0
 	adds r0, r5, #0
 	movs r1, #4
-	bl Text_Init
+	bl InitText
 	ldr r1, _080365E0  @ gUnknown_080D7FB0
 	lsls r0, r7, #2
 	adds r0, r0, r1
@@ -139,7 +139,7 @@ _08036598:
 	adds r0, r5, #0
 	adds r1, r4, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r7, #1
 	cmp r7, #5
 	ble _08036598
@@ -169,7 +169,7 @@ sub_80365E4: @ 0x080365E4
 	bl GetStringTextCenteredPos
 	adds r5, r0, #0
 	adds r0, r6, #0
-	bl Text_Clear
+	bl ClearText
 	movs r0, #0
 	str r0, [sp]
 	str r4, [sp, #4]
@@ -177,7 +177,7 @@ sub_80365E4: @ 0x080365E4
 	mov r1, r8
 	movs r2, #0
 	adds r3, r5, #0
-	bl DrawTextInline
+	bl PutDrawText
 	add sp, #8
 	pop {r3}
 	mov r8, r3
@@ -203,7 +203,7 @@ sub_8036628: @ 0x08036628
 	bl GetStringTextCenteredPos
 	adds r5, r0, #0
 	adds r0, r6, #0
-	bl Text_Clear
+	bl ClearText
 	movs r0, #0
 	str r0, [sp]
 	str r4, [sp, #4]
@@ -211,7 +211,7 @@ sub_8036628: @ 0x08036628
 	mov r1, r8
 	movs r2, #0
 	adds r3, r5, #0
-	bl DrawTextInline
+	bl PutDrawText
 	add sp, #8
 	pop {r3}
 	mov r8, r3
@@ -538,7 +538,7 @@ _080368D6:
 	ldr r0, _080368F4  @ gUnknown_02003DF0
 	movs r1, #2
 	movs r2, #0xff
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	b _08036906
 	.align 2, 0
 _080368EC: .4byte gBattleTarget
@@ -550,13 +550,13 @@ _080368F8:
 	lsls r2, r2, #0x18
 	asrs r2, r2, #0x18
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 _08036906:
 	ldr r7, _080369A4  @ gUnknown_02003E70
 	adds r0, r7, #0
 	movs r1, #2
 	mov r2, r8
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	adds r0, r7, #0
 	adds r0, #0x80
 	ldr r4, _080369A8  @ gBattleTarget
@@ -565,7 +565,7 @@ _08036906:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r7, r1
@@ -574,7 +574,7 @@ _08036906:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	ldr r5, _080369AC  @ gBattleActor
 	adds r0, r5, #0
 	adds r0, #0x5a
@@ -625,7 +625,7 @@ _08036986:
 	subs r0, #0x74
 	movs r1, #2
 	movs r2, #0xff
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	b _080369BE
 	.align 2, 0
 _080369A0: .4byte gUnknown_02003DF0
@@ -638,13 +638,13 @@ _080369B0:
 	movs r2, #0
 	ldrsb r2, [r1, r2]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 _080369BE:
 	ldr r6, _08036A5C  @ gUnknown_02003E7C
 	adds r0, r6, #0
 	movs r1, #2
 	mov r2, r8
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	adds r0, r6, #0
 	adds r0, #0x80
 	ldr r5, _08036A60  @ gBattleActor
@@ -653,34 +653,34 @@ _080369BE:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r6, r1
 	movs r1, #2
 	adds r2, r4, #0
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	adds r0, r6, #0
 	subs r0, #0x88
 	movs r1, #3
 	movs r2, #0x22
 	movs r3, #0x23
-	bl sub_8004D5C
+	bl PutTwoSpecialChar
 	ldr r4, _08036A64  @ gUnknown_02002FDC
 	adds r1, r6, #0
 	subs r1, #0xa
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	adds r0, r4, #0
 	adds r0, #8
 	adds r1, r6, #0
 	adds r1, #0x76
-	bl Text_Draw
+	bl PutText
 	adds r4, #0x10
 	adds r1, r6, #0
 	adds r1, #0xf6
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	movs r2, #0xbf
 	lsls r2, r2, #1
 	adds r4, r6, r2
@@ -692,7 +692,7 @@ _080369BE:
 	movs r2, #0x80
 	lsls r2, r2, #7
 	adds r0, r4, #0
-	bl DrawIcon
+	bl PutIcon
 	ldr r3, _08036A6C  @ 0xFFFFFEF2
 	adds r4, r6, r3
 	adds r5, #0x4a
@@ -702,7 +702,7 @@ _080369BE:
 	movs r2, #0xc0
 	lsls r2, r2, #6
 	adds r0, r4, #0
-	bl DrawIcon
+	bl PutIcon
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6, r7}
@@ -785,7 +785,7 @@ _08036AE8:
 	ldr r0, _08036B20  @ gUnknown_02003DF0
 	movs r1, #2
 	movs r2, #0xff
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	b _08036B30
 	.align 2, 0
 _08036B04: .4byte gUnknown_0200422C
@@ -801,7 +801,7 @@ _08036B24:
 	movs r2, #0
 	ldrsb r2, [r1, r2]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 _08036B30:
 	ldr r5, _08036BB4  @ gUnknown_02003E70
 	ldr r4, _08036BB8  @ gBattleTarget
@@ -811,7 +811,7 @@ _08036B30:
 	ldrsh r2, [r0, r3]
 	adds r0, r5, #0
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	adds r0, r5, #0
 	adds r0, #0x80
 	adds r1, r4, #0
@@ -819,7 +819,7 @@ _08036B30:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r5, r1
@@ -828,7 +828,7 @@ _08036B30:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0xc0
 	lsls r1, r1, #1
 	adds r0, r5, r1
@@ -837,7 +837,7 @@ _08036B30:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0x80
 	lsls r1, r1, #2
 	adds r0, r5, r1
@@ -846,7 +846,7 @@ _08036B30:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	ldr r0, _08036BBC  @ gBattleActor
 	adds r1, r0, #0
 	adds r1, #0x72
@@ -858,7 +858,7 @@ _08036B30:
 	subs r0, #0x74
 	movs r1, #2
 	movs r2, #0xff
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	b _08036BCE
 	.align 2, 0
 _08036BB0: .4byte gUnknown_02003DF0
@@ -871,7 +871,7 @@ _08036BC0:
 	movs r2, #0
 	ldrsb r2, [r1, r2]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 _08036BCE:
 	ldr r5, _08036CB8  @ gUnknown_02003E7C
 	ldr r6, _08036CBC  @ gBattleActor
@@ -881,7 +881,7 @@ _08036BCE:
 	ldrsh r2, [r0, r1]
 	adds r0, r5, #0
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	adds r0, r5, #0
 	adds r0, #0x80
 	adds r1, r6, #0
@@ -889,7 +889,7 @@ _08036BCE:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r5, r1
@@ -898,7 +898,7 @@ _08036BCE:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0xc0
 	lsls r1, r1, #1
 	adds r0, r5, r1
@@ -907,7 +907,7 @@ _08036BCE:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	movs r1, #0x80
 	lsls r1, r1, #2
 	adds r0, r5, r1
@@ -916,40 +916,40 @@ _08036BCE:
 	movs r3, #0
 	ldrsh r2, [r1, r3]
 	movs r1, #2
-	bl sub_8004BB4
+	bl PutNumberTwoChr
 	adds r0, r5, #0
 	subs r0, #0x88
 	movs r1, #3
 	movs r2, #0x22
 	movs r3, #0x23
-	bl sub_8004D5C
+	bl PutTwoSpecialChar
 	ldr r4, _08036CC0  @ gUnknown_02002FF4
 	adds r1, r5, #0
 	subs r1, #0xa
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	adds r0, r4, #0
 	adds r0, #8
 	adds r1, r5, #0
 	adds r1, #0x76
-	bl Text_Draw
+	bl PutText
 	adds r0, r4, #0
 	subs r0, #0x10
 	adds r1, r5, #0
 	adds r1, #0xf6
-	bl Text_Draw
+	bl PutText
 	adds r0, r4, #0
 	subs r0, #8
 	movs r2, #0xbb
 	lsls r2, r2, #1
 	adds r1, r5, r2
-	bl Text_Draw
+	bl PutText
 	adds r0, r4, #0
 	adds r0, #0x10
 	movs r3, #0xfb
 	lsls r3, r3, #1
 	adds r1, r5, r3
-	bl Text_Draw
+	bl PutText
 	ldr r0, _08036CC4  @ 0x0000027E
 	adds r4, r5, r0
 	ldr r0, _08036CC8  @ gBattleTarget
@@ -960,7 +960,7 @@ _08036BCE:
 	movs r2, #0x80
 	lsls r2, r2, #7
 	adds r0, r4, #0
-	bl DrawIcon
+	bl PutIcon
 	ldr r1, _08036CCC  @ 0xFFFFFEF2
 	adds r4, r5, r1
 	adds r0, r6, #0
@@ -971,7 +971,7 @@ _08036BCE:
 	movs r2, #0xc0
 	lsls r2, r2, #6
 	adds r0, r4, #0
-	bl DrawIcon
+	bl PutIcon
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
@@ -1118,22 +1118,22 @@ BKSEL_InitGfx: @ 0x08036D9C
 	lsls r1, r1, #2
 	movs r2, #0x20
 	bl ApplyPaletteExt
-	bl sub_8003D20
-	bl ResetIconGraphics_
+	bl ResetTextFont
+	bl InitIcons
 	bl sub_803650C
 	bl BattleForecase_SetupLabelText
 	adds r0, r5, #0
 	adds r0, #0x38
 	movs r1, #6
-	bl Text_Allocate
+	bl InitTextDb
 	adds r0, r5, #0
 	adds r0, #0x40
 	movs r1, #6
-	bl Text_Allocate
+	bl InitTextDb
 	adds r0, r5, #0
 	adds r0, #0x48
 	movs r1, #7
-	bl Text_Allocate
+	bl InitTextDb
 	ldr r2, _08036E18  @ 0x0000FFFF
 	movs r0, #1
 	movs r1, #0
@@ -1810,7 +1810,7 @@ NewBattleForecast: @ 0x0803730C
 	lsrs r0, r0, #0x1e
 	cmp r0, #2
 	bne _08037328
-	bl sub_8003D20
+	bl ResetTextFont
 	b _08037380
 	.align 2, 0
 _08037324: .4byte gRAMChapterData

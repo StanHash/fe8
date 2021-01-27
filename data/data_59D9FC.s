@@ -192,12 +192,12 @@ gUnknown_0859EEC0:  @ 0x0859EEC0
 gUnknown_0859EEE0:  @ 0x0859EEE0
 	.incbin "baserom.gba", 0x59EEE0, 0x20
 
-	.global gUnknown_0859EF00
-gUnknown_0859EF00:  @ 0x0859EF00
+	.global Pal_SystemText
+Pal_SystemText:  @ 0x0859EF00
 	.incbin "baserom.gba", 0x59EF00, 0x20
 
-	.global gUnknown_0859EF20
-gUnknown_0859EF20:  @ 0x0859EF20
+	.global Pal_TalkText
+Pal_TalkText:  @ 0x0859EF20
 	.incbin "baserom.gba", 0x59EF20, 0x20
 
 	.global gUnknown_0859EF40
@@ -212,8 +212,8 @@ gUnknown_0859EF60:  @ 0x0859EF60
 gUnknown_0859EF80:  @ 0x0859EF80
 	.incbin "baserom.gba", 0x59EF80, 0x40
 
-	.global gUnknown_0859EFC0
-gUnknown_0859EFC0:  @ 0x0859EFC0
+	.global Pal_GreenTextColors
+Pal_GreenTextColors:  @ 0x0859EFC0
 	.incbin "baserom.gba", 0x59EFC0, 0x20
 
 	.global gUnknown_0859EFE0

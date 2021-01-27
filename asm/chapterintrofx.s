@@ -1728,7 +1728,7 @@ sub_8020AF8: @ 0x08020AF8
 	bl AllocWeatherParticles
 	bl SMS_UpdateFromGameData
 	bl SMS_FlushIndirect
-	bl Font_LoadForUI
+	bl InitSystemTextFont
 	pop {r0}
 	bx r0
 	.align 2, 0

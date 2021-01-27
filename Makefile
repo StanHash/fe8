@@ -49,9 +49,9 @@ ASM_SUBDIR = asm
 DATA_ASM_SUBDIR = data
 
 ROM          := fe8.gba
-ELF          := $(ROM:.gba=.elf)
-MAP          := $(ROM:.gba=.map)
-LDSCRIPT     := ldscript.txt
+ELF          := fe8.elf
+MAP          := fe8.map
+LDSCRIPT     := fe8.lds
 SYM_FILES    := sym_iwram.txt sym_ewram.txt
 CFILES       := $(wildcard src/*.c)
 ASM_S_FILES  := $(wildcard asm/*.s)
@@ -72,7 +72,7 @@ src/bmitem.o: CC1FLAGS += -Wno-error
 #### Main Targets ####
 
 compare: $(ROM)
-	$(SHASUM) -c checksum.sha1
+	$(SHASUM) -c fe8.sha1
 
 .PHONY: compare
 
@@ -153,14 +153,14 @@ $(ELF): $(ALL_OBJECTS) $(LDSCRIPT) $(SYM_FILES)
 
 $(C_OBJECTS): %.o: %.c $(DEPS_DIR)/%.d
 	@$(MAKEDEP)
-	$(CPP) $(CPPFLAGS) $< | $(CC1) $(CC1FLAGS) -o $*.s
-	echo '.ALIGN 2, 0' >> $*.s
+	$(CPP) $(CPPFLAGS) $< | $(CC1) $(CC1FLAGS) -o $*.asm
+	echo '.ALIGN 2, 0' >> $*.asm
 ifeq ($(UNAME),Darwin)
-	$(SED) -f scripts/align_2_before_debug_section_for_osx.sed $*.s
+	$(SED) -f scripts/align_2_before_debug_section_for_osx.sed $*.asm
 else
-	$(SED) '/.section	.debug_line/i\.align 2, 0' $*.s
+	$(SED) '/.section	.debug_line/i\.align 2, 0' $*.asm
 endif
-	$(AS) $(ASFLAGS) $*.s -o $@
+	$(AS) $(ASFLAGS) $*.asm -o $@
 
 ifeq ($(NODEP),1)
 asm/%.o:      data_dep :=

@@ -84,10 +84,10 @@ NewUnitInfoWindow: @ 0x080347A8
 	adds r4, r0, #0
 	adds r0, #0x30
 	movs r1, #6
-	bl Text_Allocate
-	bl ResetIconGraphics
+	bl InitTextDb
+	bl ClearIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	adds r0, r4, #0
 	pop {r4}
 	pop {r1}
@@ -105,7 +105,7 @@ UnitInfoWindow_PositionUnitName: @ 0x080347D4
 	ldr r0, [r0]
 	ldrh r0, [r0]
 	bl GetStringFromIndex
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	cmp r0, #0x27
 	bgt _080347FA
 	adds r2, r4, #0
@@ -313,20 +313,20 @@ _08034914:
 	strh r0, [r2]
 _0803496C:
 	ldr r0, [sp, #0xc]
-	bl Text_Clear
+	bl ClearText
 	mov r0, r8
 	bl UnitInfoWindow_PositionUnitName
 	ldr r0, [sp, #0x1c]
 	ldrb r1, [r0]
 	ldr r0, [sp, #0xc]
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	ldr r1, [sp, #4]
 	ldr r0, [r1]
 	ldrh r0, [r0]
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	ldr r0, [sp, #0xc]
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r2, [sp, #0x10]
 	lsls r1, r2, #5
 	adds r1, #3
@@ -335,7 +335,7 @@ _0803496C:
 	ldr r0, _080349D0  @ gBg0Tm
 	adds r1, r1, r0
 	ldr r0, [sp, #0xc]
-	bl Text_Draw
+	bl PutText
 	movs r0, #3
 	bl EnableBgSync
 	mov r0, r8
@@ -388,35 +388,35 @@ sub_80349FC: @ 0x080349FC
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, _08034A54  @ 0x000004E9
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r0, _08034A58  @ 0x00000539
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x28
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r0, r5, #0
 	bl GetUnitCurrentHp
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x20
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	adds r0, r5, #0
 	bl GetUnitMaxHp
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x38
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -431,14 +431,14 @@ sub_8034A5C: @ 0x08034A5C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, _08034AA0  @ 0x000004F7
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r5, #0
 	movs r1, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r0, [r4, #4]
 	movs r3, #0x11
 	ldrsb r3, [r0, r3]
@@ -453,7 +453,7 @@ sub_8034A5C: @ 0x08034A5C
 	adds r0, r5, #0
 	movs r1, #0x38
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -467,7 +467,7 @@ sub_8034AA4: @ 0x08034AA4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl Text_Clear
+	bl ClearText
 	movs r0, #0x9f
 	lsls r0, r0, #3
 	bl GetStringFromIndex
@@ -475,14 +475,14 @@ sub_8034AA4: @ 0x08034AA4
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r0, r5, #0
 	bl GetUnitAid
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x38
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -508,7 +508,7 @@ sub_8034ADC: @ 0x08034ADC
 	movs r2, #0xa0
 	lsls r2, r2, #7
 	adds r0, r4, #0
-	bl DrawIcon
+	bl PutIcon
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -522,21 +522,21 @@ sub_8034B10: @ 0x08034B10
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, _08034B44  @ 0x000004FA
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r0, r5, #0
 	bl GetUnitStatusName
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x18
 	movs r2, #2
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -551,7 +551,7 @@ sub_8034B48: @ 0x08034B48
 	adds r4, r0, #0
 	adds r5, r1, #0
 	adds r6, r2, #0
-	bl Text_Clear
+	bl ClearText
 	movs r0, #0x9e
 	lsls r0, r0, #3
 	bl GetStringFromIndex
@@ -559,14 +559,14 @@ sub_8034B48: @ 0x08034B48
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r0, _08034BA8  @ 0x0000053A
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x28
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r0, r5, #0
 	bl GetUnitResistance
 	adds r3, r0, #0
@@ -574,14 +574,14 @@ sub_8034B48: @ 0x08034B48
 	adds r0, r4, #0
 	movs r1, #0x38
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	adds r0, r5, #0
 	bl GetUnitResistance
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x20
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -595,7 +595,7 @@ sub_8034BAC: @ 0x08034BAC
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl Text_Clear
+	bl ClearText
 	movs r0, #0x9e
 	lsls r0, r0, #3
 	bl GetStringFromIndex
@@ -603,14 +603,14 @@ sub_8034BAC: @ 0x08034BAC
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r0, r5, #0
 	bl GetUnitResistance
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x38
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -622,19 +622,19 @@ sub_8034BE4: @ 0x08034BE4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, _08034C14  @ 0x000004F4
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r0, r4, #0
 	movs r1, #0x38
 	movs r2, #2
 	adds r3, r5, #0
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -653,7 +653,7 @@ NewUnitInfoWindow_WithAllLines: @ 0x08034C18
 _08034C24:
 	adds r0, r4, #0
 	movs r1, #7
-	bl Text_Allocate
+	bl InitTextDb
 	adds r4, #8
 	subs r5, #1
 	cmp r5, #0
@@ -699,7 +699,7 @@ _08034C6A:
 	bne _08034CB0
 	adds r4, #0x38
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	movs r0, #0xb5
 	lsls r0, r0, #3
 	bl GetStringFromIndex
@@ -707,14 +707,14 @@ _08034C6A:
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #1
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r1, r5, #0
 	adds r1, #0x63
 	lsls r1, r1, #1
 	ldr r0, _08034CAC  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	b _08034D34
 	.align 2, 0
 _08034CAC: .4byte gBg0Tm
@@ -747,28 +747,28 @@ _08034CD8:
 	adds r0, r0, r1
 	ldrh r4, [r0]
 	adds r0, r5, #0
-	bl Text_Clear
+	bl ClearText
 	adds r0, r4, #0
 	bl GetItemName
 	adds r1, r0, #0
 	adds r0, r5, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	adds r0, r5, #0
 	mov r1, r8
-	bl Text_Draw
+	bl PutText
 	adds r0, r4, #0
 	bl GetItemUses
 	adds r2, r0, #0
 	adds r0, r7, #0
 	movs r1, #2
-	bl DrawDecNumber
+	bl PutNumberOrBlank
 	adds r0, r4, #0
 	bl GetItemIconId
 	adds r1, r0, #0
 	adds r0, r6, #0
 	movs r2, #0x80
 	lsls r2, r2, #7
-	bl DrawIcon
+	bl PutIcon
 	adds r6, #0x80
 	adds r7, #0x80
 	movs r0, #0x80
@@ -844,7 +844,7 @@ _08034D98:
 	lsls r4, r4, #0x18
 	lsrs r4, r4, #0x18
 	adds r0, r7, #0
-	bl Text_Clear
+	bl ClearText
 	movs r1, #0
 	lsls r4, r4, #0x18
 	asrs r4, r4, #0x18
@@ -854,19 +854,19 @@ _08034D98:
 	movs r1, #1
 _08034DC4:
 	adds r0, r7, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r6, #0
 	bl GetItemName
 	adds r1, r0, #0
 	adds r0, r7, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r0, [sp, #0x18]
 	lsls r1, r0, #1
 	ldr r0, _08034E58  @ gBg0Tm
 	mov r8, r0
 	add r1, r8
 	adds r0, r7, #0
-	bl Text_Draw
+	bl PutText
 	ldr r1, [sp, #0x14]
 	lsls r0, r1, #1
 	mov r1, r8
@@ -882,7 +882,7 @@ _08034DFA:
 	adds r2, r0, #0
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl DrawDecNumber
+	bl PutNumberOrBlank
 	ldr r4, [sp, #0x1c]
 	adds r4, #1
 	ldr r1, [sp, #0x10]
@@ -895,7 +895,7 @@ _08034DFA:
 	adds r0, r4, #0
 	movs r2, #0x80
 	lsls r2, r2, #7
-	bl DrawIcon
+	bl PutIcon
 	ldr r0, [sp, #0x14]
 	adds r0, #0x40
 	str r0, [sp, #0x14]
@@ -980,28 +980,28 @@ _08034EAC:
 	movs r5, #1
 _08034EC8:
 	adds r0, r7, #0
-	bl Text_Clear
+	bl ClearText
 	adds r0, r7, #0
 	adds r1, r5, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r6, #0
 	bl GetItemName
 	adds r1, r0, #0
 	adds r0, r7, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	ldr r0, [sp, #0x18]
 	lsls r1, r0, #1
 	ldr r2, _08034F98  @ gBg0Tm
 	mov r8, r2
 	add r1, r8
 	adds r0, r7, #0
-	bl Text_Draw
+	bl PutText
 	ldr r1, [sp, #0x14]
 	lsls r0, r1, #1
 	add r0, r8
 	adds r1, r5, #0
 	movs r2, #0x16
-	bl sub_8004B0C
+	bl PutSpecialChar
 	adds r0, r6, #0
 	bl IsItemHammernable
 	lsls r0, r0, #0x18
@@ -1020,7 +1020,7 @@ _08034F12:
 	adds r2, r0, #0
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl DrawDecNumber
+	bl PutNumberOrBlank
 	mov r4, sl
 	adds r4, #0xe
 	add r4, r9
@@ -1031,7 +1031,7 @@ _08034F12:
 	adds r2, r0, #0
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl DrawDecNumber
+	bl PutNumberOrBlank
 	mov r4, sl
 	adds r4, #1
 	add r4, r9
@@ -1043,7 +1043,7 @@ _08034F12:
 	adds r0, r4, #0
 	movs r2, #0x80
 	lsls r2, r2, #7
-	bl DrawIcon
+	bl PutIcon
 	ldr r2, [sp, #0x14]
 	adds r2, #0x40
 	str r2, [sp, #0x14]
@@ -1081,7 +1081,7 @@ sub_8034F9C: @ 0x08034F9C
 	bl NewUnitInfoWindow
 	adds r0, #0x38
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	pop {r0}
 	bx r0
 
@@ -1115,7 +1115,7 @@ sub_8034FB0: @ 0x08034FB0
 	adds r4, r4, r0
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_Draw
+	bl PutText
 	add sp, #8
 	pop {r4, r5, r6}
 	pop {r0}
@@ -1132,11 +1132,11 @@ sub_8034FFC: @ 0x08034FFC
 	adds r4, r0, #0
 	adds r0, #0x38
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	adds r4, #0x40
 	adds r0, r4, #0
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -1176,7 +1176,7 @@ sub_803501C: @ 0x0803501C
 	mov r9, r0
 	add r1, r9
 	adds r0, r6, #0
-	bl Text_Draw
+	bl PutText
 	adds r5, #0x40
 	adds r0, r5, #0
 	mov r1, r8
@@ -1186,7 +1186,7 @@ sub_803501C: @ 0x0803501C
 	add r4, r9
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_Draw
+	bl PutText
 	add sp, #8
 	pop {r3, r4}
 	mov r8, r3
@@ -1205,7 +1205,7 @@ sub_8035090: @ 0x08035090
 	bl NewUnitInfoWindow
 	adds r0, #0x38
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	pop {r0}
 	bx r0
 
@@ -1245,7 +1245,7 @@ sub_80350A4: @ 0x080350A4
 	adds r4, r4, r0
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_Draw
+	bl PutText
 	add sp, #8
 	pop {r4, r5, r6}
 	pop {r0}
@@ -1262,11 +1262,11 @@ sub_80350FC: @ 0x080350FC
 	adds r4, r0, #0
 	adds r0, #0x38
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	adds r4, #0x40
 	adds r0, r4, #0
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -1313,7 +1313,7 @@ sub_803511C: @ 0x0803511C
 	ldr r6, _08035198  @ gBg0Tm
 	adds r1, r1, r6
 	mov r0, r8
-	bl Text_Draw
+	bl PutText
 	adds r5, #0x40
 	adds r0, r5, #0
 	mov r1, r9
@@ -1323,7 +1323,7 @@ sub_803511C: @ 0x0803511C
 	adds r4, r4, r6
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl Text_Draw
+	bl PutText
 	add sp, #8
 	pop {r3, r4}
 	mov r8, r3
@@ -1345,13 +1345,13 @@ sub_803519C: @ 0x0803519C
 	str r0, [r4]
 	adds r0, #0x38
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	adds r0, r5, #0
 	bl NewUnitInfoWindow
 	str r0, [r4, #4]
 	adds r0, #0x38
 	movs r1, #8
-	bl Text_Allocate
+	bl InitTextDb
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -1365,9 +1365,9 @@ sub_80351CC: @ 0x080351CC
 	push {r4, lr}
 	sub sp, #8
 	adds r4, r0, #0
-	bl ResetIconGraphics_
+	bl InitIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	adds r0, r4, #0
 	bl sub_803519C
 	ldr r0, _08035200  @ gObject_16x16_VFlipped
@@ -1425,7 +1425,7 @@ SetupUnitRescueWindow: @ 0x08035204
 	ldr r2, _080352B4  @ gBg0Tm
 	mov r9, r2
 	add r1, r9
-	bl Text_Draw
+	bl PutText
 	ldr r0, [r5]
 	adds r1, r4, #1
 	movs r2, #3
@@ -1448,7 +1448,7 @@ SetupUnitRescueWindow: @ 0x08035204
 	adds r1, r4, r2
 	lsls r1, r1, #1
 	add r1, r9
-	bl Text_Draw
+	bl PutText
 	adds r4, #4
 	lsls r4, r4, #3
 	movs r0, #0
@@ -1512,7 +1512,7 @@ sub_80352BC: @ 0x080352BC
 	ldr r2, _08035378  @ gBg0Tm
 	mov r8, r2
 	add r1, r8
-	bl Text_Draw
+	bl PutText
 	ldr r0, [r5]
 	adds r1, r4, #1
 	movs r2, #3
@@ -1536,7 +1536,7 @@ sub_80352BC: @ 0x080352BC
 	adds r1, r4, r2
 	lsls r1, r1, #1
 	add r1, r8
-	bl Text_Draw
+	bl PutText
 	adds r4, #4
 	lsls r4, r4, #3
 	movs r0, #0
@@ -1564,9 +1564,9 @@ sub_8035380: @ 0x08035380
 	push {r4, lr}
 	sub sp, #8
 	adds r4, r0, #0
-	bl ResetIconGraphics_
+	bl InitIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	adds r0, r4, #0
 	bl sub_803519C
 	ldr r0, _080353B4  @ gObject_16x16
@@ -1628,7 +1628,7 @@ sub_80353B8: @ 0x080353B8
 	lsls r1, r1, #1
 	ldr r6, _08035474  @ gBg0Tm
 	adds r1, r1, r6
-	bl Text_Draw
+	bl PutText
 	ldr r0, [r5, #4]
 	mov r1, sl
 	str r1, [sp]
@@ -1648,7 +1648,7 @@ sub_80353B8: @ 0x080353B8
 	adds r1, r4, r2
 	lsls r1, r1, #1
 	adds r1, r1, r6
-	bl Text_Draw
+	bl PutText
 	adds r1, r4, #1
 	mov r0, r8
 	movs r2, #9

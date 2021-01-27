@@ -675,9 +675,7 @@ void sub_801A278(void) {
         SetBlankChr(0x400 + (*tile++ & 0x3FF));
     }
 
-    // TODO: macro?
-    gPal[0] = 0;
-    EnablePalSync();
+    SetBackdropColor(0);
 }
 
 void RevertMapChange(int id) {

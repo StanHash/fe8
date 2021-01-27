@@ -249,18 +249,18 @@ sub_801E684: @ 0x0801E684
 	adds r0, r4, #0
 	adds r0, #0x34
 	movs r1, #0xc
-	bl Text_Allocate
+	bl InitTextDb
 	adds r0, r4, #0
 	adds r0, #0x3c
 	movs r1, #0xc
-	bl Text_Allocate
+	bl InitTextDb
 	adds r0, r4, #0
 	adds r0, #0x44
 	movs r1, #0xc
-	bl Text_Allocate
+	bl InitTextDb
 	ldrb r1, [r5]
 	movs r0, #1
-	bl LoadIconPalette
+	bl ApplyIconPalette
 	ldr r0, [r4, #0x2c]
 	movs r1, #1
 	negs r1, r1
@@ -339,13 +339,13 @@ sub_801E748: @ 0x0801E748
 	ldrb r0, [r0]
 	str r0, [sp, #8]
 	adds r0, r6, #0
-	bl Text_Clear
+	bl ClearText
 	adds r0, r7, #0
 	adds r0, #0x3c
-	bl Text_Clear
+	bl ClearText
 	adds r0, r7, #0
 	adds r0, #0x44
-	bl Text_Clear
+	bl ClearText
 	ldrb r0, [r4]
 	mov r2, r8
 	ldrb r1, [r2]
@@ -421,9 +421,9 @@ _0801E82A:
 	movs r1, #0
 	movs r2, #0
 	adds r3, r4, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r0, r4, #0
-	bl String_GetEnd
+	bl GetStringLineEnd
 	adds r4, r0, #0
 	ldrb r0, [r4]
 	cmp r0, #0
@@ -456,16 +456,16 @@ _0801E82A:
 	strh r1, [r0]
 	adds r0, r6, #0
 	adds r1, r7, #0
-	bl Text_Draw
+	bl PutText
 	mov r0, r8
 	mov r1, r9
-	bl Text_Draw
+	bl PutText
 	ldr r0, [sp, #4]
 	movs r2, #0xa1
 	lsls r2, r2, #1
 	adds r1, r0, r2
 	mov r0, sl
-	bl Text_Draw
+	bl PutText
 	b _0801EA1C
 	.align 2, 0
 _0801E89C: .4byte gBattleActor
@@ -526,7 +526,7 @@ _0801E906:
 	adds r0, r6, #0
 	movs r1, #0x1c
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r5, r6, #0
 	adds r5, #8
 	ldr r0, _0801EA40  @ 0x000004F3
@@ -535,7 +535,7 @@ _0801E906:
 	adds r0, r5, #0
 	movs r1, #2
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	adds r4, r6, #0
 	adds r4, #0x10
 	ldr r0, _0801EA44  @ 0x000004F4
@@ -544,21 +544,21 @@ _0801E906:
 	adds r0, r4, #0
 	movs r1, #2
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r0, _0801EA48  @ 0x00000501
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r5, #0
 	movs r1, #0x32
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r0, _0801EA4C  @ 0x000004F5
 	bl GetStringFromIndex
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x32
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	mov r0, r8
 	adds r0, #0x5a
 	movs r1, #0
@@ -566,7 +566,7 @@ _0801E906:
 	adds r0, r5, #0
 	movs r1, #0x24
 	mov r2, r9
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	mov r0, r8
 	adds r0, #0x60
 	movs r2, #0
@@ -574,7 +574,7 @@ _0801E906:
 	adds r0, r4, #0
 	movs r1, #0x24
 	mov r2, r9
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	mov r0, r8
 	adds r0, #0x66
 	movs r1, #0
@@ -582,7 +582,7 @@ _0801E906:
 	adds r0, r5, #0
 	movs r1, #0x54
 	mov r2, r9
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	mov r0, r8
 	adds r0, #0x62
 	movs r2, #0
@@ -590,7 +590,7 @@ _0801E906:
 	adds r0, r4, #0
 	movs r1, #0x54
 	mov r2, r9
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	adds r0, r7, #0
 	adds r0, #0x34
 	adds r6, r7, #0
@@ -606,7 +606,7 @@ _0801E906:
 	lsls r1, r1, #1
 	ldr r4, _0801EA50  @ gBg0Tm
 	adds r1, r1, r4
-	bl Text_Draw
+	bl PutText
 	adds r0, r7, #0
 	adds r0, #0x3c
 	ldrb r1, [r6]
@@ -617,7 +617,7 @@ _0801E906:
 	adds r1, r1, r2
 	lsls r1, r1, #1
 	adds r1, r1, r4
-	bl Text_Draw
+	bl PutText
 	adds r0, r7, #0
 	adds r0, #0x44
 	ldrb r1, [r6]
@@ -628,7 +628,7 @@ _0801E906:
 	adds r1, r1, r2
 	lsls r1, r1, #1
 	adds r1, r1, r4
-	bl Text_Draw
+	bl PutText
 	ldr r4, [sp, #4]
 	adds r4, #0x50
 	mov r1, sl
@@ -639,7 +639,7 @@ _0801E906:
 	ldr r0, [sp, #8]
 	lsls r2, r0, #0xc
 	adds r0, r4, #0
-	bl DrawIcon
+	bl PutIcon
 _0801EA1C:
 	movs r0, #1
 	bl EnableBgSync

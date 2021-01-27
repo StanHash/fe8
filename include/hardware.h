@@ -4,6 +4,8 @@
 #include "global.h"
 #include "irq.h"
 
+enum { CHR_SIZE = 0x20 };
+
 struct KeySt
 {
     u8 repeatDelay;     // initial delay before generating auto-repeat presses
@@ -171,6 +173,8 @@ enum
 
 #define MAKE_RGB5(r, g, b) (((b) << 10) + ((g) << 5) + (r))
 
+#define PAL_COLOR(pal, num) (gPal[(pal)*0x10 + (num)])
+
 #define SIN_Q12(angle) (gSinLut[(angle) & 0xFF])
 #define COS_Q12(angle) (gSinLut[0x40 + ((angle) & 0xFF)])
 
@@ -240,3 +244,7 @@ enum
 
 #define SetBlendDarken(cy) \
     SetBlendConfig(3, 0, 0, (cy))
+
+#define SetBackdropColor(color) \
+    PAL_COLOR(0, 0) = (color); \
+    EnablePalSync()

@@ -42,7 +42,7 @@ sub_801F9FC: @ 0x0801F9FC
 	adds r5, r1, #0
 	adds r6, r2, #0
 	adds r0, r6, #0
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	adds r2, r0, #0
 	cmp r5, #0
 	blt _0801FA14
@@ -70,19 +70,19 @@ _0801FA2A:
 	bl DrawUiFrame2
 	cmp r5, #0
 	blt _0801FA5A
-	bl ResetIconGraphics_
+	bl InitIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	lsls r0, r4, #1
 	ldr r1, _0801FA84  @ gBg0Tm+0x242
 	adds r0, r0, r1
 	movs r2, #0x80
 	lsls r2, r2, #7
 	adds r1, r5, #0
-	bl DrawIcon
+	bl PutIcon
 	adds r4, #2
 _0801FA5A:
-	bl sub_8003D20
+	bl ResetTextFont
 	lsls r1, r4, #1
 	ldr r0, _0801FA84  @ gBg0Tm+0x242
 	adds r1, r1, r0
@@ -92,7 +92,7 @@ _0801FA5A:
 	movs r0, #0
 	movs r2, #0
 	movs r3, #0
-	bl DrawTextInline
+	bl PutDrawText
 	ldr r0, _0801FA88  @ gUnknown_0859B0C0
 	adds r1, r7, #0
 	bl SpawnProcLocking
@@ -122,13 +122,13 @@ sub_801FA8C: @ 0x0801FA8C
 	cmp r2, #0
 	beq _0801FAAE
 	mov r0, r8
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	adds r4, r0, #3
 _0801FAAE:
 	ldr r0, [sp, #0x2c]
 	cmp r0, #0
 	beq _0801FABC
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	adds r1, r4, #2
 	adds r4, r1, r0
 _0801FABC:
@@ -170,62 +170,62 @@ _0801FAEC:
 	bl DrawUiFrame2
 	cmp r7, #0
 	blt _0801FB1E
-	bl ResetIconGraphics_
+	bl InitIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	lsls r0, r6, #1
 	ldr r1, _0801FBA4  @ gBg0Tm+0x242
 	adds r0, r0, r1
 	movs r2, #0x80
 	lsls r2, r2, #7
 	adds r1, r7, #0
-	bl DrawIcon
+	bl PutIcon
 	adds r6, #2
 _0801FB1E:
-	bl sub_8003D20
+	bl ResetTextFont
 	add r0, sp, #4
 	adds r1, r5, #0
-	bl Text_Init
+	bl InitText
 	add r0, sp, #4
 	movs r1, #1
-	bl Text_Advance
+	bl Text_Skip
 	mov r0, r8
 	cmp r0, #0
 	beq _0801FB50
 	add r0, sp, #4
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	add r0, sp, #4
 	mov r1, r8
-	bl Text_AppendString
+	bl Text_DrawString
 	add r0, sp, #4
 	movs r1, #2
-	bl Text_Advance
+	bl Text_Skip
 _0801FB50:
 	add r0, sp, #4
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	add r0, sp, #4
 	mov r1, r9
-	bl sub_80040C0
+	bl Text_DrawNumberLeftAlign
 	ldr r0, [sp, #0x2c]
 	cmp r0, #0
 	beq _0801FB7E
 	add r0, sp, #4
 	movs r1, #2
-	bl Text_Advance
+	bl Text_Skip
 	add r0, sp, #4
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	add r0, sp, #4
 	ldr r1, [sp, #0x2c]
-	bl Text_AppendString
+	bl Text_DrawString
 _0801FB7E:
 	lsls r1, r6, #1
 	ldr r0, _0801FBA4  @ gBg0Tm+0x242
 	adds r1, r1, r0
 	add r0, sp, #4
-	bl Text_Draw
+	bl PutText
 	ldr r0, _0801FBA8  @ gUnknown_0859B0C0
 	mov r1, sl
 	bl SpawnProcLocking
@@ -252,31 +252,31 @@ sub_801FBAC: @ 0x0801FBAC
 	mov r8, r0
 	adds r7, r1, #0
 	adds r4, r2, #0
-	bl sub_8003D20
+	bl ResetTextFont
 	add r0, sp, #4
 	movs r1, #0x14
-	bl Text_Init
+	bl InitText
 	add r0, sp, #4
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r7, #0
 	bl GetItemName
 	adds r1, r0, #0
 	add r0, sp, #4
-	bl Text_AppendString
+	bl Text_DrawString
 	add r0, sp, #4
 	movs r1, #2
-	bl Text_Advance
+	bl Text_Skip
 	add r0, sp, #4
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r4, #0
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	add r0, sp, #4
-	bl Text_AppendString
+	bl Text_DrawString
 	add r0, sp, #4
-	bl Text_GetXCursor
+	bl Text_GetCursor
 	adds r2, r0, #0
 	adds r2, #0x28
 	movs r0, #0xf0
@@ -307,12 +307,12 @@ _0801FC18:
 	movs r2, #0x80
 	lsls r2, r2, #7
 	adds r0, r6, #0
-	bl DrawIcon
+	bl PutIcon
 	adds r4, #4
 	adds r5, r5, r4
 	add r0, sp, #4
 	adds r1, r5, #0
-	bl Text_Draw
+	bl PutText
 	ldr r0, _0801FC64  @ gUnknown_0859B0C0
 	mov r1, r8
 	bl SpawnProcLocking
@@ -338,27 +338,27 @@ sub_801FC68: @ 0x0801FC68
 	adds r7, r1, #0
 	adds r4, r2, #0
 	adds r5, r3, #0
-	bl sub_8003D20
+	bl ResetTextFont
 	add r0, sp, #4
 	movs r1, #0x14
-	bl Text_Init
+	bl InitText
 	cmp r4, #0
 	beq _0801FCA6
 	add r0, sp, #4
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r0, r4, #0
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	add r0, sp, #4
-	bl Text_AppendString
+	bl Text_DrawString
 	add r0, sp, #4
 	movs r1, #2
-	bl Text_Advance
+	bl Text_Skip
 _0801FCA6:
 	add r0, sp, #4
 	movs r1, #2
-	bl Text_SetColorId
+	bl Text_SetColor
 	cmp r4, #0
 	beq _0801FCB8
 	adds r0, r7, #0
@@ -371,9 +371,9 @@ _0801FCBC:
 	bl GetItemNameWithArticle
 	adds r1, r0, #0
 	add r0, sp, #4
-	bl Text_AppendString
+	bl Text_DrawString
 	add r0, sp, #4
-	bl Text_GetXCursor
+	bl Text_GetCursor
 	adds r1, r0, #7
 	cmp r1, #0
 	bge _0801FCD6
@@ -383,20 +383,20 @@ _0801FCD6:
 	adds r1, r4, #2
 	lsls r1, r1, #3
 	add r0, sp, #4
-	bl Text_SetXCursor
+	bl Text_SetCursor
 	add r0, sp, #4
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	cmp r5, #0
 	beq _0801FCFC
 	adds r0, r5, #0
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	add r0, sp, #4
-	bl Text_AppendString
+	bl Text_DrawString
 _0801FCFC:
 	add r0, sp, #4
-	bl Text_GetXCursor
+	bl Text_GetCursor
 	adds r2, r0, #0
 	adds r2, #0x18
 	movs r0, #0xf0
@@ -422,7 +422,7 @@ _0801FD1A:
 	ldr r5, _0801FD68  @ gBg0Tm+0x242
 	adds r1, r1, r5
 	add r0, sp, #4
-	bl Text_Draw
+	bl PutText
 	adds r4, #1
 	adds r4, r6, r4
 	lsls r4, r4, #1
@@ -434,7 +434,7 @@ _0801FD1A:
 	movs r2, #0x80
 	lsls r2, r2, #7
 	adds r0, r4, #0
-	bl DrawIcon
+	bl PutIcon
 	ldr r0, _0801FD6C  @ gUnknown_0859B0C0
 	mov r1, r8
 	bl SpawnProcLocking

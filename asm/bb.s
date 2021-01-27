@@ -67,10 +67,10 @@ sub_80354E0: @ 0x080354E0
 	adds r0, #0x30
 	ldr r1, _080355A4  @ 0x06014800
 	movs r2, #0x14
-	bl InitSomeOtherGraphicsRelatedStruct
+	bl InitSpriteTextFont
 	movs r0, #1
-	bl SetFontGlyphSet
-	ldr r0, _080355A8  @ gUnknown_0859EF20
+	bl SetTextFontGlyphs
+	ldr r0, _080355A8  @ Pal_TalkText
 	movs r1, #0xa0
 	lsls r1, r1, #2
 	movs r2, #0x20
@@ -80,13 +80,13 @@ sub_80354E0: @ 0x080354E0
 	movs r6, #1
 _0803550E:
 	adds r0, r4, #0
-	bl Text_Init3
+	bl InitSpriteText
 	adds r0, r4, #0
 	movs r1, #0
-	bl Text_80046B4
+	bl DrawSpriteTextBackgroundExt
 	adds r0, r4, #0
 	movs r1, #0
-	bl Text_SetColorId
+	bl Text_SetColor
 	adds r4, #8
 	subs r6, #1
 	cmp r6, #0
@@ -106,33 +106,33 @@ _0803550E:
 _08035544:
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl Text_AppendChar
+	bl Text_DrawCharacter
 	adds r5, r0, #0
 	adds r0, r4, #0
-	bl Text_GetXCursor
+	bl Text_GetCursor
 	cmp r0, #0xe0
 	ble _0803557A
 	subs r5, #2
 	adds r4, #8
 	adds r0, r5, #0
 	mov r1, sp
-	bl GetCharTextWidth
+	bl GetCharTextLen
 	adds r0, r7, #0
 	adds r0, #0x48
-	bl Text_GetXCursor
+	bl Text_GetCursor
 	adds r1, r0, #0
 	ldr r0, [sp]
 	subs r1, r1, r0
 	subs r1, #0xc0
 	adds r0, r4, #0
-	bl Text_SetXCursor
+	bl Text_SetCursor
 _0803557A:
 	ldrb r0, [r5]
 	cmp r0, #1
 	bhi _08035544
 _08035580:
 	ldr r0, [r7, #0x2c]
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	adds r0, #0x10
 	asrs r0, r0, #5
 	adds r1, r0, #1
@@ -141,7 +141,7 @@ _08035580:
 	strh r0, [r6]
 _08035592:
 	movs r0, #0
-	bl SetFont
+	bl SetTextFont
 	add sp, #4
 	pop {r3}
 	mov r8, r3
@@ -150,7 +150,7 @@ _08035592:
 	bx r0
 	.align 2, 0
 _080355A4: .4byte 0x06014800
-_080355A8: .4byte gUnknown_0859EF20
+_080355A8: .4byte Pal_TalkText
 
 	THUMB_FUNC_END sub_80354E0
 

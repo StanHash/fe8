@@ -4344,8 +4344,8 @@ CallRouteSplitMenu: @ 0x080864CC
 	orrs r0, r1
 	strb r0, [r2, #1]
 	movs r0, #0
-	bl SetFont
-	bl Font_LoadForUI
+	bl SetTextFont
+	bl InitSystemTextFont
 	bl LoadUiFrameGraphics
 	ldr r0, _08086510  @ gUnknown_089F36A0
 	adds r1, r4, #0
@@ -4372,10 +4372,10 @@ MenuCommand_DrawRouteSplit: @ 0x08086514
 	adds r0, r5, #0
 	movs r1, #0
 	movs r2, #0
-	bl Text_SetParameters
+	bl Text_SetParams
 	adds r0, r5, #0
 	adds r1, r6, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
 	lsls r1, r1, #5
@@ -4387,8 +4387,8 @@ MenuCommand_DrawRouteSplit: @ 0x08086514
 	ldr r0, _08086560  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r5, #0
-	bl Text_Draw
-	bl Font_InitForUIDefault
+	bl PutText
+	bl ResetText
 	movs r0, #0
 	pop {r4, r5, r6}
 	pop {r1}

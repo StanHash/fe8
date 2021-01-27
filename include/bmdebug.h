@@ -10,10 +10,9 @@
 #include "gba/io_reg.h"
 #include "hardware.h"
 #include "proc.h"
-#include "fontgrp.h"
+#include "text.h"
 #include "uiutils.h"
 #include "uimenu.h"
-#include "fontgrp.h"
 #include "bmio.h"
 
 struct DebugPrintProc

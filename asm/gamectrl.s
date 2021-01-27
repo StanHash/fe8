@@ -978,12 +978,12 @@ sub_8009EFC: @ 0x08009EFC
 
 	THUMB_FUNC_END sub_8009EFC
 
-	THUMB_FUNC_START NewGameControl
-NewGameControl: @ 0x08009F08
+	THUMB_FUNC_START StartGame
+StartGame: @ 0x08009F08
 	push {lr}
 	ldr r0, _08009F34  @ SomeUpdateRoutine
 	bl SetMainFunc
-	ldr r0, _08009F38  @ GeneralVBlankHandler
+	ldr r0, _08009F38  @ OnVSync
 	bl SetOnVBlank
 	ldr r0, _08009F3C  @ gUnknown_085916D4
 	movs r1, #3
@@ -1000,10 +1000,10 @@ NewGameControl: @ 0x08009F08
 	bx r0
 	.align 2, 0
 _08009F34: .4byte SomeUpdateRoutine
-_08009F38: .4byte GeneralVBlankHandler
+_08009F38: .4byte OnVSync
 _08009F3C: .4byte gUnknown_085916D4
 
-	THUMB_FUNC_END NewGameControl
+	THUMB_FUNC_END StartGame
 
 	THUMB_FUNC_START GetGameControl6C
 GetGameControl6C: @ 0x08009F40

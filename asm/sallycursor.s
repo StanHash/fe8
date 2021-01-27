@@ -566,7 +566,7 @@ sub_8033648: @ 0x08033648
 	negs r1, r1
 	movs r0, #0
 	bl LoadDialogueBoxGfx
-	bl Font_InitForUIDefault
+	bl ResetText
 	bl DeletePlayerPhaseInterface6Cs
 	bl HideMoveRangeGraphics
 	adds r0, r4, #0

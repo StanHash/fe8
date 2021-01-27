@@ -8,7 +8,7 @@
 #include "proc.h"
 #include "hardware.h"
 #include "oam.h"
-#include "fontgrp.h"
+#include "text.h"
 #include "uiutils.h"
 #include "chapterdata.h"
 #include "random.h"
@@ -301,8 +301,7 @@ void BMapDispSuspend(void) {
         return; // gfx was already blocked, nothing needs to be done.
 
     SetOnHBlankB(NULL);
-    gPal[0] = 0;
-    EnablePalSync();
+    SetBackdropColor(0);
     LockEachMarkedProc(1);
 }
 
@@ -563,7 +562,7 @@ void WfxBlue_Init(void) {
     void(*handler)(void) = WfxBlueHSync;
 
     for (; i < 320; ++i)
-        *palIt++ = RGB(0, 0, (31 - i / 10));
+        *palIt++ = MAKE_RGB5(0, 0, (31 - i / 10));
 
     SetOnHBlankB(handler);
 }
@@ -975,7 +974,7 @@ void StartBattleMap(struct GameCtrlProc* gameCtrl) {
     SetupBackgrounds(NULL);
 
     SetMainFunc(SomeUpdateRoutine);
-    SetOnVBlank(GeneralVBlankHandler);
+    SetOnVBlank(OnVSync);
 
     ClearBattleMapState();
     sub_80156D4();
@@ -1029,9 +1028,7 @@ void StartBattleMap(struct GameCtrlProc* gameCtrl) {
     if (gameCtrl)
         StartBMapMain(gameCtrl);
 
-    // TODO: MACRO?
-    gPal[0] = 0;
-    EnablePalSync();
+    SetBackdropColor(0);
 
     SetBlendTargetA(TRUE, TRUE, TRUE, TRUE, TRUE);
     SetBlendBackdropA(TRUE);
@@ -1043,7 +1040,7 @@ void RestartBattleMap(void) {
     SetupBackgrounds(NULL);
 
     SetMainFunc(SomeUpdateRoutine);
-    SetOnVBlank(GeneralVBlankHandler);
+    SetOnVBlank(OnVSync);
 
     sub_80156D4();
     SetupMapSpritesPalettes();
@@ -1065,9 +1062,7 @@ void RestartBattleMap(void) {
 
     SpawnProc(gProc_MapTask, PROC_TREE_4);
 
-    // TODO: MACRO?
-    gPal[0] = 0;
-    EnablePalSync();
+    SetBackdropColor(0);
 
     SetDispEnable(1, 1, 1, 0, 0);
 }
@@ -1085,7 +1080,7 @@ void GameCtrl_StartResumedGame(struct GameCtrlProc* gameCtrl) {
     SetupBackgrounds(NULL);
 
     SetMainFunc(SomeUpdateRoutine);
-    SetOnVBlank(GeneralVBlankHandler);
+    SetOnVBlank(OnVSync);
 
     ClearBattleMapState();
 
@@ -1140,7 +1135,7 @@ void GameCtrl_StartResumedGame(struct GameCtrlProc* gameCtrl) {
 
 void RefreshBMapDisplay_FromBattle(void) {
     SetMainFunc(SomeUpdateRoutine);
-    SetOnVBlank(GeneralVBlankHandler);
+    SetOnVBlank(OnVSync);
 
     LoadGameCoreGfx();
     SetupMapSpritesPalettes();
@@ -1171,7 +1166,7 @@ void InitMoreBMapGraphics(void) {
     SMS_UpdateFromGameData();
     SetupMapSpritesPalettes();
     SMS_FlushIndirect();
-    Font_LoadForUI();
+    InitSystemTextFont();
 }
 
 void RefreshBMapGraphics(void) {

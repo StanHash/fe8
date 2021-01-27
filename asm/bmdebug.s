@@ -33,7 +33,7 @@ _0801BBCC:
 	adds r4, r5, #0
 	adds r4, #0x34
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r1, _0801BC14  @ gUnknown_08A20E74
 	adds r0, r5, #0
 	adds r0, #0x3c
@@ -47,7 +47,7 @@ _0801BBCC:
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0x2c
 	ldrsh r1, [r5, r0]
 	lsls r1, r1, #5
@@ -58,7 +58,7 @@ _0801BBCC:
 	ldr r0, _0801BC18  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	pop {r4, r5, r6}
 	pop {r1}
 	bx r1
@@ -126,7 +126,7 @@ _0801BC72:
 	adds r4, r6, #0
 	adds r4, #0x34
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	movs r0, #0
 	ldrsb r0, [r5, r0]
 	lsls r0, r0, #4
@@ -137,7 +137,7 @@ _0801BC72:
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0x2c
 	ldrsh r1, [r6, r0]
 	lsls r1, r1, #5
@@ -148,7 +148,7 @@ _0801BC72:
 	ldr r0, _0801BCC8  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 _0801BCB8:
 	movs r0, #0
 	pop {r4, r5, r6, r7}
@@ -184,7 +184,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	adds r6, r5, #0
 	adds r6, #0x34
 	adds r0, r6, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, [r5, #0x30]
 	ldrh r0, [r0, #4]
 	bl GetStringFromIndex
@@ -192,7 +192,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	adds r0, r6, #0
 	movs r1, #8
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r1, _0801BD50  @ gUnknown_0859AA7C
 	adds r4, #0x66
 	movs r2, #0
@@ -205,7 +205,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	adds r0, r6, #0
 	movs r1, #0x40
 	movs r2, #2
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0x2c
 	ldrsh r1, [r5, r0]
 	lsls r1, r1, #5
@@ -216,7 +216,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	ldr r0, _0801BD54  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r6, #0
-	bl Text_Draw
+	bl PutText
 	movs r0, #0
 	pop {r4, r5, r6}
 	pop {r1}
@@ -254,7 +254,7 @@ DebugMapMenu_DisplayInfoIdle: @ 0x0801BD58
 	movs r0, #1
 	negs r0, r0
 	movs r1, #9
-	bl SetupDebugFontForOBJ
+	bl DebugInitObj
 _0801BD90:
 	movs r0, #0
 	pop {r4, r5}
@@ -288,7 +288,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	adds r4, r5, #0
 	adds r4, #0x34
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, [r5, #0x30]
 	ldrh r0, [r0, #4]
 	bl GetStringFromIndex
@@ -296,7 +296,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	adds r0, r4, #0
 	movs r1, #8
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r0, [r6, #0x58]
 	movs r1, #7
 	bl __modsi3
@@ -308,7 +308,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	adds r0, r4, #0
 	movs r1, #0x40
 	movs r2, #2
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0x2c
 	ldrsh r1, [r5, r0]
 	lsls r1, r1, #5
@@ -319,7 +319,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	ldr r0, _0801BE24  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	movs r0, #0
 	add sp, #0x10
 	pop {r4, r5, r6}
@@ -451,7 +451,7 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	adds r4, r5, #0
 	adds r4, #0x34
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, [r5, #0x30]
 	ldrh r0, [r0, #4]
 	bl GetStringFromIndex
@@ -459,7 +459,7 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	adds r0, r4, #0
 	movs r1, #8
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0xd7
 	lsls r0, r0, #3
 	bl GetStringFromIndex
@@ -467,14 +467,14 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	adds r0, r4, #0
 	movs r1, #0x48
 	movs r2, #2
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	bl sub_80A4BB0
 	adds r3, r0, #0
 	adds r3, #1
 	adds r0, r4, #0
 	movs r1, #0x40
 	movs r2, #2
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	movs r0, #0x2c
 	ldrsh r1, [r5, r0]
 	lsls r1, r1, #5
@@ -485,7 +485,7 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	ldr r0, _0801BF68  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	movs r0, #0
 	pop {r4, r5}
 	pop {r1}
@@ -657,12 +657,12 @@ DEBUGONLY_Startup: @ 0x0801C090
 	push {r4, lr}
 	ldr r0, _0801C0E0  @ SomeUpdateRoutine
 	bl SetMainFunc
-	ldr r0, _0801C0E4  @ GeneralVBlankHandler
+	ldr r0, _0801C0E4  @ OnVSync
 	bl SetOnVBlank
 	bl RefreshBMapGraphics
 	movs r0, #2
 	movs r1, #0
-	bl SetupDebugFontForBG
+	bl DebugInitBg
 	ldr r0, _0801C0E8  @ gUnknown_080D7A7C
 	bl sub_8008A24
 	ldr r0, _0801C0EC  @ gDebugContinueMenuDef
@@ -687,7 +687,7 @@ DEBUGONLY_Startup: @ 0x0801C090
 	bx r0
 	.align 2, 0
 _0801C0E0: .4byte SomeUpdateRoutine
-_0801C0E4: .4byte GeneralVBlankHandler
+_0801C0E4: .4byte OnVSync
 _0801C0E8: .4byte gUnknown_080D7A7C
 _0801C0EC: .4byte gDebugContinueMenuDef
 _0801C0F0: .4byte gUnknown_0202BCB0
@@ -1100,7 +1100,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	adds r5, r4, #0
 	adds r5, #0x34
 	adds r0, r5, #0
-	bl Text_Clear
+	bl ClearText
 	ldr r0, [r4, #0x30]
 	ldrh r0, [r0, #4]
 	bl GetStringFromIndex
@@ -1108,7 +1108,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	adds r0, r5, #0
 	movs r1, #8
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	ldr r2, _0801C43C  @ gUnknown_0859AA7C
 	ldr r0, _0801C440  @ gRAMChapterData
 	ldrb r1, [r0, #0xd]
@@ -1124,7 +1124,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	adds r0, r5, #0
 	movs r1, #0x40
 	movs r2, #2
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
 	lsls r1, r1, #5
@@ -1135,7 +1135,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	ldr r0, _0801C444  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r5, #0
-	bl Text_Draw
+	bl PutText
 	movs r0, #0
 	pop {r4, r5}
 	pop {r1}
@@ -1208,7 +1208,7 @@ DebugMenu_FogEffect: @ 0x0801C4B0
 	THUMB_FUNC_START DebugContinueMenu_ReleaseEntry
 DebugContinueMenu_ReleaseEntry: @ 0x0801C4B4
 	push {lr}
-	bl NewGameControl
+	bl StartGame
 	movs r0, #7
 	pop {r1}
 	bx r1
@@ -1268,7 +1268,7 @@ _0801C51C:
 	adds r4, r5, #0
 	adds r4, #0x34
 	adds r0, r4, #0
-	bl Text_Clear
+	bl ClearText
 	adds r0, r5, #0
 	adds r0, #0x3c
 	ldrb r0, [r0]
@@ -1282,7 +1282,7 @@ _0801C51C:
 	adds r0, r4, #0
 	movs r1, #4
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	lsls r0, r6, #1
 	adds r0, r7, r0
 	ldrh r0, [r0]
@@ -1291,7 +1291,7 @@ _0801C51C:
 	adds r0, r4, #0
 	movs r1, #0x1e
 	movs r2, #2
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0x2c
 	ldrsh r1, [r5, r0]
 	lsls r1, r1, #5
@@ -1302,7 +1302,7 @@ _0801C51C:
 	ldr r0, _0801C584  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl Text_Draw
+	bl PutText
 	movs r0, #0
 	add sp, #0xc
 	pop {r4, r5, r6, r7}

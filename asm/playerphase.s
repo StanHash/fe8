@@ -1478,7 +1478,7 @@ PlayerPhase_ApplyUnitMovement: @ 0x0801D470
 	ldrb r0, [r0]
 	strb r0, [r5, #0x10]
 _0801D4BA:
-	bl sub_8003D20
+	bl ResetTextFont
 	bl sub_8084508
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18

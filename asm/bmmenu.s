@@ -156,7 +156,7 @@ MapMenu_GuideCommandDraw: @ 0x08022678
 	adds r0, r4, #0
 	adds r0, #0x34
 	movs r1, #4
-	bl Text_SetColorId
+	bl Text_SetColor
 _08022692:
 	adds r0, r4, #0
 	adds r0, #0x3d
@@ -167,14 +167,14 @@ _08022692:
 	bne _080226A8
 	adds r0, r5, #0
 	movs r1, #1
-	bl Text_SetColorId
+	bl Text_SetColor
 _080226A8:
 	ldr r0, [r4, #0x30]
 	ldrh r0, [r0, #4]
 	bl GetStringFromIndex
 	adds r1, r0, #0
 	adds r0, r5, #0
-	bl Text_AppendString
+	bl Text_DrawString
 	adds r0, r6, #0
 	adds r0, #0x64
 	ldrb r0, [r0]
@@ -191,7 +191,7 @@ _080226A8:
 	lsls r0, r0, #1
 	adds r1, r1, r0
 	adds r0, r5, #0
-	bl Text_Draw
+	bl PutText
 	pop {r4, r5, r6}
 	pop {r1}
 	bx r1
@@ -274,7 +274,7 @@ GenericSelection_BackToUM: @ 0x08022748
 	bl TmFill
 	movs r0, #4
 	bl EnableBgSync
-	bl sub_8003D20
+	bl ResetTextFont
 	bl HideMoveRangeGraphics
 	ldr r0, _08022798  @ gUnitActionMenuDef
 	ldr r2, _0802279C  @ gUnknown_0202BCB0
@@ -387,7 +387,7 @@ GenericSelection_BackToUM_CamWait: @ 0x0802282C
 	movs r0, #4
 	bl EnableBgSync
 	bl HideMoveRangeGraphics
-	bl sub_8003D20
+	bl ResetTextFont
 	ldr r0, _0802285C  @ gProcScr_0859B600
 	movs r1, #3
 	bl SpawnProc
@@ -408,7 +408,7 @@ ItemMenu_ButtonBPressed: @ 0x08022860
 	bl TmFill
 	movs r0, #4
 	bl EnableBgSync
-	bl sub_8003D20
+	bl ResetTextFont
 	ldr r0, _08022898  @ gUnitActionMenuDef
 	ldr r2, _0802289C  @ gUnknown_0202BCB0
 	movs r3, #0x1c
@@ -798,9 +798,9 @@ UnitActionMenu_Attack: @ 0x08022B30
 	.align 2, 0
 _08022B4C: .4byte 0x00000858
 _08022B50:
-	bl ResetIconGraphics
+	bl ClearIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	ldr r0, _08022B74  @ gActiveUnit
 	ldr r0, [r0]
 	ldr r0, [r0, #0xc]
@@ -1766,9 +1766,9 @@ _0802324C:
 	movs r2, #0xf
 	movs r3, #0xb
 	bl sub_801E684
-	bl ResetIconGraphics
+	bl ClearIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	movs r0, #0x17
 _0802328C:
 	add sp, #4
@@ -1836,10 +1836,10 @@ ItemCommandEffect: @ 0x080232E8
 	ldrb r0, [r1]
 	cmp r0, #1
 	bne _08023344
-	bl ResetIconGraphics
+	bl ClearIcons
 	movs r0, #4
-	bl LoadIconPalettes
-	bl sub_8003D20
+	bl ApplyIconPalettes
+	bl ResetTextFont
 	ldr r0, _0802333C  @ gItemSelectMenuDef
 	bl StartOrphanMenu
 	adds r5, r0, #0
@@ -2069,7 +2069,7 @@ sub_80234AC: @ 0x080234AC
 	movs r2, #0x80
 	lsls r2, r2, #2
 	movs r3, #0
-	bl Font_InitForUI
+	bl InitTextFont
 	ldr r0, _080234E0  @ gBg0Tm+0x56
 	ldr r1, _080234E4  @ gBmFrameTmap0
 	movs r2, #9
@@ -2096,7 +2096,7 @@ _080234EC: .4byte gUnknown_0200422C
 ItemSubMenuEnd: @ 0x080234F0
 	push {lr}
 	movs r0, #0
-	bl SetFont
+	bl SetTextFont
 	pop {r0}
 	bx r0
 
@@ -2106,7 +2106,7 @@ ItemSubMenuEnd: @ 0x080234F0
 MenuCommand_SelectNo: @ 0x080234FC
 	push {lr}
 	movs r0, #0
-	bl SetFont
+	bl SetTextFont
 	ldr r0, _08023528  @ gBmFrameTmap0
 	ldr r1, _0802352C  @ gBg0Tm+0x56
 	movs r2, #9
@@ -2134,8 +2134,8 @@ _08023534: .4byte gBg1Tm+0x56
 sub_8023538: @ 0x08023538
 	push {lr}
 	movs r0, #0
-	bl SetFont
-	bl sub_8003D20
+	bl SetTextFont
+	bl ResetTextFont
 	bl EndAllMenus
 	movs r0, #0x31
 	pop {r1}
@@ -2453,8 +2453,8 @@ _080237A8:
 	bl m4aSongNumStart
 _080237D4:
 	movs r0, #0
-	bl SetFont
-	bl sub_8003D20
+	bl SetTextFont
+	bl ResetTextFont
 	bl EndAllMenus
 	movs r0, #0x21
 _080237E4:
@@ -2854,9 +2854,9 @@ StaffCommandEffect: @ 0x08023ACC
 	ldrb r0, [r1]
 	cmp r0, #2
 	beq _08023B24
-	bl ResetIconGraphics
+	bl ClearIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	ldr r0, _08023B1C  @ gStaffItemSelectMenuDef
 	bl StartOrphanMenu
 	adds r5, r0, #0
@@ -3942,9 +3942,9 @@ sub_8024260: @ 0x08024260
 	ldr r6, _080242F0  @ gActionData
 	ldrb r0, [r1, #2]
 	strb r0, [r6, #0xd]
-	bl ResetIconGraphics
+	bl ClearIcons
 	movs r0, #4
-	bl LoadIconPalettes
+	bl ApplyIconPalettes
 	ldr r0, _080242F4  @ gStealItemMenuDef
 	bl StartOrphanMenu
 	adds r0, r4, #0
@@ -3959,7 +3959,7 @@ sub_8024260: @ 0x08024260
 	ldr r0, [r0]
 	ldrh r0, [r0]
 	bl GetStringFromIndex
-	bl GetStringTextWidth
+	bl GetStringTextLen
 	movs r4, #0x38
 	subs r4, r4, r0
 	lsrs r0, r4, #0x1f
@@ -3978,7 +3978,7 @@ sub_8024260: @ 0x08024260
 	adds r1, r5, #0
 	movs r2, #0
 	adds r3, r4, #0
-	bl DrawTextInline
+	bl PutDrawText
 	adds r5, #0x80
 	ldrb r0, [r6, #0xd]
 	bl GetUnit
@@ -4654,7 +4654,7 @@ sub_8024788: @ 0x08024788
 	movs r1, #1
 	ldrsb r1, [r4, r1]
 	bl ChangeActiveUnitFacing
-	bl ResetIconGraphics
+	bl ClearIcons
 	movs r0, #2
 	ldrsb r0, [r4, r0]
 	bl GetUnit
@@ -5105,7 +5105,7 @@ ItemMenu_Draw1stCommand: @ 0x08024AAC
 	adds r0, r5, #0
 	movs r1, #0x10
 	movs r2, #0
-	bl Text_InsertString
+	bl Text_InsertDrawString
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
 	lsls r1, r1, #5
@@ -5116,7 +5116,7 @@ ItemMenu_Draw1stCommand: @ 0x08024AAC
 	ldr r0, _08024AEC  @ gBg0Tm
 	adds r1, r1, r0
 	adds r0, r5, #0
-	bl Text_Draw
+	bl PutText
 	movs r0, #0
 	pop {r4, r5}
 	pop {r1}

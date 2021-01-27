@@ -154,7 +154,7 @@ _0807A7FA:
 	THUMB_FUNC_START _InitFontForUIDefault
 _InitFontForUIDefault: @ 0x0807A800
 	push {lr}
-	bl Font_InitForUIDefault
+	bl ResetText
 	pop {r0}
 	bx r0
 
@@ -164,7 +164,7 @@ _InitFontForUIDefault: @ 0x0807A800
 MapAnim_Cleanup: @ 0x0807A80C
 	push {lr}
 	bl MU_AllRestartAnimations
-	bl sub_8003D20
+	bl ResetTextFont
 	bl DeleteBattleAnimInfoThing
 	bl InitBmBgLayers
 	bl LoadUiFrameGraphics
@@ -3784,14 +3784,14 @@ _0807C2D0:
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x14
-	bl Text_Clear
+	bl ClearText
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x14
 	movs r1, #0x10
 	ldr r2, [sp, #8]
 	mov r3, r9
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	ldr r1, [sp, #0xc]
 	ldrh r0, [r1]
 	bl GetStringFromIndex
@@ -3817,7 +3817,7 @@ _0807C318:
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x1c
-	bl Text_Clear
+	bl ClearText
 	ldr r1, [r5]
 	adds r0, r1, r4
 	adds r0, #0x1c
@@ -3826,7 +3826,7 @@ _0807C318:
 	ldrsh r3, [r1, r2]
 	movs r1, #8
 	ldr r2, [sp, #8]
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x1c
@@ -3835,7 +3835,7 @@ _0807C318:
 	lsls r1, r1, #3
 	ldr r2, _0807C35C  @ gBg0Tm+0x8E
 	adds r1, r1, r2
-	bl Text_Draw
+	bl PutText
 	b _0807C442
 	.align 2, 0
 _0807C358: .4byte gUnknown_089A3810
@@ -3850,7 +3850,7 @@ _0807C360:
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x24
-	bl Text_Clear
+	bl ClearText
 	ldr r1, [r5]
 	adds r0, r1, r4
 	adds r0, #0x24
@@ -3859,7 +3859,7 @@ _0807C360:
 	ldrsh r3, [r1, r2]
 	movs r1, #8
 	ldr r2, [sp, #8]
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x24
@@ -3868,7 +3868,7 @@ _0807C360:
 	lsls r1, r1, #3
 	ldr r2, _0807C3A4  @ gBg0Tm+0x94
 	adds r1, r1, r2
-	bl Text_Draw
+	bl PutText
 	b _0807C442
 	.align 2, 0
 _0807C3A0: .4byte gUnknown_089A3810
@@ -3882,14 +3882,14 @@ _0807C3A8:
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x2c
-	bl Text_Clear
+	bl ClearText
 	ldr r0, [r5]
 	adds r0, r0, r4
 	adds r0, #0x2c
 	movs r1, #0x10
 	ldr r2, [sp, #8]
 	adds r3, r6, #0
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	ldr r1, [sp, #0x10]
 	ldrh r0, [r1]
 	bl GetStringFromIndex
@@ -3915,14 +3915,14 @@ _0807C3F0:
 	ldr r0, [r4]
 	adds r0, r0, r5
 	adds r0, #0x34
-	bl Text_Clear
+	bl ClearText
 	ldr r0, [r4]
 	adds r0, r0, r5
 	adds r0, #0x34
 	movs r1, #0x10
 	ldr r2, [sp, #8]
 	mov r3, r8
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	ldr r0, [r4]
 	adds r0, r0, r6
 	movs r2, #0x10
@@ -3943,7 +3943,7 @@ _0807C432:
 	str r3, [sp, #4]
 	ldr r2, [sp, #8]
 	movs r3, #0x18
-	bl DrawTextInline
+	bl PutDrawText
 _0807C442:
 	movs r0, #1
 	bl EnableBgSync
@@ -3966,7 +3966,7 @@ _0807C454:
 	lsls r4, r2, #3
 	adds r4, #0x14
 	adds r0, r0, r4
-	bl Text_Clear
+	bl ClearText
 	mov r0, r8
 	ldr r1, [r0]
 	adds r0, r1, r5
@@ -3980,7 +3980,7 @@ _0807C454:
 	ldrsh r3, [r1, r2]
 	movs r1, #8
 	ldr r2, [sp, #8]
-	bl Text_InsertNumberOr2Dashes
+	bl Text_InsertDrawNumberOrBlank
 	mov r0, r8
 	ldr r2, [r0]
 	adds r5, r2, r5
@@ -4009,7 +4009,7 @@ _0807C454:
 	adds r0, r5, #0
 	ldr r2, [sp, #8]
 	movs r3, #0x10
-	bl DrawTextInline
+	bl PutDrawText
 	movs r0, #1
 	bl EnableBgSync
 _0807C4D4:
@@ -4100,7 +4100,7 @@ sub_807C568: @ 0x0807C568
 	sub sp, #4
 	mov sl, r0
 	bl MU_EndAll
-	bl Font_InitForUIDefault
+	bl ResetText
 	movs r0, #2
 	movs r1, #8
 	movs r2, #8
@@ -4177,7 +4177,7 @@ _0807C602:
 	adds r1, #0x14
 	adds r0, r0, r1
 	ldrb r1, [r7]
-	bl Text_Allocate
+	bl InitTextDb
 	mov r1, r9
 	movs r2, #0
 	ldrsh r0, [r1, r2]
@@ -4826,7 +4826,7 @@ _0807CAFE:
 sub_807CB04: @ 0x0807CB04
 	push {lr}
 	bl MU_AllRestartAnimations
-	bl sub_8003D20
+	bl ResetTextFont
 	bl DeleteBattleAnimInfoThing
 	bl InitBmBgLayers
 	bl LoadLegacyUiFrameGraphics
@@ -9035,7 +9035,7 @@ _0807EBEA:
 	adds r0, r7, #0
 	movs r1, #2
 	adds r2, r5, #0
-	bl DrawDecNumber
+	bl PutNumberOrBlank
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6, r7}
@@ -9798,7 +9798,7 @@ sub_807F1AC: @ 0x0807F1AC
 	push {r4, r5, r6, lr}
 	sub sp, #4
 	adds r5, r0, #0
-	bl sub_8003D20
+	bl ResetTextFont
 	ldr r0, _0807F29C  @ gBg0Tm
 	movs r1, #0
 	bl TmFill

@@ -1,130 +1,142 @@
-#include "global.h"
+
 #include "icon.h"
 
-#define MAX_ICON_COUNT 224
-#define MAX_ICON_GFX_COUNT 32
+#include "hardware.h"
+#include "dma.h"
 
-EWRAM_DATA static struct IconStruct DrawnIconLookupTable[MAX_ICON_COUNT] = {0};
-EWRAM_DATA static u8 IconGFXIDLookupTable[MAX_ICON_GFX_COUNT] = {0};
-extern void ApplyPaletteExt(const void *Palette, u32 Dest, u32 Size);
-extern void RegisterDataMove(const void *GFX, void *Dest, u32 size);
-extern void RegisterDataFill(const void *GFX, void *Dest, u32 size);
+enum { MAX_ICON_COUNT = 224 };
+enum { MAX_ICON_DISPLAY_COUNT = 0x20 };
 
-void ResetIconGraphics_()
+struct IconSt
 {
-    ResetIconGraphics(); //Probably was a debug wrapper.
+    /* 00 */ u8 refCount;
+    /* 01 */ u8 dispId;
+};
+
+static EWRAM_DATA struct IconSt sIconStTable[MAX_ICON_COUNT] = {};
+static EWRAM_DATA u8 sIconDisplayList[MAX_ICON_DISPLAY_COUNT] = {};
+
+void InitIcons(void)
+{
+    ClearIcons();
 }
 
-void ResetIconGraphics() 
+void ClearIcons(void)
 {
-    CpuFill16(0, &DrawnIconLookupTable, sizeof(DrawnIconLookupTable));
-    CpuFill16(0, &IconGFXIDLookupTable, 0x20);
+    CpuFill16(0, &sIconStTable, sizeof sIconStTable);
+    CpuFill16(0, &sIconDisplayList, sizeof sIconDisplayList);
 }
 
-void LoadIconPalettes(u32 Dest)
+void ApplyIconPalettes(int pal)
 {
-    ApplyPaletteExt(&item_icon_palette, Dest << 5, sizeof(item_icon_palette));
+    ApplyPalettes(Pal_Icons[0], pal, 2);
 }
 
-void LoadIconPalette(u32 Index, u32 Dest)
+void ApplyIconPalette(int num, int pal)
 {
-    ApplyPaletteExt(item_icon_palette[Index], Dest << 5, 0x20);
+    ApplyPalette(Pal_Icons[num], pal);
 }
 
-int GetNextFreeIcon() // Unused
+int CountActiveIcons(void)
 { 
-    int retVal = 0;
-    int i;
-    for(i = MAX_ICON_GFX_COUNT-1; i >= 0; i--)
+    int i, result = 0;
+
+    for (i = MAX_ICON_DISPLAY_COUNT - 1; i >= 0; i--)
     {
-        if(IconGFXIDLookupTable[i] != 0) retVal++;
+        if (sIconDisplayList[i] != 0)
+            result++;
     }
-    return retVal;
+
+    return result;
 }
 
-u16 GetIconGfxTileIndex(u32 Index)
+u16 IconSlot2Chr(int num)
 {
-    return 0x300 - Index * 4;
+    // TODO: constants for VRAM chr allocation
+    return 0x300 - num * 4;
 }
 
-int GetIconGfxIndex(int Index)
+int GetNewIconSlot(int icon)
 {
     int i;
-    for(i = 0; i <= MAX_ICON_GFX_COUNT-1; i++)
+
+    for (i = 0; i < MAX_ICON_DISPLAY_COUNT; ++i)
     {
-        if (IconGFXIDLookupTable[i] == 0)
+        if (sIconDisplayList[i] == 0)
         {
-            IconGFXIDLookupTable[i] = Index + 1;
+            sIconDisplayList[i] = icon + 1;
             return i;
         }
     }
+
     return -1;
 }
 
-u16 GetIconTileIndex(int Index)
+int GetIconChr(int icon)
 {
-    if (DrawnIconLookupTable[Index].Index != 0)
+    if (sIconStTable[icon].dispId != 0)
     {
-        if (DrawnIconLookupTable[Index].References < 0xFF)
-            DrawnIconLookupTable[Index].References++;
-        
-        return GetIconGfxTileIndex(DrawnIconLookupTable[Index].Index);
+        if (sIconStTable[icon].refCount < UINT8_MAX)
+            sIconStTable[icon].refCount++;
+
+        return IconSlot2Chr(sIconStTable[icon].dispId);
     }
-    else 
+
+    sIconStTable[icon].refCount++;
+    sIconStTable[icon].dispId = GetNewIconSlot(icon) + 1;
+
+    RegisterVramMove(
+        Img_Icons + (icon * CHR_SIZE * 4),
+        VRAM + CHR_SIZE * IconSlot2Chr(sIconStTable[icon].dispId), CHR_SIZE * 4);
+
+    return IconSlot2Chr(sIconStTable[icon].dispId);
+}
+
+void PutIcon(u16* tm, int icon, int tile)
+{
+    if (icon < 0)
     {
-        DrawnIconLookupTable[Index].References++;
-        DrawnIconLookupTable[Index].Index = GetIconGfxIndex(Index) + 1;
+        tm[TM_OFFSET(0, 0)] = 0;
+        tm[TM_OFFSET(1, 0)] = 0;
+        tm[TM_OFFSET(0, 1)] = 0;
+        tm[TM_OFFSET(1, 1)] = 0;
+    }
+    else
+    {
+        u16 fulltile = GetIconChr(icon) + tile;
 
-        RegisterDataMove(
-            item_icon_tiles + (Index * 0x80),
-            (void*)(VRAM + (0x1FFE0 & (VRAM + 0x20 * GetIconGfxTileIndex(DrawnIconLookupTable[Index].Index)))),
-            0x80
-        );
-
-        return GetIconGfxTileIndex(DrawnIconLookupTable[Index].Index);
+        tm[TM_OFFSET(0, 0)] = fulltile++;
+        tm[TM_OFFSET(1, 0)] = fulltile++;
+        tm[TM_OFFSET(0, 1)] = fulltile++;
+        tm[TM_OFFSET(1, 1)] = fulltile;
     }
 }
 
-void DrawIcon(u16* BgOut, int IconIndex, int OamPalBase) 
+void ClearIcon(int icon)
 {
-    if (IconIndex < 0) {
-        BgOut[0]  = 0;
-        BgOut[1]  = 0;
-        BgOut[32] = 0;
-        BgOut[33] = 0;
-    } else {
-        u16 Tile = GetIconTileIndex(IconIndex) + OamPalBase;
+    sIconDisplayList[sIconStTable[icon].dispId - 1] = 0;
+    sIconStTable[icon].dispId = 0;
+}
 
-        BgOut[0]  = Tile++;
-        BgOut[1]  = Tile++;
-        BgOut[32] = Tile++;
-        BgOut[33] = Tile;
+void PutIconObjImg(int icon, int chr)
+{
+    u8 const* src;
+    u8* dst;
+
+    dst = OBJ_VRAM0;
+    dst += CHR_SIZE * (chr & 0x3FF);
+
+    if (icon < 0)
+    {
+        RegisterDataFill(0, dst,         CHR_SIZE * 2);
+        RegisterDataFill(0, dst + 0x400, CHR_SIZE * 2);
     }
-}
+    else
+    {
+        src = Img_Icons;
+        src += CHR_SIZE * 4 * icon;
 
-void ClearIconGfx(u32 Index) 
-{
-    IconGFXIDLookupTable[DrawnIconLookupTable[Index].Index - 1] = 0;
-    DrawnIconLookupTable[Index].Index = 0;
-}
-
-void LoadIconObjectGraphics(int Index, int b)
-{
-    void* pTarget;
-
-    pTarget = OBJ_VRAM0;
-    pTarget += ((b & 0x3FF) * 0x20);
-
-    if (Index < 0) { // Clear Obj VRAM
-        RegisterDataFill(0, pTarget,         0x40);
-        RegisterDataFill(0, pTarget + 0x400, 0x40);
-    } else {
-        void* pSource;
-
-        pSource = (void *)item_icon_tiles;
-        pSource += Index * 0x80;
-
-        RegisterDataMove(pSource,        pTarget,         0x40);
-        RegisterDataMove(pSource + 0x40, pTarget + 0x400, 0x40);
+        RegisterDataMove(src,                dst,         CHR_SIZE * 2);
+        RegisterDataMove(src + CHR_SIZE * 2, dst + 0x400, CHR_SIZE * 2);
     }
 }
