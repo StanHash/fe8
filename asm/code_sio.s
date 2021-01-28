@@ -4777,7 +4777,7 @@ sub_8043904: @ 0x08043904
 	bl sub_8086CE8
 	ldr r0, _08043AD4  @ gUnknown_085ABD68
 	ldr r1, _08043AD8  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08043ADC  @ gBg2Tm+0x112
 	ldr r1, _08043AE0  @ gUnknown_085ADF40
 	movs r2, #0x80
@@ -4790,7 +4790,7 @@ sub_8043904: @ 0x08043904
 	bl ApplyPaletteExt
 	ldr r0, _08043AE8  @ gUnknown_085AC604
 	ldr r1, _08043AEC  @ 0x06016000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08043AF0  @ gUnknown_08A1BD00
 	movs r1, #0x88
 	lsls r1, r1, #2
@@ -6589,7 +6589,7 @@ sub_8044768: @ 0x08044768
 	bl sub_8086CE8
 	ldr r0, _080447DC  @ gUnknown_085ABD68
 	ldr r1, _080447E0  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080447E4  @ gUnknown_085ADC48
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -8489,13 +8489,13 @@ sub_8045640: @ 0x08045640
 	bl sub_804C33C
 	ldr r0, _0804579C  @ gUnknown_085ABD68
 	ldr r1, _080457A0  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080457A4  @ gUnknown_085ADA38
 	ldr r1, _080457A8  @ 0x06016000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080457AC  @ gUnknown_085AD0CC
 	ldr r1, _080457B0  @ 0x06016800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080457B4  @ gUnknown_085ADC48
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -8508,7 +8508,7 @@ sub_8045640: @ 0x08045640
 	bl ApplyPaletteExt
 	ldr r0, _080457BC  @ gUnknown_085ACD20
 	ldr r1, _080457C0  @ 0x06000F00
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080457C4  @ gUnknown_085ADE08
 	movs r1, #0x40
 	movs r2, #0x20
@@ -8521,7 +8521,7 @@ sub_8045640: @ 0x08045640
 	lsls r0, r0, #0x13
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080457CC  @ gUnknown_085B081C
 	movs r1, #0xa0
 	lsls r1, r1, #1
@@ -8530,7 +8530,7 @@ sub_8045640: @ 0x08045640
 	ldr r0, _080457D0  @ gUnknown_085B089C
 	ldr r4, _080457D4  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080457D8  @ gBg3Tm
 	movs r2, #0xa0
 	lsls r2, r2, #8
@@ -9420,13 +9420,13 @@ sub_8045DC0: @ 0x08045DC0
 	bl sub_8086CE8
 	ldr r0, _08045ECC  @ gUnknown_085ABD68
 	ldr r1, _08045ED0  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08045ED4  @ gUnknown_085ADA38
 	ldr r1, _08045ED8  @ 0x06016000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08045EDC  @ gUnknown_085AC604
 	ldr r1, _08045EE0  @ 0x06016800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r4, #0x98
 	lsls r4, r4, #2
 	movs r5, #3
@@ -9485,14 +9485,14 @@ _08045E46:
 	bl sub_804D664
 	str r0, [r6, #0x2c]
 	ldr r0, _08045EF4  @ gUnknown_085A9864
-	bl SetupFaceGfxData
+	bl SetFaceConfig
 	movs r0, #2
 	str r0, [sp]
 	movs r0, #3
 	movs r1, #0x64
 	movs r2, #0xd0
 	movs r3, #0x50
-	bl NewFace
+	bl StartFace
 	ldr r0, [r6, #0x2c]
 	ldr r2, _08045EF8  @ gUnknown_080D9D5E
 	ldr r1, _08045EE8  @ gUnknown_0203DA24
@@ -10632,7 +10632,7 @@ sub_80467AC: @ 0x080467AC
 	bl sub_8086CE8
 	bl sub_804D6B4
 	movs r0, #3
-	bl DeleteFaceByIndex
+	bl EndFaceById
 	ldr r4, _08046828  @ gUnknown_0203DA78
 	adds r0, r4, #0
 	bl ClearText
@@ -10697,14 +10697,14 @@ sub_8046838: @ 0x08046838
 	ldr r0, _08046970  @ 0x06000F00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08046974  @ gUnknown_085ADCC8
 	movs r1, #0xc0
 	movs r2, #0x20
 	bl ApplyPaletteExt
 	ldr r0, _08046978  @ gUnknown_085ABD68
 	ldr r1, _0804697C  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08046980  @ gUnknown_085ADC48
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -10715,7 +10715,7 @@ sub_8046838: @ 0x08046838
 	ldr r0, _08046984  @ gUnknown_085AE778
 	ldr r4, _08046988  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804698C  @ gBg2Tm+0x142
 	movs r2, #0x80
 	lsls r2, r2, #5
@@ -10862,7 +10862,7 @@ sub_80469C4: @ 0x080469C4
 	bl sub_8086CE8
 	ldr r0, _08046AB8  @ gUnknown_085ABD68
 	ldr r1, _08046ABC  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08046AC0  @ gUnknown_0203DB64
 	bl SetTextFont
 	bl InitSystemTextFont
@@ -11675,14 +11675,14 @@ sub_8047008: @ 0x08047008
 	ldr r0, _080471C4  @ 0x06000F00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080471C8  @ gUnknown_085ADCC8
 	movs r1, #0xc0
 	movs r2, #0x20
 	bl ApplyPaletteExt
 	ldr r0, _080471CC  @ gUnknown_085ABD68
 	ldr r1, _080471D0  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080471D4  @ gUnknown_085ADC48
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -12037,17 +12037,17 @@ sub_8047324: @ 0x08047324
 	ldr r0, _08047524  @ 0x06000F00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08047528  @ gUnknown_085ADCC8
 	movs r1, #0xc0
 	movs r2, #0x20
 	bl ApplyPaletteExt
 	ldr r0, _0804752C  @ gUnknown_085ABD68
 	ldr r1, _08047530  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08047534  @ gUnknown_085ACEFC
 	ldr r1, _08047538  @ 0x06016000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804753C  @ gUnknown_085ADE08
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -12562,14 +12562,14 @@ sub_8047780: @ 0x08047780
 	ldr r0, _080478F0  @ 0x06000F00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080478F4  @ gUnknown_085ADCC8
 	movs r1, #0xc0
 	movs r2, #0x20
 	bl ApplyPaletteExt
 	ldr r0, _080478F8  @ gUnknown_085ABD68
 	ldr r1, _080478FC  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08047900  @ gUnknown_085ADC48
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -12580,7 +12580,7 @@ sub_8047780: @ 0x08047780
 	ldr r0, _08047904  @ gUnknown_085AE778
 	ldr r4, _08047908  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804790C  @ gBg2Tm+0x142
 	movs r2, #0x80
 	lsls r2, r2, #5
@@ -13007,7 +13007,7 @@ sub_8047B34: @ 0x08047B34
 	bl sub_8086CE8
 	ldr r0, _08047BC8  @ gUnknown_085AB358
 	ldr r1, _08047BCC  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08047BD0  @ gUnknown_085ADBE8
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -13093,14 +13093,14 @@ _08047BFC:
 	bl sub_804C49C
 	bl sub_804C508
 	ldr r0, _08047C5C  @ gUnknown_085A9E48
-	bl SetupFaceGfxData
+	bl SetFaceConfig
 	movs r0, #2
 	str r0, [sp]
 	movs r0, #3
 	movs r1, #0x64
 	movs r2, #0xd0
 	movs r3, #0x50
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	str r0, [r6, #0x54]
 	movs r0, #0x38
@@ -13294,7 +13294,7 @@ sub_8047D88: @ 0x08047D88
 	bl sub_8086CE8
 	ldr r0, _08047E24  @ gUnknown_085AB358
 	ldr r1, _08047E28  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08047E2C  @ gUnknown_085ADBE8
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -13391,14 +13391,14 @@ _08047E68:
 	bl sub_804C49C
 	bl sub_804C508
 	ldr r0, _08047EF4  @ gUnknown_085A9E68
-	bl SetupFaceGfxData
+	bl SetFaceConfig
 	movs r0, #2
 	str r0, [sp]
 	movs r0, #3
 	movs r1, #0x64
 	movs r2, #0xd0
 	movs r3, #0x50
-	bl NewFace
+	bl StartFace
 	adds r0, r6, #0
 	movs r1, #0
 	bl sub_8047A54
@@ -13759,7 +13759,7 @@ sub_8048168: @ 0x08048168
 	stm r1!, {r2, r3}
 	bl EndBG3Slider
 	movs r0, #3
-	bl DeleteFaceByIndex
+	bl EndFaceById
 	adds r5, r6, #0
 	adds r5, #0x2c
 	movs r4, #4
@@ -14569,7 +14569,7 @@ sub_80487C0: @ 0x080487C0
 	push {r4, r5, lr}
 	ldr r4, [r0, #0x14]
 	movs r0, #3
-	bl DeleteFaceByIndex
+	bl EndFaceById
 	adds r5, r4, #0
 	adds r5, #0x2c
 	movs r4, #4
@@ -14820,7 +14820,7 @@ sub_8048988: @ 0x08048988
 	adds r4, r0, #0
 	ldr r0, _08048A48  @ gUnknown_085AD80C
 	ldr r1, _08048A4C  @ 0x06002800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08048A50  @ gUnknown_085ADC48
 	movs r1, #0x40
 	movs r2, #0x80
@@ -15181,7 +15181,7 @@ _08048C64:
 	movs r4, #0x80
 	lsls r4, r4, #1
 	adds r1, r1, r4
-	ldr r2, _08048CB0  @ gObject_32x16
+	ldr r2, _08048CB0  @ Sprite_32x16
 	adds r3, r7, #0
 	adds r3, #0x32
 	ldrb r3, [r3]
@@ -15210,7 +15210,7 @@ _08048C98:
 	.align 2, 0
 _08048CA8: .4byte gUnknown_085AA0A4
 _08048CAC: .4byte gUnknown_085AA0CA
-_08048CB0: .4byte gObject_32x16
+_08048CB0: .4byte Sprite_32x16
 _08048CB4: .4byte 0x00009340
 
 	THUMB_FUNC_END sub_8048B78
@@ -15239,7 +15239,7 @@ sub_8048CB8: @ 0x08048CB8
 	movs r0, #5
 	bl Interpolate
 	adds r1, r0, #0
-	ldr r2, _08048D14  @ gObject_32x16
+	ldr r2, _08048D14  @ Sprite_32x16
 	adds r0, r6, #0
 	adds r0, #0x32
 	ldrb r3, [r0]
@@ -15261,7 +15261,7 @@ _08048D0C:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08048D14: .4byte gObject_32x16
+_08048D14: .4byte Sprite_32x16
 _08048D18: .4byte 0x00009340
 
 	THUMB_FUNC_END sub_8048CB8
@@ -15556,7 +15556,7 @@ _08048F4A:
 	movs r4, #0x80
 	lsls r4, r4, #1
 	adds r1, r1, r4
-	ldr r5, _08048FC0  @ gObject_32x16
+	ldr r5, _08048FC0  @ Sprite_32x16
 	ldr r3, _08048FC4  @ 0x00009350
 	adds r2, r5, #0
 	bl PutOamHiRam
@@ -15575,7 +15575,7 @@ _08048F4A:
 	adds r0, r0, r2
 	ldr r1, [r7, #0x30]
 	adds r1, r1, r4
-	ldr r2, _08048FCC  @ gObject_16x16
+	ldr r2, _08048FCC  @ Sprite_16x16
 	ldr r3, _08048FD0  @ 0x00009358
 	bl PutOamHiRam
 	mov r1, r9
@@ -15602,10 +15602,10 @@ _08048FA6:
 	.align 2, 0
 _08048FB8: .4byte gSinLut
 _08048FBC: .4byte gSinLut+0x80
-_08048FC0: .4byte gObject_32x16
+_08048FC0: .4byte Sprite_32x16
 _08048FC4: .4byte 0x00009350
 _08048FC8: .4byte 0x00009354
-_08048FCC: .4byte gObject_16x16
+_08048FCC: .4byte Sprite_16x16
 _08048FD0: .4byte 0x00009358
 
 	THUMB_FUNC_END sub_8048EB8
@@ -15690,7 +15690,7 @@ _0804906A:
 	movs r4, #0x80
 	lsls r4, r4, #1
 	adds r1, r1, r4
-	ldr r5, _080490D8  @ gObject_32x16
+	ldr r5, _080490D8  @ Sprite_32x16
 	ldr r3, _080490DC  @ 0x00009350
 	adds r2, r5, #0
 	bl PutOamHiRam
@@ -15709,7 +15709,7 @@ _0804906A:
 	adds r0, r0, r2
 	ldr r1, [r7, #0x30]
 	adds r1, r1, r4
-	ldr r2, _080490E4  @ gObject_16x16
+	ldr r2, _080490E4  @ Sprite_16x16
 	ldr r3, _080490E8  @ 0x00009358
 	bl PutOamHiRam
 	ldr r1, [sp, #4]
@@ -15733,10 +15733,10 @@ _080490C2:
 	bx r0
 	.align 2, 0
 _080490D4: .4byte gSinLut
-_080490D8: .4byte gObject_32x16
+_080490D8: .4byte Sprite_32x16
 _080490DC: .4byte 0x00009350
 _080490E0: .4byte 0x00009354
-_080490E4: .4byte gObject_16x16
+_080490E4: .4byte Sprite_16x16
 _080490E8: .4byte 0x00009358
 
 	THUMB_FUNC_END sub_8048FD4
@@ -16637,7 +16637,7 @@ sub_8049788: @ 0x08049788
 	push {lr}
 	ldr r0, _08049798  @ gUnknown_085AD9CC
 	ldr r1, _0804979C  @ 0x06013E00
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -20103,7 +20103,7 @@ _0804B29C:
 	mov r0, r8
 	lsls r0, r0, #2
 	str r0, [sp, #8]
-	ldr r1, _0804B380  @ gObject_16x8
+	ldr r1, _0804B380  @ Sprite_16x8
 	mov sl, r1
 	movs r0, #0xf
 	mov r9, r0
@@ -20190,7 +20190,7 @@ _0804B35A:
 _0804B374: .4byte gUnknown_085AA22C
 _0804B378: .4byte gUnknown_080D9F28
 _0804B37C: .4byte gUnknown_085A92E0
-_0804B380: .4byte gObject_16x8
+_0804B380: .4byte Sprite_16x8
 _0804B384: .4byte gUnknown_03001818
 _0804B388: .4byte 0x000009F2
 
@@ -21921,7 +21921,7 @@ sub_804C02C: @ 0x0804C02C
 	adds r4, r0, #0
 	ldr r0, _0804C06C  @ gUnknown_089AE224
 	ldr r1, _0804C070  @ 0x06004400
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804C074  @ gUnknown_089AE484
 	movs r1, #0x60
 	movs r2, #0x20
@@ -22479,11 +22479,11 @@ sub_804C3EC: @ 0x0804C3EC
 	movs r3, #0xc0
 	lsls r3, r3, #0x13
 	adds r1, r1, r3
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804C468  @ gUnknown_085AAE0C
 	ldr r6, _0804C46C  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	adds r4, r4, r5
 	adds r4, r4, r6
 	ldr r1, _0804C470  @ 0x06014000
@@ -22825,7 +22825,7 @@ _0804C6AA:
 	movs r2, #0x2c
 	ldrsh r4, [r7, r2]
 	adds r4, #8
-	ldr r6, _0804C748  @ gObject_8x16
+	ldr r6, _0804C748  @ Sprite_8x16
 	ldrh r0, [r7, #0x36]
 	lsrs r0, r0, #5
 	movs r1, #6
@@ -22848,7 +22848,7 @@ _0804C6AA:
 	movs r2, #0x2c
 	ldrsh r4, [r7, r2]
 	adds r4, #8
-	ldr r6, _0804C74C  @ gObject_8x16_HFlipped
+	ldr r6, _0804C74C  @ Sprite_8x16_HFlipped
 	ldrh r0, [r7, #0x38]
 	lsrs r0, r0, #5
 	movs r1, #6
@@ -22888,8 +22888,8 @@ _0804C72E:
 _0804C73C: .4byte 0x000082C8
 _0804C740: .4byte gUnknown_085AA9A0
 _0804C744: .4byte gUnknown_080DA09C
-_0804C748: .4byte gObject_8x16
-_0804C74C: .4byte gObject_8x16_HFlipped
+_0804C748: .4byte Sprite_8x16
+_0804C74C: .4byte Sprite_8x16_HFlipped
 _0804C750: .4byte gUnknown_085AA9B4
 _0804C754: .4byte gUnknown_0203DA24
 
@@ -24427,13 +24427,13 @@ sub_804D2A4: @ 0x0804D2A4
 	str r0, [r1]
 	ldr r0, _0804D354  @ gUnknown_0859F020
 	ldr r1, _0804D358  @ 0x06014000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804D35C  @ gUnknown_085A06D8
 	ldr r1, _0804D360  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804D364  @ gUnknown_085AE7EC
 	ldr r1, _0804D368  @ 0x06002800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r5, _0804D36C  @ gRAMChapterData
 	ldrb r0, [r5, #0xf]
 	lsls r0, r0, #2
@@ -24441,7 +24441,7 @@ sub_804D2A4: @ 0x0804D2A4
 	ldr r0, [r0]
 	ldr r4, _0804D370  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _0804D374  @ 0x06002980
 	adds r0, r4, #0
 	movs r2, #3
@@ -25112,7 +25112,7 @@ sub_804D80C: @ 0x0804D80C
 	push {lr}
 	ldr r0, _0804D828  @ gUnknown_08A1DD0C
 	ldr r1, _0804D82C  @ 0x06016800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0804D830  @ gUnknown_08A1E0D8
 	movs r1, #0x90
 	lsls r1, r1, #2

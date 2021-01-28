@@ -38,8 +38,9 @@ SECTIONS
         src/icon.o(.text);
         src/debug-text.o(.text);
         src/text.o(.text);
-        src/animedrv.o(.text);
-        src/ctc.o(.text);
+        src/bso.o(.text);
+        src/sprite.o(.text);
+        src/face.o(.text);
         asm/face.o(.text);
         asm/scene.o(.text);
         src/ap.o(.text);
@@ -189,7 +190,7 @@ SECTIONS
         . = ALIGN(4); data/trig_rodata.o(.rodata);
         . = ALIGN(4); src/debug-text.o(.rodata);
         . = ALIGN(4); src/text.o(.rodata);
-        . = ALIGN(4); src/data_face.o(.rodata);
+        . = ALIGN(4); src/face.o(.rodata);
         . = ALIGN(4); src/data_scene.o(.rodata);
         . = ALIGN(4); src/ap.o(.rodata);
         . = ALIGN(4); src/data_gamecontrol.o(.rodata);
@@ -238,8 +239,8 @@ SECTIONS
         . = ALIGN(4); src/proc.o(.data);
         . = ALIGN(4); src/debug-text.o(.data);
         . = ALIGN(4); src/text.o(.data);
-        . = ALIGN(4); src/ctc.o(.data);
-        . = ALIGN(4); src/data_face.o(.data);
+        . = ALIGN(4); src/sprite.o(.data);
+        . = ALIGN(4); src/face.o(.data);
         . = ALIGN(4); src/data_scene.o(.data);
         . = ALIGN(4); src/ap.o(.data);
         . = ALIGN(4); src/data_gamecontrol.o(.data);

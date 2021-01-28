@@ -81,7 +81,7 @@ _0802203E:
 	movs r0, #0x2e
 	ldrsh r1, [r4, r0]
 	asrs r2, r2, #0x10
-	ldr r3, _0802205C  @ gObject_8x8
+	ldr r3, _0802205C  @ Sprite_8x8
 	movs r0, #0xa0
 	lsls r0, r0, #4
 	str r0, [sp]
@@ -93,7 +93,7 @@ _08022052:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0802205C: .4byte gObject_8x8
+_0802205C: .4byte Sprite_8x8
 
 	THUMB_FUNC_END sub_8021FEC
 

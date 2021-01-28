@@ -12,7 +12,7 @@
 #include "uiutils.h"
 #include "chapterdata.h"
 #include "random.h"
-#include "ctc.h"
+#include "sprite.h"
 #include "bmunit.h"
 #include "bmmap.h"
 #include "bmbattle.h"
@@ -399,7 +399,7 @@ void WfxSnow_VSync(void) {
             PutOamLo(
                 ((it->xPosition >> 8) - origins[it->typeId].x) & 0xFF,
                 ((it->yPosition >> 8) - origins[it->typeId].y) & 0xFF,
-                gObject_8x8,
+                Sprite_8x8,
                 (BM_OBJPAL_1 << 12) + it->gfxIndex
             );
 
@@ -452,7 +452,7 @@ void WfxSandStorm_Init(void) {
 
     AllocWeatherParticles(gRAMChapterData.chapterWeatherId);
 
-    CopyDataWithPossibleUncomp(gUnknown_085A3964, gBuf);
+    Decompress(gUnknown_085A3964, gBuf);
     CopyTileGfxForObj(gBuf, OBJ_VRAM0 + 0x1C * 0x20, 4, 4);
 
     for (i = 0; i < 0x40; ++i) {
@@ -476,7 +476,7 @@ void WfxSandStorm_VSync(void) {
             PutOamLo(
                 ((it->xPosition & 0xFF) - 0x10) & 0x1FF,
                 it->yPosition,
-                gObject_32x32,
+                Sprite_32x32,
                 (BM_OBJPAL_1 << 12) + 0x1C
             );
 
@@ -492,7 +492,7 @@ void WfxSnowStorm_Init(void) {
 
     AllocWeatherParticles(gRAMChapterData.chapterWeatherId);
 
-    CopyDataWithPossibleUncomp(gUnknown_085A39EC, gBuf);
+    Decompress(gUnknown_085A39EC, gBuf);
     CopyTileGfxForObj(gBuf, OBJ_VRAM0 + 0x18 * 0x20, 8, 4);
 
     for (i = 0; i < 0x40; ++i) {
@@ -531,7 +531,7 @@ void WfxSnowStorm_VSync(void) {
             PutOamLo(
                 ((it->xPosition >> 8) - gUnknown_0202BCB0.camera.x) & 0xFF,
                 ((it->yPosition >> 8) - gUnknown_0202BCB0.camera.y) & 0xFF,
-                gObject_32x32,
+                Sprite_32x32,
                 (BM_OBJPAL_1 << 12) + 0x18 + (it->gfxIndex * 4)
             );
 
@@ -647,7 +647,7 @@ void WfxFlamesInitParticles(void) {
     int i;
 
     AllocWeatherParticles(gRAMChapterData.chapterWeatherId);
-    CopyDataWithPossibleUncomp(gUnknown_085A3A84, OBJ_VRAM0 + 0x18 * 0x20);
+    Decompress(gUnknown_085A3A84, OBJ_VRAM0 + 0x18 * 0x20);
     ApplyPaletteExt(gUnknown_085A3AC0, 0x340, 0x20);
 
     for (i = 0; i < 0x10; ++i) {
@@ -723,7 +723,7 @@ void WfxFlamesUpdateParticles(void) {
             PutOamLo(
                 ((it->xPosition >> 8) - gUnknown_0202BCB0.camera.x) & 0xFF,
                 yDisplay,
-                gObject_8x8,
+                Sprite_8x8,
                 (BM_OBJPAL_10 << 12) + objTile
             );
         }
@@ -768,7 +768,7 @@ void WfxCloudsOffsetGraphicsEffect(u32* lines) {
 void WfxClouds_Init(void) {
     AllocWeatherParticles(WEATHER_NONE);
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_085A3B00,
         sWeatherEffect.gfxData
     );

@@ -48,7 +48,7 @@ sub_8022300: @ 0x08022300
 	bl NewBlockingTimer
 	ldr r0, _08022368  @ gUnknown_085A7CC0
 	ldr r1, _0802236C  @ 0x06013000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08022370  @ gUnknown_085A7EC8
 	movs r1, #0xa8
 	lsls r1, r1, #2

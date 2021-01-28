@@ -9,7 +9,7 @@
 #include "proc.h"
 #include "hardware.h"
 #include "dma.h"
-#include "ctc.h"
+#include "sprite.h"
 
 #define CHAR_NEWLINE 0x01
 

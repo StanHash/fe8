@@ -2315,20 +2315,20 @@ sub_800E640: @ 0x0800E640
 	cmp r0, #0
 	beq _0800E668
 	bl sub_80081A8
-	ldr r0, _0800E664  @ gUnknown_08591154
+	ldr r0, _0800E664  @ ProcScr_Face
 	bl EndEachProc
-	bl ResetFaces
+	bl InitFaces
 	bl sub_80067E8
 	b _0800E686
 	.align 2, 0
-_0800E664: .4byte gUnknown_08591154
+_0800E664: .4byte ProcScr_Face
 _0800E668:
 	bl Face6CExists
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800E686
 	bl sub_80081A8
-	ldr r0, _0800E68C  @ gUnknown_08591154
+	ldr r0, _0800E68C  @ ProcScr_Face
 	ldr r1, _0800E690  @ sub_8005F38
 	bl ForEachProc
 	ldr r0, _0800E694  @ gUnknown_08591DE8
@@ -2339,7 +2339,7 @@ _0800E686:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800E68C: .4byte gUnknown_08591154
+_0800E68C: .4byte ProcScr_Face
 _0800E690: .4byte sub_8005F38
 _0800E694: .4byte gUnknown_08591DE8
 
@@ -2577,7 +2577,7 @@ _0800E842:
 	lsls r0, r0, #0x13
 	adds r1, r1, r0
 	adds r0, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0800E898  @ gBg3Tm
 	adds r1, r5, #4
 	adds r1, r4, r1
@@ -3127,7 +3127,7 @@ _0800EC94:
 	lsls r0, r0, #0x13
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0800ECF8  @ gBg2Tm
 	ldrh r2, [r6, #0x2c]
 	lsls r1, r2, #1
@@ -3245,7 +3245,7 @@ _0800ED94:
 	lsls r0, r0, #0x13
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0800EDFC  @ gBg3Tm
 	ldrh r2, [r6, #0x2c]
 	lsls r1, r2, #1
@@ -3638,9 +3638,9 @@ Event22_: @ 0x0800F0C8
 	movs r0, #2
 	bl EnableBgSync
 	bl sub_80081A8
-	ldr r0, _0800F120  @ gUnknown_08591154
+	ldr r0, _0800F120  @ ProcScr_Face
 	bl EndEachProc
-	bl ResetFaces
+	bl InitFaces
 	bl sub_80067E8
 	adds r0, r4, #0
 	bl Event24_
@@ -3652,7 +3652,7 @@ Event22_: @ 0x0800F0C8
 	.align 2, 0
 _0800F118: .4byte gBg0Tm
 _0800F11C: .4byte gBg1Tm
-_0800F120: .4byte gUnknown_08591154
+_0800F120: .4byte ProcScr_Face
 
 	THUMB_FUNC_END Event22_
 

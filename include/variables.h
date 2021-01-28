@@ -568,7 +568,7 @@ extern u32 gUnknown_03003240[];
 // extern ??? PutOamLoRamFunc
 // extern ??? gUnknown_03004160
 // extern ??? MapFloodCoreStepRamFunc
-// extern ??? gUnknown_03004980
+// extern ??? gFaces
 // extern ??? gUnknown_03004990
 // extern ??? gStatGainSimUnit
 extern struct Unit* gActiveUnit;
@@ -1077,15 +1077,15 @@ extern struct Glyph const* TextGlyphs_System[];
 extern struct Glyph const* TextGlyphs_Talk[];
 extern struct Glyph const* gUnknown_08590B44[];
 // extern ??? gUnknown_08590FEC
-// extern ??? gUnknown_0859100C
-// extern ??? gUnknown_08591026
-// extern ??? gUnknown_08591040
-// extern ??? gUnknown_08591066
+// extern ??? Sprite_Face64x80
+// extern ??? Sprite_Face64x80_Flipped
+// extern ??? Sprite_Face96x80
+// extern ??? Sprite_Face96x80_Flipped
 // extern ??? gUnknown_0859108C
 // extern ??? gUnknown_085910BE
 // extern ??? gUnknown_085910F0
 // extern ??? gUnknown_08591122
-// extern ??? gUnknown_08591154
+// extern ??? ProcScr_Face
 // extern ??? gUnknown_0859118C
 // extern ??? gUnknown_085911C4
 // extern ??? gUnknown_085911D8

@@ -173,7 +173,7 @@ HandleNewItemGetFromDrop: @ 0x0801E098
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #4
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458

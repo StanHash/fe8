@@ -71,7 +71,7 @@ struct MenuProc
     /* 64 */ u8 backBg : 2;
     /* 64 */ u8 frontBg : 2;
 
-    /* 66 */ u16 tileref;
+    /* 66 */ u16 tile;
     /* 68 */ u16 unk68;
 };
 
@@ -140,12 +140,12 @@ struct MenuProc* StartOrphanMenuAdjusted(const struct MenuDef* def, int xSubject
 struct MenuProc* StartMenu(const struct MenuDef* def, struct Proc* parent);
 struct MenuProc* StartOrphanMenuAt(const struct MenuDef* def, struct MenuRect rect);
 struct MenuProc* StartOrphanMenu(const struct MenuDef* def);
-struct MenuProc* StartOrphanMenuAdjustedExt(const struct MenuDef* def, int xSubject, int xTileLeft, int xTileRight, int backBg, int tileref, int frontBg, int unk);
-struct MenuProc* StartMenuExt(const struct MenuDef* def, int backBg, int tileref, int frontBg, int unk, struct Proc* parent);
-struct MenuProc* StartOrphanMenuAtExt(const struct MenuDef* def, struct MenuRect rect, int backBg, int tileref, int frontBg, int unk);
-struct MenuProc* StartOrphanMenuExt(const struct MenuDef* def, int backBg, int tileref, int frontBg, int unk);
+struct MenuProc* StartOrphanMenuAdjustedExt(const struct MenuDef* def, int xSubject, int xTileLeft, int xTileRight, int backBg, int tile, int frontBg, int unk);
+struct MenuProc* StartMenuExt(const struct MenuDef* def, int backBg, int tile, int frontBg, int unk, struct Proc* parent);
+struct MenuProc* StartOrphanMenuAtExt(const struct MenuDef* def, struct MenuRect rect, int backBg, int tile, int frontBg, int unk);
+struct MenuProc* StartOrphanMenuExt(const struct MenuDef* def, int backBg, int tile, int frontBg, int unk);
 struct MenuProc* StartMenuAt(const struct MenuDef* def, struct MenuRect rect, struct Proc* parent);
-struct MenuProc* StartMenuCore(const struct MenuDef* def, struct MenuRect rect, int backBg, int tileref, int frontBg, int unk, struct Proc* parent);
+struct MenuProc* StartMenuCore(const struct MenuDef* def, struct MenuRect rect, int backBg, int tile, int frontBg, int unk, struct Proc* parent);
 
 struct Proc* EndMenu(struct MenuProc* proc);
 void EndAllMenus(void);

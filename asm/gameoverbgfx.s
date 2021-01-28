@@ -177,14 +177,14 @@ sub_80212C0: @ 0x080212C0
 	bl SetBgChrOffset
 	ldr r0, _080213CC  @ gUnknown_08A0AB0C
 	ldr r1, _080213D0  @ 0x06001000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080213D4  @ gUnknown_08A0AE64
 	movs r1, #0x80
 	movs r2, #0x20
 	bl ApplyPaletteExt
 	ldr r0, _080213D8  @ gUnknown_08A07DD8
 	ldr r1, _080213DC  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080213E0  @ gUnknown_08A0AE44
 	movs r1, #0
 	movs r2, #0x20

@@ -1094,7 +1094,7 @@ sub_8038240: @ 0x08038240
 	lsls r0, r0, #0x13
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08038410  @ gUnknown_08A25DCC
 	movs r2, #0x80
 	lsls r2, r2, #1
@@ -1112,11 +1112,11 @@ sub_8038240: @ 0x08038240
 	ldr r2, _0803841C  @ 0x06004C00
 	adds r1, r1, r2
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08038420  @ gUnknown_08A268F8
 	ldr r4, _08038424  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08038428  @ gUnknown_08A268D8
 	movs r1, #0xe0
 	movs r2, #0x20
@@ -1132,10 +1132,10 @@ sub_8038240: @ 0x08038240
 	ldr r0, _08038434  @ 0x06004000
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08038438  @ gUnknown_089A27B4
 	mov r1, r8
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0803843C  @ gUnknown_089A28E0
 	movs r1, #0x40
 	movs r2, #0x40

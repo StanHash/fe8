@@ -1,175 +1,22 @@
 	.INCLUDE "macro.inc"
-
 	.SYNTAX UNIFIED
-	THUMB_FUNC_START GetPortraitStructPointer
-GetPortraitStructPointer: @ 0x08005514
-	adds r1, r0, #0
-	lsls r0, r1, #3
-	subs r0, r0, r1
-	lsls r0, r0, #2
-	ldr r1, _08005524  @ portrait_data - 0x1C
-	adds r0, r0, r1
-	bx lr
-	.align 2, 0
-_08005524: .4byte portrait_data - 0x1C
 
-	THUMB_FUNC_END GetPortraitStructPointer
-
-	THUMB_FUNC_START ResetFaces
-ResetFaces: @ 0x08005528
-	push {r4, lr}
-	movs r4, #0
-_0800552C:
-	adds r0, r4, #0
-	bl DeleteFaceByIndex
-	adds r4, #1
-	cmp r4, #3
-	ble _0800552C
-	movs r0, #0
-	bl SetupFaceGfxData
-	pop {r4}
-	pop {r0}
-	bx r0
-
-	THUMB_FUNC_END ResetFaces
-
-	THUMB_FUNC_START SetupFaceGfxData
-SetupFaceGfxData: @ 0x08005544
-	push {lr}
-	cmp r0, #0
-	bne _0800554C
-	ldr r0, _08005568  @ gUnknown_08590FEC
-_0800554C:
-	ldr r2, _0800556C  @ gUnknown_0202A68C
-	adds r1, r0, #0
-	movs r3, #3
-_08005552:
-	ldr r0, [r1]
-	str r0, [r2]
-	ldrh r0, [r1, #4]
-	strh r0, [r2, #4]
-	adds r2, #8
-	adds r1, #8
-	subs r3, #1
-	cmp r3, #0
-	bge _08005552
-	pop {r0}
-	bx r0
-	.align 2, 0
-_08005568: .4byte gUnknown_08590FEC
-_0800556C: .4byte gUnknown_0202A68C
-
-	THUMB_FUNC_END SetupFaceGfxData
-
-	THUMB_FUNC_START sub_8005570
-sub_8005570: @ 0x08005570
-	push {lr}
-	movs r1, #0
-	ldr r2, _08005580  @ gUnknown_03004980
-_08005576:
-	ldr r0, [r2]
-	cmp r0, #0
-	bne _08005584
-	adds r0, r1, #0
-	b _08005590
-	.align 2, 0
-_08005580: .4byte gUnknown_03004980
-_08005584:
-	adds r2, #4
-	adds r1, #1
-	cmp r1, #3
-	ble _08005576
-	movs r0, #1
-	negs r0, r0
-_08005590:
-	pop {r1}
-	bx r1
-
-	THUMB_FUNC_END sub_8005570
-
-	THUMB_FUNC_START Load6CFACEGraphics
-Load6CFACEGraphics: @ 0x08005594
-	push {lr}
-	ldr r1, [r0, #0x2c]
-	ldr r2, [r1]
-	ldr r1, _080055B4  @ gUnknown_0202A68C
-	adds r0, #0x40
-	ldrb r0, [r0]
-	lsls r0, r0, #3
-	adds r0, r0, r1
-	ldr r1, [r0]
-	ldr r0, _080055B8  @ 0x06010000
-	adds r1, r1, r0
-	adds r0, r2, #0
-	bl CopyDataWithPossibleUncomp
-	pop {r0}
-	bx r0
-	.align 2, 0
-_080055B4: .4byte gUnknown_0202A68C
-_080055B8: .4byte 0x06010000
-
-	THUMB_FUNC_END Load6CFACEGraphics
-
-	THUMB_FUNC_START sub_80055BC
-sub_80055BC: @ 0x080055BC
-	push {r4, lr}
-	sub sp, #4
-	adds r4, r0, #0
-	bl sub_80057A4
-	movs r1, #0x80
-	lsls r1, r1, #7
-	ands r1, r0
-	cmp r1, #0
-	bne _08005602
-	adds r0, r4, #0
-	bl sub_80057A4
-	adds r2, r0, #0
-	movs r0, #0x80
-	lsls r0, r0, #3
-	ands r2, r0
-	negs r2, r2
-	asrs r2, r2, #0x1f
-	ands r2, r0
-	ldrh r1, [r4, #0x36]
-	movs r0, #0xff
-	ands r0, r1
-	adds r2, r2, r0
-	adds r0, r4, #0
-	adds r0, #0x41
-	ldrb r0, [r0]
-	ldrh r3, [r4, #0x34]
-	ldr r1, _0800560C  @ 0x000001FF
-	ands r1, r3
-	ldr r3, [r4, #0x38]
-	ldrh r4, [r4, #0x3c]
-	str r4, [sp]
-	bl PutSpriteExt
-_08005602:
-	add sp, #4
-	pop {r4}
-	pop {r0}
-	bx r0
-	.align 2, 0
-_0800560C: .4byte 0x000001FF
-
-	THUMB_FUNC_END sub_80055BC
-
-	THUMB_FUNC_START sub_8005610
-sub_8005610: @ 0x08005610
+	THUMB_FUNC_START StartFaceAuto
+StartFaceAuto: @ 0x08005610
 	push {r4, r5, r6, r7, lr}
 	sub sp, #4
 	adds r5, r0, #0
 	adds r6, r1, #0
 	adds r7, r2, #0
 	adds r4, r3, #0
-	bl sub_8005570
+	bl GetFreeFaceSlot
 	cmp r0, #0
 	blt _08005632
 	str r4, [sp]
 	adds r1, r5, #0
 	adds r2, r6, #0
 	adds r3, r7, #0
-	bl NewFace
+	bl StartFace
 	b _08005634
 _08005632:
 	movs r0, #0
@@ -179,10 +26,10 @@ _08005634:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8005610
+	THUMB_FUNC_END StartFaceAuto
 
-	THUMB_FUNC_START NewFace
-NewFace: @ 0x0800563C
+	THUMB_FUNC_START StartFace
+StartFace: @ 0x0800563C
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -193,7 +40,7 @@ NewFace: @ 0x0800563C
 	mov r8, r1
 	mov r9, r2
 	mov sl, r3
-	ldr r1, _08005660  @ gUnknown_03004980
+	ldr r1, _08005660  @ gFaces
 	lsls r0, r6, #2
 	adds r5, r0, r1
 	ldr r7, [r5]
@@ -202,15 +49,15 @@ NewFace: @ 0x0800563C
 	movs r0, #0
 	b _08005720
 	.align 2, 0
-_08005660: .4byte gUnknown_03004980
+_08005660: .4byte gFaces
 _08005664:
-	ldr r0, _080056A4  @ gUnknown_08591154
+	ldr r0, _080056A4  @ ProcScr_Face
 	movs r1, #5
 	bl SpawnProc
 	adds r4, r0, #0
 	str r4, [r5]
 	mov r0, r8
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	adds r5, r0, #0
 	movs r0, #0x80
 	lsls r0, r0, #6
@@ -232,7 +79,7 @@ _08005664:
 	bl EnablePalSync
 	b _080056C8
 	.align 2, 0
-_080056A4: .4byte gUnknown_08591154
+_080056A4: .4byte ProcScr_Face
 _080056A8: .4byte gUnknown_0202A68C
 _080056AC: .4byte gPal+0x200
 _080056B0: .4byte 0x01000008
@@ -288,7 +135,7 @@ _08005710:
 	str r0, [r4, #0x30]
 	adds r0, r4, #0
 	ldr r1, [sp, #0x24]
-	bl sub_8005770
+	bl SetFaceDisp
 	adds r0, r4, #0
 _08005720:
 	add sp, #4
@@ -303,12 +150,12 @@ _08005720:
 _08005730: .4byte gUnknown_0859124C
 _08005734: .4byte gUnknown_08591264
 
-	THUMB_FUNC_END NewFace
+	THUMB_FUNC_END StartFace
 
-	THUMB_FUNC_START DeleteE_FACEByPointer
-DeleteE_FACEByPointer: @ 0x08005738
+	THUMB_FUNC_START EndFace
+EndFace: @ 0x08005738
 	push {lr}
-	ldr r2, _08005754  @ gUnknown_03004980
+	ldr r2, _08005754  @ gFaces
 	adds r1, r0, #0
 	adds r1, #0x40
 	ldrb r1, [r1]
@@ -320,33 +167,33 @@ DeleteE_FACEByPointer: @ 0x08005738
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08005754: .4byte gUnknown_03004980
+_08005754: .4byte gFaces
 
-	THUMB_FUNC_END DeleteE_FACEByPointer
+	THUMB_FUNC_END EndFace
 
-	THUMB_FUNC_START DeleteFaceByIndex
-DeleteFaceByIndex: @ 0x08005758
+	THUMB_FUNC_START EndFaceById
+EndFaceById: @ 0x08005758
 	push {lr}
-	ldr r1, _0800576C  @ gUnknown_03004980
+	ldr r1, _0800576C  @ gFaces
 	lsls r0, r0, #2
 	adds r0, r0, r1
 	ldr r0, [r0]
-	bl DeleteE_FACEByPointer
+	bl EndFace
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800576C: .4byte gUnknown_03004980
+_0800576C: .4byte gFaces
 
-	THUMB_FUNC_END DeleteFaceByIndex
+	THUMB_FUNC_END EndFaceById
 
-	THUMB_FUNC_START sub_8005770
-sub_8005770: @ 0x08005770
+	THUMB_FUNC_START SetFaceDisp
+SetFaceDisp: @ 0x08005770
 	push {r4, lr}
 	adds r4, r0, #0
 	cmp r4, #0
 	beq _08005782
 	str r1, [r4, #0x30]
-	bl sub_80057C0
+	bl FaceRefreshSprite
 	ldr r0, [r4, #0x30]
 	b _08005784
 _08005782:
@@ -356,47 +203,47 @@ _08005784:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8005770
+	THUMB_FUNC_END SetFaceDisp
 
-	THUMB_FUNC_START sub_800578C
-sub_800578C: @ 0x0800578C
+	THUMB_FUNC_START SetFaceDispById
+SetFaceDispById: @ 0x0800578C
 	push {lr}
-	ldr r2, _080057A0  @ gUnknown_03004980
+	ldr r2, _080057A0  @ gFaces
 	lsls r0, r0, #2
 	adds r0, r0, r2
 	ldr r0, [r0]
-	bl sub_8005770
+	bl SetFaceDisp
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080057A0: .4byte gUnknown_03004980
+_080057A0: .4byte gFaces
 
-	THUMB_FUNC_END sub_800578C
+	THUMB_FUNC_END SetFaceDispById
 
-	THUMB_FUNC_START sub_80057A4
-sub_80057A4: @ 0x080057A4
+	THUMB_FUNC_START GetFaceDisp
+GetFaceDisp: @ 0x080057A4
 	ldr r0, [r0, #0x30]
 	bx lr
 
-	THUMB_FUNC_END sub_80057A4
+	THUMB_FUNC_END GetFaceDisp
 
-	THUMB_FUNC_START sub_80057A8
-sub_80057A8: @ 0x080057A8
+	THUMB_FUNC_START GetFaceDispById
+GetFaceDispById: @ 0x080057A8
 	push {lr}
-	ldr r1, _080057BC  @ gUnknown_03004980
+	ldr r1, _080057BC  @ gFaces
 	lsls r0, r0, #2
 	adds r0, r0, r1
 	ldr r0, [r0]
-	bl sub_80057A4
+	bl GetFaceDisp
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080057BC: .4byte gUnknown_03004980
+_080057BC: .4byte gFaces
 
-	THUMB_FUNC_END sub_80057A8
+	THUMB_FUNC_END GetFaceDispById
 
-	THUMB_FUNC_START sub_80057C0
-sub_80057C0: @ 0x080057C0
+	THUMB_FUNC_START FaceRefreshSprite
+FaceRefreshSprite: @ 0x080057C0
 	push {r4, lr}
 	adds r3, r0, #0
 	ldr r1, [r3, #0x30]
@@ -424,25 +271,25 @@ _080057EC:
 	beq _080057FC
 	cmp r1, #1
 	bhi _08005804
-	ldr r0, _080057F8  @ gUnknown_0859100C
+	ldr r0, _080057F8  @ Sprite_Face64x80
 	b _0800582E
 	.align 2, 0
-_080057F8: .4byte gUnknown_0859100C
+_080057F8: .4byte Sprite_Face64x80
 _080057FC:
-	ldr r0, _08005800  @ gUnknown_08591026
+	ldr r0, _08005800  @ Sprite_Face64x80_Flipped
 	b _0800582E
 	.align 2, 0
-_08005800: .4byte gUnknown_08591026
+_08005800: .4byte Sprite_Face64x80_Flipped
 _08005804:
-	ldr r0, _08005808  @ gUnknown_08591040
+	ldr r0, _08005808  @ Sprite_Face96x80
 	b _0800582E
 	.align 2, 0
-_08005808: .4byte gUnknown_08591040
+_08005808: .4byte Sprite_Face96x80
 _0800580C:
-	ldr r0, _08005810  @ gUnknown_08591066
+	ldr r0, _08005810  @ Sprite_Face96x80_Flipped
 	b _0800582E
 	.align 2, 0
-_08005810: .4byte gUnknown_08591066
+_08005810: .4byte Sprite_Face96x80_Flipped
 _08005814:
 	ldr r0, _08005818  @ gUnknown_0859108C
 	b _0800582E
@@ -518,7 +365,7 @@ _0800586A:
 	.align 2, 0
 _08005890: .4byte gUnknown_0202A68C
 
-	THUMB_FUNC_END sub_80057C0
+	THUMB_FUNC_END FaceRefreshSprite
 
 	THUMB_FUNC_START sub_8005894
 sub_8005894: @ 0x08005894
@@ -636,14 +483,14 @@ _08005958: .4byte 0x00007EFF
 _0800595C: .4byte 0x0001FFFF
 _08005960:
 	adds r0, r4, #0
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	adds r4, r0, #0
 	ldr r0, [r4, #4]
 	lsls r1, r5, #5
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, [r4, #8]
 	lsls r1, r6, #5
 	movs r2, #0x20
@@ -760,11 +607,11 @@ _08005A60: .4byte 0x00007EFF
 _08005A64: .4byte 0x0001FFFF
 _08005A68:
 	adds r0, r6, #0
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	adds r5, r0, #0
 	ldr r0, [r5, #4]
 	mov r1, sp
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	lsls r1, r7, #5
 	movs r4, #0xc0
 	lsls r4, r4, #0x13
@@ -995,8 +842,8 @@ _08005C20: .4byte gUnknown_085A08F0
 
 	THUMB_FUNC_END sub_8005BCC
 
-	THUMB_FUNC_START ShouldPortraitBeSmol
-ShouldPortraitBeSmol: @ 0x08005C24
+	THUMB_FUNC_START IsSmallFid
+IsSmallFid: @ 0x08005C24
 	push {lr}
 	subs r0, #0x10
 	cmp r0, #0x16
@@ -1041,7 +888,7 @@ _08005C9E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END ShouldPortraitBeSmol
+	THUMB_FUNC_END IsSmallFid
 
 	THUMB_FUNC_START sub_8005CA4
 sub_8005CA4: @ 0x08005CA4
@@ -1056,7 +903,7 @@ sub_8005CA4: @ 0x08005CA4
 	cmp r5, #0
 	beq _08005D54
 	adds r0, r5, #0
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	adds r4, r0, #0
 	ldr r0, [r4, #8]
 	lsls r1, r7, #5
@@ -1070,13 +917,13 @@ sub_8005CA4: @ 0x08005CA4
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, [r4, #8]
 	mov r1, r8
 	movs r2, #0x20
 	bl ApplyPaletteExt
 	adds r0, r5, #0
-	bl ShouldPortraitBeSmol
+	bl IsSmallFid
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08005D0C
@@ -1118,7 +965,7 @@ _08005D34:
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	lsls r1, r7, #0xc
 	ldr r0, _08005D60  @ 0x000003FF
 	ands r0, r6
@@ -1188,7 +1035,7 @@ sub_8005D98: @ 0x08005D98
 	adds r0, r4, #0
 	adds r0, #0x44
 	ldrh r0, [r0]
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	adds r5, r0, #0
 	movs r6, #0
 	movs r1, #0x34
@@ -1246,7 +1093,7 @@ _08005E38:
 	adds r0, r4, #0
 	adds r0, #0x44
 	ldrh r0, [r0]
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	adds r5, r0, #0
 	ldrb r0, [r5, #0x17]
 	lsls r0, r0, #6
@@ -1309,7 +1156,7 @@ sub_8005E98: @ 0x08005E98
 	adds r3, r6, #0
 	bl sub_8005CA4
 	mov r0, r8
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6}
@@ -1324,7 +1171,7 @@ _08005EC8: .4byte gUnknown_08591204
 sub_8005ECC: @ 0x08005ECC
 	push {lr}
 	ldr r0, [r0, #0x54]
-	bl DeleteE_FACEByPointer
+	bl EndFace
 	pop {r0}
 	bx r0
 
@@ -1353,7 +1200,7 @@ sub_8005EF0: @ 0x08005EF0
 	push {r6}
 	adds r4, r0, #0
 	ldrh r0, [r4, #0x3e]
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	mov r8, r0
 	ldr r6, _08005F34  @ gUnknown_0202A68C
 	adds r5, r4, #0
@@ -1389,7 +1236,7 @@ sub_8005F38: @ 0x08005F38
 	push {r4, lr}
 	adds r4, r0, #0
 	ldrh r0, [r4, #0x3e]
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	ldr r1, _08005F68  @ gUnknown_0202A68C
 	adds r0, r4, #0
 	adds r0, #0x40
@@ -1484,13 +1331,13 @@ sub_8005FE0: @ 0x08005FE0
 	sub sp, #4
 	adds r4, r0, #0
 	ldr r0, [r4, #0x2c]
-	bl sub_80057A4
+	bl GetFaceDisp
 	movs r1, #0x30
 	ands r1, r0
 	cmp r1, #0
 	bne _08006034
 	ldr r0, [r4, #0x2c]
-	bl sub_80057A4
+	bl GetFaceDisp
 	movs r1, #8
 	ands r1, r0
 	movs r3, #0
@@ -1526,7 +1373,7 @@ _08006034:
 	cmp r0, #0
 	bge _080060A4
 	ldr r0, [r4, #0x2c]
-	bl sub_80057A4
+	bl GetFaceDisp
 	movs r1, #8
 	ands r1, r0
 	movs r5, #0
@@ -1582,7 +1429,7 @@ _080060A4:
 	ldrb r2, [r1, #0x14]
 	movs r1, #4
 	subs r5, r1, r2
-	bl sub_80057A4
+	bl GetFaceDisp
 	movs r6, #1
 	ands r0, r6
 	cmp r0, #0
@@ -1598,7 +1445,7 @@ _080060BC:
 	subs r5, #0x10
 	ldr r1, _0800612C  @ 0x000001FF
 	ands r5, r1
-	bl sub_80057A4
+	bl GetFaceDisp
 	ands r0, r6
 	cmp r0, #0
 	beq _080060DE
@@ -1607,7 +1454,7 @@ _080060BC:
 	adds r5, r5, r0
 _080060DE:
 	ldr r0, [r4, #0x2c]
-	bl sub_80057A4
+	bl GetFaceDisp
 	adds r2, r0, #0
 	movs r0, #0x80
 	lsls r0, r0, #3
@@ -1628,7 +1475,7 @@ _080060DE:
 	adds r0, r4, #0
 	adds r0, #0x41
 	ldrb r0, [r0]
-	ldr r3, _08006130  @ gObject_32x16
+	ldr r3, _08006130  @ Sprite_32x16
 	ldrh r1, [r4, #0x3c]
 	adds r1, #0x1c
 	str r1, [sp]
@@ -1642,7 +1489,7 @@ _080060DE:
 _08006124: .4byte 0x000003FF
 _08006128: .4byte 0x06010000
 _0800612C: .4byte 0x000001FF
-_08006130: .4byte gObject_32x16
+_08006130: .4byte Sprite_32x16
 
 	THUMB_FUNC_END sub_8005FE0
 
@@ -1691,7 +1538,7 @@ _08006174:
 	ldrb r2, [r1, #0x16]
 	movs r1, #4
 	subs r4, r1, r2
-	bl sub_80057A4
+	bl GetFaceDisp
 	movs r1, #1
 	mov r8, r1
 	ands r0, r1
@@ -1708,7 +1555,7 @@ _0800618E:
 	subs r4, #0x10
 	ldr r1, _0800620C  @ 0x000001FF
 	ands r4, r1
-	bl sub_80057A4
+	bl GetFaceDisp
 	mov r1, r8
 	ands r0, r1
 	cmp r0, #0
@@ -1718,7 +1565,7 @@ _0800618E:
 	adds r4, r4, r0
 _080061B2:
 	ldr r0, [r7, #0x2c]
-	bl sub_80057A4
+	bl GetFaceDisp
 	movs r1, #0x80
 	lsls r1, r1, #3
 	ands r0, r1
@@ -1739,7 +1586,7 @@ _080061B2:
 	cmp r0, #0
 	beq _08006214
 	adds r0, r2, #0
-	bl sub_80057A4
+	bl GetFaceDisp
 	mov r1, r8
 	ands r0, r1
 	cmp r0, #0
@@ -1750,7 +1597,7 @@ _080061EE:
 	adds r0, r1, #0
 	adds r0, #0x41
 	ldrb r0, [r0]
-	ldr r3, _08006210  @ gObject_16x16
+	ldr r3, _08006210  @ Sprite_16x16
 	ldrh r1, [r1, #0x3c]
 	adds r1, r1, r5
 	adds r1, #2
@@ -1761,12 +1608,12 @@ _080061EE:
 	b _0800622A
 	.align 2, 0
 _0800620C: .4byte 0x000001FF
-_08006210: .4byte gObject_16x16
+_08006210: .4byte Sprite_16x16
 _08006214:
 	adds r0, r2, #0
 	adds r0, #0x41
 	ldrb r0, [r0]
-	ldr r3, _08006238  @ gObject_32x16
+	ldr r3, _08006238  @ Sprite_32x16
 	ldrh r1, [r2, #0x3c]
 	adds r1, r1, r5
 	str r1, [sp]
@@ -1782,7 +1629,7 @@ _0800622A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08006238: .4byte gObject_32x16
+_08006238: .4byte Sprite_32x16
 
 	THUMB_FUNC_END sub_8006134
 
@@ -2081,7 +1928,7 @@ _08006444:
 	THUMB_FUNC_START sub_8006458
 sub_8006458: @ 0x08006458
 	push {lr}
-	ldr r2, _0800646C  @ gUnknown_03004980
+	ldr r2, _0800646C  @ gFaces
 	lsls r0, r0, #2
 	adds r0, r0, r2
 	ldr r0, [r0]
@@ -2089,7 +1936,7 @@ sub_8006458: @ 0x08006458
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800646C: .4byte gUnknown_03004980
+_0800646C: .4byte gFaces
 
 	THUMB_FUNC_END sub_8006458
 
@@ -2158,7 +2005,7 @@ sub_80064D4: @ 0x080064D4
 	THUMB_FUNC_START sub_80064DC
 sub_80064DC: @ 0x080064DC
 	push {lr}
-	ldr r2, _080064F0  @ gUnknown_03004980
+	ldr r2, _080064F0  @ gFaces
 	lsls r0, r0, #2
 	adds r0, r0, r2
 	ldr r0, [r0]
@@ -2166,7 +2013,7 @@ sub_80064DC: @ 0x080064DC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080064F0: .4byte gUnknown_03004980
+_080064F0: .4byte gFaces
 
 	THUMB_FUNC_END sub_80064DC
 
@@ -2182,7 +2029,7 @@ sub_80064F4: @ 0x080064F4
 	mov r9, r1
 	mov sl, r2
 	str r3, [sp, #4]
-	ldr r1, _08006518  @ gUnknown_03004980
+	ldr r1, _08006518  @ gFaces
 	lsls r0, r7, #2
 	adds r4, r0, r1
 	ldr r6, [r4]
@@ -2191,7 +2038,7 @@ sub_80064F4: @ 0x080064F4
 	movs r0, #0
 	b _08006602
 	.align 2, 0
-_08006518: .4byte gUnknown_03004980
+_08006518: .4byte gFaces
 _0800651C:
 	ldr r0, _0800655C  @ gUnknown_0859118C
 	movs r1, #5
@@ -2199,7 +2046,7 @@ _0800651C:
 	adds r5, r0, #0
 	str r5, [r4]
 	mov r0, r9
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	mov r8, r0
 	movs r0, #0x80
 	lsls r0, r0, #6
@@ -2259,7 +2106,7 @@ _08006582:
 	ldr r0, [sp, #0x28]
 	str r0, [r5, #0x30]
 	adds r0, r5, #0
-	bl sub_80057C0
+	bl FaceRefreshSprite
 	movs r1, #0xf0
 	lsls r1, r1, #2
 	ldr r2, [sp, #0x28]
@@ -2322,7 +2169,7 @@ _08006614: .4byte gUnknown_0202A68C
 
 	THUMB_FUNC_START sub_8006618
 sub_8006618: @ 0x08006618
-	ldr r3, _08006628  @ gUnknown_03004980
+	ldr r3, _08006628  @ gFaces
 	lsls r0, r0, #2
 	adds r0, r0, r3
 	ldr r3, [r0]
@@ -2331,7 +2178,7 @@ sub_8006618: @ 0x08006618
 	strh r2, [r0, #0x36]
 	bx lr
 	.align 2, 0
-_08006628: .4byte gUnknown_03004980
+_08006628: .4byte gFaces
 
 	THUMB_FUNC_END sub_8006618
 
@@ -2362,7 +2209,7 @@ sub_8006650: @ 0x08006650
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x34]
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	str r0, [r4, #0x30]
 	ldr r0, [r0]
 	ldr r5, _080066A0  @ gUnknown_0202A68C
@@ -2374,7 +2221,7 @@ sub_8006650: @ 0x08006650
 	ldr r1, [r1]
 	ldr r2, _080066A4  @ 0x06010000
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, [r4, #0x30]
 	ldr r0, [r0, #8]
 	ldr r1, [r4, #0x2c]
@@ -2455,14 +2302,14 @@ sub_80066FC: @ 0x080066FC
 	push {r4, lr}
 	adds r4, r0, #0
 	adds r0, r1, #0
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	ldr r0, [r0]
 	lsls r4, r4, #5
 	movs r1, #0xc0
 	lsls r1, r1, #0x13
 	adds r4, r4, r1
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -2474,7 +2321,7 @@ sub_800671C: @ 0x0800671C
 	push {r4, lr}
 	adds r4, r0, #0
 	adds r0, r1, #0
-	bl GetPortraitStructPointer
+	bl GetFaceInfo
 	ldr r0, [r0, #8]
 	lsls r4, r4, #5
 	adds r1, r4, #0

@@ -1107,7 +1107,7 @@ BKSEL_InitGfx: @ 0x08036D9C
 	ldr r0, _08036E08  @ gUnknown_085A0C80
 	ldr r4, _08036E0C  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _08036E10  @ 0x06015D00
 	adds r0, r4, #0
 	movs r2, #4
@@ -1361,7 +1361,7 @@ sub_8036F4C: @ 0x08036F4C
 	adds r1, #0x48
 	adds r2, r5, #0
 	adds r2, #0x28
-	ldr r3, _08036FE0  @ gObject_16x16
+	ldr r3, _08036FE0  @ Sprite_16x16
 	ldr r4, _08036FE4  @ 0x000022E6
 	adds r0, r0, r4
 	str r0, [sp]
@@ -1378,7 +1378,7 @@ _08036FB2:
 	adds r1, #0x18
 	adds r2, r5, #0
 	adds r2, #0x28
-	ldr r3, _08036FE0  @ gObject_16x16
+	ldr r3, _08036FE0  @ Sprite_16x16
 	ldr r4, _08036FE4  @ 0x000022E6
 	adds r0, r0, r4
 	str r0, [sp]
@@ -1391,7 +1391,7 @@ _08036FD4:
 	bx r0
 	.align 2, 0
 _08036FDC: .4byte gSinLut
-_08036FE0: .4byte gObject_16x16
+_08036FE0: .4byte Sprite_16x16
 _08036FE4: .4byte 0x000022E6
 
 	THUMB_FUNC_END sub_8036F4C

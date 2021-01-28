@@ -845,7 +845,7 @@ sub_8022B8C: @ 0x08022B8C
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #0xc
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458
@@ -886,7 +886,7 @@ sub_8022BD8: @ 0x08022BD8
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #0xc
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458
@@ -1757,7 +1757,7 @@ _0802324C:
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #0xc
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458
@@ -1852,7 +1852,7 @@ ItemCommandEffect: @ 0x080232E8
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #0xc
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458
@@ -2163,7 +2163,7 @@ sub_8023550: @ 0x08023550
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #0xc
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458
@@ -2230,7 +2230,7 @@ sub_80235A8: @ 0x080235A8
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #0xc
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458
@@ -2251,7 +2251,7 @@ _08023644: .4byte gItemSelectMenuDef
 _08023648:
 	bl ClearBg0Bg1
 	movs r0, #0
-	bl DeleteFaceByIndex
+	bl EndFaceById
 	ldr r0, _08023674  @ gUnitActionMenuDef
 	ldr r2, _08023678  @ gUnknown_0202BCB0
 	movs r3, #0x1c
@@ -2516,7 +2516,7 @@ ItemSubMenu_TradeItem: @ 0x08023838
 	adds r0, r4, #0
 	bl sub_8023538
 	movs r0, #0
-	bl DeleteFaceByIndex
+	bl EndFaceById
 	adds r0, r4, #0
 	adds r1, r5, #0
 	bl TradeCommandEffect
@@ -2869,7 +2869,7 @@ StaffCommandEffect: @ 0x08023ACC
 	movs r0, #0
 	movs r2, #0xb0
 	movs r3, #0xc
-	bl NewFace
+	bl StartFace
 	movs r0, #0
 	movs r1, #5
 	bl sub_8006458

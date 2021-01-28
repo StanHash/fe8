@@ -36,7 +36,7 @@ sub_8010DC0: @ 0x08010DC0
 	lsls r0, r0, #0x13
 	adds r1, r1, r0
 	adds r0, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08010E48  @ gBg3Tm
 	adds r1, r5, #4
 	adds r1, r4, r1
@@ -70,14 +70,14 @@ _08010E4C: .4byte gPal
 sub_8010E50: @ 0x08010E50
 	push {lr}
 	bl sub_80081A8
-	ldr r0, _08010E68  @ gUnknown_08591154
+	ldr r0, _08010E68  @ ProcScr_Face
 	bl EndEachProc
-	bl ResetFaces
+	bl InitFaces
 	bl sub_80067E8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08010E68: .4byte gUnknown_08591154
+_08010E68: .4byte ProcScr_Face
 
 	THUMB_FUNC_END sub_8010E50
 
@@ -589,7 +589,7 @@ IconOAMUpdater_Loop: @ 0x08011254
 	push {r4, lr}
 	ldr r4, [r0, #0x2c]
 	ldr r1, [r0, #0x30]
-	ldr r2, _0801126C  @ gObject_16x16
+	ldr r2, _0801126C  @ Sprite_16x16
 	adds r0, #0x4a
 	ldrh r3, [r0]
 	adds r0, r4, #0
@@ -598,7 +598,7 @@ IconOAMUpdater_Loop: @ 0x08011254
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801126C: .4byte gObject_16x16
+_0801126C: .4byte Sprite_16x16
 
 	THUMB_FUNC_END IconOAMUpdater_Loop
 

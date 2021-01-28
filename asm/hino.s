@@ -466,7 +466,7 @@ sub_8012A2C: @ 0x08012A2C
 	bl PlaySpacialSoundMaybe
 	ldr r0, _08012A58  @ gUnknown_089B06AC
 	ldr r1, _08012A5C  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08012A60  @ gUnknown_089B0700
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -1177,8 +1177,8 @@ _08012F4C: .4byte gBuf
 
 	THUMB_FUNC_END sub_8012F20
 
-	THUMB_FUNC_START CopyDataWithPossibleUncomp
-CopyDataWithPossibleUncomp: @ 0x08012F50
+	THUMB_FUNC_START Decompress
+Decompress: @ 0x08012F50
 	push {r4, r5, lr}
 	adds r3, r0, #0
 	adds r4, r1, #0
@@ -1210,7 +1210,7 @@ _08012F66:
 _08012F88: .4byte 0x00017FFF
 _08012F8C: .4byte gUnknown_08599FB4
 
-	THUMB_FUNC_END CopyDataWithPossibleUncomp
+	THUMB_FUNC_END Decompress
 
 	THUMB_FUNC_START FilterR0ForRawCopy
 FilterR0ForRawCopy: @ 0x08012F90
@@ -1244,7 +1244,7 @@ sub_8012FB0: @ 0x08012FB0
 	adds r4, r1, #0
 	ldr r1, [r5]
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	adds r0, r4, #0
 	bl FilterR0ForRawCopy
 	ldr r1, [r5]
@@ -6496,11 +6496,11 @@ _0801531A:
 	ldr r0, [r4, #0x14]
 	bl Proc_Run
 	movs r0, #0
-	bl PushSpriteLayerObjects
+	bl PutSpriteLayerOam
 	ldr r0, [r4, #0x10]
 	bl Proc_Run
 	movs r0, #0xd
-	bl PushSpriteLayerObjects
+	bl PutSpriteLayerOam
 	ldr r1, _08015358  @ gUnknown_0202BCB0
 	movs r0, #1
 	strb r0, [r1]

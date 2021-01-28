@@ -1,6 +1,6 @@
 #include "global.h"
 #include "ap.h"
-#include "ctc.h"
+#include "sprite.h"
 #include "proc.h"
 #include "hardware.h"
 #include "oam.h"

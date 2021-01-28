@@ -2,7 +2,7 @@
 
 #include "hardware.h"
 #include "dma.h"
-#include "ctc.h"
+#include "sprite.h"
 
 #include "uiutils.h"
 
@@ -197,7 +197,7 @@ void UnpackLegacyUiFrameImage(void* dest)
     if (dest == NULL)
         dest = BG_CHAR_ADDR(0);
 
-    CopyDataWithPossibleUncomp(sLegacyUiFrameImageLookup[gRAMChapterData.cfgWindowColor], dest);
+    Decompress(sLegacyUiFrameImageLookup[gRAMChapterData.cfgWindowColor], dest);
 }
 
 void UnpackUiFrameImage(void* dest)
@@ -205,7 +205,7 @@ void UnpackUiFrameImage(void* dest)
     if (dest == NULL)
         dest = BG_CHAR_ADDR(0);
 
-    CopyDataWithPossibleUncomp(sUiFrameImageLookup[gRAMChapterData.cfgWindowColor], dest);
+    Decompress(sUiFrameImageLookup[gRAMChapterData.cfgWindowColor], dest);
 }
 
 void UnpackUiBarPalette(int palId)
@@ -227,7 +227,7 @@ void UnpackUiFrameBuffered(int id)
     bufSize = FilterR0ForRawCopy(sUiFrameImageLookup[id]);
     bufAddr = gUnknown_02022288 - bufSize;
 
-    CopyDataWithPossibleUncomp(sUiFrameImageLookup[id], bufAddr);
+    Decompress(sUiFrameImageLookup[id], bufAddr);
     RegisterDataMove(bufAddr, BG_CHAR_ADDR(0), bufSize);
 
     UnpackUiFramePalette(-1);
@@ -1192,7 +1192,7 @@ void ClearUiItemHoverExt(int bg, int base, int x, int y, int width)
 
 void UnpackUnkUiFrame(void* vram, int palId, int palCount)
 {
-    CopyDataWithPossibleUncomp(gUnkUiFrameImage, vram);
+    Decompress(gUnkUiFrameImage, vram);
     ApplyPalettes(gUnkUiFramePalettes, palId, palCount);
 }
 

@@ -2616,7 +2616,7 @@ sub_807B9F8: @ 0x0807B9F8
 	adds r0, r0, r2
 	adds r1, r1, r0
 	adds r0, r5, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -2736,7 +2736,7 @@ sub_807BAE4: @ 0x0807BAE4
 	bl sub_807B9F8
 	ldr r1, _0807BB08  @ 0x06000560
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807BB0C  @ gUnknown_08A1D79C
 	movs r1, #0xa0
 	movs r2, #0x20
@@ -2915,7 +2915,7 @@ sub_807BC00: @ 0x0807BC00
 	ldr r0, _0807BC48  @ 0x06000020
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807BC4C  @ gUnknown_089AD78C
 	bl sub_807BAE4
 	ldr r0, _0807BC50  @ gUnknown_0203E1F0
@@ -3217,7 +3217,7 @@ sub_807BE1C: @ 0x0807BE1C
 	ldr r0, [r6]
 	ldr r6, _0807BEEC  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldrb r0, [r5, #0x11]
 	lsls r0, r0, #5
 	ldrb r1, [r5, #0x10]
@@ -4843,7 +4843,7 @@ MapAnim_BeginMISSAnim: @ 0x0807CB24
 	adds r4, r0, #0
 	ldr r0, _0807CB70  @ gUnknown_089AC0A4
 	ldr r1, _0807CB74  @ 0x06013000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807CB78  @ gUnknown_089AC194
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
@@ -4888,7 +4888,7 @@ MapAnim_BeginNODAMAGEAnim: @ 0x0807CB80
 	adds r4, r0, #0
 	ldr r0, _0807CBCC  @ gUnknown_089AC2FC
 	ldr r1, _0807CBD0  @ 0x06013000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807CBD4  @ gUnknown_089AC440
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
@@ -4974,7 +4974,7 @@ WallBreakAnim_Init: @ 0x0807CC28
 	adds r4, r0, #0
 	ldr r0, _0807CC68  @ gUnknown_089ADA80
 	ldr r1, _0807CC6C  @ 0x06013000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807CC70  @ gUnknown_089ADD0C
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -5053,7 +5053,7 @@ MapAnim_BeginPoisonAnim: @ 0x0807CCC0
 	bl PlaySpacialSoundMaybe
 	ldr r0, _0807CD04  @ gUnknown_089ADEB0
 	ldr r1, _0807CD08  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807CD0C  @ gUnknown_089AE204
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -5131,7 +5131,7 @@ sub_807CD60: @ 0x0807CD60
 	bl PlaySpacialSoundMaybe
 	ldr r0, _0807CDA4  @ gUnknown_089ADEB0
 	ldr r1, _0807CDA8  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807CDAC  @ gUnknown_089AE204
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -5227,7 +5227,7 @@ sub_807CE18: @ 0x0807CE18
 	ldr r0, _0807CE70  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807CE74  @ gUnknown_089B80C4
 	movs r1, #0x80
 	movs r2, #0x20
@@ -5295,7 +5295,7 @@ _0807CEB8:
 	ldr r0, [r1]
 	ldr r6, _0807CF24  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _0807CF28  @ gBg2Tm
 	ldr r0, [r4, #0x30]
 	cmp r0, #0
@@ -5601,7 +5601,7 @@ sub_807D0FC: @ 0x0807D0FC
 	ldr r0, _0807D18C  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r0, #1
 	movs r1, #0x10
 	movs r2, #0x10
@@ -5717,7 +5717,7 @@ _0807D212:
 	ldr r0, _0807D264  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, [r5, #0x30]
 	cmp r0, #0
 	bge _0807D22E
@@ -6138,7 +6138,7 @@ sub_807D51C: @ 0x0807D51C
 	ldr r0, _0807D574  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807D578  @ gUnknown_089B4BFC
 	movs r1, #0x80
 	movs r2, #0x20
@@ -6219,7 +6219,7 @@ _0807D5D8:
 	ldr r0, [r1]
 	ldr r4, _0807D660  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _0807D664  @ gBg2Tm
 	ldr r0, [r5, #0x30]
 	cmp r0, #0
@@ -6384,7 +6384,7 @@ sub_807D6D8: @ 0x0807D6D8
 	ldr r0, _0807D75C  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, [r5, #0x54]
 	movs r1, #0x80
 	movs r2, #0x20
@@ -6586,7 +6586,7 @@ sub_807D860: @ 0x0807D860
 	ldr r0, _0807D934  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807D938  @ gBg2Tm
 	ldr r3, [r6, #0x2c]
 	movs r1, #0x10
@@ -6880,7 +6880,7 @@ sub_807DAE8: @ 0x0807DAE8
 	ldr r0, _0807DB28  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807DB2C  @ gUnknown_089AE484
 	movs r1, #0x80
 	movs r2, #0x20
@@ -7005,7 +7005,7 @@ sub_807DBE4: @ 0x0807DBE4
 _0807DBFC:
 	ldr r0, _0807DC84  @ gUnknown_089B03D4
 	ldr r1, _0807DC88  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807DC8C  @ gUnknown_089B068C
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -7238,7 +7238,7 @@ sub_807DDC8: @ 0x0807DDC8
 	bl sub_807E978
 	ldr r0, _0807DE1C  @ gUnknown_089B1E10
 	ldr r1, _0807DE20  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807DE24  @ gUnknown_089B20E8
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -7336,7 +7336,7 @@ sub_807DE80: @ 0x0807DE80
 	ldr r0, _0807DED4  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807DED8  @ gUnknown_086810B8
 	movs r1, #0x80
 	movs r2, #0x20
@@ -7674,7 +7674,7 @@ sub_807E118: @ 0x0807E118
 	bl sub_807E978
 	ldr r0, _0807E168  @ gUnknown_08686F84
 	ldr r1, _0807E16C  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807E170  @ gUnknown_0868716C
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -7812,7 +7812,7 @@ sub_807E22C: @ 0x0807E22C
 	ldr r0, _0807E284  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807E288  @ gUnknown_089B73D4
 	movs r1, #0x80
 	movs r2, #0x20
@@ -7873,7 +7873,7 @@ _0807E2BE:
 	ldr r0, [r1]
 	ldr r6, _0807E328  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _0807E32C  @ gBg2Tm
 	ldr r0, [r4, #0x30]
 	cmp r0, #0
@@ -8156,10 +8156,10 @@ sub_807E4D0: @ 0x0807E4D0
 	ldr r0, _0807E56C  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807E570  @ gUnknown_089B21D8
 	ldr r1, _0807E574  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r4, _0807E578  @ gUnknown_089B2728
 	adds r0, r4, #0
 	movs r1, #0x80
@@ -8367,7 +8367,7 @@ sub_807E67C: @ 0x0807E67C
 	ldr r0, _0807E6D8  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807E6DC  @ gUnknown_0868DF5C
 	movs r1, #0x80
 	movs r2, #0x20
@@ -8545,7 +8545,7 @@ sub_807E7E0: @ 0x0807E7E0
 	ldr r0, _0807E890  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r4, _0807E894  @ gBg2Tm
 	ldr r0, [r5, #0x30]
 	cmp r0, #0
@@ -8575,7 +8575,7 @@ _0807E822:
 	bl EnableBgSync
 	ldr r0, _0807E8A0  @ gUnknown_089B06AC
 	ldr r1, _0807E8A4  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807E8A8  @ gUnknown_089B0700
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -8895,11 +8895,11 @@ sub_807EA98: @ 0x0807EA98
 	ldr r0, _0807EB88  @ 0x06004000
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807EB8C  @ gUnknown_088039E8
 	ldr r4, _0807EB90  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r2, #0xe0
 	lsls r2, r2, #2
 	movs r3, #0xa4
@@ -9334,7 +9334,7 @@ sub_807EDF8: @ 0x0807EDF8
 	lsls r1, r1, #5
 	ldr r2, _0807EE68  @ 0x06010000
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r5, _0807EE6C  @ gUnknown_089AC9A8
 	adds r1, r6, #0
 	adds r1, #0x10
@@ -9889,8 +9889,8 @@ _0807F1CE:
 	str r0, [sp]
 	movs r0, #0
 	movs r2, #0xb8
-	bl NewFace
-	ldr r0, _0807F2B0  @ gUnknown_03004980
+	bl StartFace
+	ldr r0, _0807F2B0  @ gFaces
 	ldr r2, [r0]
 	ldrh r1, [r5, #0x32]
 	movs r0, #0x20
@@ -9912,7 +9912,7 @@ _0807F2A0: .4byte 0x0000FF70
 _0807F2A4: .4byte gDispIo
 _0807F2A8: .4byte gUnknown_0203E1F0
 _0807F2AC: .4byte 0x00001042
-_0807F2B0: .4byte gUnknown_03004980
+_0807F2B0: .4byte gFaces
 
 	THUMB_FUNC_END sub_807F1AC
 
@@ -9983,7 +9983,7 @@ sub_807F30C: @ 0x0807F30C
 	movs r0, #1
 	movs r1, #0
 	bl SetBgOffset
-	ldr r0, _0807F350  @ gUnknown_03004980
+	ldr r0, _0807F350  @ gFaces
 	ldr r2, [r0]
 	ldrh r1, [r4, #0x32]
 	movs r0, #0x20
@@ -10002,7 +10002,7 @@ _0807F348:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0807F350: .4byte gUnknown_03004980
+_0807F350: .4byte gFaces
 
 	THUMB_FUNC_END sub_807F30C
 
@@ -10021,7 +10021,7 @@ sub_807F354: @ 0x0807F354
 	movs r0, #1
 	movs r1, #0
 	bl SetBgOffset
-	ldr r0, _0807F398  @ gUnknown_03004980
+	ldr r0, _0807F398  @ gFaces
 	ldr r2, [r0]
 	ldrh r1, [r4, #0x32]
 	movs r0, #0x20
@@ -10040,7 +10040,7 @@ _0807F390:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0807F398: .4byte gUnknown_03004980
+_0807F398: .4byte gFaces
 
 	THUMB_FUNC_END sub_807F354
 
@@ -10177,7 +10177,7 @@ sub_807F48C: @ 0x0807F48C
 	adds r4, r0, #0
 	ldr r0, _0807F520  @ gUnknown_089AC794
 	ldr r1, _0807F524  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807F528  @ gUnknown_089AC9A8
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -10480,7 +10480,7 @@ LoadSparkGfx: @ 0x0807F6C0
 	push {lr}
 	ldr r0, _0807F6DC  @ gUnknown_089AE7A4
 	ldr r1, _0807F6E0  @ 0x06013800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807F6E4  @ gUnknown_089AE7C4
 	movs r1, #0xa0
 	lsls r1, r1, #2
@@ -10515,7 +10515,7 @@ sub_807F6E8: @ 0x0807F6E8
 	subs r1, r2, #4
 	movs r2, #0xff
 	ands r1, r2
-	ldr r2, _0807F71C  @ gObject_8x8
+	ldr r2, _0807F71C  @ Sprite_8x8
 	ldr r3, _0807F720  @ 0x000041C0
 	bl PutOamHiRam
 _0807F714:
@@ -10523,7 +10523,7 @@ _0807F714:
 	bx r0
 	.align 2, 0
 _0807F718: .4byte 0x000001FF
-_0807F71C: .4byte gObject_8x8
+_0807F71C: .4byte Sprite_8x8
 _0807F720: .4byte 0x000041C0
 
 	THUMB_FUNC_END sub_807F6E8
@@ -10913,7 +10913,7 @@ _0807F9C8:
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldrh r1, [r6]
 	lsls r0, r1, #1
 	adds r0, r0, r1
@@ -10924,7 +10924,7 @@ _0807F9C8:
 	ldr r0, [r0]
 	ldr r4, _0807FA90  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807FA94  @ gBg2Tm
 	ldrh r3, [r5]
 	lsls r1, r3, #2
@@ -11027,7 +11027,7 @@ sub_807FAA0: @ 0x0807FAA0
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldrh r1, [r5]
 	lsls r0, r1, #1
 	adds r0, r0, r1
@@ -11038,7 +11038,7 @@ sub_807FAA0: @ 0x0807FAA0
 	ldr r0, [r0]
 	ldr r1, _0807FB78  @ gBuf
 	mov r8, r1
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807FB7C  @ gBg2Tm
 	ldrh r3, [r6]
 	lsls r1, r3, #2
@@ -11491,7 +11491,7 @@ _0807FE58:
 	movs r3, #0xc0
 	lsls r3, r3, #0x13
 	adds r1, r1, r3
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	mov r0, r8
 	ldrh r1, [r0]
 	lsls r0, r1, #1
@@ -11503,7 +11503,7 @@ _0807FE58:
 	ldr r0, [r0]
 	ldr r4, _0807FFE0  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0807FFE4  @ gBg2Tm
 	ldrh r3, [r7]
 	lsls r1, r3, #2
@@ -11879,14 +11879,14 @@ _08080154:
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	mov r0, sl
 	adds r0, #8
 	adds r0, r4, r0
 	ldr r0, [r0]
 	ldr r6, _08080248  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0808024C  @ gBg2Tm
 	ldrh r3, [r5]
 	lsls r1, r3, #2
@@ -12305,14 +12305,14 @@ sub_8080498: @ 0x08080498
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	mov r0, r8
 	adds r0, #8
 	adds r0, r5, r0
 	ldr r0, [r0]
 	ldr r1, _08080524  @ gBuf
 	mov r9, r1
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08080528  @ gBg2Tm
 	ldr r1, _0808052C  @ gUnknown_082058DC
 	adds r6, r6, r1
@@ -12374,13 +12374,13 @@ sub_8080530: @ 0x08080530
 	movs r2, #0xc0
 	lsls r2, r2, #0x13
 	adds r1, r1, r2
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	adds r6, #8
 	adds r4, r4, r6
 	ldr r0, [r4]
 	ldr r4, _080805A0  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080805A4  @ gBg2Tm
 	ldr r1, _080805A8  @ gUnknown_082058DC
 	add r8, r1
@@ -13486,7 +13486,7 @@ sub_8080D6C: @ 0x08080D6C
 	ldr r0, _08080DC4  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08080DC8  @ gUnknown_089E7DEC
 	movs r1, #0x80
 	movs r2, #0x20
@@ -13554,7 +13554,7 @@ _08080E0E:
 	ldr r0, [r1]
 	ldr r6, _08080E78  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _08080E7C  @ gBg2Tm
 	ldr r0, [r4, #0x30]
 	cmp r0, #0
@@ -13677,7 +13677,7 @@ sub_8080EE4: @ 0x08080EE4
 	ldr r0, _08080F3C  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08080F40  @ gUnknown_089E7DEC
 	movs r1, #0x80
 	movs r2, #0x20
@@ -13751,7 +13751,7 @@ _08080F92:
 	ldr r0, [r1]
 	ldr r6, _08080FFC  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _08081000  @ gBg2Tm
 	ldr r0, [r4, #0x30]
 	cmp r0, #0
@@ -13905,7 +13905,7 @@ sub_8081078: @ 0x08081078
 	ldr r0, _080810F8  @ 0x06002C00
 	adds r1, r1, r0
 	adds r0, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080810FC  @ gUnknown_089E7DEC
 	movs r1, #0x80
 	movs r2, #0x20
@@ -13968,7 +13968,7 @@ _08081134:
 	ldr r0, [r1]
 	ldr r6, _080811A0  @ gBuf
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _080811A4  @ gBg2Tm
 	ldr r0, [r4, #0x30]
 	cmp r0, #0

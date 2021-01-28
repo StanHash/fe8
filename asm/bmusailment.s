@@ -10,7 +10,7 @@ sub_8035AA4: @ 0x08035AA4
 	bl ClearBg0Bg1
 	ldr r0, _08035AF8  @ gUnknown_08A032AC
 	ldr r1, _08035AFC  @ 0x06005000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08035B00  @ gUnknown_08A03334
 	movs r1, #0x60
 	movs r2, #0x20

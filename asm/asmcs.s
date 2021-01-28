@@ -3332,7 +3332,7 @@ sub_8085C7C: @ 0x08085C7C
 	bl SetBlendTargetB
 	ldr r0, _08085D74  @ gUnknown_085A06D8
 	ldr r1, _08085D78  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08085D7C  @ gUnknown_0859FA2C
 	movs r1, #0xa0
 	movs r2, #0x20
@@ -3348,7 +3348,7 @@ sub_8085C7C: @ 0x08085C7C
 	bne _08085D90
 	ldr r0, _08085D84  @ gUnknown_089A18F4
 	ldr r1, _08085D88  @ 0x06014000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08085D8C  @ gUnknown_089A230C
 	movs r1, #0x90
 	lsls r1, r1, #2
@@ -3371,7 +3371,7 @@ _08085D8C: .4byte gUnknown_089A230C
 _08085D90:
 	ldr r0, _08085DBC  @ gUnknown_089A1E70
 	ldr r1, _08085DC0  @ 0x06014000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08085DC4  @ gUnknown_089A232C
 	movs r1, #0x90
 	lsls r1, r1, #2
@@ -3406,7 +3406,7 @@ sub_8085DCC: @ 0x08085DCC
 	adds r0, r0, r1
 	ldr r0, [r0]
 	ldr r1, _08085DE8  @ 0x06002800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	b _08085DFA
 	.align 2, 0
 _08085DE4: .4byte gUnknown_089EE9B0
@@ -3417,7 +3417,7 @@ _08085DEC:
 	adds r0, r0, r1
 	ldr r0, [r0]
 	ldr r1, _08085E04  @ 0x06004000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 _08085DFA:
 	pop {r0}
 	bx r0
@@ -3443,7 +3443,7 @@ _08085E18:
 	adds r1, r1, r0
 	ldr r0, [r1]
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r1, #0xb0
 	lsls r1, r1, #1
 _08085E2A:

@@ -55,7 +55,7 @@ _0801F598:
 	ldr r6, _0801F5F0  @ gUnknown_085A129C
 _0801F59C:
 	ldr r1, _0801F5F4  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0801F5F8  @ gUnknown_085A206C
 	movs r1, #0x90
 	lsls r1, r1, #2
@@ -133,7 +133,7 @@ sub_801F630: @ 0x0801F630
 	adds r5, r0, #0
 	ldr r0, _0801F67C  @ gUnknown_085A2940
 	ldr r1, _0801F680  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
 	ldr r1, _0801F684  @ gUnknown_0202BCB0
@@ -315,7 +315,7 @@ sub_801F780: @ 0x0801F780
 	ldr r6, [sp, #0x18]
 	ldr r0, _0801F7C8  @ gUnknown_089ADA80
 	ldr r1, _0801F7CC  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0801F7D0  @ gUnknown_089ADD0C
 	movs r1, #0x90
 	lsls r1, r1, #2
@@ -351,7 +351,7 @@ sub_801F7D8: @ 0x0801F7D8
 	adds r5, r0, #0
 	ldr r0, _0801F830  @ gUnknown_085A20AC
 	ldr r1, _0801F834  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0801F838  @ gUnknown_085A208C
 	movs r1, #0x90
 	lsls r1, r1, #2
@@ -505,7 +505,7 @@ sub_801F904: @ 0x0801F904
 	adds r5, r0, #0
 	ldr r0, _0801F964  @ gUnknown_085A34B0
 	ldr r1, _0801F968  @ 0x06014800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0801F96C  @ gUnknown_085A3944
 	movs r1, #0x90
 	lsls r1, r1, #2

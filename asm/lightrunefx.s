@@ -11,7 +11,7 @@ sub_802153C: @ 0x0802153C
 	adds r6, r0, #0
 	ldr r0, _080215D4  @ gUnknown_085A403C
 	ldr r1, _080215D8  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080215DC  @ gUnknown_085A5760
 	movs r1, #0x40
 	movs r2, #0x20
@@ -19,7 +19,7 @@ sub_802153C: @ 0x0802153C
 	ldr r0, _080215E0  @ gUnknown_085A5780
 	ldr r4, _080215E4  @ gBmFrameTmap0
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r0, #0x84
 	lsls r0, r0, #6
 	adds r1, r0, #0
@@ -206,7 +206,7 @@ sub_80216D0: @ 0x080216D0
 	adds r6, r0, #0
 	ldr r0, _08021768  @ gUnknown_085A403C
 	ldr r1, _0802176C  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08021770  @ gUnknown_085A5760
 	movs r1, #0x40
 	movs r2, #0x20
@@ -214,7 +214,7 @@ sub_80216D0: @ 0x080216D0
 	ldr r0, _08021774  @ gUnknown_085A5780
 	ldr r4, _08021778  @ gBmFrameTmap0
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r0, #0x84
 	lsls r0, r0, #6
 	adds r1, r0, #0
@@ -401,7 +401,7 @@ sub_8021864: @ 0x08021864
 	adds r6, r0, #0
 	ldr r0, _080218FC  @ gUnknown_085A403C
 	ldr r1, _08021900  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08021904  @ gUnknown_085A5760
 	movs r1, #0x40
 	movs r2, #0x20
@@ -409,7 +409,7 @@ sub_8021864: @ 0x08021864
 	ldr r0, _08021908  @ gUnknown_085A5780
 	ldr r4, _0802190C  @ gBmFrameTmap0
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r0, #0x84
 	lsls r0, r0, #6
 	adds r1, r0, #0

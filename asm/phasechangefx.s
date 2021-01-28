@@ -877,10 +877,10 @@ sub_801F2CC: @ 0x0801F2CC
 	push {r4, lr}
 	ldr r0, _0801F310  @ gUnknown_0859F020
 	ldr r1, _0801F314  @ 0x06014000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _0801F318  @ gUnknown_085A06D8
 	ldr r1, _0801F31C  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
@@ -915,7 +915,7 @@ _0801F324:
 _0801F32A:
 	ldr r0, _0801F338  @ gUnknown_0859F3F8
 	ldr r1, _0801F33C  @ 0x06002800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r4, _0801F340  @ gUnknown_0859FA2C
 	b _0801F34E
 	.align 2, 0
@@ -925,7 +925,7 @@ _0801F340: .4byte gUnknown_0859FA2C
 _0801F344:
 	ldr r0, _0801F368  @ gUnknown_0859FA4C
 	ldr r1, _0801F36C  @ 0x06002800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r4, _0801F370  @ gUnknown_085A0068
 _0801F34E:
 	adds r0, r4, #0
@@ -945,7 +945,7 @@ _0801F370: .4byte gUnknown_085A0068
 _0801F374:
 	ldr r0, _0801F39C  @ gUnknown_085A0088
 	ldr r1, _0801F3A0  @ 0x06002800
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r4, _0801F3A4  @ gUnknown_085A0698
 	adds r0, r4, #0
 	movs r1, #0xa0

@@ -374,7 +374,7 @@ _08020022:
 	bl ApplyPaletteExt
 	ldr r0, _0802008C  @ gUnknown_08B12DB4
 	adds r1, r5, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r1, #0xf
 	adds r0, r6, #0
 	ands r0, r1
@@ -628,7 +628,7 @@ sub_80200F0: @ 0x080200F0
 	strb r0, [r7, #0x15]
 	ldr r0, _080202A0  @ gUnknown_08B17B64
 	ldr r1, _080202A4  @ 0x06008000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080202A8  @ gUnknown_08B18ED4
 	movs r1, #0
 	movs r2, #0x60
@@ -640,7 +640,7 @@ sub_80200F0: @ 0x080200F0
 	bl sub_800154C
 	ldr r0, _080202B0  @ gUnknown_08B19874
 	ldr r1, _080202B4  @ 0x06014000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080202B8  @ gUnknown_08B19DEC
 	movs r1, #0x90
 	lsls r1, r1, #2
@@ -841,7 +841,7 @@ _080203EE:
 	movs r5, #0x80
 	lsls r5, r5, #1
 	orrs r1, r5
-	ldr r6, _080204A0  @ gObject_32x32
+	ldr r6, _080204A0  @ Sprite_32x32
 	ldr r3, _080204A4  @ 0x00002210
 	adds r2, r6, #0
 	bl PutOamHiRam
@@ -914,7 +914,7 @@ _08020490: .4byte gUnknown_0859B120
 _08020494: .4byte gUnknown_0859B132
 _08020498: .4byte gSinLut
 _0802049C: .4byte 0x000001FF
-_080204A0: .4byte gObject_32x32
+_080204A0: .4byte Sprite_32x32
 _080204A4: .4byte 0x00002210
 _080204A8: .4byte 0x00002214
 
@@ -992,7 +992,7 @@ sub_80204E4: @ 0x080204E4
 	ands r1, r4
 	adds r5, #0xba
 	orrs r1, r5
-	ldr r2, _08020570  @ gObject_16x16
+	ldr r2, _08020570  @ Sprite_16x16
 	mov r8, r2
 	ldr r2, _08020574  @ 0x00002218
 	mov r9, r2
@@ -1021,7 +1021,7 @@ sub_80204E4: @ 0x080204E4
 	bx r0
 	.align 2, 0
 _0802056C: .4byte 0x000001FF
-_08020570: .4byte gObject_16x16
+_08020570: .4byte Sprite_16x16
 _08020574: .4byte 0x00002218
 
 	THUMB_FUNC_END sub_80204E4
@@ -1540,7 +1540,7 @@ sub_8020944: @ 0x08020944
 	bl SetBlendTargetB
 	ldr r0, _080209C0  @ gUnknown_08B18F34
 	ldr r1, _080209C4  @ 0x06008000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080209C8  @ gUnknown_08B19854
 	movs r1, #0x80
 	movs r2, #0x20
@@ -1548,7 +1548,7 @@ sub_8020944: @ 0x08020944
 	ldr r0, _080209CC  @ gUnknown_08B196D8
 	ldr r4, _080209D0  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _080209D4  @ gBg2Tm
 	movs r2, #0x80
 	lsls r2, r2, #7

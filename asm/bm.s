@@ -8,7 +8,7 @@ LoadObjUIGfx: @ 0x08015680
 	ldr r0, _080156AC  @ gUnknown_0859E8E0
 	ldr r4, _080156B0  @ gBuf
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _080156B4  @ 0x06010000
 	adds r0, r4, #0
 	movs r2, #0x12
@@ -50,7 +50,7 @@ sub_80156D4: @ 0x080156D4
 	push {lr}
 	bl ResetText
 	bl LoadLegacyUiFrameGraphics
-	bl ResetFaces
+	bl InitFaces
 	bl InitIcons
 	movs r0, #4
 	bl ApplyIconPalettes
@@ -65,7 +65,7 @@ LoadGameCoreGfx: @ 0x080156F4
 	push {lr}
 	bl ResetText
 	bl LoadUiFrameGraphics
-	bl ResetFaces
+	bl InitFaces
 	bl InitIcons
 	movs r0, #4
 	bl ApplyIconPalettes

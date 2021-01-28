@@ -192,7 +192,7 @@ _0804F9F0:
 	cmp r0, #0
 	beq _0804F9FE
 	movs r0, #0
-	bl DeleteFaceByIndex
+	bl EndFaceById
 _0804F9FE:
 	movs r0, #1
 	ands r0, r5

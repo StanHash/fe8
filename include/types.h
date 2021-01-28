@@ -425,7 +425,7 @@ enum
     FACE_BLINK_CLOSED = 6,
 };
 
-struct FaceData
+struct FaceInfo
 {
     /* 00 */ const u8*  img;
     /* 04 */ const u8*  imgChibi;
@@ -437,7 +437,7 @@ struct FaceData
     /* 18 */ u8 blinkKind;
 };
 
-struct FaceVramEntry
+struct FaceVramEnt
 {
     /* 00 */ u32 tileOffset;
     /* 04 */ u16 paletteId;

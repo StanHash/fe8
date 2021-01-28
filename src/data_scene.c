@@ -126,7 +126,7 @@ struct ProcScr CONST_DATA gUnknown_08591388[] =
     PROC_BLOCK,
 };
 
-struct FaceVramEntry CONST_DATA gUnknown_08591390[4] =
+struct FaceVramEnt CONST_DATA gUnknown_08591390[4] =
 {
     [0] =
     {

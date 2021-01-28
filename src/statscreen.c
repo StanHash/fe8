@@ -9,7 +9,7 @@
 #include "hardware.h"
 #include "m4a.h"
 #include "sound.h"
-#include "ctc.h"
+#include "sprite.h"
 #include "icon.h"
 #include "text.h"
 #include "bmio.h"
@@ -84,7 +84,7 @@ struct HelpPromptSprProc
 
     /* 2C */ int xDisplay;
     /* 30 */ int yDisplay;
-    /* 34 */ int tileref;
+    /* 34 */ int tile;
 };
 
 static void InitTexts(void);
@@ -841,7 +841,7 @@ void DisplayPage1(void)
     int i, item;
     const char* str;
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_08A02204,
         gBuf);
 
@@ -1555,12 +1555,12 @@ void PageNumCtrl_UpdateArrows(struct StatScreenPageNameProc* proc)
     PutSprite(0,
         gStatScreen.xDispOff + proc->xLeftCursor,
         gStatScreen.yDispOff + PAGENUM_LEFTARROW_Y,
-        gObject_8x16, baseref + 0x5A + (proc->animTimerLeft >> 5) % 6);
+        Sprite_8x16, baseref + 0x5A + (proc->animTimerLeft >> 5) % 6);
 
     PutSprite(0,
         gStatScreen.xDispOff + proc->xRightCursor,
         gStatScreen.yDispOff + PAGENUM_RIGHTARROW_Y,
-        gObject_8x16_HFlipped, baseref + 0x5A + (proc->animTimerRight >> 5) % 6);
+        Sprite_8x16_HFlipped, baseref + 0x5A + (proc->animTimerRight >> 5) % 6);
 }
 
 static
@@ -1572,19 +1572,19 @@ void PageNumCtrl_UpdatePageNum(struct StatScreenPageNameProc* proc)
     PutSprite(2,
         gStatScreen.xDispOff + PAGENUM_DISPLAY_X + 13,
         gStatScreen.yDispOff + PAGENUM_DISPLAY_Y,
-        gObject_8x8, TILE(chr, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3) + gStatScreen.pageAmt);
+        Sprite_8x8, TILE(chr, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3) + gStatScreen.pageAmt);
 
     // '/'
     PutSprite(2,
         gStatScreen.xDispOff + PAGENUM_DISPLAY_X + 7,
         gStatScreen.yDispOff + PAGENUM_DISPLAY_Y,
-        gObject_8x8, TILE(chr, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3));
+        Sprite_8x8, TILE(chr, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3));
 
     // page num
     PutSprite(2,
         gStatScreen.xDispOff + PAGENUM_DISPLAY_X,
         gStatScreen.yDispOff + PAGENUM_DISPLAY_Y,
-        gObject_8x8, TILE(chr, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3) + gStatScreen.page + 1);
+        Sprite_8x8, TILE(chr, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3) + gStatScreen.page + 1);
 }
 
 static
@@ -1593,7 +1593,7 @@ void PageNumCtrl_DisplayMuPlatform(struct StatScreenPageNameProc* proc)
     PutSprite(11,
         gStatScreen.xDispOff + 64,
         gStatScreen.yDispOff + 131,
-        gObject_32x16, TILE(0x28F, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3));
+        Sprite_32x16, TILE(0x28F, STATSCREEN_OBJPAL_4) + OAM2_PRIORITY(3));
 }
 
 static
@@ -1613,7 +1613,7 @@ void PageNumCtrl_DisplayBlinkIcons(struct StatScreenPageNameProc* proc)
             if (displayIcon)
             {
                 PutSprite(4,
-                    184, 78, gObject_8x8,
+                    184, 78, Sprite_8x8,
                     TILE(3, 0xF & palidLut[gStatScreen.unit->rescueOtherUnit >> 6]) + OAM2_PRIORITY(2));
             }
         }
@@ -1623,7 +1623,7 @@ void PageNumCtrl_DisplayBlinkIcons(struct StatScreenPageNameProc* proc)
             if (displayIcon)
             {
                 PutSprite(4,
-                    10, 86, gObject_8x8,
+                    10, 86, Sprite_8x8,
                     TILE(3, 0xF & palidLut[gStatScreen.unit->rescueOtherUnit>>6]) + OAM2_PRIORITY(2));
             }
         }
@@ -1679,12 +1679,12 @@ void StatScreen_InitDisplay(struct Proc* proc)
 
     // Load and display Halo
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_08A064E0, (void*)(VRAM + 0x220 * 0x20));
 
     ApplyPalette(gUnknown_08A0731C, STATSCREEN_BGPAL_HALO);
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_08A071FC, gBuf);
 
     TmApplyTsa(gBg1Tm + TM_OFFSET(12, 0),
@@ -1692,19 +1692,19 @@ void StatScreen_InitDisplay(struct Proc* proc)
 
     // Load and display Background
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_08A03368, (void*)(VRAM + 0x580 * 0x20));
 
     ApplyPalettes(gUnknown_08A06460, STATSCREEN_BGPAL_BACKGROUND, 4);
 
-    CopyDataWithPossibleUncomp(gUnknown_08A05F10, gBuf);
+    Decompress(gUnknown_08A05F10, gBuf);
 
     TmApplyTsa(gBg3Tm, gBuf,
         TILE(0x180, 12));
 
     // Load object graphics
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_08A02274, (void*)(VRAM + 0x10000 + 0x240 * 0x20));
 
     ApplyIconPalettes(STATSCREEN_BGPAL_ITEMICONS);
@@ -1713,14 +1713,14 @@ void StatScreen_InitDisplay(struct Proc* proc)
 
     ApplyIconPalette(1, 0x13);
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_08A01F24, (void*)(VRAM + 0x440 * 0x20));
 
     ApplyPalette(gUnknown_08A021E4, STATSCREEN_BGPAL_7);
 
     ApplyIconPalette(1, 0x14);
 
-    CopyDataWithPossibleUncomp(
+    Decompress(
         gUnknown_08A020F0, (void*)(VRAM + 0x60 * 0x20));
 
     gStatScreen.mu = NULL;
@@ -1753,7 +1753,7 @@ void StatScreen_Display(struct Proc* proc)
     sub_8005E98(proc, gBg2Tm + TM_OFFSET(1, 1), fid,
         0x4E0, STATSCREEN_BGPAL_FACE);
 
-    if (GetPortraitStructPointer(fid)->img)
+    if (GetFaceInfo(fid)->img)
         ApplyPalette(gUnknown_08A01EE4, STATSCREEN_BGPAL_2);
     else
         ApplyPalette(gUnknown_08A01F04, STATSCREEN_BGPAL_2);
@@ -2519,7 +2519,7 @@ void HelpPrompt_OnIdle(struct HelpPromptSprProc* proc)
 {
     PutSprite(0,
         proc->xDisplay, proc->yDisplay,
-        sSprite_MetaHelp, proc->tileref);
+        sSprite_MetaHelp, proc->tile);
 }
 
 struct Proc* StartHelpPromptSprite_Unused(int x, int y, struct Proc* parent)
@@ -2531,7 +2531,7 @@ struct Proc* StartHelpPromptSprite_Unused(int x, int y, struct Proc* parent)
 
     proc->xDisplay = x;
     proc->yDisplay = y;
-    proc->tileref  = TILE(0, 0);
+    proc->tile  = TILE(0, 0);
 
     return (void*) proc;
 }
@@ -2547,7 +2547,7 @@ struct Proc* StartHelpPromptSprite(int x, int y, int palid, struct Proc* parent)
 
     proc->xDisplay = x;
     proc->yDisplay = y;
-    proc->tileref  = TILE(0, 0xF & palid);
+    proc->tile = TILE(0, 0xF & palid);
 
     return (void*) proc;
 }
@@ -2561,7 +2561,7 @@ struct Proc* StartHelpPromptSprite_Unused2(int x, int y, struct Proc* parent)
 
     proc->xDisplay = x;
     proc->yDisplay = y;
-    proc->tileref  = TILE(0, 0);
+    proc->tile = TILE(0, 0);
 
     return (void*) proc;
 }

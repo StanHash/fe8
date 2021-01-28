@@ -3,7 +3,7 @@
 #include "global.h"
 #include "portrait_pointer.h"
 
-struct FaceData CONST_DATA portrait_data[] =
+struct FaceInfo CONST_DATA FaceInfoTable[] =
 {
 	{portrait_Mystery_1_tileset, portrait_Mystery_1_chibi, portrait_Mystery_1_palette, portrait_Mystery_1_mouth, 0, 2, 5, 3, 3, FACE_BLINK_NORMAL}, // 0
 	{portrait_Eirika_tileset, portrait_Eirika_chibi, portrait_Eirika_palette, portrait_Eirika_mouth, 0, 2, 6, 3, 4, FACE_BLINK_NORMAL}, // 1

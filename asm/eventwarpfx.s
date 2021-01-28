@@ -12,7 +12,7 @@ sub_8021B9C: @ 0x08021B9C
 	adds r6, r0, #0
 	ldr r0, _08021C48  @ gUnknown_085A5A60
 	ldr r1, _08021C4C  @ 0x06002000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08021C50  @ gUnknown_085A61A8
 	movs r1, #0xa0
 	movs r2, #0x20
@@ -20,7 +20,7 @@ sub_8021B9C: @ 0x08021B9C
 	ldr r0, _08021C54  @ gUnknown_085A61C8
 	ldr r4, _08021C58  @ gBmFrameTmap0
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r0, #0xa2
 	lsls r0, r0, #7
 	adds r1, r0, #0

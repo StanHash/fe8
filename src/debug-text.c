@@ -8,7 +8,7 @@
 #include "dma.h"
 #include "oam.h"
 #include "armfunc.h"
-#include "ctc.h"
+#include "sprite.h"
 
 struct DebugTextSt
 {
@@ -319,7 +319,7 @@ void DebugPutObjStr(int x, int y, char const* str)
             ? *str - 0x40
             : *str - 0x20;
 
-        PutOamHi(x, y, gObject_8x8, chr + sDebugOam2Chr + sDebugOam2Pal);
+        PutOamHi(x, y, Sprite_8x8, chr + sDebugOam2Chr + sDebugOam2Pal);
 
         x += 8;
         str++;

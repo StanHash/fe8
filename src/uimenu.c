@@ -109,7 +109,7 @@ struct MenuProc* StartOrphanMenuAdjustedExt(
     const struct MenuDef* def,
     int xSubject, int xTileLeft, int xTileRight,
     int backBg,
-    int tileref,
+    int tile,
     int frontBg,
     int unk)
 {
@@ -120,39 +120,39 @@ struct MenuProc* StartOrphanMenuAdjustedExt(
     else
         rect.x = xTileLeft;
 
-    return StartMenuCore(def, rect, backBg, tileref, frontBg, unk, NULL);
+    return StartMenuCore(def, rect, backBg, tile, frontBg, unk, NULL);
 }
 
 struct MenuProc* StartMenuExt(
     const struct MenuDef* def,
     int backBg,
-    int tileref,
+    int tile,
     int frontBg,
     int unk,
     struct Proc* parent)
 {
-    return StartMenuCore(def, def->rect, backBg, tileref, frontBg, unk, parent);
+    return StartMenuCore(def, def->rect, backBg, tile, frontBg, unk, parent);
 }
 
 struct MenuProc* StartOrphanMenuAtExt(
     const struct MenuDef* def,
     struct MenuRect rect,
     int backBg,
-    int tileref,
+    int tile,
     int frontBg,
     int unk)
 {
-    return StartMenuCore(def, rect, backBg, tileref, frontBg, unk, NULL);
+    return StartMenuCore(def, rect, backBg, tile, frontBg, unk, NULL);
 }
 
 struct MenuProc* StartOrphanMenuExt(
     const struct MenuDef* def,
     int backBg,
-    int tileref,
+    int tile,
     int frontBg,
     int unk)
 {
-    return StartMenuCore(def, def->rect, backBg, tileref, frontBg, unk, NULL);
+    return StartMenuCore(def, def->rect, backBg, tile, frontBg, unk, NULL);
 }
 
 struct MenuProc* StartMenuAt(
@@ -167,7 +167,7 @@ struct MenuProc* StartMenuCore(
     const struct MenuDef* def,
     struct MenuRect rect,
     int backBg,
-    int tileref,
+    int tile,
     int frontBg,
     int unk,
     struct Proc* parent)
@@ -234,10 +234,10 @@ struct MenuProc* StartMenuCore(
     if (rect.y + rect.h < yTileInner)
         proc->rect.h = yTileInner + 1 - rect.y;
 
-    proc->backBg  = backBg & 3;
-    proc->tileref = tileref;
+    proc->backBg = backBg & 3;
+    proc->tile = tile;
     proc->frontBg = frontBg & 3;
-    proc->unk68   = unk;
+    proc->unk68 = unk;
 
     gKeySt->pressed = 0;
 
@@ -312,7 +312,7 @@ void RedrawMenu(struct MenuProc* proc)
     DrawUiFrame(
         GetBgTilemap(proc->backBg),
         proc->rect.x, proc->rect.y, proc->rect.w, proc->rect.h,
-        proc->tileref, proc->def->style);
+        proc->tile, proc->def->style);
 
     ClearUiFrame(
         GetBgTilemap(proc->frontBg),
@@ -363,11 +363,11 @@ void DrawMenuItemHover(struct MenuProc* proc, int item, s8 boolHover)
     {
 
     case TRUE:
-        DrawUiItemHoverExt(proc->backBg, proc->tileref, x, y, w);
+        DrawUiItemHoverExt(proc->backBg, proc->tile, x, y, w);
         break;
 
     case FALSE:
-        ClearUiItemHoverExt(proc->backBg, proc->tileref, x, y, w);
+        ClearUiItemHoverExt(proc->backBg, proc->tile, x, y, w);
         break;
 
     }
@@ -407,7 +407,7 @@ void Menu_OnIdle(struct MenuProc* proc)
         ClearMenuBgs(proc);
 
     if (actions & MENU_ACT_ENDFACE)
-        DeleteFaceByIndex(0);
+        EndFaceById(0);
 
     if (actions & MENU_ACT_DOOM)
         proc->state |= MENU_STATE_DOOMED;

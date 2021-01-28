@@ -5,7 +5,7 @@
 #include "sound.h"
 #include "hardware.h"
 #include "oam.h"
-#include "ctc.h"
+#include "sprite.h"
 #include "text.h"
 #include "ap.h"
 #include "bmitem.h"
@@ -366,7 +366,7 @@ int GetItemCantUseMsgid(struct Unit* unit, int item)
 void DoItemUse(struct Unit* unit, int item)
 {
     ClearBg0Bg1();
-    DeleteFaceByIndex(0);
+    EndFaceById(0);
 
     switch (GetItemIndex(item))
     {
@@ -896,9 +896,9 @@ int RepairSelectOnSelect(ProcPtr proc, struct SelectTarget* target)
         16, 11);
 
     // TODO: UNIT_HAS_PORTRAIT macro?
-    if (GetPortraitStructPointer(GetUnitPortraitId(GetUnit(gActionData.targetIndex)))->img)
+    if (GetFaceInfo(GetUnitPortraitId(GetUnit(gActionData.targetIndex)))->img)
     {
-        NewFace(0, GetUnitPortraitId(GetUnit(gActionData.targetIndex)), 184, 12, 2);
+        StartFace(0, GetUnitPortraitId(GetUnit(gActionData.targetIndex)), 184, 12, 2);
         sub_8006458(0, 5);
     }
 

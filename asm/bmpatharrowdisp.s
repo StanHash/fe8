@@ -601,7 +601,7 @@ sub_8032E28: @ 0x08032E28
 	lsrs r4, r4, #0x18
 	ldr r0, _08032E98  @ gUnknown_08A03054
 	ldr r1, _08032E9C  @ 0x06015E00
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08032EA0  @ gUnknown_08A0328C
 	movs r1, #0x98
 	lsls r1, r1, #2
@@ -1106,7 +1106,7 @@ _080331B2:
 	subs r2, r0, r2
 	str r3, [sp]
 	movs r0, #0xb
-	ldr r3, _08033244  @ gObject_16x16
+	ldr r3, _08033244  @ Sprite_16x16
 	bl PutSprite
 _08033220:
 	subs r0, r6, #1
@@ -1125,7 +1125,7 @@ _08033228:
 _08033238: .4byte gUnknown_0859DBA0
 _0803323C: .4byte gUnknown_0859DB6C
 _08033240: .4byte gUnknown_0202BCB0
-_08033244: .4byte gObject_16x16
+_08033244: .4byte Sprite_16x16
 
 	THUMB_FUNC_END sub_803318C
 

@@ -102,7 +102,7 @@ nullsub_35: @ 0x0804FDD0
 	THUMB_FUNC_START NewEkrBattle
 NewEkrBattle: @ 0x0804FDD4
 	push {r4, lr}
-	bl AnimClearAll
+	bl BsoInit
 	ldr r4, _0804FE1C  @ gUnknown_02000064
 	ldr r0, _0804FE20  @ gUnknown_085B9378
 	movs r1, #3
@@ -244,10 +244,10 @@ _0804FF00:
 	ldr r0, [r4, #0x14]
 	bl Proc_Run
 	movs r0, #0
-	bl PushSpriteLayerObjects
+	bl PutSpriteLayerOam
 	ldr r0, [r4, #4]
 	bl Proc_Run
-	bl AnimUpdateAll
+	bl BsoUpdateAll
 	bl BattleAIS_ExecCommands
 	ldr r0, [r4, #0x10]
 	bl Proc_Run
@@ -266,7 +266,7 @@ _0804FF00:
 	str r0, [r1]
 _0804FF42:
 	movs r0, #0xd
-	bl PushSpriteLayerObjects
+	bl PutSpriteLayerOam
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -1124,7 +1124,7 @@ _08050586:
 _08050598:
 	bl sub_8031EF0
 	bl sub_80581EC
-	bl AnimClearAll
+	bl BsoInit
 	bl sub_80599E8
 	bl sub_8059D28
 	movs r0, #0
@@ -3296,7 +3296,7 @@ _08051602:
 	cmp r0, #0
 	bne _08051610
 	add r0, sp, #8
-	bl AnimDisplay
+	bl BsoPutOam
 _08051610:
 	movs r4, #0
 	str r4, [sp, #0x24]
@@ -3356,7 +3356,7 @@ _0805167E:
 	cmp r0, #0
 	bne _0805168C
 	add r0, sp, #8
-	bl AnimDisplay
+	bl BsoPutOam
 _0805168C:
 	ldr r2, [sp, #0x100]
 	ldr r3, _0805177C  @ 0xFFD80000
@@ -3456,7 +3456,7 @@ _08051726:
 	adds r0, r1, #0
 	mov r6, r9
 	strh r6, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _0805174A:
 	lsls r1, r7, #0x10
 	asrs r1, r1, #0x10
@@ -3503,7 +3503,7 @@ _08051794:
 	strh r0, [r2, #8]
 	adds r0, r2, #0
 	strh r3, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _080517B0:
 	ldr r3, [sp, #0x108]
 	ldr r4, _080518A8  @ 0xFFD80000
@@ -3610,7 +3610,7 @@ _08051858:
 	adds r0, r2, #0
 	mov r6, r9
 	strh r6, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _0805187C:
 	lsls r1, r7, #0x10
 	asrs r1, r1, #0x10
@@ -3656,7 +3656,7 @@ _080518C0:
 	strh r0, [r2, #8]
 	adds r0, r2, #0
 	strh r3, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _080518DC:
 	ldr r3, [sp, #0xd8]
 	cmp r3, #1
@@ -3690,7 +3690,7 @@ _080518EE:
 	strh r0, [r1, #4]
 	adds r0, r1, #0
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 	str r4, [sp, #0x24]
 	ldr r0, _08051AA0  @ gUnknown_085B949C
 	str r0, [sp, #0x44]
@@ -3710,7 +3710,7 @@ _080518EE:
 	strh r0, [r1, #4]
 	adds r0, r1, #0
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _0805194A:
 	mov r6, sl
 	ldr r4, [r6, #0x50]
@@ -3735,7 +3735,7 @@ _0805194A:
 	strh r0, [r1, #4]
 	adds r0, r1, #0
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 	str r4, [sp, #0x24]
 	ldr r0, _08051AAC  @ gUnknown_085B94F0
 	str r0, [sp, #0x44]
@@ -3755,7 +3755,7 @@ _0805194A:
 	strh r0, [r1, #4]
 	adds r0, r1, #0
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _080519A6:
 	mov r0, sl
 	ldr r4, [r0, #0x4c]
@@ -3789,7 +3789,7 @@ _080519A6:
 	adds r0, r1, #0
 	strh r5, [r0, #4]
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _080519EC:
 	ldr r0, _08051AB8  @ gUnknown_085B9544
 	str r0, [sp, #0x44]
@@ -3808,7 +3808,7 @@ _080519EC:
 	adds r0, r1, #0
 	strh r5, [r0, #4]
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _08051A12:
 	mov r5, sl
 	ldr r4, [r5, #0x50]
@@ -3842,7 +3842,7 @@ _08051A12:
 	adds r0, r1, #0
 	strh r5, [r0, #4]
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _08051A58:
 	ldr r0, _08051AB8  @ gUnknown_085B9544
 	str r0, [sp, #0x44]
@@ -3861,7 +3861,7 @@ _08051A58:
 	adds r0, r1, #0
 	strh r5, [r0, #4]
 	strh r4, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _08051A7E:
 	add sp, #0x118
 	pop {r3, r4, r5}
@@ -6785,7 +6785,7 @@ sub_80531A4: @ 0x080531A4
 	movs r0, #0xa
 	strh r0, [r5, #0xa]
 	strh r0, [r6, #0xa]
-	bl AnimSort
+	bl BsoSort
 	movs r0, #0
 	movs r1, #0x10
 	movs r2, #0x10
@@ -7959,7 +7959,7 @@ _08053AD4:
 	ldr r0, _08053B04  @ gUnknown_085C72AC
 _08053ADE:
 	movs r1, #5
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	ldrh r1, [r5, #0x36]
 	lsls r0, r4, #0x10
@@ -8117,7 +8117,7 @@ _08053C36:
 	ldr r0, [r7, #0x64]
 	cmp r0, #0
 	beq _08053C46
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, _08053CDC  @ gUnknown_0201FADC
 	bl sub_805AE58
 _08053C46:
@@ -11393,7 +11393,7 @@ _0805558E:
 	ldr r0, [sp, #0x14]
 _08055590:
 	movs r1, #0x78
-	bl AnimCreate
+	bl BsoCreate
 	adds r1, r0, #0
 	movs r0, #0xa1
 	lsls r0, r0, #6
@@ -11443,7 +11443,7 @@ _080555EA:
 	ldr r0, [sp, #0x14]
 _080555EC:
 	movs r1, #0x14
-	bl AnimCreate
+	bl BsoCreate
 	adds r1, r0, #0
 	movs r0, #0xa1
 	lsls r0, r0, #6
@@ -12290,7 +12290,7 @@ _08055BE4:
 	b _08055C24
 _08055BF2:
 	bl NewEkrBattleDeamon
-	bl AnimClearAll
+	bl BsoInit
 	bl sub_8052184
 	ldr r1, _08055C28  @ gUnknown_02017744
 	str r0, [r1]
@@ -12367,13 +12367,13 @@ _08055C8E:
 	ldr r0, [r4, #0x14]
 	bl Proc_Run
 	movs r0, #0
-	bl PushSpriteLayerObjects
+	bl PutSpriteLayerOam
 	ldr r0, [r4, #0x10]
 	bl Proc_Run
-	bl AnimUpdateAll
+	bl BsoUpdateAll
 	bl BattleAIS_ExecCommands
 	movs r0, #0xd
-	bl PushSpriteLayerObjects
+	bl PutSpriteLayerOam
 	ldr r1, _08055CD4  @ gUnknown_0202BCB0
 	movs r0, #1
 	strb r0, [r1]
@@ -13091,7 +13091,7 @@ ekrBattleEnding_8056228: @ 0x08056228
 	adds r0, #8
 	strh r0, [r4, #0x3c]
 	strh r0, [r4, #0x3a]
-	bl AnimClearAll
+	bl BsoInit
 	movs r0, #1
 	bl sub_8056900
 	movs r0, #1
@@ -13555,7 +13555,7 @@ _0805660E:
 	adds r0, r6, r0
 	ldr r0, [r0]
 	movs r1, #0x64
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	str r2, [r5, #0x5c]
 	movs r0, #0x90
@@ -13645,7 +13645,7 @@ _080566C6:
 	adds r0, r6, r0
 	ldr r0, [r0]
 	movs r1, #0x64
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	str r2, [r5, #0x5c]
 	movs r0, #0x90
@@ -13738,7 +13738,7 @@ _0805678A:
 	adds r0, r6, r0
 	ldr r0, [r0]
 	movs r1, #0x64
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	str r2, [r5, #0x5c]
 	movs r0, #0x90
@@ -13801,7 +13801,7 @@ _0805680E:
 	adds r0, r6, r0
 	ldr r0, [r0]
 	movs r1, #0x64
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	str r2, [r5, #0x5c]
 	movs r0, #0x90
@@ -13858,7 +13858,7 @@ sub_8056864: @ 0x08056864
 	cmp r1, r0
 	blt _08056886
 	adds r0, r5, #0
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	b _080568F6
@@ -14347,7 +14347,7 @@ _08056C44:
 	strh r1, [r5, #8]
 	str r0, [r5, #0x1c]
 	adds r0, r5, #0
-	bl AnimDisplay
+	bl BsoPutOam
 _08056C6A:
 	ldr r1, [r4, #0x50]
 	cmp r1, #1
@@ -14425,7 +14425,7 @@ _08056CE4:
 	strh r1, [r5, #8]
 	str r0, [r5, #0x1c]
 	adds r0, r5, #0
-	bl AnimDisplay
+	bl BsoPutOam
 _08056D0A:
 	movs r3, #0xd3
 	lsls r3, r3, #2
@@ -19725,7 +19725,7 @@ _080596A6:
 	movs r0, #0x14
 _080596B2:
 	strh r0, [r7, #0xa]
-	bl AnimSort
+	bl BsoSort
 	b _080596CC
 _080596BA:
 	adds r0, r7, #0
@@ -19734,7 +19734,7 @@ _080596BA:
 	bne _080596CC
 	movs r0, #0x64
 	strh r0, [r7, #0xa]
-	bl AnimSort
+	bl BsoSort
 _080596CC:
 	ldrb r0, [r7, #0x14]
 	subs r0, #1
@@ -20707,7 +20707,7 @@ sub_8059E18: @ 0x08059E18
 	ldr r0, _08059F48  @ gUnknown_085B9D5C
 _08059E80:
 	adds r1, r6, #0
-	bl AnimCreate
+	bl BsoCreate
 	adds r3, r0, #0
 	ldr r2, _08059F38  @ gUnknown_02000028
 	ldr r0, _08059F4C  @ gUnknown_0201FB0C
@@ -20749,7 +20749,7 @@ _08059E80:
 	ldr r0, _08059F48  @ gUnknown_085B9D5C
 _08059ED4:
 	mov r1, r9
-	bl AnimCreate
+	bl BsoCreate
 	adds r3, r0, #0
 	ldr r2, _08059F38  @ gUnknown_02000028
 	ldr r0, _08059F4C  @ gUnknown_0201FB0C
@@ -20848,7 +20848,7 @@ sub_8059F5C: @ 0x08059F5C
 	ldr r0, _0805A068  @ gUnknown_085B9D5C
 _08059FAE:
 	adds r1, r4, #0
-	bl AnimCreate
+	bl BsoCreate
 	adds r3, r0, #0
 	ldr r2, _0805A058  @ gUnknown_02000028
 	ldr r0, _0805A06C  @ gUnknown_0201FB0C
@@ -20889,7 +20889,7 @@ _08059FAE:
 	ldr r0, _0805A068  @ gUnknown_085B9D5C
 _0805A000:
 	adds r1, r7, #0
-	bl AnimCreate
+	bl BsoCreate
 	adds r3, r0, #0
 	ldr r2, _0805A058  @ gUnknown_02000028
 	ldr r0, _0805A06C  @ gUnknown_0201FB0C
@@ -21034,7 +21034,7 @@ _0805A0FA:
 	ldr r0, _0805A150  @ gUnknown_020041C8
 	adds r1, r1, r0
 	str r1, [r4, #0x30]
-	bl AnimSort
+	bl BsoSort
 	adds r0, r4, #0
 	bl sub_807705C
 	pop {r4, r5, r6, r7}
@@ -21739,7 +21739,7 @@ _0805A6B2:
 	str r0, [r1]
 	mov r1, r8
 	adds r0, r7, #0
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	ldr r0, [r4, #0x24]
 	str r0, [r2, #0x30]
@@ -21784,7 +21784,7 @@ _0805A70C: .4byte 0x000057F0
 _0805A710:
 	mov r1, sl
 	ldr r0, [sp]
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	ldr r0, [r4, #0x24]
 	str r0, [r2, #0x30]
@@ -22159,7 +22159,7 @@ NewEfxAnimeDrvProc: @ 0x0805A9C0
 	movs r1, #4
 	bl SpawnProc
 	str r0, [r4]
-	bl AnimClearAll
+	bl BsoInit
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -22185,7 +22185,7 @@ _0805A9F0: .4byte gUnknown_0201FB18
 	THUMB_FUNC_START ExecAllAIS
 ExecAllAIS: @ 0x0805A9F4
 	push {lr}
-	bl AnimUpdateAll
+	bl BsoUpdateAll
 	pop {r0}
 	bx r0
 
@@ -22218,9 +22218,9 @@ sub_805AA28: @ 0x0805AA28
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x14]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r4, #0x18]
-	bl AnimDelete
+	bl BsoRemove
 	movs r0, #0
 	str r0, [r4, #0x14]
 	str r0, [r4, #0x18]
@@ -23071,7 +23071,7 @@ _0805B0A4:
 BeginAnimsOnBattle_Arena: @ 0x0805B0A8
 	push {lr}
 	bl NewEkrBattleDeamon
-	bl AnimClearAll
+	bl BsoInit
 	bl sub_8052184
 	ldr r1, _0805B0C8  @ gUnknown_02017744
 	str r0, [r1]
@@ -23088,7 +23088,7 @@ _0805B0C8: .4byte gUnknown_02017744
 	THUMB_FUNC_START sub_805B0CC
 sub_805B0CC: @ 0x0805B0CC
 	push {lr}
-	bl AnimClearAll
+	bl BsoInit
 	bl NewEkrTogiEndPROC
 	ldr r0, _0805B0E8  @ MainUpdate_8055C68
 	bl SetMainFunc
@@ -25170,7 +25170,7 @@ sub_805C080: @ 0x0805C080
 	subs r0, #1
 	str r0, [r1]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, _0805C0C8  @ gUnknown_0203E120
 	movs r1, #0
 	ldrsh r0, [r0, r1]
@@ -25302,7 +25302,7 @@ sub_805C188: @ 0x0805C188
 	ldr r0, [r4, #0x64]
 	bl Proc_End
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0805C1BA:
@@ -25581,7 +25581,7 @@ sub_805C3C0: @ 0x0805C3C0
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0805C3E6:
@@ -26190,7 +26190,7 @@ sub_805C904: @ 0x0805C904
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0805C92A:
@@ -26516,7 +26516,7 @@ sub_805CBA8: @ 0x0805CBA8
 	cmp r0, r1
 	ble _0805CBD2
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805CBD8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -26880,7 +26880,7 @@ sub_805CE94: @ 0x0805CE94
 	cmp r0, #0xa
 	ble _0805CEBA
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805CEC0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -27086,7 +27086,7 @@ sub_805D030: @ 0x0805D030
 	cmp r0, r1
 	ble _0805D05A
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805D060  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -27335,7 +27335,7 @@ _0805D22E:
 	cmp r0, r1
 	ble _0805D254
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805D25C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -27654,7 +27654,7 @@ sub_805D4B8: @ 0x0805D4B8
 	subs r1, #1
 	str r1, [r2]
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -28037,7 +28037,7 @@ _0805D7A8:
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0805D7CE:
@@ -28408,7 +28408,7 @@ sub_805DAA4: @ 0x0805DAA4
 	cmp r0, #0x32
 	ble _0805DACA
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805DAD0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -28794,7 +28794,7 @@ _0805DDCE:
 	cmp r0, #0x32
 	ble _0805DDE6
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805DDEC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -29167,7 +29167,7 @@ sub_805E0B4: @ 0x0805E0B4
 	cmp r0, #0x28
 	ble _0805E0DA
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805E0E0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -29646,7 +29646,7 @@ sub_805E494: @ 0x0805E494
 	cmp r0, #0x33
 	ble _0805E4BA
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805E4C0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -29764,7 +29764,7 @@ sub_805E53C: @ 0x0805E53C
 	strb r0, [r1]
 	ldr r0, _0805E5D4  @ gUnknown_0861AD24
 	movs r1, #0x78
-	bl AnimCreate
+	bl BsoCreate
 	str r0, [r7, #0x60]
 	movs r1, #0xa1
 	lsls r1, r1, #6
@@ -29899,7 +29899,7 @@ sub_805E694: @ 0x0805E694
 	subs r0, #1
 	str r0, [r1]
 	adds r0, r3, #0
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	b _0805E748
@@ -30250,7 +30250,7 @@ sub_805E968: @ 0x0805E968
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805E988  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -31369,7 +31369,7 @@ sub_805F234: @ 0x0805F234
 	subs r1, #1
 	str r1, [r2]
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -31476,7 +31476,7 @@ sub_805F300: @ 0x0805F300
 	strh r0, [r1, #6]
 	movs r0, #0x14
 	strh r0, [r1, #0xa]
-	bl AnimSort
+	bl BsoSort
 	movs r0, #0x27
 	strh r0, [r4, #0x2c]
 	adds r0, r4, #0
@@ -32903,7 +32903,7 @@ _0805FE64: .4byte gUnknown_0866EFF0
 sub_805FE68: @ 0x0805FE68
 	push {lr}
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0805FE7C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -33399,7 +33399,7 @@ sub_8060254: @ 0x08060254
 	cmp r0, #0x2c
 	bne _0806027A
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _08060280  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -33904,7 +33904,7 @@ sub_8060664: @ 0x08060664
 	subs r1, #1
 	str r1, [r2]
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -34187,7 +34187,7 @@ sub_806088C: @ 0x0806088C
 	subs r1, #1
 	str r1, [r2]
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -34695,7 +34695,7 @@ sub_8060C78: @ 0x08060C78
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08060CA2:
@@ -35055,7 +35055,7 @@ _08060F78:
 	ldr r0, _08060FA0  @ gUnknown_0865C7A8
 _08060F7A:
 	movs r1, #0x78
-	bl AnimCreate
+	bl BsoCreate
 	adds r1, r0, #0
 	str r1, [r5, #0x60]
 _08060F84:
@@ -35130,7 +35130,7 @@ sub_8060FA4: @ 0x08060FA4
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r6, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r6, #0
 	bl Proc_Break
 _08061014:
@@ -36432,7 +36432,7 @@ sub_8061A30: @ 0x08061A30
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08061A5A:
@@ -36493,7 +36493,7 @@ sub_8061A98: @ 0x08061A98
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08061AC2:
@@ -36666,7 +36666,7 @@ sub_8061BE4: @ 0x08061BE4
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08061C0E:
@@ -37961,7 +37961,7 @@ _0806265C: .4byte gUnknown_086808A0
 sub_8062660: @ 0x08062660
 	push {lr}
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _08062674  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -39047,7 +39047,7 @@ sub_8062ED8: @ 0x08062ED8
 	orrs r0, r1
 	strh r0, [r2, #8]
 	mov r0, sp
-	bl AnimDisplay
+	bl BsoPutOam
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
 	strh r0, [r4, #0x2c]
@@ -39133,7 +39133,7 @@ sub_8062FA4: @ 0x08062FA4
 	subs r1, #1
 	str r1, [r2]
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -39724,7 +39724,7 @@ _08063464: .4byte gUnknown_08692674
 sub_8063468: @ 0x08063468
 	push {lr}
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0806347C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -41512,7 +41512,7 @@ _0806425A:
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r5, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r5, #0
 	bl Proc_Break
 _0806427C:
@@ -45702,7 +45702,7 @@ sub_806635C: @ 0x0806635C
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08066386:
@@ -45819,7 +45819,7 @@ sub_8066434: @ 0x08066434
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08066466:
@@ -46978,7 +46978,7 @@ sub_8066D7C: @ 0x08066D7C
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08066DA6:
@@ -47105,7 +47105,7 @@ sub_8066E74: @ 0x08066E74
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08066E9E:
@@ -47251,7 +47251,7 @@ sub_8066F90: @ 0x08066F90
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08066FBA:
@@ -47388,7 +47388,7 @@ sub_80670A8: @ 0x080670A8
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _080670D2:
@@ -47525,7 +47525,7 @@ sub_80671C0: @ 0x080671C0
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _080671EA:
@@ -47916,7 +47916,7 @@ sub_80674A0: @ 0x080674A0
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _080674CA:
@@ -48215,7 +48215,7 @@ sub_80676E4: @ 0x080676E4
 	strh r5, [r0, #6]
 	movs r1, #0x14
 	strh r1, [r0, #0xa]
-	bl AnimSort
+	bl BsoSort
 	ldr r0, _0806775C  @ gUnknown_086BD76C
 	movs r1, #0x20
 	bl SomePaletteStoringRoutine_SpellAnim
@@ -48256,7 +48256,7 @@ sub_8067764: @ 0x08067764
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806778E:
@@ -48693,7 +48693,7 @@ sub_8067AA0: @ 0x08067AA0
 	strh r1, [r0, #6]
 	movs r1, #0x14
 	strh r1, [r0, #0xa]
-	bl AnimSort
+	bl BsoSort
 	ldr r0, _08067B40  @ gUnknown_086C93FC
 	movs r1, #0x20
 	bl SomePaletteStoringRoutine_SpellAnim
@@ -48735,7 +48735,7 @@ sub_8067B48: @ 0x08067B48
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08067B72:
@@ -49573,7 +49573,7 @@ sub_8068208: @ 0x08068208
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08068232:
@@ -49679,7 +49679,7 @@ sub_80682E0: @ 0x080682E0
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806830A:
@@ -50577,7 +50577,7 @@ _080689A2:
 	cmp r0, r1
 	ble _080689C8
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _080689D0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -52490,7 +52490,7 @@ _0806985A:
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806986E:
@@ -52876,7 +52876,7 @@ _08069B2C:
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08069B5E:
@@ -53066,7 +53066,7 @@ _08069CB2:
 	adds r0, r2, #0
 	orrs r0, r1
 	strh r0, [r4, #8]
-	bl AnimSort
+	bl BsoSort
 	add sp, #4
 	pop {r3, r4}
 	mov r8, r3
@@ -53621,7 +53621,7 @@ sub_806A0CC: @ 0x0806A0CC
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806A12C:
@@ -54631,7 +54631,7 @@ _0806A822:
 	mov r0, sl
 	cmp r0, #4
 	ble _0806A7D6
-	bl AnimSort
+	bl BsoSort
 	ldrh r0, [r7, #0x2c]
 	adds r0, #1
 	strh r0, [r7, #0x2c]
@@ -54742,7 +54742,7 @@ _0806A944:
 	mov r1, r8
 	cmp r1, #4
 	ble _0806A8F6
-	bl AnimSort
+	bl BsoSort
 	ldrh r0, [r6, #0x2e]
 	adds r0, #1
 	strh r0, [r6, #0x2e]
@@ -54856,7 +54856,7 @@ _0806AA2E:
 	adds r7, #1
 	cmp r7, #4
 	ble _0806A9E6
-	bl AnimSort
+	bl BsoSort
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
 	strh r0, [r5, #0x2c]
@@ -54987,7 +54987,7 @@ _0806AAFC:
 	mov r2, r8
 	cmp r2, #4
 	ble _0806AAB0
-	bl AnimSort
+	bl BsoSort
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
 	strh r0, [r5, #0x2c]
@@ -55000,15 +55000,15 @@ _0806AAFC:
 	subs r0, #1
 	str r0, [r1]
 	ldr r0, [r5, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r5, #0x64]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r5, #0x68]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r5, #0x44]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r5, #0x48]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r5, #0
 	bl Proc_Break
 _0806ABBA:
@@ -55827,7 +55827,7 @@ sub_806B24C: @ 0x0806B24C
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	b _0806B2B8
@@ -56314,7 +56314,7 @@ _0806B646:
 sub_806B64C: @ 0x0806B64C
 	push {lr}
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0806B660  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -56417,7 +56417,7 @@ _0806B706:
 _0806B712:
 	movs r0, #0x14
 	strh r0, [r4, #0xa]
-	bl AnimSort
+	bl BsoSort
 	ldr r0, _0806B734  @ gUnknown_086E9D40
 	movs r1, #0x80
 	lsls r1, r1, #5
@@ -57067,7 +57067,7 @@ _0806BC78:
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806BC8C:
@@ -59281,7 +59281,7 @@ sub_806CE08: @ 0x0806CE08
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806CE2A:
@@ -59456,7 +59456,7 @@ sub_806CF5C: @ 0x0806CF5C
 	subs r0, #1
 	str r0, [r1]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -59588,7 +59588,7 @@ sub_806D05C: @ 0x0806D05C
 	subs r0, #1
 	str r0, [r1]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -60118,7 +60118,7 @@ sub_806D540: @ 0x0806D540
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806D566:
@@ -60244,7 +60244,7 @@ sub_806D62C: @ 0x0806D62C
 	subs r1, #1
 	str r1, [r0]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806D652:
@@ -60481,7 +60481,7 @@ _0806D7FC:
 	cmp r1, r0
 	ble _0806D81C
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0806D824  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -60564,7 +60564,7 @@ sub_806D89C: @ 0x0806D89C
 	cmp r0, r1
 	ble _0806D8C6
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r1, _0806D8CC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -61345,7 +61345,7 @@ _0806DF14:
 	strh r0, [r4, #8]
 	movs r0, #0x64
 	strh r0, [r4, #0xa]
-	bl AnimSort
+	bl BsoSort
 	adds r0, r7, #0
 	bl GetAISSubjectId
 	cmp r0, #0
@@ -61420,7 +61420,7 @@ sub_806DFD0: @ 0x0806DFD0
 	bl GetAISSubjectId
 	bl sub_805A394
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
 	ldr r1, _0806E010  @ gUnknown_02000010
@@ -61731,7 +61731,7 @@ _0806E202:
 	strh r0, [r4, #8]
 	movs r0, #0x64
 	strh r0, [r4, #0xa]
-	bl AnimSort
+	bl BsoSort
 	adds r0, r6, #0
 	bl GetAISSubjectId
 	cmp r0, #0
@@ -61784,7 +61784,7 @@ sub_806E290: @ 0x0806E290
 	bl GetAISSubjectId
 	bl sub_805A394
 	ldr r0, [r6, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r6, #0x5c]
 	bl GetAISSubjectId
 	ldr r1, _0806E304  @ gUnknown_02000010
@@ -62738,7 +62738,7 @@ _0806EA04:
 	adds r0, r6, #0
 _0806EA06:
 	movs r1, #0x78
-	bl AnimCreate
+	bl BsoCreate
 	adds r2, r0, #0
 	mov r1, r8
 	ldrh r0, [r1, #0x10]
@@ -63130,7 +63130,7 @@ sub_806ECE8: @ 0x0806ECE8
 	cmp r0, #0x32
 	ble _0806ED06
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806ED06:
@@ -63419,7 +63419,7 @@ sub_806EF24: @ 0x0806EF24
 	cmp r0, #0x32
 	ble _0806EF42
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806EF42:
@@ -63789,7 +63789,7 @@ sub_806F1E8: @ 0x0806F1E8
 	cmp r0, r1
 	bne _0806F20A
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806F20A:
@@ -64135,7 +64135,7 @@ _0806F4B0: .4byte gUnknown_085D4F90
 sub_806F4B4: @ 0x0806F4B4
 	push {lr}
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 
@@ -64237,7 +64237,7 @@ sub_806F568: @ 0x0806F568
 	strh r0, [r1, #6]
 	movs r0, #0x14
 	strh r0, [r1, #0xa]
-	bl AnimSort
+	bl BsoSort
 	movs r0, #0x27
 	strh r0, [r4, #0x2c]
 	adds r0, r4, #0
@@ -64597,7 +64597,7 @@ sub_806F820: @ 0x0806F820
 	cmp r0, #0x3c
 	ble _0806F83E
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806F83E:
@@ -64788,7 +64788,7 @@ sub_806F968: @ 0x0806F968
 	adds r1, r3, #0
 	orrs r1, r2
 	strh r1, [r0, #8]
-	bl AnimSort
+	bl BsoSort
 	ldr r0, [r5, #0x5c]
 	ldr r1, _0806F9D0  @ gUnknown_086BD76C
 	bl sub_806EB2C
@@ -64818,7 +64818,7 @@ sub_806F9D8: @ 0x0806F9D8
 	cmp r0, #0xc8
 	ble _0806F9F6
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0806F9F6:
@@ -68873,7 +68873,7 @@ _0807178C:
 	strh r0, [r1, #4]
 	mov r0, sp
 	strh r3, [r0, #0xc]
-	bl AnimDisplay
+	bl BsoPutOam
 _080717C6:
 	add sp, #0x48
 	pop {r4}
@@ -71906,7 +71906,7 @@ sub_8072FD0: @ 0x08072FD0
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -71956,7 +71956,7 @@ sub_8073034: @ 0x08073034
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -72017,7 +72017,7 @@ sub_80730AC: @ 0x080730AC
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -72241,7 +72241,7 @@ sub_8073240: @ 0x08073240
 	orrs r0, r1
 	strh r0, [r2, #8]
 	mov r0, sp
-	bl AnimDisplay
+	bl BsoPutOam
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
 	strh r0, [r4, #0x2c]
@@ -73599,15 +73599,15 @@ _08073DBA:
 	ldr r0, [r1]
 	ldrh r4, [r0, #6]
 	ldr r0, _08073E04  @ gUnknown_087592CC
-	bl SetupFaceGfxData
+	bl SetFaceConfig
 	ldr r0, _08073E08  @ 0x00001042
 	str r0, [sp]
 	movs r0, #0
 	adds r1, r4, #0
 	movs r2, #0xbc
 	movs r3, #0x50
-	bl NewFace
-	ldr r0, _08073E0C  @ gUnknown_03004980
+	bl StartFace
+	ldr r0, _08073E0C  @ gFaces
 	ldr r1, [r0]
 	movs r2, #0
 	movs r0, #0xa0
@@ -73631,7 +73631,7 @@ _08073DBA:
 	.align 2, 0
 _08073E04: .4byte gUnknown_087592CC
 _08073E08: .4byte 0x00001042
-_08073E0C: .4byte gUnknown_03004980
+_08073E0C: .4byte gFaces
 _08073E10: .4byte gBg2Tm
 _08073E14: .4byte 0x01000200
 
@@ -73794,7 +73794,7 @@ _08073EE2:
 	mov r3, r9
 	bl Interpolate
 	strh r0, [r5]
-	ldr r0, _08073FA8  @ gUnknown_03004980
+	ldr r0, _08073FA8  @ gFaces
 	ldr r1, [r0]
 	movs r0, #0x50
 	mov r2, r8
@@ -73840,7 +73840,7 @@ _08073F8E:
 	.align 2, 0
 _08073FA0: .4byte gUnknown_02020134
 _08073FA4: .4byte gUnknown_02020136
-_08073FA8: .4byte gUnknown_03004980
+_08073FA8: .4byte gFaces
 _08073FAC: .4byte gUnknown_020165C8
 _08073FB0: .4byte gPal
 
@@ -74316,7 +74316,7 @@ sub_80742F8: @ 0x080742F8
 	movs r2, #0
 	bl Interpolate
 	adds r6, r0, #0
-	ldr r0, _080743B4  @ gUnknown_03004980
+	ldr r0, _080743B4  @ gFaces
 	ldr r1, [r0]
 	movs r0, #0x50
 	subs r0, r0, r5
@@ -74362,7 +74362,7 @@ _080743A2:
 	.align 2, 0
 _080743AC: .4byte gUnknown_02020134
 _080743B0: .4byte gUnknown_02020136
-_080743B4: .4byte gUnknown_03004980
+_080743B4: .4byte gFaces
 _080743B8: .4byte gUnknown_020165C8
 _080743BC: .4byte gPal
 
@@ -74532,7 +74532,7 @@ _08074500:
 	strb r0, [r3, #0x18]
 _0807452C:
 	movs r0, #0
-	bl DeleteFaceByIndex
+	bl EndFaceById
 	adds r0, r5, #0
 	bl Proc_Break
 	add sp, #0x2c
@@ -75225,7 +75225,7 @@ _08074A50: .4byte gUnknown_085C6054
 sub_8074A54: @ 0x08074A54
 	push {lr}
 	ldr r0, [r0, #0x64]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 
@@ -75408,7 +75408,7 @@ sub_8074B90: @ 0x08074B90
 	ldr r0, _08074BE4  @ 0x06010000
 	adds r1, r1, r0
 	adds r0, r2, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r4, _08074BE8  @ gUnknown_089AC9A8
 	adds r1, r5, #0
 	adds r1, #0x10
@@ -76519,7 +76519,7 @@ sub_80753FC: @ 0x080753FC
 	cmp r0, r1
 	ble _0807541E
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0807541E:
@@ -76875,9 +76875,9 @@ sub_80756BC: @ 0x080756BC
 	cmp r0, r1
 	ble _0807570E
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	ldr r0, [r4, #0x64]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _0807570E:
@@ -76973,7 +76973,7 @@ _080757A4:
 	ldr r1, [r4, #0x60]
 	movs r0, #0x78
 	strh r0, [r1, #0xa]
-	bl AnimSort
+	bl BsoSort
 	ldr r0, [r4, #0x5c]
 	ldrh r1, [r0, #2]
 	adds r1, #0x10
@@ -76988,7 +76988,7 @@ _080757D8:
 	ldr r1, [r4, #0x60]
 	movs r0, #0x14
 	strh r0, [r1, #0xa]
-	bl AnimSort
+	bl BsoSort
 	ldr r0, [r4, #0x5c]
 	ldrh r1, [r0, #2]
 	subs r1, #0xc
@@ -77077,7 +77077,7 @@ sub_8075874: @ 0x08075874
 	cmp r0, r1
 	ble _08075896
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 _08075896:
@@ -77846,7 +77846,7 @@ _08075EA8:
 _08075EC0:
 	ldr r0, _08075F10  @ gUnknown_0878D518
 	movs r1, #0x96
-	bl AnimCreate
+	bl BsoCreate
 	ldr r1, [sp]
 	str r0, [r1, #0x60]
 	movs r1, #0x91
@@ -78116,7 +78116,7 @@ _080760C2:
 	cmp r0, r1
 	ble _080760E4
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	bl ClearBG1
 	adds r0, r4, #0
 	bl Proc_Break
@@ -78171,7 +78171,7 @@ _08076126:
 	cmp r0, r1
 	ble _08076148
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	bl ClearBG1
 	adds r0, r4, #0
 	bl Proc_Break
@@ -78226,7 +78226,7 @@ _0807618A:
 	cmp r0, r1
 	ble _080761AC
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	bl ClearBG1
 	adds r0, r4, #0
 	bl Proc_Break
@@ -78283,7 +78283,7 @@ _080761EE:
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	bl ClearBG1
 	adds r0, r4, #0
 	bl Proc_Break
@@ -78386,7 +78386,7 @@ _080762A2:
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	bl ClearBG1
 	adds r0, r4, #0
 	bl Proc_Break
@@ -78458,7 +78458,7 @@ _0807632A:
 BeginAnimsOnBattle_Hensei: @ 0x08076330
 	push {lr}
 	bl NewEkrBattleDeamon
-	bl AnimClearAll
+	bl BsoInit
 	bl sub_8052184
 	ldr r1, _08076350  @ gUnknown_02017744
 	str r0, [r1]
@@ -78475,7 +78475,7 @@ _08076350: .4byte gUnknown_02017744
 	THUMB_FUNC_START sub_8076354
 sub_8076354: @ 0x08076354
 	push {lr}
-	bl AnimClearAll
+	bl BsoInit
 	bl sub_8076470
 	ldr r0, _08076368  @ MainUpdate_8055C68
 	bl SetMainFunc
@@ -78969,10 +78969,10 @@ sub_80766E4: @ 0x080766E4
 	bl EnableBgSync
 	ldr r0, _0807677C  @ gUnknown_087F4798
 	ldr r1, _08076780  @ 0x06008000
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r0, _08076784  @ gUnknown_087F798C
 	ldr r1, _08076788  @ gUnknown_02019790
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	bl sub_806FBB8
 	ldr r0, _0807678C  @ gUnknown_0201FB0C
 	ldr r0, [r0]
@@ -80697,7 +80697,7 @@ sub_8077474: @ 0x08077474
 	ldr r0, _08077500  @ gUnknown_087F798C
 	ldr r6, _08077504  @ gUnknown_02019790
 	adds r1, r6, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	movs r1, #0xf0
 	lsls r1, r1, #3
 	adds r0, r6, r1
@@ -80892,7 +80892,7 @@ sub_80775E8: @ 0x080775E8
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	ldr r0, [r4, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	adds r0, r4, #0
 	bl Proc_Break
 	adds r0, r4, #0
@@ -80956,7 +80956,7 @@ sub_807766C: @ 0x0807766C
 sub_8077678: @ 0x08077678
 	push {lr}
 	ldr r0, [r0, #0x60]
-	bl AnimDelete
+	bl BsoRemove
 	pop {r0}
 	bx r0
 
@@ -81902,7 +81902,7 @@ sub_8077DC8: @ 0x08077DC8
 	ldr r0, _08077E4C  @ gUnknown_087F45D0
 	ldr r4, _08077E50  @ gUnknown_02019790
 	adds r1, r4, #0
-	bl CopyDataWithPossibleUncomp
+	bl Decompress
 	ldr r1, _08077E54  @ gBg1Tm
 	movs r5, #1
 	str r5, [sp]
