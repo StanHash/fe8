@@ -104,7 +104,7 @@ UnitInfoWindow_PositionUnitName: @ 0x080347D4
 	ldr r0, [r4, #0x2c]
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	bl GetStringTextLen
 	cmp r0, #0x27
 	bgt _080347FA
@@ -323,7 +323,7 @@ _0803496C:
 	ldr r1, [sp, #4]
 	ldr r0, [r1]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	ldr r0, [sp, #0xc]
 	bl Text_DrawString
@@ -390,14 +390,14 @@ sub_80349FC: @ 0x080349FC
 	adds r5, r1, #0
 	bl ClearText
 	ldr r0, _08034A54  @ 0x000004E9
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
 	bl Text_InsertDrawString
 	ldr r0, _08034A58  @ 0x00000539
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x28
@@ -433,7 +433,7 @@ sub_8034A5C: @ 0x08034A5C
 	adds r4, r1, #0
 	bl ClearText
 	ldr r0, _08034AA0  @ 0x000004F7
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r5, #0
 	movs r1, #0
@@ -470,7 +470,7 @@ sub_8034AA4: @ 0x08034AA4
 	bl ClearText
 	movs r0, #0x9f
 	lsls r0, r0, #3
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
@@ -524,7 +524,7 @@ sub_8034B10: @ 0x08034B10
 	adds r5, r1, #0
 	bl ClearText
 	ldr r0, _08034B44  @ 0x000004FA
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
@@ -554,14 +554,14 @@ sub_8034B48: @ 0x08034B48
 	bl ClearText
 	movs r0, #0x9e
 	lsls r0, r0, #3
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #3
 	bl Text_InsertDrawString
 	ldr r0, _08034BA8  @ 0x0000053A
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x28
@@ -598,7 +598,7 @@ sub_8034BAC: @ 0x08034BAC
 	bl ClearText
 	movs r0, #0x9e
 	lsls r0, r0, #3
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
@@ -624,7 +624,7 @@ sub_8034BE4: @ 0x08034BE4
 	adds r5, r1, #0
 	bl ClearText
 	ldr r0, _08034C14  @ 0x000004F4
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
@@ -702,7 +702,7 @@ _08034C6A:
 	bl ClearText
 	movs r0, #0xb5
 	lsls r0, r0, #3
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0

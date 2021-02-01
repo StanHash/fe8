@@ -358,7 +358,7 @@ char* GetAffinityName(int affinity)
         0x534, 0x510, 0x511, 0x512, 0x513, 0x50C, 0x50B, 0x50A
     };
 
-    return GetStringFromIndex(textIdLookup[affinity]);
+    return GetMsg(textIdLookup[affinity]);
 }
 
 static void SetSupportLevelGained(u8 charA, u8 charB)

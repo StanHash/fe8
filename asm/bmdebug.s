@@ -187,7 +187,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	bl ClearText
 	ldr r0, [r5, #0x30]
 	ldrh r0, [r0, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r6, #0
 	movs r1, #8
@@ -200,7 +200,7 @@ DebugMapMenu_DisplayInfoDraw: @ 0x0801BCE4
 	lsls r0, r0, #2
 	adds r0, r0, r1
 	ldr r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r6, #0
 	movs r1, #0x40
@@ -291,7 +291,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	bl ClearText
 	ldr r0, [r5, #0x30]
 	ldrh r0, [r0, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #8
@@ -303,7 +303,7 @@ DebugMenu_WeatherDraw: @ 0x0801BDA4
 	lsls r0, r0, #1
 	add r0, sp
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x40
@@ -454,7 +454,7 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	bl ClearText
 	ldr r0, [r5, #0x30]
 	ldrh r0, [r0, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #8
@@ -462,7 +462,7 @@ DebugMenu_ClearDraw: @ 0x0801BF00
 	bl Text_InsertDrawString
 	movs r0, #0xd7
 	lsls r0, r0, #3
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x48
@@ -821,7 +821,7 @@ sub_801C1DC: @ 0x0801C1DC
 	movs r2, #0
 	bl sub_80A4E70
 	ldr r0, _0801C21C  @ 0x0000026A
-	bl GetStringFromIndex
+	bl GetMsg
 	bl SetTacticianName
 	ldr r1, _0801C220  @ gRAMChapterData
 	movs r0, #1
@@ -894,7 +894,7 @@ _0801C27C:
 	bl sub_80A4E70
 _0801C28A:
 	ldr r0, _0801C2C4  @ 0x0000026A
-	bl GetStringFromIndex
+	bl GetMsg
 	bl SetTacticianName
 	adds r0, r4, #0
 	adds r0, #0x3c
@@ -1103,7 +1103,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	bl ClearText
 	ldr r0, [r4, #0x30]
 	ldrh r0, [r0, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r5, #0
 	movs r1, #8
@@ -1119,7 +1119,7 @@ DebugMenu_FogDraw: @ 0x0801C3D4
 	ands r0, r1
 	adds r0, r0, r2
 	ldr r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r5, #0
 	movs r1, #0x40
@@ -1277,7 +1277,7 @@ _0801C51C:
 	lsls r0, r0, #1
 	add r0, sp
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #4
@@ -1286,7 +1286,7 @@ _0801C51C:
 	lsls r0, r6, #1
 	adds r0, r7, r0
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x1e

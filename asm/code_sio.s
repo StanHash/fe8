@@ -3721,7 +3721,7 @@ _0804312C: .4byte gUnknown_0203DD0C
 _08043130: .4byte gBg2Tm+0x2
 _08043134:
 	adds r0, r6, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r5, #0
 	bl Text_DrawString
@@ -4145,7 +4145,7 @@ _08043404:
 _08043420: .4byte gUnknown_0203DB7C
 _08043424:
 	movs r0, #0xcc
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r4, #0
 	bl sub_8042DC8
 	ldrb r0, [r5, #5]
@@ -4412,7 +4412,7 @@ sub_80435F0: @ 0x080435F0
 	adds r2, r4, #0
 	bl sub_80A693C
 	movs r0, #0xcc
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r4, #0
 	bl sub_8042DC8
 	ldr r0, [r7, #0x3c]
@@ -4518,7 +4518,7 @@ sub_80436C0: @ 0x080436C0
 	cmp r0, #0
 	bne _08043734
 	movs r0, #0xcc
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r6, #0
 	bl sub_8042DC8
 	movs r0, #0x80
@@ -4549,7 +4549,7 @@ _08043738:
 	cmp r0, #0
 	bne _08043778
 	movs r0, #0xcc
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r4, #0
 	bl sub_8042DC8
 	movs r0, #0x80
@@ -4626,7 +4626,7 @@ sub_80437C0: @ 0x080437C0
 	movs r7, #0
 _080437F4:
 	ldr r0, _08043840  @ 0x0000076B
-	bl GetStringFromIndex
+	bl GetMsg
 	ldr r4, _08043844  @ gUnknown_0203DD50
 	adds r4, r7, r4
 	adds r1, r4, #0
@@ -4696,7 +4696,7 @@ _08043876:
 	lsls r0, r6, #4
 	adds r0, r0, r7
 	ldr r0, [r0, #8]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	lsls r2, r6, #1
 	adds r2, #5
@@ -6112,7 +6112,7 @@ _080443D8:
 	bl ClearText
 	movs r0, #0xa0
 	lsls r0, r0, #1
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -6120,7 +6120,7 @@ _080443D8:
 	movs r1, #0x26
 	bl Text_SetCursor
 	ldr r0, _08044428  @ 0x00000141
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -7778,7 +7778,7 @@ NameSelect_DrawName: @ 0x080450AC
 	adds r0, r4, #0
 	bl ClearText
 	ldr r0, _08045100  @ 0x00000141
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -7787,7 +7787,7 @@ NameSelect_DrawName: @ 0x080450AC
 	bl Text_SetCursor
 	movs r0, #0xa3
 	lsls r0, r0, #1
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -9347,7 +9347,7 @@ _08045D0C:
 	lsls r0, r0, #2
 	adds r0, r0, r1
 	ldr r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	movs r0, #0xa
 	str r0, [sp]
@@ -10641,7 +10641,7 @@ sub_80467AC: @ 0x080467AC
 	bl Text_SetColor
 	ldr r5, _0804682C  @ 0x0000077D
 	adds r0, r5, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	movs r0, #0x60
 	bl GetStringTextCenteredPos
@@ -10649,7 +10649,7 @@ sub_80467AC: @ 0x080467AC
 	adds r0, r4, #0
 	bl Text_SetCursor
 	adds r0, r5, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -10747,7 +10747,7 @@ _080468D4:
 	movs r1, #0
 	bl Text_SetColor
 	ldr r0, [r6]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -11534,7 +11534,7 @@ sub_8046EB8: @ 0x08046EB8
 	adds r3, r6, #0
 	bl sub_8042DE8
 	ldr r0, _08046F64  @ 0x0000077F
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	mov r0, r9
 	movs r1, #0x5d
@@ -11544,7 +11544,7 @@ sub_8046EB8: @ 0x08046EB8
 	mov r1, sp
 	adds r0, r1, r4
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	mov r0, r9
 	movs r1, #0x80
@@ -11554,7 +11554,7 @@ sub_8046EB8: @ 0x08046EB8
 	add r8, r5
 	mov r1, r8
 	ldrh r0, [r1]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	mov r0, r9
 	movs r1, #0x9a
@@ -11732,28 +11732,28 @@ _08047094:
 	adds r0, r4, #0
 	bl ClearText
 	ldr r0, _080471EC  @ 0x00000772
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0xc
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _080471F0  @ 0x00000773
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x54
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _080471F4  @ 0x00000774
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x78
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _080471F8  @ 0x00000775
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x96
@@ -12106,28 +12106,28 @@ _080473D2:
 	adds r0, r4, #0
 	bl ClearText
 	ldr r0, _08047554  @ 0x00000772
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0xc
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _08047558  @ 0x00000773
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x54
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _0804755C  @ 0x00000774
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x78
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _08047560  @ 0x00000775
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x96
@@ -12501,7 +12501,7 @@ _08047704:
 	adds r0, #0xc
 	adds r0, r5, r0
 	ldr r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -12642,7 +12642,7 @@ _0804785A:
 	movs r1, #0
 	bl Text_SetColor
 	ldr r0, [r5]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -14211,7 +14211,7 @@ sub_80484D8: @ 0x080484D8
 	adds r3, r6, #0
 	bl sub_8042DE8
 	ldr r0, _0804851C  @ 0x000005AE
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x3e
@@ -14512,7 +14512,7 @@ sub_8048730: @ 0x08048730
 	bl InitSystemTextFont
 	ldr r4, _08048790  @ gUnknown_0203DA88
 	ldr r0, _08048794  @ 0x0000077E
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	movs r2, #0
@@ -15903,7 +15903,7 @@ sub_8049238: @ 0x08049238
 	adds r4, r0, #0
 	bl sub_8048A6C
 	ldr r0, _08049268  @ 0x00000771
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	str r4, [sp]
 	movs r0, #0x58
@@ -15931,7 +15931,7 @@ sub_804926C: @ 0x0804926C
 	adds r4, r0, #0
 	bl sub_8048A6C
 	ldr r0, _08049294  @ 0x00000771
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	str r4, [sp]
 	movs r0, #0x58

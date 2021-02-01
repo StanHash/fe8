@@ -717,8 +717,8 @@ static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 classIndex, int objTil
 
     config->paletteIndex = palId;
 
-    ap = AP_Create(MU_GetAnimationByClassId(classIndex), 10);
-    AP_SwitchAnimation(ap, MU_FACING_SELECTED);
+    ap = StartAnim(MU_GetAnimationByClassId(classIndex), 10);
+    Anim_SetAnimId(ap, MU_FACING_SELECTED);
 
     Decompress(
         MU_GetSheetGfx(proc),
@@ -742,7 +742,7 @@ void MU_SetFacing(struct MUProc* proc, int facingId) {
     if (facingId == MU_FACING_STANDING)
         sub_8027068(proc->muIndex, proc->pGfxVRAM);
     else
-        AP_SwitchAnimation(proc->pAPHandle, proc->facingId);
+        Anim_SetAnimId(proc->pAPHandle, proc->facingId);
 }
 
 void MU_SetDefaultFacing(struct MUProc* proc) {
@@ -992,10 +992,10 @@ void MU_StartFogBumpFx(int x, int y) {
         OBJ_VRAM0 + 0x20 * 0x180
     );
 
-    ap = AP_Create(gUnknown_089A8EF8, 2);
+    ap = StartAnim(gUnknown_089A8EF8, 2);
 
     ap->tileBase = 0x1180;
-    AP_SwitchAnimation(ap, MU_FACING_LEFT);
+    Anim_SetAnimId(ap, MU_FACING_LEFT);
 
     proc = SpawnProc(sProcScr_MUFogBumpFx, PROC_TREE_3);
 
@@ -1039,7 +1039,7 @@ static void MU_FogBumpFx_TransitionInLoop(struct MUFogBumpFxProc* proc) {
         Div(+COS_Q12(0) * 16, scale)  // pd
     );
 
-    AP_Update(
+    Anim_Display(
         proc->pAPHandle,
 
         (proc->xDisplay - 8),
@@ -1051,7 +1051,7 @@ static void MU_FogBumpFx_DisplayLoop(struct MUFogBumpFxProc* proc) {
     if (proc->timer++ >= 40)
         Proc_Break(proc);
 
-    AP_Update(
+    Anim_Display(
         proc->pAPHandle,
 
         (proc->xDisplay),
@@ -1251,7 +1251,7 @@ static void MU_OnLoop(struct MUProc* proc) {
 
 static void MU_OnEnd(struct MUProc* proc) {
     proc->pMUConfig->muIndex = 0;
-    AP_Delete(proc->pAPHandle);
+    Anim_End(proc->pAPHandle);
 }
 
 void MU_EndAll(void) {
@@ -1447,7 +1447,7 @@ static void MU_DisplayAsMMS(struct MUProc* proc) {
         if (proc->stateId == MU_STATE_DEATHFADE)
             position.y |= 0x400;
 
-        AP_Update(
+        Anim_Display(
             proc->pAPHandle,
 
             position.x,
@@ -1693,7 +1693,7 @@ static void MU_807988C(struct MUEffectProc* proc) {
 }
 
 void MU_StartActionAnim(struct MUProc* proc) {
-    AP_SwitchAnimation(proc->pAPHandle, MU_FACING_SELECTED);
+    Anim_SetAnimId(proc->pAPHandle, MU_FACING_SELECTED);
 
     proc->pAPHandle->frameTimer    = 0;
     proc->pAPHandle->frameInterval = 0x100;
@@ -1842,7 +1842,7 @@ void MU_SetSpecialSprite(struct MUProc* proc, int displayedClassId, const u16* p
 
     proc->displayedClassId = displayedClassId;
 
-    AP_SetDefinition(
+    Anim_SetInfo(
         proc->pAPHandle,
         MU_GetAnimationByClassId(proc->displayedClassId)
     );

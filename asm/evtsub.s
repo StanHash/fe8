@@ -551,7 +551,7 @@ sub_8011BA4: @ 0x08011BA4
 	bl SpawnProc
 	adds r7, r0, #0
 	adds r0, r4, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	mov sl, r0
 	mov r0, r8
 	str r0, [r7, #0x30]

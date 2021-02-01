@@ -190,7 +190,7 @@ HandleNewItemGetFromDrop: @ 0x0801E098
 	cmp r0, #0x63
 	bgt _0801E10C
 	ldr r0, _0801E108  @ 0x00000867
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r6, #0
 	bl NewBottomHelpText
@@ -201,7 +201,7 @@ _0801E104: .4byte gUnknown_0202BCB0
 _0801E108: .4byte 0x00000867
 _0801E10C:
 	ldr r0, _0801E130  @ 0x00000866
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r6, #0
 	bl NewBottomHelpText

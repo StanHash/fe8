@@ -21,25 +21,25 @@ struct APHandle {
 
 
 void InitAnims();
-struct APHandle* AP_Create(const void* apDefinition, u16 aObjNode);
-void AP_Delete(struct APHandle* handle);
-s8   AP_Update(struct APHandle* handle, int x, int y);
-void AP_Display(struct APHandle*, int, int);
-s8   AP_ExecFrame(struct APHandle*);
-void AP_QueueObjRotScale(struct APHandle*);
-void AP_SwitchAnimation(struct APHandle* handle, int index);
-void AP_SetDefinition(struct APHandle* handle, const u16* definition);
-void AP_QueueObjGraphics(struct APHandle*);
-void AP_LoadDefinition(struct APHandle*, const u16*);
-void AP_ExecDummyFrame(struct APHandle*);
-void AP_Init(struct APHandle*, const u16*, u16);
-struct APHandle* AP_Find(const u16* definition);
-// ??? APProc_Create(???);
+struct APHandle* StartAnim(const void* apDefinition, u16 aObjNode);
+void Anim_End(struct APHandle* handle);
+s8   Anim_Display(struct APHandle* handle, int x, int y);
+void PutAnim(struct APHandle*, int, int);
+s8   ExecAnim(struct APHandle*);
+void PutAnimAffine(struct APHandle*);
+void Anim_SetAnimId(struct APHandle* handle, int index);
+void Anim_SetInfo(struct APHandle* handle, const u16* definition);
+void SyncAnimImg(struct APHandle*);
+void SetAnimInfo(struct APHandle*, const u16*);
+void AnimRunFirstFrame(struct APHandle*);
+void InitAnim(struct APHandle*, const u16*, u16);
+struct APHandle* FindAnim(const u16* definition);
+// ??? StartAnimProc(???);
 // ??? APProc_OnUpdate(???);
 // ??? APProc_OnEnd(???);
-// ??? APProc_SetParameters(???);
-// ??? APProc_Delete(???);
-// ??? APProc_DeleteAll(???);
-// ??? APProc_Exists(???);
+// ??? SetAnimProcParams(???);
+// ??? EndAnimProc(???);
+// ??? EndEachAnimProc(???);
+// ??? AnimProcExists(???);
 
 #endif // GUARD_AP_H

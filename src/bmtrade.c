@@ -270,12 +270,12 @@ void TradeMenu_InitUnitNameDisplay(struct TradeMenuProc* proc)
 
     // TODO: text color constants
 
-    str = GetStringFromIndex(UNIT_NAME_ID(proc->units[0]));
+    str = GetMsg(UNIT_NAME_ID(proc->units[0]));
     xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextLen(str)) / 2;
 
     PutDrawText(NULL, gBg0Tm + TM_OFFSET(0, 0), 0, xStart, UNIT_PANEL_WIDTH, str);
 
-    str = GetStringFromIndex(UNIT_NAME_ID(proc->units[1]));
+    str = GetMsg(UNIT_NAME_ID(proc->units[1]));
     xStart = ((8 * UNIT_PANEL_WIDTH) - GetStringTextLen(str)) / 2;
 
     PutDrawText(NULL, gBg0Tm + TM_OFFSET(24, 0), 0, xStart, UNIT_PANEL_WIDTH, str);

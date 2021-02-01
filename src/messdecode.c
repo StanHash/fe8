@@ -77,7 +77,7 @@ void SomethingRelatedToText(s8 *a)
     }
 }
 
-char *GetStringFromIndex(int index)
+char *GetMsg(int index)
 {
     if (index == gUnknown_0202B6AC)
         return gUnknown_0202A6AC.buffer0202A6AC;
@@ -87,7 +87,7 @@ char *GetStringFromIndex(int index)
     return gUnknown_0202A6AC.buffer0202A6AC;
 }
 
-char *GetStringFromIndexInBuffer(int index, char *buffer)
+char *GetMsgTo(int index, char *buffer)
 {
     DecodeString(gUnknown_0815D48C[index], buffer);
     SomethingRelatedToText(buffer);
@@ -140,7 +140,7 @@ char *sub_800A2A4(void)
                 *r4++ = *r5++;
                 continue;
             }
-            CopyString(r4, GetStringFromIndex(GetCharacterData(gRAMChapterData.unk1C[r1])->nameTextId));
+            CopyString(r4, GetMsg(GetCharacterData(gRAMChapterData.unk1C[r1])->nameTextId));
         label:
             while (*r4 != 0)
                 r4++;

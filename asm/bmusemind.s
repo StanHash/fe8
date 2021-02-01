@@ -1667,7 +1667,7 @@ _0802F94E:
 	bl GetItemIconId
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	adds r0, r7, #0
 	adds r1, r4, #0
@@ -1773,7 +1773,7 @@ _0802FA1C:
 	bl GetItemIconId
 	adds r4, r0, #0
 	movs r0, #0x1e
-	bl GetStringFromIndex
+	bl GetMsg
 	str r0, [sp]
 	adds r0, r7, #0
 	adds r1, r4, #0

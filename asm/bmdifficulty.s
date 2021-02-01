@@ -1219,7 +1219,7 @@ sub_8038448: @ 0x08038448
 _08038464: .4byte gUnknown_080D8070
 _08038468:
 	ldrh r0, [r5]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	bl strlen
 	adds r1, r0, #0
@@ -1618,7 +1618,7 @@ _0803871E:
 	add r0, r8
 	lsrs r7, r0, #0x18
 	ldr r0, _080387C8  @ 0x0000020D
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r5, r0, #0
 	adds r0, r6, #0
 	movs r1, #1
@@ -1710,7 +1710,7 @@ _080387EE:
 	adds r0, r5, r1
 	lsrs r7, r0, #0x18
 	ldr r0, _08038890  @ 0x0000020D
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r5, r0, #0
 	adds r0, r6, #0
 	movs r1, #1
@@ -1910,7 +1910,7 @@ _0803898C:
 	adds r0, r4, r2
 	lsrs r7, r0, #0x18
 	ldr r0, _080389EC  @ 0x0000020D
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r5, r0, #0
 	ldrh r1, [r6]
 	ldr r0, _080389F0  @ 0x0000FFFF
@@ -2019,7 +2019,7 @@ _08038A78:
 	adds r0, r4, r1
 	lsrs r7, r0, #0x18
 	ldr r0, _08038AD4  @ 0x0000020D
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r5, r0, #0
 	ldrh r1, [r6]
 	ldr r0, _08038AD8  @ 0x0000FFFF

@@ -4365,7 +4365,7 @@ MenuCommand_DrawRouteSplit: @ 0x08086514
 	adds r4, r1, #0
 	ldr r0, [r4, #0x30]
 	ldrh r0, [r0, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r6, r0, #0
 	adds r5, r4, #0
 	adds r5, #0x34

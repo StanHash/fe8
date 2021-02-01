@@ -418,7 +418,7 @@ void Text_DrawNumberOrBlank(struct Text* text, int number)
     if (number == 255 || number == -1)
     {
         Text_Skip(text, -8);
-        Text_DrawString(text, GetStringFromIndex(0x535));
+        Text_DrawString(text, GetMsg(0x535));
     }
     else
     {

@@ -382,7 +382,7 @@ void SetUnitStatusExt(struct Unit* unit, int status, int duration) {
 }
 
 inline char* GetUnitStatusName(struct Unit* unit) {
-    return GetStringFromIndex(sStatusNameTextIdLookup[unit->statusIndex]);
+    return GetMsg(sStatusNameTextIdLookup[unit->statusIndex]);
 }
 
 int GetUnitSMSId(struct Unit* unit) {
@@ -940,9 +940,9 @@ s8 UnitGive(struct Unit* actor, struct Unit* target) {
 
 inline char* GetUnitRescueName(struct Unit* unit) {
     if (!unit->rescueOtherUnit)
-        return GetStringFromIndex(sStatusNameTextIdLookup[0]);
+        return GetMsg(sStatusNameTextIdLookup[0]);
 
-    return GetStringFromIndex(GetUnit(unit->rescueOtherUnit)->pCharacterData->nameTextId);
+    return GetMsg(GetUnit(unit->rescueOtherUnit)->pCharacterData->nameTextId);
 }
 
 void UnitKill(struct Unit* unit) {

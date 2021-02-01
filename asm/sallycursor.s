@@ -1279,13 +1279,13 @@ SALLYCURSOR6C_StartUnitSwap: @ 0x08033C10
 	adds r5, r0, #0
 	ldr r0, _08033C7C  @ gUnknown_085A0EA0
 	movs r1, #0
-	bl AP_Create
+	bl StartAnim
 	adds r4, r0, #0
 	movs r0, #0
 	strh r0, [r4, #0x22]
 	adds r0, r4, #0
 	movs r1, #0
-	bl AP_SwitchAnimation
+	bl Anim_SetAnimId
 	str r4, [r5, #0x54]
 	adds r1, r5, #0
 	adds r1, #0x4a
@@ -1299,7 +1299,7 @@ SALLYCURSOR6C_StartUnitSwap: @ 0x08033C10
 	ldrsh r0, [r1, r2]
 	str r0, [r5, #0x40]
 	ldr r0, _08033C84  @ 0x00000872
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r5, #0
 	bl NewBottomHelpText
@@ -1400,7 +1400,7 @@ _08033D04:
 	cmp r7, #0
 	beq _08033D3C
 	ldr r0, [r4, #0x54]
-	bl AP_Delete
+	bl Anim_End
 	adds r0, r4, #0
 	bl Proc_Break
 	bl DeleteEach6CBB
@@ -1429,7 +1429,7 @@ _08033D54:
 	cmp r0, #0
 	beq _08033D88
 	ldr r0, [r4, #0x54]
-	bl AP_Delete
+	bl Anim_End
 	adds r0, r4, #0
 	movs r1, #4
 	bl Proc_Goto
@@ -1462,7 +1462,7 @@ _08033D88:
 	bne _08033DA6
 	movs r1, #1
 _08033DA6:
-	bl AP_SwitchAnimation
+	bl Anim_SetAnimId
 _08033DAA:
 	ldr r0, [r4, #0x54]
 	ldr r3, _08033DD4  @ gUnknown_0202BCB0
@@ -1476,7 +1476,7 @@ _08033DAA:
 	movs r4, #0xe
 	ldrsh r3, [r3, r4]
 	subs r2, r2, r3
-	bl AP_Update
+	bl Anim_Display
 	asrs r0, r6, #0x18
 	strh r0, [r5]
 _08033DCA:

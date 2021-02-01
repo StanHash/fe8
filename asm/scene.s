@@ -390,7 +390,7 @@ sub_8006A30: @ 0x08006A30
 	adds r4, r0, #0
 	adds r5, r1, #0
 	adds r0, r2, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	adds r0, r4, #0
 	adds r1, r5, #0
@@ -409,7 +409,7 @@ sub_8006A50: @ 0x08006A50
 	adds r5, r1, #0
 	adds r0, r2, #0
 	adds r6, r3, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	adds r0, r4, #0
 	adds r1, r5, #0
@@ -2895,7 +2895,7 @@ sub_8007DE8: @ 0x08007DE8
 	adds r0, r0, r4
 	mov r8, r0
 	ldrh r0, [r7]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r6, #0
 	mov r1, r8
@@ -2903,7 +2903,7 @@ sub_8007DE8: @ 0x08007DE8
 	bl Text_InsertDrawString
 	adds r4, #0x38
 	ldrh r0, [r7, #8]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r6, #0
 	adds r1, r4, #0
@@ -5490,7 +5490,7 @@ sub_8009200: @ 0x08009200
 	movs r3, #1
 	negs r3, r3
 	adds r0, r6, #0
-	bl APProc_SetParameters
+	bl SetAnimProcParams
 	b _08009248
 	.align 2, 0
 _08009238: .4byte gUnknown_0202BCB0
@@ -5512,7 +5512,7 @@ sub_8009250: @ 0x08009250
 	ldr r0, [r0, #0x34]
 	cmp r0, #0
 	beq _0800925C
-	bl APProc_Delete
+	bl EndAnimProc
 _0800925C:
 	pop {r0}
 	bx r0

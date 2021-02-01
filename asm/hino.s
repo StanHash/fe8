@@ -512,7 +512,7 @@ sub_8012A64: @ 0x08012A64
 	str r4, [sp, #4]
 	adds r0, r5, #0
 	adds r3, r6, #0
-	bl APProc_Create
+	bl StartAnimProc
 	ldr r1, [r7, #0x30]
 	ldr r2, [r7, #0x34]
 	movs r0, #1
@@ -520,7 +520,7 @@ sub_8012A64: @ 0x08012A64
 	str r4, [sp, #4]
 	adds r0, r5, #0
 	adds r3, r6, #0
-	bl APProc_Create
+	bl StartAnimProc
 _08012AAE:
 	add sp, #8
 	pop {r4, r5, r6, r7}

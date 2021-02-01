@@ -128,13 +128,13 @@ _08036598:
 	adds r0, r0, r1
 	ldr r6, [r0]
 	adds r0, r6, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	movs r0, #0x20
 	bl GetStringTextCenteredPos
 	adds r4, r0, #0
 	adds r0, r6, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r5, #0
 	adds r1, r4, #0
@@ -162,7 +162,7 @@ sub_80365E4: @ 0x080365E4
 	adds r6, r1, #0
 	ldr r0, [r2]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	movs r0, #0x30
 	adds r1, r4, #0

@@ -268,7 +268,7 @@ _08010FDE:
 _08010FE8: .4byte gUnknown_030005F4
 _08010FEC:
 	ldr r0, [r5, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	bl GetStringTextLen
 	b _08011056
 _08010FF8:
@@ -280,7 +280,7 @@ _08011000:
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
@@ -387,7 +387,7 @@ _080110DE:
 _080110E8:
 	add r4, sp, #0x10
 	ldr r0, [r5, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	b _0801113C
 _080110F2:
 	add r0, sp, #0x10
@@ -400,7 +400,7 @@ _080110FC:
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	b _0801113C
 	.align 2, 0
 _0801110C: .4byte gUnknown_030005F0

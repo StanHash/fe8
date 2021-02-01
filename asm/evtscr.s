@@ -1922,7 +1922,7 @@ sub_800E31C: @ 0x0800E31C
 _0800E348: .4byte gUnknown_030004E4
 _0800E34C:
 	adds r0, r7, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	bl sub_800A2A4
 	add r2, sp, #4
 	mov r1, sp

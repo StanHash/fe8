@@ -706,7 +706,7 @@ void DoUseRescueStaff(struct Unit* unit, void(*func)(struct Unit*))
 
     NewBottomHelpText(
         NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
-        GetStringFromIndex(0x876)); // TODO: msgid "Select which character to bring next to you."
+        GetMsg(0x876)); // TODO: msgid "Select which character to bring next to you."
 }
 
 void DoUseSpecialDance(struct Unit* unit, void(*func)(struct Unit*), int msgHelp)
@@ -717,14 +717,14 @@ void DoUseSpecialDance(struct Unit* unit, void(*func)(struct Unit*), int msgHelp
 
     NewBottomHelpText(
         NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
-        GetStringFromIndex(msgHelp));
+        GetMsg(msgHelp));
 }
 
 void WarpSelect_OnInit(struct WarpSelectProc* proc)
 {
     struct APHandle* ap;
 
-    NewBottomHelpText(proc, GetStringFromIndex(0x871)); // TODO: msgid "Select warp point."
+    NewBottomHelpText(proc, GetMsg(0x871)); // TODO: msgid "Select warp point."
 
     EnsureCameraOntoPosition(proc,
         GetUnit(gActionData.targetIndex)->xPos,
@@ -742,10 +742,10 @@ void WarpSelect_OnInit(struct WarpSelectProc* proc)
         GetUnit(gActionData.targetIndex)->xPos,
         GetUnit(gActionData.targetIndex)->yPos);
 
-    ap = AP_Create(gUnknown_085A0EA0, 0);
+    ap = StartAnim(gUnknown_085A0EA0, 0);
 
     ap->tileBase = OAM2_CHR(0) + OAM2_PAL(0);
-    AP_SwitchAnimation(ap, 0);
+    Anim_SetAnimId(ap, 0);
 
     proc->ap = ap;
     proc->prevWarpAllowed = 2; // neither TRUE nor FALSE
@@ -793,10 +793,10 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
 
     if (warpAllowed != proc->prevWarpAllowed)
     {
-        AP_SwitchAnimation(proc->ap, warpAllowed ? 0 : 1);
+        Anim_SetAnimId(proc->ap, warpAllowed ? 0 : 1);
     }
 
-    AP_Update(proc->ap,
+    Anim_Display(proc->ap,
         gUnknown_0202BCB0.playerCursorDisplay.x - gUnknown_0202BCB0.camera.x,
         gUnknown_0202BCB0.playerCursorDisplay.y - gUnknown_0202BCB0.camera.y);
 
@@ -834,7 +834,7 @@ void WarpSelect_OnCancel(struct WarpSelectProc* proc)
 void WarpSelect_OnEnd(struct WarpSelectProc* proc)
 {
     HideMoveRangeGraphics();
-    AP_Delete(proc->ap);
+    Anim_End(proc->ap);
 }
 
 static int WarpOnSelectTarget(ProcPtr proc, struct SelectTarget* target)
@@ -856,7 +856,7 @@ void DoUseWarpStaff(struct Unit* unit)
 
     NewBottomHelpText(
         NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, WarpOnSelectTarget),
-        GetStringFromIndex(0x875)); // TODO: msgid "Select character to warp."
+        GetMsg(0x875)); // TODO: msgid "Select character to warp."
 
     PlaySe(0x6A); // TODO: song ids
 }
@@ -879,7 +879,7 @@ void DoUsePutTrap(struct Unit* unit, void(*func)(struct Unit*), int msgHelp)
 
     NewBottomHelpText(
         NewTargetSelection_Specialized(&gSelectInfo_PutTrap, OnSelectPutTrap),
-        GetStringFromIndex(msgHelp));
+        GetMsg(msgHelp));
 
     PlaySe(0x6A); // TODO: song ids
 }
@@ -913,7 +913,7 @@ void DoUseRepairStaff(struct Unit* unit)
 
     NewBottomHelpText(
         NewTargetSelection(&gSelectInfo_Repair),
-        GetStringFromIndex(0x878)); // TODO: msgid "Select the character whose weapon needs repair."
+        GetMsg(0x878)); // TODO: msgid "Select the character whose weapon needs repair."
 
     PlaySe(0x6A); // TODO: song ids
 }
@@ -1000,7 +1000,7 @@ void DoUseHealStaff(struct Unit* unit, void(*func)(struct Unit*))
 
     NewBottomHelpText(
         NewTargetSelection(&gSelectInfo_Heal),
-        GetStringFromIndex(0x874)); // TODO: msgid "Select a character to restore HP to."
+        GetMsg(0x874)); // TODO: msgid "Select a character to restore HP to."
 }
 
 void DoUseRestoreStaff(struct Unit* unit, void(*func)(struct Unit*))
@@ -1011,7 +1011,7 @@ void DoUseRestoreStaff(struct Unit* unit, void(*func)(struct Unit*))
 
     NewBottomHelpText(
         NewTargetSelection(&gSelectInfo_Restore),
-        GetStringFromIndex(0x877)); // TODO: msgid "Select a character to restore to normal."
+        GetMsg(0x877)); // TODO: msgid "Select a character to restore to normal."
 }
 
 int BarrierSelectOnInit(ProcPtr proc)
@@ -1033,7 +1033,7 @@ void DoUseBarrierStaff(struct Unit* unit)
 
     NewBottomHelpText(
         NewTargetSelection(&gSelectInfo_Barrier),
-        GetStringFromIndex(0x879)); // TODO: msgid "Select a character to restore to normal."
+        GetMsg(0x879)); // TODO: msgid "Select a character to restore to normal."
 }
 
 int AttackStaffSelectOnInit(ProcPtr proc)
@@ -1055,7 +1055,7 @@ void DoUseAttackStaff(struct Unit* unit, void(*func)(struct Unit*))
 
     NewBottomHelpText(
         NewTargetSelection(&gSelectInfo_OffensiveStaff),
-        GetStringFromIndex(0x87B)); // TODO: msgid "Select a unit to use the staff on."
+        GetMsg(0x87B)); // TODO: msgid "Select a unit to use the staff on."
 }
 
 int sub_8029CDC(ProcPtr proc)
@@ -1090,7 +1090,7 @@ void sub_8029D6C(void)
 {
     NewBottomHelpText(
         NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
-        GetStringFromIndex(0x876)); // TODO: msgid "Select which character to bring next to you."
+        GetMsg(0x876)); // TODO: msgid "Select which character to bring next to you."
 }
 
 void TorchSelect_OnInit(struct WarpSelectProc* proc)
@@ -1098,7 +1098,7 @@ void TorchSelect_OnInit(struct WarpSelectProc* proc)
     gUnknown_0202BCB0.gameStateBits |= GMAP_STATE_BIT0;
 
     NewBottomHelpText(proc,
-        GetStringFromIndex(0x87C)); // TODO: msgid "Select an area to light up."
+        GetMsg(0x87C)); // TODO: msgid "Select an area to light up."
 
     if (ShouldMoveCameraPosSomething(gActiveUnit->xPos, gActiveUnit->yPos))
         EnsureCameraOntoPosition(proc, gActiveUnit->xPos, gActiveUnit->yPos);

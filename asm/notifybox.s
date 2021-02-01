@@ -271,7 +271,7 @@ sub_801FBAC: @ 0x0801FBAC
 	movs r1, #0
 	bl Text_SetColor
 	adds r0, r4, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	add r0, sp, #4
 	bl Text_DrawString
@@ -348,7 +348,7 @@ sub_801FC68: @ 0x0801FC68
 	movs r1, #0
 	bl Text_SetColor
 	adds r0, r4, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	add r0, sp, #4
 	bl Text_DrawString
@@ -390,7 +390,7 @@ _0801FCD6:
 	cmp r5, #0
 	beq _0801FCFC
 	adds r0, r5, #0
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	add r0, sp, #4
 	bl Text_DrawString

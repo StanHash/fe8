@@ -352,7 +352,7 @@ _080376DA:
 	movs r4, #1
 	negs r4, r4
 	movs r0, #0x20
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	adds r0, r6, #0
 	adds r1, r4, #0
@@ -379,7 +379,7 @@ _08037716:
 	movs r4, #1
 	negs r4, r4
 	movs r0, #0x21
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	adds r0, r6, #0
 	adds r1, r4, #0

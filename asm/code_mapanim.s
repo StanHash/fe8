@@ -3247,7 +3247,7 @@ sub_807BE1C: @ 0x0807BE1C
 	ldr r0, [r5]
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
@@ -3794,7 +3794,7 @@ _0807C2D0:
 	bl Text_InsertDrawNumberOrBlank
 	ldr r1, [sp, #0xc]
 	ldrh r0, [r1]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	ldr r0, [r5]
 	adds r0, r0, r4
@@ -3892,7 +3892,7 @@ _0807C3A8:
 	bl Text_InsertDrawNumberOrBlank
 	ldr r1, [sp, #0x10]
 	ldrh r0, [r1]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	ldr r0, [r5]
 	adds r0, r0, r4
@@ -4868,7 +4868,7 @@ MapAnim_BeginMISSAnim: @ 0x0807CB24
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4}
 	pop {r0}
@@ -4913,7 +4913,7 @@ MapAnim_BeginNODAMAGEAnim: @ 0x0807CB80
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4}
 	pop {r0}
@@ -4992,7 +4992,7 @@ WallBreakAnim_Init: @ 0x0807CC28
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4, r5}
 	pop {r0}
@@ -5069,7 +5069,7 @@ MapAnim_BeginPoisonAnim: @ 0x0807CCC0
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4}
 	pop {r0}
@@ -5147,7 +5147,7 @@ sub_807CD60: @ 0x0807CD60
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4}
 	pop {r0}
@@ -7044,7 +7044,7 @@ _0807DBFC:
 	movs r1, #2
 	str r1, [sp, #4]
 	adds r1, r4, #0
-	bl APProc_Create
+	bl StartAnimProc
 _0807DC60:
 	bl sub_8081E78
 	bl sub_8081EAC
@@ -7114,7 +7114,7 @@ _0807DCE6:
 	bls _0807DD04
 	adds r0, r5, #0
 	bl Proc_Break
-	bl APProc_DeleteAll
+	bl EndEachAnimProc
 _0807DD04:
 	add sp, #4
 	pop {r4, r5}
@@ -7252,7 +7252,7 @@ sub_807DDC8: @ 0x0807DDC8
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	adds r5, #0x48
 	movs r0, #1
 	strh r0, [r5]
@@ -7689,7 +7689,7 @@ sub_807E118: @ 0x0807E118
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4}
 	pop {r0}
@@ -7720,7 +7720,7 @@ sub_807E17C: @ 0x0807E17C
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4}
 	pop {r0}
@@ -7747,7 +7747,7 @@ sub_807E1B0: @ 0x0807E1B0
 	str r4, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	add sp, #8
 	pop {r4}
 	pop {r0}
@@ -8181,7 +8181,7 @@ sub_807E4D0: @ 0x0807E4D0
 	str r5, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	adds r6, #0x48
 	strh r5, [r6]
 	movs r0, #1
@@ -8660,7 +8660,7 @@ sub_807E8B0: @ 0x0807E8B0
 	str r4, [sp, #4]
 	adds r0, r5, #0
 	adds r3, r6, #0
-	bl APProc_Create
+	bl StartAnimProc
 	ldr r1, [r7, #0x30]
 	ldr r2, [r7, #0x34]
 	movs r0, #1
@@ -8668,7 +8668,7 @@ sub_807E8B0: @ 0x0807E8B0
 	str r4, [sp, #4]
 	adds r0, r5, #0
 	adds r3, r6, #0
-	bl APProc_Create
+	bl StartAnimProc
 _0807E920:
 	add sp, #8
 	pop {r3}
@@ -8926,7 +8926,7 @@ sub_807EA98: @ 0x0807EA98
 	ldr r0, [r7]
 	ldr r0, [r0, #4]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r2, r0, #0
 	adds r0, r4, #0
 	movs r1, #0
@@ -8962,7 +8962,7 @@ _0807EB48:
 	adds r0, r1, r0
 	ldr r0, [r0]
 	ldr r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #3
@@ -9305,7 +9305,7 @@ _0807EDE4:
 	THUMB_FUNC_START sub_807EDEC
 sub_807EDEC: @ 0x0807EDEC
 	push {lr}
-	bl APProc_DeleteAll
+	bl EndEachAnimProc
 	pop {r0}
 	bx r0
 
@@ -9421,7 +9421,7 @@ sub_807EE84: @ 0x0807EE84
 	str r6, [sp]
 	movs r4, #2
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	b _0807EFD0
 	.align 2, 0
 _0807EEDC: .4byte gUnknown_089A3F4C
@@ -9450,7 +9450,7 @@ _0807EEEC:
 	ldr r0, _0807EFE0  @ gUnknown_089A5314
 	adds r1, r4, #0
 	mov r2, r8
-	bl APProc_Create
+	bl StartAnimProc
 	subs r1, r4, #3
 	ldrh r0, [r5, #0x2c]
 	movs r3, #0xf
@@ -9468,7 +9468,7 @@ _0807EEEC:
 	str r0, [sp, #4]
 	ldr r0, _0807EFE0  @ gUnknown_089A5314
 	mov r2, r8
-	bl APProc_Create
+	bl StartAnimProc
 	cmp r7, #0
 	ble _0807EF68
 	adds r1, r4, #0
@@ -9490,7 +9490,7 @@ _0807EEEC:
 	movs r0, #2
 	str r0, [sp, #4]
 	ldr r0, _0807EFE0  @ gUnknown_089A5314
-	bl APProc_Create
+	bl StartAnimProc
 _0807EF68:
 	cmp r7, #0
 	bge _0807EF88
@@ -9618,7 +9618,7 @@ _0807F038:
 	ldr r0, _0807F0FC  @ gUnknown_089A5314
 	mov r1, sl
 	mov r2, r8
-	bl APProc_Create
+	bl StartAnimProc
 	mov r1, sl
 	subs r1, #3
 	ldrh r0, [r7, #0x2c]
@@ -9637,7 +9637,7 @@ _0807F038:
 	str r0, [sp, #4]
 	ldr r0, _0807F0FC  @ gUnknown_089A5314
 	mov r2, r8
-	bl APProc_Create
+	bl StartAnimProc
 	mov r1, sl
 	subs r1, #0x12
 	mov r2, r8
@@ -9656,7 +9656,7 @@ _0807F038:
 	str r0, [sp, #4]
 	ldr r0, _0807F0FC  @ gUnknown_089A5314
 	adds r3, r5, #0
-	bl APProc_Create
+	bl StartAnimProc
 	ldr r4, _0807F100  @ 0x000003FF
 	mov r0, r9
 	ands r0, r4
@@ -10232,7 +10232,7 @@ _0807F4F2:
 	movs r1, #2
 	str r1, [sp, #4]
 	adds r1, r4, #0
-	bl APProc_Create
+	bl StartAnimProc
 	ldr r0, _0807F538  @ gRAMChapterData
 	adds r0, #0x41
 	ldrb r0, [r0]
@@ -10260,7 +10260,7 @@ _0807F538: .4byte gRAMChapterData
 	THUMB_FUNC_START sub_807F53C
 sub_807F53C: @ 0x0807F53C
 	push {lr}
-	bl APProc_DeleteAll
+	bl EndEachAnimProc
 	pop {r0}
 	bx r0
 
@@ -14247,7 +14247,7 @@ _080812F8:
 	ldr r0, [r0]
 	ldr r0, [r0, #0x30]
 	movs r1, #5
-	bl AP_SwitchAnimation
+	bl Anim_SetAnimId
 	pop {r0}
 	bx r0
 	.align 2, 0

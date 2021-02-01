@@ -81,7 +81,7 @@ _0801F59C:
 	str r0, [sp, #4]
 	adds r0, r6, #0
 	adds r1, r4, #0
-	bl APProc_Create
+	bl StartAnimProc
 	adds r4, #8
 	movs r0, #0xba
 	adds r1, r4, #0
@@ -154,7 +154,7 @@ sub_801F630: @ 0x0801F630
 	str r1, [sp]
 	str r1, [sp, #4]
 	adds r1, r4, #0
-	bl APProc_Create
+	bl StartAnimProc
 	adds r4, #8
 	movs r0, #0xbf
 	adds r1, r4, #0
@@ -249,7 +249,7 @@ sub_801F6EC: @ 0x0801F6EC
 	movs r4, #0
 	str r4, [sp]
 	str r4, [sp, #4]
-	bl APProc_Create
+	bl StartAnimProc
 	ldr r0, [r5, #0x5c]
 	subs r0, #1
 	str r0, [r5, #0x5c]
@@ -372,7 +372,7 @@ sub_801F7D8: @ 0x0801F7D8
 	str r1, [sp, #4]
 	adds r1, r4, #0
 	movs r2, #0x50
-	bl APProc_Create
+	bl StartAnimProc
 	adds r4, #8
 	movs r0, #0xbc
 	adds r1, r4, #0
@@ -534,7 +534,7 @@ sub_801F904: @ 0x0801F904
 	movs r1, #0
 	str r1, [sp, #4]
 	adds r1, r4, #0
-	bl APProc_Create
+	bl StartAnimProc
 	adds r4, #8
 	movs r0, #0xbb
 	adds r1, r4, #0

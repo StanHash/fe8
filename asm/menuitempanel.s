@@ -397,7 +397,7 @@ _0801E7F8:
 _0801E800:
 	adds r0, r4, #0
 	bl GetItemUseDescId
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	movs r5, #0
 	ldr r7, [sp, #4]
@@ -521,7 +521,7 @@ _0801E8E6:
 	mov r9, r0
 _0801E906:
 	ldr r0, _0801EA3C  @ 0x000004F1
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r6, #0
 	movs r1, #0x1c
@@ -530,7 +530,7 @@ _0801E906:
 	adds r5, r6, #0
 	adds r5, #8
 	ldr r0, _0801EA40  @ 0x000004F3
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r5, #0
 	movs r1, #2
@@ -539,21 +539,21 @@ _0801E906:
 	adds r4, r6, #0
 	adds r4, #0x10
 	ldr r0, _0801EA44  @ 0x000004F4
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #2
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _0801EA48  @ 0x00000501
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r5, #0
 	movs r1, #0x32
 	movs r2, #0
 	bl Text_InsertDrawString
 	ldr r0, _0801EA4C  @ 0x000004F5
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r3, r0, #0
 	adds r0, r4, #0
 	movs r1, #0x32

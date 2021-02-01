@@ -62,7 +62,7 @@ sub_8022300: @ 0x08022300
 	str r1, [sp, #4]
 	adds r1, r5, #0
 	adds r2, r6, #0
-	bl APProc_Create
+	bl StartAnimProc
 	ldr r0, _08022378  @ gUnknown_0859B560
 	adds r1, r4, #0
 	bl SpawnProc

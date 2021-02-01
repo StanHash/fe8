@@ -171,7 +171,7 @@ _08022692:
 _080226A8:
 	ldr r0, [r4, #0x30]
 	ldrh r0, [r0, #4]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r5, #0
 	bl Text_DrawString
@@ -3903,7 +3903,7 @@ StealTargetSelection_OnInit: @ 0x0802421C
 	adds r4, r0, #0
 	bl NewUnitInfoWindow_WithAllLines
 	ldr r0, _08024238  @ 0x0000086D
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -3958,7 +3958,7 @@ sub_8024260: @ 0x08024260
 	bl GetUnit
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	bl GetStringTextLen
 	movs r4, #0x38
 	subs r4, r4, r0
@@ -3969,7 +3969,7 @@ sub_8024260: @ 0x08024260
 	bl GetUnit
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	ldr r5, _08024300  @ gBg0Tm+0xC6
 	movs r1, #7
 	str r1, [sp]
@@ -4499,7 +4499,7 @@ RescueSelection_OnConstruction: @ 0x0802467C
 	adds r4, r0, #0
 	bl sub_80351CC
 	ldr r0, _08024698  @ 0x00000868
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4535,7 +4535,7 @@ DropSelection_OnConstruction: @ 0x080246C0
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _080246D8  @ 0x00000869
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4559,7 +4559,7 @@ sub_80246E0: @ 0x080246E0
 	adds r4, r0, #0
 	bl sub_8035380
 	ldr r0, _080246FC  @ 0x0000086B
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4596,7 +4596,7 @@ sub_8024724: @ 0x08024724
 	adds r4, r0, #0
 	bl sub_80351CC
 	ldr r0, _08024740  @ 0x0000086A
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4633,7 +4633,7 @@ TradeTargetSelection_OnInit: @ 0x08024768
 	adds r4, r0, #0
 	bl NewUnitInfoWindow_WithAllLines
 	ldr r0, _08024784  @ 0x0000086C
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4671,7 +4671,7 @@ sub_80247B0: @ 0x080247B0
 	adds r4, r0, #0
 	bl sub_8034F9C
 	ldr r0, _080247CC  @ 0x0000086F
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4709,7 +4709,7 @@ sub_80247F4: @ 0x080247F4
 	bl sub_8034F9C
 	movs r0, #0x87
 	lsls r0, r0, #4
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4772,7 +4772,7 @@ sub_8024868: @ 0x08024868
 	adds r4, r0, #0
 	movs r0, #0x88
 	lsls r0, r0, #4
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4794,7 +4794,7 @@ sub_8024888: @ 0x08024888
 	adds r4, r0, #0
 	movs r0, #0x88
 	lsls r0, r0, #4
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText
@@ -4815,7 +4815,7 @@ sub_80248A8: @ 0x080248A8
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _080248C0  @ 0x00000881
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl NewBottomHelpText

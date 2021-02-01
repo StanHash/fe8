@@ -89,7 +89,7 @@ inline int GetItemIndex(int item) {
 inline char* GetItemName(int item) {
     char* result;
 
-    result = GetStringFromIndex(GetItemData(ITEM_INDEX(item))->nameTextId);
+    result = GetMsg(GetItemData(ITEM_INDEX(item))->nameTextId);
     result = FilterSomeTextFromStandardBuffer();
 
     return result;
@@ -594,34 +594,34 @@ char* GetItemDisplayRangeString(int item) {
     switch (GetItemEncodedRange(item)) {
 
     case 0x10: // 1-mag/2
-        return GetStringFromIndex(rangeTextIdLookup[0]);
+        return GetMsg(rangeTextIdLookup[0]);
 
     case 0x11: // 1-1
-        return GetStringFromIndex(rangeTextIdLookup[1]);
+        return GetMsg(rangeTextIdLookup[1]);
 
     case 0x12: // 1-2
-        return GetStringFromIndex(rangeTextIdLookup[2]);
+        return GetMsg(rangeTextIdLookup[2]);
 
     case 0x13: // 1-3
-        return GetStringFromIndex(rangeTextIdLookup[3]);
+        return GetMsg(rangeTextIdLookup[3]);
 
     case 0x22: // 2-2
-        return GetStringFromIndex(rangeTextIdLookup[4]);
+        return GetMsg(rangeTextIdLookup[4]);
 
     case 0x23: // 2-3
-        return GetStringFromIndex(rangeTextIdLookup[5]);
+        return GetMsg(rangeTextIdLookup[5]);
 
     case 0x3A: // 3-10
-        return GetStringFromIndex(rangeTextIdLookup[6]);
+        return GetMsg(rangeTextIdLookup[6]);
 
     case 0x3F: // 3-15
-        return GetStringFromIndex(rangeTextIdLookup[7]);
+        return GetMsg(rangeTextIdLookup[7]);
 
     case 0xFF: // total
-        return GetStringFromIndex(rangeTextIdLookup[8]);
+        return GetMsg(rangeTextIdLookup[8]);
 
     default: // bad
-        return GetStringFromIndex(rangeTextIdLookup[9]);
+        return GetMsg(rangeTextIdLookup[9]);
 
     } // switch (GetItemEncodedRange(item))
 }
@@ -663,7 +663,7 @@ char* GetItemDisplayRankString(int item) {
     else
         var = GetWeaponLevelFromExp(var);
 
-    return GetStringFromIndex(rankTextIdLookup[var]);
+    return GetMsg(rankTextIdLookup[var]);
 }
 
 int GetDisplayRankStringFromExp(int wexp) {
@@ -683,7 +683,7 @@ char* GetWeaponTypeDisplayString(int wpnType) {
         0x50D, 0x50E, 0x50F,        // Item, Bllsta, Dragon
     };
 
-    return GetStringFromIndex(wtypeTextIdLookup[wpnType]);
+    return GetMsg(wtypeTextIdLookup[wpnType]);
 }
 
 void GetWeaponExpProgressState(int wexp, int* outValue, int* outMax) {

@@ -4513,7 +4513,7 @@ _08051F78:
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r5, r0, #0
 _08051F86:
 	ldr r4, _08051FC4  @ gUnknown_02017660
@@ -4589,7 +4589,7 @@ _08052038:
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r5, r0, #0
 _08052046:
 	ldr r4, _08052084  @ gUnknown_02017678
@@ -72879,7 +72879,7 @@ _08073762:
 	add r0, r8
 	ldr r0, [r0]
 	ldr r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r6, r0, #0
 	lsls r4, r7, #3
 	ldr r0, _08073894  @ gUnknown_02017660
@@ -72951,7 +72951,7 @@ _080737B4:
 	ldr r0, [r0]
 	ldr r0, [r0, #4]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -72969,7 +72969,7 @@ _080737B4:
 	bl Text_SetColor
 	ldr r0, _080738B0  @ gMid_Lv
 	ldr r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -73066,7 +73066,7 @@ sub_8073910: @ 0x08073910
 	ldr r0, [r0]
 	ldr r0, [r0, #4]
 	ldrh r0, [r0]
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl Text_DrawString
@@ -77652,7 +77652,7 @@ DrawBattlePopup: @ 0x08075CA8
 	cmp r0, #0
 	bne _08075D34
 	movs r0, #1
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	bl GetStringTextLen
 	str r0, [sp, #4]
@@ -77660,7 +77660,7 @@ DrawBattlePopup: @ 0x08075CA8
 	adds r1, #0x10
 	mov r8, r1
 	movs r0, #2
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	bl GetStringTextLen
 	mov r2, r8
@@ -77689,7 +77689,7 @@ _08075D34:
 	adds r0, #0x10
 	mov r8, r0
 	movs r0, #3
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	bl GetStringTextLen
 	add r0, r8
@@ -77701,7 +77701,7 @@ _08075D62:
 	movs r0, #0x10
 	mov r8, r0
 	movs r0, #0xd
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	bl GetStringTextLen
 	adds r7, r0, #0
@@ -77731,7 +77731,7 @@ _08075D7A:
 	cmp r1, #0
 	bne _08075DE4
 	movs r0, #1
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	adds r0, r5, #0
 	movs r1, #0
@@ -77768,7 +77768,7 @@ _08075DE4:
 	bl Text_Skip
 	movs r0, #3
 _08075E0E:
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	adds r0, r5, #0
 	movs r1, #0
@@ -77779,7 +77779,7 @@ _08075E0E:
 	b _08075E3E
 _08075E26:
 	movs r0, #0xd
-	bl GetStringFromIndex
+	bl GetMsg
 	adds r4, r0, #0
 	adds r0, r5, #0
 	movs r1, #0

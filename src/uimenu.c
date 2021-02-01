@@ -337,7 +337,7 @@ void RedrawMenu(struct MenuProc* proc)
         if (!item->def->nameMsgId)
             Text_DrawString(&item->text, item->def->name);
         else
-            Text_DrawString(&item->text, GetStringFromIndex(item->def->nameMsgId));
+            Text_DrawString(&item->text, GetMsg(item->def->nameMsgId));
 
         PutText(
             &item->text,

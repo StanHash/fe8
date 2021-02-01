@@ -516,7 +516,7 @@ void DisplayTexts(const struct SSTextDispInfo* infos)
                 infos->tilemap,
                 infos->color,
                 infos->xoff, 0,
-                GetStringFromIndex(*infos->mid));
+                GetMsg(*infos->mid));
         }
         else
         {
@@ -530,7 +530,7 @@ void DisplayTexts(const struct SSTextDispInfo* infos)
 static
 void DisplayLeftPanel(void)
 {
-    const char* namestr = GetStringFromIndex(UNIT_NAME_ID(gStatScreen.unit));
+    const char* namestr = GetMsg(UNIT_NAME_ID(gStatScreen.unit));
     unsigned namexoff = GetStringTextCenteredPos(0x30, namestr);
 
     TmFill(gBg0Tm, 0);
@@ -551,7 +551,7 @@ void DisplayLeftPanel(void)
         &gStatScreen.text[STATSCREEN_TEXT_CLASSNAME],
         gBg0Tm + TM_OFFSET(1, 13),
         TEXT_COLOR_SYSTEM_WHITE, 0, 0,
-        GetStringFromIndex(gStatScreen.unit->pClassData->nameTextId));
+        GetMsg(gStatScreen.unit->pClassData->nameTextId));
 
     // Display Lv/E labels
     PutTwoSpecialChar(gBg0Tm + TM_OFFSET(1, 15), TEXT_COLOR_SYSTEM_GOLD, 0x24, 0x25);
@@ -627,15 +627,15 @@ void DisplayBwl(void)
 
     // Draw B label
     Text_InsertDrawString(&gStatScreen.text[STATSCREEN_TEXT_BWL],
-        0, TEXT_COLOR_SYSTEM_GOLD, GetStringFromIndex(0x51F));
+        0, TEXT_COLOR_SYSTEM_GOLD, GetMsg(0x51F));
 
     // Draw W label
     Text_InsertDrawString(&gStatScreen.text[STATSCREEN_TEXT_BWL],
-        32, TEXT_COLOR_SYSTEM_GOLD, GetStringFromIndex(0x520));
+        32, TEXT_COLOR_SYSTEM_GOLD, GetMsg(0x520));
 
     // Draw L label
     Text_InsertDrawString(&gStatScreen.text[STATSCREEN_TEXT_BWL],
-        64, TEXT_COLOR_SYSTEM_GOLD, GetStringFromIndex(0x521));
+        64, TEXT_COLOR_SYSTEM_GOLD, GetMsg(0x521));
 
     // Display labels
     PutText(&gStatScreen.text[STATSCREEN_TEXT_BWL],
@@ -688,7 +688,7 @@ void DisplayPage0(void)
             &gStatScreen.text[STATSCREEN_TEXT_POWLABEL],
             gBmFrameTmap0 + TM_OFFSET(1, 1),
             TEXT_COLOR_SYSTEM_GOLD, 0, 0,
-            GetStringFromIndex(0x4FF)); // Mag
+            GetMsg(0x4FF)); // Mag
     }
     else
     {
@@ -697,7 +697,7 @@ void DisplayPage0(void)
             &gStatScreen.text[STATSCREEN_TEXT_POWLABEL],
             gBmFrameTmap0 + TM_OFFSET(1, 1),
             TEXT_COLOR_SYSTEM_GOLD, 0, 0,
-            GetStringFromIndex(0x4FE)); // Str
+            GetMsg(0x4FE)); // Str
     }
 
     // displaying str/mag stat value
@@ -974,7 +974,7 @@ void DisplaySupportList(void)
             PutDrawText(&gStatScreen.text[STATSCREEN_TEXT_SUPPORT0 + lineNum],
                 gBmFrameTmap0 + TM_OFFSET(7, yTile),
                 textColor, 0, 0,
-                GetStringFromIndex(GetCharacterData(pid)->nameTextId));
+                GetMsg(GetCharacterData(pid)->nameTextId));
 
             rankColor = TEXT_COLOR_SYSTEM_BLUE;
 
@@ -2188,7 +2188,7 @@ void StartHelpBoxExt(const struct HelpBoxInfo* info, int unk)
         proc->info->populate(proc);
 
     SetTextFontGlyphs(1);
-    GetStringTextBox(GetStringFromIndex(proc->mid), &wContent, &hContent);
+    GetStringTextBox(GetMsg(proc->mid), &wContent, &hContent);
     SetTextFontGlyphs(0);
 
     ApplyHelpBoxContentSize(proc, wContent, hContent);
@@ -2222,7 +2222,7 @@ void StartHelpBoxExt_Unk(int x, int y, int mid)
     proc->mid = mid;
 
     SetTextFontGlyphs(1);
-    GetStringTextBox(GetStringFromIndex(proc->mid), &wContent, &hContent);
+    GetStringTextBox(GetMsg(proc->mid), &wContent, &hContent);
     SetTextFontGlyphs(0);
 
     ResetHelpBoxInitSize(proc);
@@ -2344,7 +2344,7 @@ void ApplyHelpBoxContentSize(struct HelpBoxProc* proc, int width, int height)
         if (width < 0x90)
             width = 0x90;
 
-        if (GetStringTextLen(GetStringFromIndex(proc->mid)) > 8)
+        if (GetStringTextLen(GetMsg(proc->mid)) > 8)
             height += 0x20;
         else
             height += 0x10;

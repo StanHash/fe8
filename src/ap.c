@@ -63,37 +63,37 @@ void InitAnims(void) {
     } while ((int)it >= (int)base); // casts are needed for match
 }
 
-struct APHandle* AP_Create(const void* apDefinition, u16 aObjNode) {
+struct APHandle* StartAnim(const void* apDefinition, u16 aObjNode) {
     struct APHandle* result;
 
-    if (!(result = AP_Find(NULL)))
+    if (!(result = FindAnim(NULL)))
         return NULL;
 
-    AP_Init(result, apDefinition, aObjNode);
+    InitAnim(result, apDefinition, aObjNode);
     return result;
 }
 
-void AP_Delete(struct APHandle* handle) {
+void Anim_End(struct APHandle* handle) {
     if (handle && handle->pDefinition)
         handle->pDefinition = NULL;
 }
 
-s8 AP_Update(struct APHandle* handle, int x, int y) {
+s8 Anim_Display(struct APHandle* handle, int x, int y) {
     if (!handle || !handle->pDefinition)
         return FALSE;
     
-    AP_Display(handle, x, y);
-    return AP_ExecFrame(handle);
+    PutAnim(handle, x, y);
+    return ExecAnim(handle);
 }
 
-void AP_Display(struct APHandle* handle, int x, int y) {
+void PutAnim(struct APHandle* handle, int x, int y) {
     int rotScaleMask = 0;
 
     if (!handle || !handle->pDefinition)
         return;
 
     if (handle->pCurrentRotScale) {
-        AP_QueueObjRotScale(handle);
+        PutAnimAffine(handle);
         rotScaleMask = (handle->rotScaleIndex << 9);
     }
 
@@ -105,10 +105,10 @@ void AP_Display(struct APHandle* handle, int x, int y) {
     );
 
     if (handle->pGraphics && handle->gfxNeedsUpdate)
-        AP_QueueObjGraphics(handle);
+        SyncAnimImg(handle);
 }
 
-s8 AP_ExecFrame(struct APHandle* handle) {
+s8 ExecAnim(struct APHandle* handle) {
     int tmp; // needed to match
 
     if (!handle || !handle->pDefinition)
@@ -131,10 +131,10 @@ s8 AP_ExecFrame(struct APHandle* handle) {
         switch (handle->pAnimDataCurrent[1]) {
         case (u16)(-1): // loop back to start
             handle->pAnimDataCurrent = handle->pAnimDataStart;
-            return AP_ExecFrame(handle);
+            return ExecAnim(handle);
         
         case 1: // delete handle
-            AP_Delete(handle);
+            Anim_End(handle);
         case 0: // end animation
             return FALSE;
         }
@@ -147,7 +147,7 @@ s8 AP_ExecFrame(struct APHandle* handle) {
     // Check if next frame wasn't reached yet
     if (handle->subframeTimer < 0x100) {
         handle->frameTimer = 1;
-        return AP_ExecFrame(handle);
+        return ExecAnim(handle);
     }
 
     // Setting clock values depending on subframe clock
@@ -170,7 +170,7 @@ s8 AP_ExecFrame(struct APHandle* handle) {
     return TRUE;
 }
 
-void AP_QueueObjRotScale(struct APHandle* handle) {
+void PutAnimAffine(struct APHandle* handle) {
     int i, count;
     const u16* it;
 
@@ -195,7 +195,7 @@ void AP_QueueObjRotScale(struct APHandle* handle) {
     }
 }
 
-void AP_SwitchAnimation(struct APHandle* handle, int index) {
+void Anim_SetAnimId(struct APHandle* handle, int index) {
     const u16* animDataList;
 
     if (!handle || !handle->pDefinition)
@@ -208,18 +208,18 @@ void AP_SwitchAnimation(struct APHandle* handle, int index) {
     handle->pAnimDataStart   = animDataList + animDataList[index]/2;
     handle->pAnimDataCurrent = handle->pAnimDataStart;
 
-    AP_ExecDummyFrame(handle);
+    AnimRunFirstFrame(handle);
 }
 
-void AP_SetDefinition(struct APHandle* handle, const u16* definition) {
+void Anim_SetInfo(struct APHandle* handle, const u16* definition) {
     if (!handle || !handle->pDefinition)
         return;
     
-    AP_LoadDefinition(handle, definition);
-    AP_ExecDummyFrame(handle);
+    SetAnimInfo(handle, definition);
+    AnimRunFirstFrame(handle);
 }
 
-void AP_QueueObjGraphics(struct APHandle* handle) {
+void SyncAnimImg(struct APHandle* handle) {
     const u16* itGfxData;
     const u16* itObjData;
     u32 tileOffset;
@@ -266,7 +266,7 @@ void AP_QueueObjGraphics(struct APHandle* handle) {
     handle->gfxNeedsUpdate = FALSE;
 }
 
-void AP_LoadDefinition(struct APHandle* handle, const u16* definition) {
+void SetAnimInfo(struct APHandle* handle, const u16* definition) {
     handle->pDefinition = definition;
 
     // frame data starts at offset in short 0
@@ -285,7 +285,7 @@ void AP_LoadDefinition(struct APHandle* handle, const u16* definition) {
     handle->pAnimDataCurrent = handle->pAnimDataStart;
 }
 
-void AP_ExecDummyFrame(struct APHandle* handle) {
+void AnimRunFirstFrame(struct APHandle* handle) {
     int tmp;
 
     // needed to match (and apparently even a thing in the source cf FE6:08013050)
@@ -297,13 +297,13 @@ void AP_ExecDummyFrame(struct APHandle* handle) {
     handle->frameTimer    = 0;
     handle->frameInterval = 0x100;
 
-    AP_ExecFrame(handle);
+    ExecAnim(handle);
 
     handle->frameInterval = tmp;
 }
 
-void AP_Init(struct APHandle* handle, const u16* definition, u16 objLayer) {
-    AP_LoadDefinition(handle, definition);
+void InitAnim(struct APHandle* handle, const u16* definition, u16 objLayer) {
+    SetAnimInfo(handle, definition);
 
     handle->pGraphics  = NULL;
     handle->tileBase   = 0;
@@ -320,10 +320,10 @@ void AP_Init(struct APHandle* handle, const u16* definition, u16 objLayer) {
 
     handle->subframeTimer = 0;
 
-    AP_ExecFrame(handle);
+    ExecAnim(handle);
 }
 
-struct APHandle* AP_Find(const u16* definition) {
+struct APHandle* FindAnim(const u16* definition) {
     int i = 0;
     struct APHandle* result = sAPArray;
 
@@ -337,13 +337,13 @@ struct APHandle* AP_Find(const u16* definition) {
     return NULL;
 }
 
-struct APProc* APProc_Create(const void* apDefinition, int xPos, int yPos, int tileBase, int anim, u16 aObjNode) {
+struct APProc* StartAnimProc(const void* apDefinition, int xPos, int yPos, int tileBase, int anim, u16 aObjNode) {
     struct APHandle* handle;
     struct APProc* proc;
 
     // Setting up handle
-    handle = AP_Create(apDefinition, aObjNode);
-    AP_SwitchAnimation(handle, anim);
+    handle = StartAnim(apDefinition, aObjNode);
+    Anim_SetAnimId(handle, anim);
     handle->tileBase = tileBase;
 
     // Making Proc
@@ -359,17 +359,17 @@ struct APProc* APProc_Create(const void* apDefinition, int xPos, int yPos, int t
 
 void APProc_OnUpdate(struct APProc* proc) {
     // Update AP, and end proc if the AP was freed (aka the animation ended)
-    if (!AP_Update(proc->pHandle, proc->xPosition, proc->yPosition))
+    if (!Anim_Display(proc->pHandle, proc->xPosition, proc->yPosition))
         if (!proc->pHandle || !proc->pHandle->pDefinition)
             Proc_End(proc);
 }
 
 void APProc_OnEnd(struct APProc* proc) {
     // Free AP when proc ends
-    AP_Delete(proc->pHandle);
+    Anim_End(proc->pHandle);
 }
 
-void APProc_SetParameters(struct APProc* proc, int x, int y, int tileBase) {
+void SetAnimProcParams(struct APProc* proc, int x, int y, int tileBase) {
     // Set position
     proc->xPosition = x;
     proc->yPosition = y;
@@ -379,16 +379,16 @@ void APProc_SetParameters(struct APProc* proc, int x, int y, int tileBase) {
         proc->pHandle->tileBase = tileBase;
 }
 
-void APProc_Delete(struct APProc* proc) {
+void EndAnimProc(struct APProc* proc) {
     // delet
     Proc_End(proc);
 }
 
-void APProc_DeleteAll(void) {
+void EndEachAnimProc(void) {
     // delet all
     EndEachProc(sProcScr_ApProc);
 }
 
-int APProc_Exists(void) {
+int AnimProcExists(void) {
     return FindProc(sProcScr_ApProc) ? TRUE : FALSE;
 }
