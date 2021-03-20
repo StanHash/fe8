@@ -22,7 +22,7 @@ sub_801DF94: @ 0x0801DF94
 	bhi _0801DFC8
 	ldr r0, _0801DFC4  @ gSendToConvoyMenuDef
 	adds r1, r4, #0
-	bl StartMenu
+	bl StartMenuChild
 	b _0801DFD0
 	.align 2, 0
 _0801DFC0: .4byte gUnknown_02001F70
@@ -30,7 +30,7 @@ _0801DFC4: .4byte gSendToConvoyMenuDef
 _0801DFC8:
 	ldr r0, _0801DFD8  @ gConvoyMenuDef
 	adds r1, r4, #0
-	bl StartMenu
+	bl StartMenuChild
 _0801DFD0:
 	movs r0, #0
 	pop {r4, r5}
@@ -45,16 +45,16 @@ _0801DFD8: .4byte gConvoyMenuDef
 sub_801DFDC: @ 0x0801DFDC
 	push {r4, lr}
 	adds r4, r0, #0
-	bl DeleteEach6CBB
-	bl sub_801EA54
-	ldr r0, _0801DFF4  @ gUnknown_0202BCB0
+	bl EndBottomHelpText
+	bl EndMenuItemPanel
+	ldr r0, _0801DFF4  @ gBmSt
 	ldrh r0, [r0, #0x2e]
 	cmp r0, #0
 	beq _0801DFF8
 	movs r0, #0
 	b _0801E002
 	.align 2, 0
-_0801DFF4: .4byte gUnknown_0202BCB0
+_0801DFF4: .4byte gBmSt
 _0801DFF8:
 	adds r0, r4, #0
 	movs r1, #0x63
@@ -82,20 +82,20 @@ sub_801E008: @ 0x0801E008
 	THUMB_FUNC_START sub_801E018
 sub_801E018: @ 0x0801E018
 	push {lr}
-	ldr r0, _0801E028  @ gUnknown_0202BCB0
+	ldr r0, _0801E028  @ gBmSt
 	ldrh r0, [r0, #0x2e]
 	bl AddItemToConvoy
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801E028: .4byte gUnknown_0202BCB0
+_0801E028: .4byte gBmSt
 
 	THUMB_FUNC_END sub_801E018
 
 	THUMB_FUNC_START sub_801E02C
 sub_801E02C: @ 0x0801E02C
 	push {lr}
-	ldr r0, _0801E040  @ gActionData
+	ldr r0, _0801E040  @ gAction
 	ldrb r0, [r0, #0xc]
 	bl GetUnit
 	ldr r1, _0801E044  @ gActiveUnit
@@ -103,7 +103,7 @@ sub_801E02C: @ 0x0801E02C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801E040: .4byte gActionData
+_0801E040: .4byte gAction
 _0801E044: .4byte gActiveUnit
 
 	THUMB_FUNC_END sub_801E02C
@@ -120,24 +120,24 @@ sub_801E048: @ 0x0801E048
 	ldrb r0, [r0]
 	cmp r0, #0x63
 	bhi _0801E074
-	ldr r0, _0801E070  @ gActionData
+	ldr r0, _0801E070  @ gAction
 	ldrh r1, [r0, #6]
 	adds r0, r4, #0
 	bl sub_801FD80
 	b _0801E08E
 	.align 2, 0
 _0801E06C: .4byte gUnknown_02001F70
-_0801E070: .4byte gActionData
+_0801E070: .4byte gAction
 _0801E074:
-	ldr r0, _0801E080  @ gActionData
+	ldr r0, _0801E080  @ gAction
 	ldrh r1, [r0, #6]
 	adds r0, r4, #0
 	bl sub_801FD70
 	b _0801E08E
 	.align 2, 0
-_0801E080: .4byte gActionData
+_0801E080: .4byte gAction
 _0801E084:
-	ldr r0, _0801E094  @ gActionData
+	ldr r0, _0801E094  @ gAction
 	ldrh r1, [r0, #6]
 	adds r0, r4, #0
 	bl sub_801FD70
@@ -146,7 +146,7 @@ _0801E08E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801E094: .4byte gActionData
+_0801E094: .4byte gAction
 
 	THUMB_FUNC_END sub_801E048
 
@@ -163,10 +163,10 @@ HandleNewItemGetFromDrop: @ 0x0801E098
 	bne _0801E128
 	ldr r0, _0801E100  @ gActiveUnit
 	str r4, [r0]
-	ldr r0, _0801E104  @ gUnknown_0202BCB0
+	ldr r0, _0801E104  @ gBmSt
 	strh r5, [r0, #0x2c]
 	adds r0, r4, #0
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -176,12 +176,12 @@ HandleNewItemGetFromDrop: @ 0x0801E098
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 	adds r0, r6, #0
 	adds r1, r4, #0
 	movs r2, #0xf
 	movs r3, #0xa
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	bl HasConvoyAccess
 	lsls r0, r0, #0x18
 	cmp r0, #0
@@ -193,21 +193,21 @@ HandleNewItemGetFromDrop: @ 0x0801E098
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r6, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	b _0801E11A
 	.align 2, 0
 _0801E100: .4byte gActiveUnit
-_0801E104: .4byte gUnknown_0202BCB0
+_0801E104: .4byte gBmSt
 _0801E108: .4byte 0x00000867
 _0801E10C:
 	ldr r0, _0801E130  @ 0x00000866
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r6, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 _0801E11A:
 	movs r0, #2
-	bl sub_8008A0C
+	bl SetDialoguePromptResult
 	ldr r0, _0801E134  @ gUnknown_0859AE38
 	adds r1, r6, #0
 	bl SpawnProcLocking
@@ -235,7 +235,7 @@ SendToConvoyMenu_Draw: @ 0x0801E138
 MenuCommand_DrawExtraItem: @ 0x0801E144
 	push {r4, r5, r6, lr}
 	adds r4, r1, #0
-	ldr r0, _0801E180  @ gUnknown_0202BCB0
+	ldr r0, _0801E180  @ gBmSt
 	ldrh r6, [r0, #0x2c]
 	adds r5, r4, #0
 	adds r5, #0x34
@@ -260,7 +260,7 @@ MenuCommand_DrawExtraItem: @ 0x0801E144
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801E180: .4byte gUnknown_0202BCB0
+_0801E180: .4byte gBmSt
 _0801E184: .4byte gBg0Tm
 
 	THUMB_FUNC_END MenuCommand_DrawExtraItem
@@ -279,7 +279,7 @@ SendToConvoyMenu_NormalEffect: @ 0x0801E188
 	adds r1, r1, r0
 	ldrh r0, [r1]
 	bl AddItemToConvoy
-	ldr r3, _0801E1D4  @ gActionData
+	ldr r3, _0801E1D4  @ gAction
 	ldr r0, [r5]
 	movs r2, #0
 	ldrsb r2, [r4, r2]
@@ -293,7 +293,7 @@ SendToConvoyMenu_NormalEffect: @ 0x0801E188
 	ldrsb r1, [r4, r1]
 	bl UnitRemoveItem
 	ldr r0, [r5]
-	ldr r1, _0801E1D8  @ gUnknown_0202BCB0
+	ldr r1, _0801E1D8  @ gBmSt
 	ldrh r1, [r1, #0x2c]
 	bl UnitAddItem
 	movs r0, #0x37
@@ -302,18 +302,18 @@ SendToConvoyMenu_NormalEffect: @ 0x0801E188
 	bx r1
 	.align 2, 0
 _0801E1D0: .4byte gActiveUnit
-_0801E1D4: .4byte gActionData
-_0801E1D8: .4byte gUnknown_0202BCB0
+_0801E1D4: .4byte gAction
+_0801E1D8: .4byte gBmSt
 
 	THUMB_FUNC_END SendToConvoyMenu_NormalEffect
 
 	THUMB_FUNC_START MenuCommand_SendItemToConvoy
 MenuCommand_SendItemToConvoy: @ 0x0801E1DC
 	push {r4, lr}
-	ldr r4, _0801E1F4  @ gUnknown_0202BCB0
+	ldr r4, _0801E1F4  @ gBmSt
 	ldrh r0, [r4, #0x2c]
 	bl AddItemToConvoy
-	ldr r1, _0801E1F8  @ gActionData
+	ldr r1, _0801E1F8  @ gAction
 	ldrh r0, [r4, #0x2c]
 	strh r0, [r1, #6]
 	movs r0, #0x37
@@ -321,8 +321,8 @@ MenuCommand_SendItemToConvoy: @ 0x0801E1DC
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801E1F4: .4byte gUnknown_0202BCB0
-_0801E1F8: .4byte gActionData
+_0801E1F4: .4byte gBmSt
+_0801E1F8: .4byte gAction
 
 	THUMB_FUNC_END MenuCommand_SendItemToConvoy
 
@@ -331,7 +331,7 @@ SendToConvoyMenu_Selected: @ 0x0801E1FC
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
-	ldr r2, _0801E244  @ gActionData
+	ldr r2, _0801E244  @ gAction
 	ldr r0, _0801E248  @ gActiveUnit
 	ldr r1, [r0]
 	adds r4, #0x3c
@@ -348,7 +348,7 @@ SendToConvoyMenu_Selected: @ 0x0801E1FC
 	movs r1, #1
 	negs r1, r1
 	movs r0, #0
-	bl LoadDialogueBoxGfx
+	bl LoadHelpBoxGfx
 	movs r1, #0
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
@@ -362,7 +362,7 @@ SendToConvoyMenu_Selected: @ 0x0801E1FC
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801E244: .4byte gActionData
+_0801E244: .4byte gAction
 _0801E248: .4byte gActiveUnit
 _0801E24C: .4byte 0x0000084B
 
@@ -373,8 +373,8 @@ SendToConvoyMenu_Selected2: @ 0x0801E250
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
-	ldr r1, _0801E288  @ gActionData
-	ldr r0, _0801E28C  @ gUnknown_0202BCB0
+	ldr r1, _0801E288  @ gAction
+	ldr r0, _0801E28C  @ gBmSt
 	ldrh r0, [r0, #0x2c]
 	strh r0, [r1, #6]
 	movs r0, #5
@@ -382,7 +382,7 @@ SendToConvoyMenu_Selected2: @ 0x0801E250
 	movs r1, #1
 	negs r1, r1
 	movs r0, #0
-	bl LoadDialogueBoxGfx
+	bl LoadHelpBoxGfx
 	adds r4, #0x3c
 	movs r1, #0
 	ldrsb r1, [r4, r1]
@@ -397,8 +397,8 @@ SendToConvoyMenu_Selected2: @ 0x0801E250
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0801E288: .4byte gActionData
-_0801E28C: .4byte gUnknown_0202BCB0
+_0801E288: .4byte gAction
+_0801E28C: .4byte gBmSt
 _0801E290: .4byte 0x0000084B
 
 	THUMB_FUNC_END SendToConvoyMenu_Selected2
@@ -406,7 +406,7 @@ _0801E290: .4byte 0x0000084B
 	THUMB_FUNC_START SendToConvoyMenu_Idle
 SendToConvoyMenu_Idle: @ 0x0801E294
 	push {r4, lr}
-	bl sub_8008A00
+	bl GetDialoguePromptResult
 	cmp r0, #1
 	beq _0801E2A2
 	movs r0, #0
@@ -416,7 +416,7 @@ _0801E2A2:
 	ldr r1, [r0]
 	movs r0, #0
 	strh r0, [r1, #8]
-	ldr r1, _0801E2D4  @ gActionData
+	ldr r1, _0801E2D4  @ gAction
 	ldrh r0, [r1, #8]
 	cmp r0, #4
 	bhi _0801E2C6
@@ -425,7 +425,7 @@ _0801E2A2:
 	ldrh r1, [r1, #8]
 	bl UnitRemoveItem
 	ldr r0, [r4]
-	ldr r1, _0801E2DC  @ gUnknown_0202BCB0
+	ldr r1, _0801E2DC  @ gBmSt
 	ldrh r1, [r1, #0x2c]
 	bl UnitAddItem
 _0801E2C6:
@@ -436,9 +436,9 @@ _0801E2C8:
 	bx r1
 	.align 2, 0
 _0801E2D0: .4byte gKeySt
-_0801E2D4: .4byte gActionData
+_0801E2D4: .4byte gAction
 _0801E2D8: .4byte gActiveUnit
-_0801E2DC: .4byte gUnknown_0202BCB0
+_0801E2DC: .4byte gBmSt
 
 	THUMB_FUNC_END SendToConvoyMenu_Idle
 

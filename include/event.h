@@ -16,7 +16,7 @@ struct EventEngineProc {
     /* 40 */ s8 overwrittenTextSpeed;
     /* 41 */ u8 execType;
     /* 42 */ u8 activeTextType;
-    /* 43 */ u8 chapterIndex;
+    /* 43 */ u8 chapter;
 
     /* 44 */ u16 mapSpritePalIdOverride;
 
@@ -93,7 +93,7 @@ void CallGameOverEvent(void);
 // ??? sub_800D524(???);
 // ??? SlotQueuePush(???);
 // ??? SlotQueuePop(???);
-// ??? SetEventSlotCounter(???);
-// ??? GetEventSlotCounter(???);
+// ??? SetEventCounter(???);
+// ??? GetEventCounter(???);
 
 #endif // GUARD_EVENT_H

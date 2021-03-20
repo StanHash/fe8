@@ -143,7 +143,7 @@ sub_80212C0: @ 0x080212C0
 	push {r4, r5, lr}
 	sub sp, #4
 	adds r5, r0, #0
-	bl BMapDispSuspend
+	bl LockGameGraphicsLogic
 	movs r0, #0x3e
 	movs r1, #0
 	bl StartBgm

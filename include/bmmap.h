@@ -22,25 +22,25 @@ void UpdateBmMapDisplay(void);
 void RefreshEntityBmMaps(void);
 char* GetTerrainName(int terrainId);
 int GetTerrainHealAmount(int terrainId);
-int GetTerrainUnk(int terrainId);
+int GetTerrainHealsStatus(int terrainId);
 void sub_801A278(void);
 void RevertMapChange(int id);
 
-extern struct Vec2 gBmMapSize;
-extern u8** gBmMapUnit;
-extern u8** gBmMapTerrain;
-extern u8** gBmMapMovement;
-extern u8** gBmMapRange;
-extern u8** gBmMapFog;
-extern u8** gBmMapHidden;
-extern u8** gBmMapUnk;
+extern struct Vec2 gMapSize;
+extern u8** gMapUnit;
+extern u8** gMapTerrain;
+extern u8** gMapMovement;
+extern u8** gMapRange;
+extern u8** gMapFog;
+extern u8** gMapHidden;
+extern u8** gMapMovement2;
 
 extern u8*   gTilesetTerrainLookup;
 extern u16** gBmMapBaseTiles;
 
 enum
 {
-    // Magic values for gBmMapMovement
+    // Magic values for gMapMovement
 
     MAP_MOVEMENT_MAX = 120,
     MAP_MOVEMENT_EXTENDED = 124,
@@ -48,7 +48,7 @@ enum
 
 enum
 {
-    // For use with gBmMapHidden
+    // For use with gMapHidden
 
     HIDDEN_BIT_UNIT = (1 << 0),
     HIDDEN_BIT_TRAP = (1 << 1),

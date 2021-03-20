@@ -8,9 +8,9 @@
 PrepareArenaStruct: @ 0x08031794
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r5, _080317F8  @ gUnknown_0203A8F0
+	ldr r5, _080317F8  @ gArenaSt
 	str r4, [r5]
-	ldr r0, _080317FC  @ gUnknown_0203A910
+	ldr r0, _080317FC  @ gArenaOpponent
 	str r0, [r5, #4]
 	ldr r2, _08031800  @ gUnknown_03003060
 	ldr r0, [r4, #0xc]
@@ -28,7 +28,7 @@ PrepareArenaStruct: @ 0x08031794
 	bl sub_803190C
 	strb r0, [r5, #0x10]
 	ldrb r0, [r5, #0x10]
-	bl GetClassData
+	bl GetJInfo
 	bl GetClassBestWRankType
 	strb r0, [r5, #0xe]
 	ldrb r0, [r5, #0xd]
@@ -49,8 +49,8 @@ PrepareArenaStruct: @ 0x08031794
 	bl GetNearLevel
 	b _0803180C
 	.align 2, 0
-_080317F8: .4byte gUnknown_0203A8F0
-_080317FC: .4byte gUnknown_0203A910
+_080317F8: .4byte gArenaSt
+_080317FC: .4byte gArenaOpponent
 _08031800: .4byte gUnknown_03003060
 _08031804:
 	ldrb r0, [r5, #0x11]
@@ -84,7 +84,7 @@ _08031830:
 	cmp r0, #0
 	bne _0803182E
 _0803183E:
-	ldr r4, _08031870  @ gUnknown_0203A8F0
+	ldr r4, _08031870  @ gArenaSt
 	ldr r0, [r4]
 	movs r1, #0x14
 	ldrsb r1, [r4, r1]
@@ -105,7 +105,7 @@ _0803183E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08031870: .4byte gUnknown_0203A8F0
+_08031870: .4byte gArenaSt
 
 	THUMB_FUNC_END PrepareArenaStruct
 
@@ -244,7 +244,7 @@ _0803195C:
 _0803195E:
 	mov r8, r0
 _08031960:
-	ldr r0, _080319AC  @ gUnknown_0203A8F0
+	ldr r0, _080319AC  @ gArenaSt
 	ldr r0, [r0]
 	ldr r1, [r0]
 	ldr r0, [r0, #4]
@@ -261,7 +261,7 @@ _08031960:
 	mov r4, r8
 _0803197E:
 	ldrb r0, [r4]
-	bl GetClassData
+	bl GetJInfo
 	ldr r0, [r0, #0x28]
 	movs r1, #0x80
 	lsls r1, r1, #1
@@ -283,14 +283,14 @@ _0803199A:
 	b _080319B4
 	.align 2, 0
 _080319A8: .4byte gUnknown_0859DA22
-_080319AC: .4byte gUnknown_0203A8F0
+_080319AC: .4byte gArenaSt
 _080319B0:
 	adds r6, #1
 _080319B2:
 	adds r4, #1
 _080319B4:
 	ldrb r0, [r4]
-	bl GetClassData
+	bl GetJInfo
 	ldr r0, [r0, #0x28]
 	movs r1, #0x80
 	lsls r1, r1, #1
@@ -413,12 +413,12 @@ _08031A7C:
 LoadArenaOpponentStruct: @ 0x08031A84
 	push {r4, r5, r6, lr}
 	sub sp, #0x14
-	ldr r6, _08031B00  @ gUnknown_0203A910
+	ldr r6, _08031B00  @ gArenaOpponent
 	mov r1, sp
 	movs r3, #0
 	movs r0, #0xfd
 	strb r0, [r1]
-	ldr r4, _08031B04  @ gUnknown_0203A8F0
+	ldr r4, _08031B04  @ gArenaSt
 	ldrb r0, [r4, #0x10]
 	strb r0, [r1, #1]
 	ldrb r0, [r1, #3]
@@ -453,13 +453,13 @@ LoadArenaOpponentStruct: @ 0x08031A84
 	strb r0, [r6, #0xb]
 	adds r0, r6, #0
 	mov r1, sp
-	bl UnitInitFromDefinition
+	bl UnitInitFromInfo
 	ldr r1, [r6]
 	adds r0, r6, #0
-	bl UnitLoadStatsFromChracter
+	bl UnitInitStats
 	movs r4, #8
 	ldrsb r4, [r6, r4]
-	ldr r0, _08031B08  @ gRAMChapterData
+	ldr r0, _08031B08  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #0x40
 	ands r0, r1
@@ -470,9 +470,9 @@ LoadArenaOpponentStruct: @ 0x08031A84
 	lsls r0, r0, #3
 	b _08031B12
 	.align 2, 0
-_08031B00: .4byte gUnknown_0203A910
-_08031B04: .4byte gUnknown_0203A8F0
-_08031B08: .4byte gRAMChapterData
+_08031B00: .4byte gArenaOpponent
+_08031B04: .4byte gArenaSt
+_08031B08: .4byte gPlaySt
 _08031B0C:
 	lsls r0, r4, #1
 	adds r0, r0, r4
@@ -513,7 +513,7 @@ _08031B46:
 	strb r0, [r6, #8]
 _08031B52:
 	adds r0, r6, #0
-	bl UnitCheckStatCaps
+	bl UnitCheckStatOverflow
 	adds r0, r6, #0
 	bl GetUnitMaxHp
 	adds r1, r0, #0
@@ -534,7 +534,7 @@ LoadArenaWeapons: @ 0x08031B70
 	mov r0, sp
 	movs r2, #8
 	bl memcpy
-	ldr r4, _08031BBC  @ gUnknown_0203A8F0
+	ldr r4, _08031BBC  @ gArenaSt
 	ldrb r0, [r4, #0xd]
 	add r0, sp
 	ldrb r0, [r0]
@@ -565,7 +565,7 @@ _08031BB0:
 	bx r0
 	.align 2, 0
 _08031BB8: .4byte gUnknown_080D7F5C
-_08031BBC: .4byte gUnknown_0203A8F0
+_08031BBC: .4byte gArenaSt
 
 	THUMB_FUNC_END LoadArenaWeapons
 
@@ -619,10 +619,10 @@ _08031C08:
 PrepareBalancedArenaFight: @ 0x08031C10
 	push {r4, r5, r6, lr}
 	movs r6, #0
-	ldr r4, _08031C38  @ gUnknown_0203A8F0
+	ldr r4, _08031C38  @ gArenaSt
 	ldr r0, [r4]
 	bl GetUnitPower
-	ldr r5, _08031C3C  @ gBattleActor
+	ldr r5, _08031C3C  @ gBattleUnitA
 	adds r0, #5
 	adds r1, r5, #0
 	adds r1, #0x5a
@@ -635,8 +635,8 @@ PrepareBalancedArenaFight: @ 0x08031C10
 	bl GetUnitResistance
 	b _08031C46
 	.align 2, 0
-_08031C38: .4byte gUnknown_0203A8F0
-_08031C3C: .4byte gBattleActor
+_08031C38: .4byte gArenaSt
+_08031C3C: .4byte gBattleUnitA
 _08031C40:
 	ldr r0, [r4]
 	bl GetUnitDefense
@@ -644,10 +644,10 @@ _08031C46:
 	adds r1, r5, #0
 	adds r1, #0x5c
 	strh r0, [r1]
-	ldr r4, _08031C70  @ gUnknown_0203A8F0
+	ldr r4, _08031C70  @ gArenaSt
 	ldr r0, [r4, #4]
 	bl GetUnitPower
-	ldr r5, _08031C74  @ gBattleTarget
+	ldr r5, _08031C74  @ gBattleUnitB
 	adds r0, #5
 	adds r1, r5, #0
 	adds r1, #0x5a
@@ -660,8 +660,8 @@ _08031C46:
 	bl GetUnitResistance
 	b _08031C7E
 	.align 2, 0
-_08031C70: .4byte gUnknown_0203A8F0
-_08031C74: .4byte gBattleTarget
+_08031C70: .4byte gArenaSt
+_08031C74: .4byte gBattleUnitB
 _08031C78:
 	ldr r0, [r4, #4]
 	bl GetUnitDefense
@@ -669,16 +669,16 @@ _08031C7E:
 	adds r1, r5, #0
 	adds r1, #0x5c
 	strh r0, [r1]
-	ldr r0, _08031CCC  @ gBattleActor
+	ldr r0, _08031CCC  @ gBattleUnitA
 	adds r0, #0x5a
 	movs r1, #0
 	ldrsh r4, [r0, r1]
-	ldr r0, _08031CD0  @ gBattleTarget
+	ldr r0, _08031CD0  @ gBattleUnitB
 	adds r0, #0x5c
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r4, r0
-	ldr r5, _08031CD4  @ gUnknown_0203A8F0
+	ldr r5, _08031CD4  @ gArenaSt
 	ldr r0, [r5, #4]
 	bl GetUnitMaxHp
 	movs r1, #6
@@ -703,9 +703,9 @@ _08031C7E:
 	strb r0, [r1, #0x18]
 	b _08031CEC
 	.align 2, 0
-_08031CCC: .4byte gBattleActor
-_08031CD0: .4byte gBattleTarget
-_08031CD4: .4byte gUnknown_0203A8F0
+_08031CCC: .4byte gBattleUnitA
+_08031CD0: .4byte gBattleUnitB
+_08031CD4: .4byte gArenaSt
 _08031CD8:
 	ldr r0, [r5, #4]
 	ldrb r1, [r0, #0x17]
@@ -718,7 +718,7 @@ _08031CD8:
 	bge _08031CEC
 	strb r2, [r1, #0x17]
 _08031CEC:
-	ldr r2, _08031D4C  @ gUnknown_0203A8F0
+	ldr r2, _08031D4C  @ gArenaSt
 	ldr r1, [r2, #4]
 	ldrb r0, [r1, #0x16]
 	adds r0, #1
@@ -728,16 +728,16 @@ _08031CEC:
 	adds r0, #1
 	strb r0, [r1, #0x15]
 _08031CFE:
-	ldr r0, _08031D50  @ gBattleTarget
+	ldr r0, _08031D50  @ gBattleUnitB
 	adds r0, #0x5a
 	movs r1, #0
 	ldrsh r4, [r0, r1]
-	ldr r0, _08031D54  @ gBattleActor
+	ldr r0, _08031D54  @ gBattleUnitA
 	adds r0, #0x5c
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r4, r0
-	ldr r5, _08031D4C  @ gUnknown_0203A8F0
+	ldr r5, _08031D4C  @ gArenaSt
 	ldr r0, [r5]
 	bl GetUnitMaxHp
 	movs r1, #6
@@ -766,16 +766,16 @@ _08031D44:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08031D4C: .4byte gUnknown_0203A8F0
-_08031D50: .4byte gBattleTarget
-_08031D54: .4byte gBattleActor
+_08031D4C: .4byte gArenaSt
+_08031D50: .4byte gBattleUnitB
+_08031D54: .4byte gBattleUnitA
 
 	THUMB_FUNC_END PrepareBalancedArenaFight
 
 	THUMB_FUNC_START AdjustArenaOpponentPower
 AdjustArenaOpponentPower: @ 0x08031D58
 	push {r4, r5, r6, lr}
-	ldr r4, _08031DA0  @ gUnknown_0203A8F0
+	ldr r4, _08031DA0  @ gArenaSt
 	ldr r0, [r4]
 	movs r1, #0x14
 	ldrsb r1, [r4, r1]
@@ -793,7 +793,7 @@ AdjustArenaOpponentPower: @ 0x08031D58
 	bhi _08031D80
 	ldrh r1, [r4, #0x18]
 _08031D80:
-	ldr r6, _08031DA0  @ gUnknown_0203A8F0
+	ldr r6, _08031DA0  @ gArenaSt
 	ldrh r4, [r6, #0x16]
 	ldrh r5, [r6, #0x18]
 	subs r2, r4, r5
@@ -809,7 +809,7 @@ _08031D8E:
 	movs r0, #0
 	b _08031E9A
 	.align 2, 0
-_08031DA0: .4byte gUnknown_0203A8F0
+_08031DA0: .4byte gArenaSt
 _08031DA4:
 	cmp r4, r5
 	bcs _08031E20
@@ -959,7 +959,7 @@ _08031E9A:
 	THUMB_FUNC_START sub_8031EA0
 sub_8031EA0: @ 0x08031EA0
 	push {lr}
-	ldr r2, _08031EC8  @ gUnknown_0203A8F0
+	ldr r2, _08031EC8  @ gArenaSt
 	ldrh r1, [r2, #0x18]
 	ldrh r0, [r2, #0x16]
 	subs r0, r1, r0
@@ -980,49 +980,49 @@ _08031EC2:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08031EC8: .4byte gUnknown_0203A8F0
+_08031EC8: .4byte gArenaSt
 
 	THUMB_FUNC_END sub_8031EA0
 
 	THUMB_FUNC_START sub_8031ECC
 sub_8031ECC: @ 0x08031ECC
-	ldr r0, _08031ED4  @ gUnknown_0203A8F0
+	ldr r0, _08031ED4  @ gArenaSt
 	movs r1, #8
 	ldrsh r0, [r0, r1]
 	bx lr
 	.align 2, 0
-_08031ED4: .4byte gUnknown_0203A8F0
+_08031ED4: .4byte gArenaSt
 
 	THUMB_FUNC_END sub_8031ECC
 
 	THUMB_FUNC_START sub_8031ED8
 sub_8031ED8: @ 0x08031ED8
-	ldr r0, _08031EE0  @ gUnknown_0203A8F0
+	ldr r0, _08031EE0  @ gArenaSt
 	ldrb r0, [r0, #0xa]
 	bx lr
 	.align 2, 0
-_08031EE0: .4byte gUnknown_0203A8F0
+_08031EE0: .4byte gArenaSt
 
 	THUMB_FUNC_END sub_8031ED8
 
 	THUMB_FUNC_START sub_8031EE4
 sub_8031EE4: @ 0x08031EE4
-	ldr r1, _08031EEC  @ gUnknown_0203A8F0
+	ldr r1, _08031EEC  @ gArenaSt
 	strb r0, [r1, #0xa]
 	bx lr
 	.align 2, 0
-_08031EEC: .4byte gUnknown_0203A8F0
+_08031EEC: .4byte gArenaSt
 
 	THUMB_FUNC_END sub_8031EE4
 
 	THUMB_FUNC_START sub_8031EF0
 sub_8031EF0: @ 0x08031EF0
 	push {r4, r5, lr}
-	ldr r0, _08031F3C  @ gUnknown_0202BCB0
+	ldr r0, _08031F3C  @ gBmSt
 	adds r0, #0x3c
 	ldrb r5, [r0]
-	ldr r1, _08031F40  @ gActionData
-	ldr r4, _08031F44  @ gBattleTarget
+	ldr r1, _08031F40  @ gAction
+	ldr r4, _08031F44  @ gBattleUnitB
 	ldrb r0, [r4, #0x13]
 	strb r0, [r1, #0x15]
 	movs r0, #4
@@ -1036,9 +1036,9 @@ sub_8031EF0: @ 0x08031EF0
 	bne _08031F1A
 	bl BattleApplyExpGains
 _08031F1A:
-	ldr r0, _08031F48  @ gUnknown_0203A8F0
+	ldr r0, _08031F48  @ gArenaSt
 	ldr r0, [r0]
-	ldr r1, _08031F4C  @ gBattleActor
+	ldr r1, _08031F4C  @ gBattleUnitA
 	bl UpdateUnitDuringBattle
 	cmp r5, #0
 	beq _08031F30
@@ -1053,16 +1053,16 @@ _08031F34:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08031F3C: .4byte gUnknown_0202BCB0
-_08031F40: .4byte gActionData
-_08031F44: .4byte gBattleTarget
-_08031F48: .4byte gUnknown_0203A8F0
-_08031F4C: .4byte gBattleActor
+_08031F3C: .4byte gBmSt
+_08031F40: .4byte gAction
+_08031F44: .4byte gBattleUnitB
+_08031F48: .4byte gArenaSt
+_08031F4C: .4byte gBattleUnitA
 
 	THUMB_FUNC_END sub_8031EF0
 
-	THUMB_FUNC_START sub_8031F50
-sub_8031F50: @ 0x08031F50
+	THUMB_FUNC_START CouldUnitUseAnyWeapon
+CouldUnitUseAnyWeapon: @ 0x08031F50
 	push {lr}
 	adds r2, r0, #0
 	adds r0, #0x30
@@ -1083,7 +1083,7 @@ _08031F70:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8031F50
+	THUMB_FUNC_END CouldUnitUseAnyWeapon
 
 	THUMB_FUNC_START sub_8031F74
 sub_8031F74: @ 0x08031F74
@@ -1133,7 +1133,7 @@ _08031FBE:
 	THUMB_FUNC_START sub_8031FC8
 sub_8031FC8: @ 0x08031FC8
 	push {r4, lr}
-	ldr r4, _08031FE8  @ gUnknown_0203A8F0
+	ldr r4, _08031FE8  @ gArenaSt
 	ldr r0, [r4]
 	adds r1, r4, #0
 	adds r1, #0x1a
@@ -1146,7 +1146,7 @@ sub_8031FC8: @ 0x08031FC8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08031FE8: .4byte gUnknown_0203A8F0
+_08031FE8: .4byte gArenaSt
 
 	THUMB_FUNC_END sub_8031FC8
 

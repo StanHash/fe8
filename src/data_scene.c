@@ -52,19 +52,19 @@ extern u8 CONST_DATA gUnknown_089E8238[];
 void sub_800662C(ProcPtr);
 void sub_8006650(ProcPtr);
 void sub_80066A8(ProcPtr);
-void sub_8006B4C(ProcPtr);
-void sub_8007C0C(ProcPtr);
-void sub_8006C00(ProcPtr);
-void sub_8006C34(ProcPtr);
+void DialogueSkipInputListener_OnLoop(ProcPtr);
+void DialogueMain_OnEnd(ProcPtr);
+void DialogueMain_OnInit(ProcPtr);
+void DialogueMain_OnLoop(ProcPtr);
 void sub_8007AB0(ProcPtr);
 void sub_8007B0C(ProcPtr);
-void _Loop6CBlockingTimer(ProcPtr);
+void DialoguePauseTimer_OnLoop(ProcPtr);
 void sub_8007C4C(ProcPtr);
 void sub_8007D38(ProcPtr);
 void sub_8007DA4(ProcPtr);
 void sub_80B42E8(void);
 void sub_80B4308(void);
-void sub_8007E9C(ProcPtr);
+void DialogueTextChoice_OnLoop(ProcPtr);
 void sub_8007F9C(ProcPtr);
 void sub_8007FDC(ProcPtr);
 void sub_80080D0(ProcPtr);
@@ -103,7 +103,7 @@ struct SceneState* CONST_DATA gUnknown_0859133C = &sSceneStateCore;
 struct ProcScr CONST_DATA gUnknown_08591340[] =
 {
     PROC_MARK(PROC_MARK_5),
-    PROC_REPEAT(sub_8006B4C),
+    PROC_REPEAT(DialogueSkipInputListener_OnLoop),
 
     PROC_END,
 };
@@ -111,12 +111,12 @@ struct ProcScr CONST_DATA gUnknown_08591340[] =
 struct ProcScr CONST_DATA gUnknown_08591358[] =
 {
     PROC_MARK(PROC_MARK_5),
-    PROC_ONEND(sub_8007C0C),
+    PROC_ONEND(DialogueMain_OnEnd),
 
     PROC_SLEEP(1),
 
-    PROC_CALL(sub_8006C00),
-    PROC_REPEAT(sub_8006C34),
+    PROC_CALL(DialogueMain_OnInit),
+    PROC_REPEAT(DialogueMain_OnLoop),
 
     PROC_END,
 };
@@ -168,7 +168,7 @@ struct ProcScr CONST_DATA gUnknown_085913D0[] =
     PROC_MARK(PROC_MARK_5),
 
     PROC_SLEEP(1),
-    PROC_REPEAT(_Loop6CBlockingTimer),
+    PROC_REPEAT(DialoguePauseTimer_OnLoop),
 
     PROC_END,
 };
@@ -247,7 +247,7 @@ struct ChoiceEntryInfo CONST_DATA gUnknown_085914A0[2] =
 struct ProcScr CONST_DATA gUnknown_085914B0[] =
 {
     PROC_SLEEP(8),
-    PROC_REPEAT(sub_8007E9C),
+    PROC_REPEAT(DialogueTextChoice_OnLoop),
 
     PROC_END,
 };
@@ -285,7 +285,7 @@ struct ProcScr CONST_DATA gUnknown_08591530[] =
     PROC_END,
 };
 
-void sub_80087A4(ProcPtr);
+void nullsub_74(ProcPtr);
 void sub_80087A8(ProcPtr);
 void sub_800880C(ProcPtr);
 void sub_8008840(ProcPtr);
@@ -293,7 +293,7 @@ void sub_8008840(ProcPtr);
 struct ProcScr CONST_DATA gUnknown_08591540[] =
 {
     PROC_MARK(PROC_MARK_5),
-    PROC_ONEND(sub_80087A4),
+    PROC_ONEND(nullsub_74),
 
     PROC_CALL(sub_80087A8),
     PROC_REPEAT(sub_800880C),

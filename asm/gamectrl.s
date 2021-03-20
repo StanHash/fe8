@@ -149,7 +149,7 @@ _0800994A:
 sub_8009950: @ 0x08009950
 	push {r4, r5, r6, lr}
 	sub sp, #0x4c
-	bl sub_80A4BB0
+	bl GetGlobalCompletionCount
 	cmp r0, #0
 	beq _08009960
 _0800995C:
@@ -161,13 +161,13 @@ _08009960:
 	mov r6, sp
 _08009966:
 	adds r0, r4, #0
-	bl sub_80A5218
+	bl IsSaveBlockValid
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08009992
 	adds r0, r4, #0
 	mov r1, sp
-	bl sub_80A522C
+	bl LoadSavedChapterState
 	ldrh r0, [r6, #0x2e]
 	lsls r0, r0, #0x14
 	lsrs r0, r0, #0x1b
@@ -248,8 +248,8 @@ sub_80099E4: @ 0x080099E4
 
 	THUMB_FUNC_END sub_80099E4
 
-	THUMB_FUNC_START Goto6CLabel12IfSomething
-Goto6CLabel12IfSomething: @ 0x08009A00
+	THUMB_FUNC_START GameControl_HandleSelectRightL
+GameControl_HandleSelectRightL: @ 0x08009A00
 	push {lr}
 	adds r2, r0, #0
 	ldr r0, _08009A20  @ gKeySt
@@ -268,7 +268,7 @@ _08009A1A:
 	.align 2, 0
 _08009A20: .4byte gKeySt
 
-	THUMB_FUNC_END Goto6CLabel12IfSomething
+	THUMB_FUNC_END GameControl_HandleSelectRightL
 
 	THUMB_FUNC_START sub_8009A24
 sub_8009A24: @ 0x08009A24
@@ -276,7 +276,7 @@ sub_8009A24: @ 0x08009A24
 	movs r0, #0
 	bl SetupBackgrounds
 	bl sub_80156D4
-	ldr r2, _08009A54  @ gRAMChapterData
+	ldr r2, _08009A54  @ gPlaySt
 	adds r2, #0x40
 	ldrb r1, [r2]
 	movs r0, #0x61
@@ -289,33 +289,33 @@ sub_8009A24: @ 0x08009A24
 	negs r2, r2
 	movs r0, #3
 	movs r1, #0
-	bl sub_8086BB8
+	bl StartScreenMenuScrollingBg
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009A54: .4byte gRAMChapterData
+_08009A54: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8009A24
 
-	THUMB_FUNC_START sub_8009A58
-sub_8009A58: @ 0x08009A58
+	THUMB_FUNC_START GameControl_8009A58
+GameControl_8009A58: @ 0x08009A58
 	movs r1, #0x14
 	strh r1, [r0, #0x2e]
 	bx lr
 
-	THUMB_FUNC_END sub_8009A58
+	THUMB_FUNC_END GameControl_8009A58
 
-	THUMB_FUNC_START Null6CCallback
-Null6CCallback: @ 0x08009A60
+	THUMB_FUNC_START GameControl_8009A60_Null
+GameControl_8009A60_Null: @ 0x08009A60
 	push {lr}
 	bl Proc_Break
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END Null6CCallback
+	THUMB_FUNC_END GameControl_8009A60_Null
 
-	THUMB_FUNC_START Delete6CIfNotMarkedB
-Delete6CIfNotMarkedB: @ 0x08009A6C
+	THUMB_FUNC_START EndProcIfNotMarkedB
+EndProcIfNotMarkedB: @ 0x08009A6C
 	push {lr}
 	adds r1, r0, #0
 	adds r0, #0x26
@@ -328,7 +328,7 @@ _08009A7E:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END Delete6CIfNotMarkedB
+	THUMB_FUNC_END EndProcIfNotMarkedB
 
 	THUMB_FUNC_START sub_8009A84
 sub_8009A84: @ 0x08009A84
@@ -341,9 +341,9 @@ sub_8009A84: @ 0x08009A84
 	mov r0, sp
 	bl CpuFastSet
 	bl EnablePalSync
-	ldr r0, _08009AB4  @ Delete6CIfNotMarkedB
+	ldr r0, _08009AB4  @ EndProcIfNotMarkedB
 	bl ForEveryProc
-	ldr r0, _08009AB8  @ SomeUpdateRoutine
+	ldr r0, _08009AB8  @ OnGameLoopMain
 	bl SetMainFunc
 	add sp, #4
 	pop {r0}
@@ -351,8 +351,8 @@ sub_8009A84: @ 0x08009A84
 	.align 2, 0
 _08009AAC: .4byte gPal
 _08009AB0: .4byte 0x01000100
-_08009AB4: .4byte Delete6CIfNotMarkedB
-_08009AB8: .4byte SomeUpdateRoutine
+_08009AB4: .4byte EndProcIfNotMarkedB
+_08009AB8: .4byte OnGameLoopMain
 
 	THUMB_FUNC_END sub_8009A84
 
@@ -477,8 +477,8 @@ _08009B84:
 
 	THUMB_FUNC_END sub_8009B64
 
-	THUMB_FUNC_START GAMECTRL_MasterSwitch
-GAMECTRL_MasterSwitch: @ 0x08009B88
+	THUMB_FUNC_START GameControl_MasterSwitch
+GameControl_MasterSwitch: @ 0x08009B88
 	push {r4, lr}
 	adds r4, r0, #0
 	adds r0, #0x29
@@ -507,7 +507,7 @@ _08009BA4: @ jump table
 	.4byte _08009C16 @ case 11
 	.4byte _08009C0E @ case 12
 _08009BD8:
-	bl sub_80BC81C
+	bl GmDataInit
 _08009BDC:
 	adds r0, r4, #0
 	movs r1, #7
@@ -542,7 +542,7 @@ _08009C16:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END GAMECTRL_MasterSwitch
+	THUMB_FUNC_END GameControl_MasterSwitch
 
 	THUMB_FUNC_START sub_8009C1C
 sub_8009C1C: @ 0x08009C1C
@@ -604,15 +604,15 @@ sub_8009C5C: @ 0x08009C5C
 _08009C72:
 	movs r0, #0
 	movs r1, #0
-	bl InitPlaythroughState
-	ldr r4, _08009CA0  @ gRAMChapterData
+	bl InitClearChapterState
+	ldr r4, _08009CA0  @ gPlaySt
 	ldrb r1, [r4, #0x14]
 	movs r0, #8
 	orrs r0, r1
 	strb r0, [r4, #0x14]
-	bl sub_8083D18
-	bl ClearLocalEvents
-	bl ClearUnits
+	bl ClearGlobalTriggerState
+	bl ClearTemporaryFlags
+	bl InitUnits
 	adds r0, r5, #0
 	adds r0, #0x2a
 	ldrb r0, [r0]
@@ -622,7 +622,7 @@ _08009C98:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009CA0: .4byte gRAMChapterData
+_08009CA0: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8009C5C
 
@@ -631,14 +631,14 @@ sub_8009CA4: @ 0x08009CA4
 	push {lr}
 	bl sub_80A6D38
 	bl sub_80A41C8
-	bl ChapterChangeUnitCleanup
-	ldr r1, _08009CBC  @ gRAMChapterData
+	bl ChapterEndUnitCleanup
+	ldr r1, _08009CBC  @ gPlaySt
 	movs r0, #0x7f
 	strb r0, [r1, #0xe]
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009CBC: .4byte gRAMChapterData
+_08009CBC: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8009CA4
 
@@ -646,8 +646,8 @@ _08009CBC: .4byte gRAMChapterData
 sub_8009CC0: @ 0x08009CC0
 	push {lr}
 	movs r0, #3
-	bl sub_80A5A20
-	ldr r0, _08009CDC  @ gRAMChapterData
+	bl ClearSaveBlock
+	ldr r0, _08009CDC  @ gPlaySt
 	adds r0, #0x41
 	ldrb r2, [r0]
 	movs r1, #2
@@ -657,12 +657,12 @@ sub_8009CC0: @ 0x08009CC0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009CDC: .4byte gRAMChapterData
+_08009CDC: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8009CC0
 
-	THUMB_FUNC_START sub_8009CE0
-sub_8009CE0: @ 0x08009CE0
+	THUMB_FUNC_START GameControl_PostChapterSwitch
+GameControl_PostChapterSwitch: @ 0x08009CE0
 	push {r4, lr}
 	adds r4, r0, #0
 	bl MU_EndAll
@@ -694,13 +694,13 @@ _08009D14:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8009CE0
+	THUMB_FUNC_END GameControl_PostChapterSwitch
 
 	THUMB_FUNC_START sub_8009D1C
 sub_8009D1C: @ 0x08009D1C
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _08009D40  @ gRAMChapterData
+	ldr r0, _08009D40  @ gPlaySt
 	adds r0, #0x4a
 	ldrb r0, [r0]
 	movs r1, #0xe
@@ -717,7 +717,7 @@ _08009D3A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009D40: .4byte gRAMChapterData
+_08009D40: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8009D1C
 
@@ -725,7 +725,7 @@ _08009D40: .4byte gRAMChapterData
 sub_8009D44: @ 0x08009D44
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _08009D68  @ gRAMChapterData
+	ldr r0, _08009D68  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #4
 	ands r0, r1
@@ -742,7 +742,7 @@ _08009D64:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009D68: .4byte gRAMChapterData
+_08009D68: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8009D44
 
@@ -750,7 +750,7 @@ _08009D68: .4byte gRAMChapterData
 sub_8009D6C: @ 0x08009D6C
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _08009D88  @ gRAMChapterData
+	ldr r0, _08009D88  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #0x80
 	ands r0, r1
@@ -761,7 +761,7 @@ sub_8009D6C: @ 0x08009D6C
 	bl Proc_Goto
 	b _08009D94
 	.align 2, 0
-_08009D88: .4byte gRAMChapterData
+_08009D88: .4byte gPlaySt
 _08009D8C:
 	adds r0, r2, #0
 	movs r1, #9
@@ -772,8 +772,8 @@ _08009D94:
 
 	THUMB_FUNC_END sub_8009D6C
 
-	THUMB_FUNC_START sub_8009D98
-sub_8009D98: @ 0x08009D98
+	THUMB_FUNC_START GameControl_ChapterSwitch
+GameControl_ChapterSwitch: @ 0x08009D98
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	movs r4, #2
@@ -782,57 +782,57 @@ _08009D9E:
 	subs r4, #1
 	cmp r4, #0
 	bge _08009D9E
-	ldr r0, _08009DD8  @ gUnknown_0300534E
+	ldr r0, _08009DD8  @ gGmMonsterRnState
 	bl RandGetSt
 	movs r0, #3
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08009DC0
-	ldr r0, _08009DDC  @ gRAMChapterData
+	ldr r0, _08009DDC  @ gPlaySt
 	bl RegisterChapterTimeAndTurnCount
 _08009DC0:
 	bl ComputeChapterRankings
-	ldr r0, _08009DDC  @ gRAMChapterData
+	ldr r0, _08009DDC  @ gPlaySt
 	adds r1, r5, #0
 	adds r1, #0x2a
 	ldrb r1, [r1]
 	strb r1, [r0, #0xe]
-	bl ChapterChangeUnitCleanup
+	bl ChapterEndUnitCleanup
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009DD8: .4byte gUnknown_0300534E
-_08009DDC: .4byte gRAMChapterData
+_08009DD8: .4byte gGmMonsterRnState
+_08009DDC: .4byte gPlaySt
 
-	THUMB_FUNC_END sub_8009D98
+	THUMB_FUNC_END GameControl_ChapterSwitch
 
-	THUMB_FUNC_START CallActualSaveMenu
-CallActualSaveMenu: @ 0x08009DE0
+	THUMB_FUNC_START GameControl_CallPostChapterSaveMenu
+GameControl_CallPostChapterSaveMenu: @ 0x08009DE0
 	push {lr}
 	adds r1, r0, #0
-	ldr r0, _08009DFC  @ gRAMChapterData
+	ldr r0, _08009DFC  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #0x38
 	beq _08009DF6
 	adds r0, r1, #0
-	bl Make6C_savemenu2
+	bl Start_savemenu2
 _08009DF6:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009DFC: .4byte gRAMChapterData
+_08009DFC: .4byte gPlaySt
 
-	THUMB_FUNC_END CallActualSaveMenu
+	THUMB_FUNC_END GameControl_CallPostChapterSaveMenu
 
 	THUMB_FUNC_START sub_8009E00
 sub_8009E00: @ 0x08009E00
 	push {lr}
 	adds r3, r0, #0
-	ldr r2, _08009E24  @ gRAMChapterData
+	ldr r2, _08009E24  @ gPlaySt
 	ldrb r1, [r2, #0x14]
 	movs r0, #4
 	ands r0, r1
@@ -848,7 +848,7 @@ _08009E1E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009E24: .4byte gRAMChapterData
+_08009E24: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8009E00
 
@@ -880,7 +880,7 @@ sub_8009E54: @ 0x08009E54
 	push {lr}
 	movs r0, #0
 	bl SetupBackgrounds
-	ldr r0, _08009E6C  @ gRAMChapterData
+	ldr r0, _08009E6C  @ gPlaySt
 	ldrb r0, [r0, #0x1b]
 	cmp r0, #2
 	beq _08009E70
@@ -888,7 +888,7 @@ sub_8009E54: @ 0x08009E54
 	beq _08009E80
 	b _08009E88
 	.align 2, 0
-_08009E6C: .4byte gRAMChapterData
+_08009E6C: .4byte gPlaySt
 _08009E70:
 	ldr r0, _08009E7C  @ gUnknown_08A0035C
 	movs r1, #1
@@ -902,7 +902,7 @@ _08009E80:
 	bl CallEvent
 _08009E88:
 	movs r0, #0x84
-	bl SetEventId
+	bl SetFlag
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -910,12 +910,12 @@ _08009E94: .4byte gUnknown_08A00364
 
 	THUMB_FUNC_END sub_8009E54
 
-	THUMB_FUNC_START sub_8009E98
-sub_8009E98: @ 0x08009E98
+	THUMB_FUNC_START CallGameEndingEvent
+CallGameEndingEvent: @ 0x08009E98
 	push {lr}
-	bl StartBattleMap
-	bl sub_80141B0
-	ldr r0, _08009EB0  @ gRAMChapterData
+	bl StartChapter
+	bl BlackenScreen
+	ldr r0, _08009EB0  @ gPlaySt
 	ldrb r0, [r0, #0x1b]
 	cmp r0, #2
 	beq _08009EB4
@@ -923,7 +923,7 @@ sub_8009E98: @ 0x08009E98
 	beq _08009EC4
 	b _08009ECC
 	.align 2, 0
-_08009EB0: .4byte gRAMChapterData
+_08009EB0: .4byte gPlaySt
 _08009EB4:
 	ldr r0, _08009EC0  @ gUnknown_08A0037C
 	movs r1, #1
@@ -937,37 +937,37 @@ _08009EC4:
 	bl CallEvent
 _08009ECC:
 	movs r0, #0x84
-	bl SetEventId
+	bl SetFlag
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08009ED8: .4byte gUnknown_08A0048C
 
-	THUMB_FUNC_END sub_8009E98
+	THUMB_FUNC_END CallGameEndingEvent
 
-	THUMB_FUNC_START GetChapterIdTo6C
-GetChapterIdTo6C: @ 0x08009EDC
-	ldr r1, _08009EE8  @ gRAMChapterData
+	THUMB_FUNC_START GameControl_RememberChapterId
+GameControl_RememberChapterId: @ 0x08009EDC
+	ldr r1, _08009EE8  @ gPlaySt
 	ldrb r1, [r1, #0xe]
 	adds r0, #0x30
 	strb r1, [r0]
 	bx lr
 	.align 2, 0
-_08009EE8: .4byte gRAMChapterData
+_08009EE8: .4byte gPlaySt
 
-	THUMB_FUNC_END GetChapterIdTo6C
+	THUMB_FUNC_END GameControl_RememberChapterId
 
-	THUMB_FUNC_START SetChapterIdFrom6C
-SetChapterIdFrom6C: @ 0x08009EEC
-	ldr r1, _08009EF8  @ gRAMChapterData
+	THUMB_FUNC_START GameControl_RestoreChapterId
+GameControl_RestoreChapterId: @ 0x08009EEC
+	ldr r1, _08009EF8  @ gPlaySt
 	adds r0, #0x30
 	ldrb r0, [r0]
 	strb r0, [r1, #0xe]
 	bx lr
 	.align 2, 0
-_08009EF8: .4byte gRAMChapterData
+_08009EF8: .4byte gPlaySt
 
-	THUMB_FUNC_END SetChapterIdFrom6C
+	THUMB_FUNC_END GameControl_RestoreChapterId
 
 	THUMB_FUNC_START sub_8009EFC
 sub_8009EFC: @ 0x08009EFC
@@ -981,9 +981,9 @@ sub_8009EFC: @ 0x08009EFC
 	THUMB_FUNC_START StartGame
 StartGame: @ 0x08009F08
 	push {lr}
-	ldr r0, _08009F34  @ SomeUpdateRoutine
+	ldr r0, _08009F34  @ OnGameLoopMain
 	bl SetMainFunc
-	ldr r0, _08009F38  @ OnVSync
+	ldr r0, _08009F38  @ OnVBlank
 	bl SetOnVBlank
 	ldr r0, _08009F3C  @ gUnknown_085916D4
 	movs r1, #3
@@ -999,14 +999,14 @@ StartGame: @ 0x08009F08
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08009F34: .4byte SomeUpdateRoutine
-_08009F38: .4byte OnVSync
+_08009F34: .4byte OnGameLoopMain
+_08009F38: .4byte OnVBlank
 _08009F3C: .4byte gUnknown_085916D4
 
 	THUMB_FUNC_END StartGame
 
-	THUMB_FUNC_START GetGameControl6C
-GetGameControl6C: @ 0x08009F40
+	THUMB_FUNC_START GetGameControl
+GetGameControl: @ 0x08009F40
 	push {lr}
 	ldr r0, _08009F4C  @ gUnknown_085916D4
 	bl FindProc
@@ -1015,13 +1015,13 @@ GetGameControl6C: @ 0x08009F40
 	.align 2, 0
 _08009F4C: .4byte gUnknown_085916D4
 
-	THUMB_FUNC_END GetGameControl6C
+	THUMB_FUNC_END GetGameControl
 
 	THUMB_FUNC_START SetNextGameActionId
 SetNextGameActionId: @ 0x08009F50
 	push {r4, lr}
 	adds r4, r0, #0
-	bl GetGameControl6C
+	bl GetGameControl
 	adds r0, #0x29
 	strb r4, [r0]
 	pop {r4}
@@ -1034,7 +1034,7 @@ SetNextGameActionId: @ 0x08009F50
 SetNextChapterId: @ 0x08009F64
 	push {r4, lr}
 	adds r4, r0, #0
-	bl GetGameControl6C
+	bl GetGameControl
 	adds r0, #0x2a
 	strb r4, [r0]
 	pop {r4}
@@ -1046,7 +1046,7 @@ SetNextChapterId: @ 0x08009F64
 	THUMB_FUNC_START sub_8009F78
 sub_8009F78: @ 0x08009F78
 	push {lr}
-	bl GetGameControl6C
+	bl GetGameControl
 	adds r0, #0x2a
 	ldrb r1, [r0]
 	negs r0, r1
@@ -1095,11 +1095,11 @@ _08009FD0: .4byte gUnknown_085916D4
 
 	THUMB_FUNC_END RestartGameAndGoto12
 
-	THUMB_FUNC_START sub_8009FD4
-sub_8009FD4: @ 0x08009FD4
+	THUMB_FUNC_START nullsub_RestartGameAndGoto7
+nullsub_RestartGameAndGoto7: @ 0x08009FD4
 	bx lr
 
-	THUMB_FUNC_END sub_8009FD4
+	THUMB_FUNC_END nullsub_RestartGameAndGoto7
 
 	THUMB_FUNC_START nullsub_9
 nullsub_9: @ 0x08009FD8
@@ -1107,9 +1107,9 @@ nullsub_9: @ 0x08009FD8
 
 	THUMB_FUNC_END nullsub_9
 
-	THUMB_FUNC_START ForceEnableSoundEffects
-ForceEnableSoundEffects: @ 0x08009FDC
-	ldr r2, _08009FF4  @ gRAMChapterData
+	THUMB_FUNC_START GameControl_EnableSoundEffects
+GameControl_EnableSoundEffects: @ 0x08009FDC
+	ldr r2, _08009FF4  @ gPlaySt
 	adds r2, #0x41
 	ldrb r1, [r2]
 	movs r0, #2
@@ -1121,14 +1121,14 @@ ForceEnableSoundEffects: @ 0x08009FDC
 	strb r0, [r2]
 	bx lr
 	.align 2, 0
-_08009FF4: .4byte gRAMChapterData
+_08009FF4: .4byte gPlaySt
 
-	THUMB_FUNC_END ForceEnableSoundEffects
+	THUMB_FUNC_END GameControl_EnableSoundEffects
 
 	THUMB_FUNC_START sub_8009FF8
 sub_8009FF8: @ 0x08009FF8
 	push {r4, r5, lr}
-	ldr r3, _0800A044  @ gRAMChapterData
+	ldr r3, _0800A044  @ gPlaySt
 	adds r2, r3, #0
 	adds r2, #0x42
 	ldrb r1, [r2]
@@ -1165,5 +1165,5 @@ sub_8009FF8: @ 0x08009FF8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800A044: .4byte gRAMChapterData
+_0800A044: .4byte gPlaySt
 	THUMB_FUNC_END sub_8009FF8

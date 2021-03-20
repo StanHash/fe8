@@ -1,6 +1,6 @@
 #include "global.h"
 
-#include "constants/items.h"
+#include "constants/iids.h"
 
 #include "proc.h"
 #include "hardware.h"
@@ -10,7 +10,7 @@
 #include "statscreen.h"
 
 #include "bmitem.h"
-#include "bmunit.h"
+#include "unit.h"
 
 #include "m4a.h"
 #include "sound.h"
@@ -22,13 +22,13 @@ enum
 
     UNIT_PANEL_WIDTH = 6,
 
-    ITEM_PANEL_WIDTH = 7,
+    IID_PANEL_WIDTH = 7,
 
-    ITEM_PANEL_LEFT_X = 1,
-    ITEM_PANEL_LEFT_Y = 8,
+    IID_PANEL_LEFT_X = 1,
+    IID_PANEL_LEFT_Y = 8,
 
-    ITEM_PANEL_RIGHT_X = 15,
-    ITEM_PANEL_RIGHT_Y = 8,
+    IID_PANEL_RIGHT_X = 15,
+    IID_PANEL_RIGHT_Y = 8,
 };
 
 enum
@@ -137,19 +137,19 @@ EWRAM_DATA static struct TradeMenuProc* sTradeMenuProc = NULL;
 CONST_DATA
 static struct Vec2 sItemDisplayTileLocation[2][UNIT_ITEM_COUNT] = {
     [TRADEMENU_UNIT_LEFT] = {
-        { ITEM_PANEL_LEFT_X + 1, ITEM_PANEL_LEFT_Y + 1 },
-        { ITEM_PANEL_LEFT_X + 1, ITEM_PANEL_LEFT_Y + 3 },
-        { ITEM_PANEL_LEFT_X + 1, ITEM_PANEL_LEFT_Y + 5 },
-        { ITEM_PANEL_LEFT_X + 1, ITEM_PANEL_LEFT_Y + 7 },
-        { ITEM_PANEL_LEFT_X + 1, ITEM_PANEL_LEFT_Y + 9 },
+        { IID_PANEL_LEFT_X + 1, IID_PANEL_LEFT_Y + 1 },
+        { IID_PANEL_LEFT_X + 1, IID_PANEL_LEFT_Y + 3 },
+        { IID_PANEL_LEFT_X + 1, IID_PANEL_LEFT_Y + 5 },
+        { IID_PANEL_LEFT_X + 1, IID_PANEL_LEFT_Y + 7 },
+        { IID_PANEL_LEFT_X + 1, IID_PANEL_LEFT_Y + 9 },
     },
 
     [TRADEMENU_UNIT_RIGHT] = {
-        { ITEM_PANEL_RIGHT_X + 1, ITEM_PANEL_RIGHT_Y + 1 },
-        { ITEM_PANEL_RIGHT_X + 1, ITEM_PANEL_RIGHT_Y + 3 },
-        { ITEM_PANEL_RIGHT_X + 1, ITEM_PANEL_RIGHT_Y + 5 },
-        { ITEM_PANEL_RIGHT_X + 1, ITEM_PANEL_RIGHT_Y + 7 },
-        { ITEM_PANEL_RIGHT_X + 1, ITEM_PANEL_RIGHT_Y + 9 },
+        { IID_PANEL_RIGHT_X + 1, IID_PANEL_RIGHT_Y + 1 },
+        { IID_PANEL_RIGHT_X + 1, IID_PANEL_RIGHT_Y + 3 },
+        { IID_PANEL_RIGHT_X + 1, IID_PANEL_RIGHT_Y + 5 },
+        { IID_PANEL_RIGHT_X + 1, IID_PANEL_RIGHT_Y + 7 },
+        { IID_PANEL_RIGHT_X + 1, IID_PANEL_RIGHT_Y + 9 },
     }
 };
 
@@ -163,7 +163,7 @@ static struct ProcScr sProcScr_TradeMenu_HighlightUpdater[] = {
 
 CONST_DATA
 static struct ProcScr sProcScr_TradeMenu[] = {
-    PROC_CALL(AddSkipThread2),
+    PROC_CALL(LockGameLogic),
     PROC_SLEEP(0),
 
     PROC_WHILE_EXISTS(gUnknown_0859A548),
@@ -194,7 +194,7 @@ PROC_LABEL(L_TRADEMENU_END),
     PROC_CALL(TradeMenu_ClearDisplay),
     PROC_CALL(ClearBg0Bg1),
 
-    PROC_CALL(SubSkipThread2),
+    PROC_CALL(UnlockGameLogic),
 
     PROC_END
 };
@@ -256,7 +256,7 @@ void TradeMenu_InitUnitNameDisplay(struct TradeMenuProc* proc)
     int xStart;
 
     // TODO: constants
-    sub_80ADB7C(6, 0x4800, 0x08, 0x800, 0x400, (struct Proc*) (proc));
+    StartSmallBrownNameBoxes(6, 0x4800, 0x08, 0x800, 0x400, (struct Proc*) (proc));
 
     sub_80ADBFC(0, -40, -1, 1);
     sub_80ADBFC(1, 184, -1, 0);
@@ -328,15 +328,15 @@ void TradeMenu_InitItemText(struct TradeMenuProc* proc)
     {
         for (row = 0; row < UNIT_ITEM_COUNT; ++row)
         {
-            InitTextDb(&gTradeMenuText[col][row], ITEM_PANEL_WIDTH);
+            InitTextDb(&gTradeMenuText[col][row], IID_PANEL_WIDTH);
         }
     }
 }
 
 void TradeMenu_RefreshItemText(struct TradeMenuProc* proc)
 {
-    u8 xLookup[] = { ITEM_PANEL_LEFT_X, ITEM_PANEL_RIGHT_X };
-    u8 yLookup[] = { ITEM_PANEL_LEFT_Y, ITEM_PANEL_RIGHT_Y };
+    u8 xLookup[] = { IID_PANEL_LEFT_X, IID_PANEL_RIGHT_X };
+    u8 yLookup[] = { IID_PANEL_LEFT_Y, IID_PANEL_RIGHT_Y };
 
     int col, row;
 
@@ -466,7 +466,7 @@ void TradeMenu_ApplyItemSwap(struct TradeMenuProc* proc)
 
     proc->hasTraded = TRUE;
 
-    gActionData.unitActionType = UNIT_ACTION_TRADED;
+    gAction.unitActionType = UNIT_ACTION_TRADED;
 
     UnitRemoveInvalidItems(proc->units[0]);
     UnitRemoveInvalidItems(proc->units[1]);
@@ -488,11 +488,11 @@ void TradeMenu_InitItemDisplay(struct TradeMenuProc* proc)
     TradeMenu_RefreshItemText(proc);
 
     // TODO: face display type (arg 5) constants
-    StartFace(0, GetUnitPortraitId(proc->units[0]), 64,  -4, 3);
-    StartFace(1, GetUnitPortraitId(proc->units[1]), 176, -4, 2);
+    StartFace(0, GetUnitFid(proc->units[0]), 64,  -4, 3);
+    StartFace(1, GetUnitFid(proc->units[1]), 176, -4, 2);
 
-    sub_8006458(0, 5);
-    sub_8006458(1, 5);
+    SetFaceBlinkControlById(0, 5);
+    SetFaceBlinkControlById(1, 5);
 
     EnableBgSync(BG0_SYNC_BIT | BG1_SYNC_BIT);
 }
@@ -617,11 +617,11 @@ void TradeMenu_OnEndSelected(struct TradeMenuProc* proc)
 
 s8 TradeMenu_LoadForcedInitialHover(struct TradeMenuProc* proc)
 {
-    if (gUnknown_0202BCB0.unk3F < 0)
+    if (gBmSt.unk3F < 0)
         return TRUE;
 
-    proc->hoverColumn = gUnknown_0202BCB0.unk3F / UNIT_ITEM_COUNT;
-    proc->hoverRow   = gUnknown_0202BCB0.unk3F % UNIT_ITEM_COUNT;
+    proc->hoverColumn = gBmSt.unk3F / UNIT_ITEM_COUNT;
+    proc->hoverRow   = gBmSt.unk3F % UNIT_ITEM_COUNT;
 
     TradeMenu_RefreshSelectableCells(proc);
     Proc_Goto(proc, L_TRADEMENU_SELECTED);
@@ -652,9 +652,9 @@ void TradeMenu_HelpBox_OnInit(struct Proc* proc)
         tradeMenu->hasItem[tradeMenu->extraColumn][tradeMenu->extraRow] = FALSE;
     }
 
-    LoadDialogueBoxGfx(NULL, -1);
+    LoadHelpBoxGfx(NULL, -1);
 
-    StartItemHelpBox(
+    ShowItemHelpBox(
         8 * sItemDisplayTileLocation[tradeMenu->hoverColumn][tradeMenu->hoverRow].x,
         8 * sItemDisplayTileLocation[tradeMenu->hoverColumn][tradeMenu->hoverRow].y,
         item);
@@ -671,7 +671,7 @@ void TradeMenu_HelpBox_OnLoop(struct Proc* proc)
 
     if (changedSelection)
     {
-        StartItemHelpBox(
+        ShowItemHelpBox(
             8 * sItemDisplayTileLocation[tradeMenu->hoverColumn][tradeMenu->hoverRow].x,
             8 * sItemDisplayTileLocation[tradeMenu->hoverColumn][tradeMenu->hoverRow].y,
             item);
@@ -703,7 +703,7 @@ void TradeMenu_HelpBox_OnEnd(struct Proc* proc)
         tradeMenu->hasItem[tradeMenu->extraColumn][tradeMenu->extraRow] = TRUE;
     }
 
-    CloseHelpBox();
+    MoveableHelpBox_OnEnd();
 
     DisplayUiHand(
         8 * sItemDisplayTileLocation[tradeMenu->hoverColumn][tradeMenu->hoverRow].x,
@@ -841,7 +841,7 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
 
             if (!(gKeySt->pressed & (DPAD_UP | DPAD_DOWN)))
             {
-                if (GetItemIndex(proc->units[proc->hoverColumn]->items[proc->hoverRow]) == ITEM_VULNERARY)
+                if (GetItemIndex(proc->units[proc->hoverColumn]->items[proc->hoverRow]) == IID_VULNERARY)
                 {
                     SetKeyIgnore(START_BUTTON | DPAD_UP | DPAD_DOWN);
                     sub_802E0C0();
@@ -880,7 +880,7 @@ s8 TradeMenu_UpdateTutorial(struct TradeMenuProc* proc)
         if (gKeySt->pressed & B_BUTTON)
         {
             SetKeyIgnore(0);
-            UnsetEventId(0x87); // TODO: EID/FLAG DEFINTIONS
+            ClearFlag(0x87); // TODO: EID/FLAG DEFINTIONS
 
             return FALSE;
         }

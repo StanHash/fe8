@@ -181,7 +181,7 @@ void UnpackLegacyUiFramePalette(int palId)
     if (palId < 0)
         palId = BGPAL_UI_FRAME;
 
-    ApplyPalette(sLegacyUiFramePaletteLookup[gRAMChapterData.cfgWindowColor], palId);
+    ApplyPalette(sLegacyUiFramePaletteLookup[gPlaySt.configWindowColor], palId);
 }
 
 void UnpackUiFramePalette(int palId)
@@ -189,7 +189,7 @@ void UnpackUiFramePalette(int palId)
     if (palId < 0)
         palId = BGPAL_UI_FRAME;
 
-    ApplyPalette(sUiFramePaletteLookup[gRAMChapterData.cfgWindowColor], palId);
+    ApplyPalette(sUiFramePaletteLookup[gPlaySt.configWindowColor], palId);
 }
 
 void UnpackLegacyUiFrameImage(void* dest)
@@ -197,7 +197,7 @@ void UnpackLegacyUiFrameImage(void* dest)
     if (dest == NULL)
         dest = BG_CHAR_ADDR(0);
 
-    Decompress(sLegacyUiFrameImageLookup[gRAMChapterData.cfgWindowColor], dest);
+    Decompress(sLegacyUiFrameImageLookup[gPlaySt.configWindowColor], dest);
 }
 
 void UnpackUiFrameImage(void* dest)
@@ -205,7 +205,7 @@ void UnpackUiFrameImage(void* dest)
     if (dest == NULL)
         dest = BG_CHAR_ADDR(0);
 
-    Decompress(sUiFrameImageLookup[gRAMChapterData.cfgWindowColor], dest);
+    Decompress(sUiFrameImageLookup[gPlaySt.configWindowColor], dest);
 }
 
 void UnpackUiBarPalette(int palId)
@@ -213,7 +213,7 @@ void UnpackUiBarPalette(int palId)
     if (palId < 0)
         palId = BGPAL_UI_STATBAR;
 
-    ApplyPalette(sStatBarPaletteLookup[gRAMChapterData.cfgWindowColor], palId);
+    ApplyPalette(sStatBarPaletteLookup[gPlaySt.configWindowColor], palId);
 }
 
 void UnpackUiFrameBuffered(int id)
@@ -222,9 +222,9 @@ void UnpackUiFrameBuffered(int id)
     s8* bufAddr;
 
     if (id < 0)
-        id = gRAMChapterData.cfgWindowColor;
+        id = gPlaySt.configWindowColor;
 
-    bufSize = FilterR0ForRawCopy(sUiFrameImageLookup[id]);
+    bufSize = GetPackSize(sUiFrameImageLookup[id]);
     bufAddr = gUnknown_02022288 - bufSize;
 
     Decompress(sUiFrameImageLookup[id], bufAddr);

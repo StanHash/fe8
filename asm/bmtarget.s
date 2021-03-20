@@ -8,14 +8,14 @@
 sub_8024E40: @ 0x08024E40
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
-	ldr r0, _08024EA0  @ gBmMapSize
+	ldr r0, _08024EA0  @ gMapSize
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	subs r1, r0, #1
 	cmp r1, #0
 	blt _08024E98
 _08024E50:
-	ldr r0, _08024EA0  @ gBmMapSize
+	ldr r0, _08024EA0  @ gMapSize
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	subs r4, r0, #1
@@ -24,7 +24,7 @@ _08024E50:
 	blt _08024E92
 	lsls r5, r1, #2
 _08024E60:
-	ldr r0, _08024EA4  @ gBmMapMovement
+	ldr r0, _08024EA4  @ gMapMovement
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -34,7 +34,7 @@ _08024E60:
 	asrs r0, r0, #0x18
 	cmp r0, #0
 	beq _08024E8C
-	ldr r0, _08024EA8  @ gBmMapUnit
+	ldr r0, _08024EA8  @ gMapUnit
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -57,9 +57,9 @@ _08024E98:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08024EA0: .4byte gBmMapSize
-_08024EA4: .4byte gBmMapMovement
-_08024EA8: .4byte gBmMapUnit
+_08024EA0: .4byte gMapSize
+_08024EA4: .4byte gMapMovement
+_08024EA8: .4byte gMapUnit
 
 	THUMB_FUNC_END sub_8024E40
 
@@ -67,14 +67,14 @@ _08024EA8: .4byte gBmMapUnit
 ForEachUnitInRange: @ 0x08024EAC
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
-	ldr r0, _08024F0C  @ gBmMapSize
+	ldr r0, _08024F0C  @ gMapSize
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	subs r1, r0, #1
 	cmp r1, #0
 	blt _08024F04
 _08024EBC:
-	ldr r0, _08024F0C  @ gBmMapSize
+	ldr r0, _08024F0C  @ gMapSize
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	subs r4, r0, #1
@@ -83,7 +83,7 @@ _08024EBC:
 	blt _08024EFE
 	lsls r5, r1, #2
 _08024ECC:
-	ldr r0, _08024F10  @ gBmMapRange
+	ldr r0, _08024F10  @ gMapRange
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -93,7 +93,7 @@ _08024ECC:
 	asrs r0, r0, #0x18
 	cmp r0, #0
 	beq _08024EF8
-	ldr r0, _08024F14  @ gBmMapUnit
+	ldr r0, _08024F14  @ gMapUnit
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -116,9 +116,9 @@ _08024F04:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08024F0C: .4byte gBmMapSize
-_08024F10: .4byte gBmMapRange
-_08024F14: .4byte gBmMapUnit
+_08024F0C: .4byte gMapSize
+_08024F10: .4byte gMapRange
+_08024F14: .4byte gMapUnit
 
 	THUMB_FUNC_END ForEachUnitInRange
 
@@ -126,14 +126,14 @@ _08024F14: .4byte gBmMapUnit
 ForEachPosInRange: @ 0x08024F18
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
-	ldr r0, _08024F68  @ gBmMapSize
+	ldr r0, _08024F68  @ gMapSize
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	subs r5, r0, #1
 	cmp r5, #0
 	blt _08024F60
 _08024F28:
-	ldr r0, _08024F68  @ gBmMapSize
+	ldr r0, _08024F68  @ gMapSize
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r0, #1
@@ -141,7 +141,7 @@ _08024F28:
 	cmp r4, #0
 	blt _08024F5A
 _08024F36:
-	ldr r0, _08024F6C  @ gBmMapRange
+	ldr r0, _08024F6C  @ gMapRange
 	ldr r1, [r0]
 	lsls r0, r5, #2
 	adds r0, r0, r1
@@ -168,8 +168,8 @@ _08024F60:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08024F68: .4byte gBmMapSize
-_08024F6C: .4byte gBmMapRange
+_08024F68: .4byte gMapSize
+_08024F6C: .4byte gMapRange
 
 	THUMB_FUNC_END ForEachPosInRange
 
@@ -235,7 +235,7 @@ sub_8024FD8: @ 0x08024FD8
 	mov r8, r2
 	bl InitTargets
 	movs r1, #0xff
-	ldr r7, _08025034  @ gWorkingBmMap
+	ldr r7, _08025034  @ gWorkingMap
 	lsls r6, r5, #2
 _08024FEE:
 	movs r2, #0xff
@@ -274,7 +274,7 @@ _08025008:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025034: .4byte gWorkingBmMap
+_08025034: .4byte gWorkingMap
 
 	THUMB_FUNC_END sub_8024FD8
 
@@ -310,7 +310,7 @@ ForEachUnitInMagBy2Range: @ 0x0802506C
 	mov r6, r8
 	push {r6}
 	mov r8, r0
-	ldr r6, _080250B8  @ gUnknown_02033F3C
+	ldr r6, _080250B8  @ gUnitSubject
 	ldr r0, [r6]
 	movs r4, #0x10
 	ldrsb r4, [r0, r4]
@@ -320,7 +320,7 @@ ForEachUnitInMagBy2Range: @ 0x0802506C
 	adds r1, r5, #0
 	bl InitTargets
 	ldr r0, [r6]
-	bl GetUnitMagBy2Range
+	bl GetUnitMagRange
 	adds r2, r0, #0
 	adds r0, r4, #0
 	adds r1, r5, #0
@@ -340,7 +340,7 @@ ForEachUnitInMagBy2Range: @ 0x0802506C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080250B8: .4byte gUnknown_02033F3C
+_080250B8: .4byte gUnitSubject
 
 	THUMB_FUNC_END ForEachUnitInMagBy2Range
 
@@ -353,8 +353,8 @@ TryAddTrapsToTargetList: @ 0x080250BC
 	ldrb r0, [r4, #2]
 	cmp r0, #0
 	beq _0802516E
-	ldr r6, _08025174  @ gBmMapTerrain
-	ldr r5, _08025178  @ gBmMapRange
+	ldr r6, _08025174  @ gMapTerrain
+	ldr r5, _08025178  @ gMapRange
 _080250D0:
 	cmp r0, #2
 	bne _08025166
@@ -440,8 +440,8 @@ _0802516E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025174: .4byte gBmMapTerrain
-_08025178: .4byte gBmMapRange
+_08025174: .4byte gMapTerrain
+_08025178: .4byte gMapRange
 
 	THUMB_FUNC_END TryAddTrapsToTargetList
 
@@ -449,14 +449,14 @@ _08025178: .4byte gBmMapRange
 AddUnitToTargetListIfNotAllied: @ 0x0802517C
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _080251B0  @ gUnknown_02033F3C
+	ldr r0, _080251B0  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _080251AA
@@ -473,7 +473,7 @@ _080251AA:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080251B0: .4byte gUnknown_02033F3C
+_080251B0: .4byte gUnitSubject
 
 	THUMB_FUNC_END AddUnitToTargetListIfNotAllied
 
@@ -487,12 +487,12 @@ MakeTargetListForWeapon: @ 0x080251B4
 	ldrsb r5, [r0, r5]
 	movs r6, #0x11
 	ldrsb r6, [r0, r6]
-	ldr r1, _08025210  @ gUnknown_02033F3C
+	ldr r1, _08025210  @ gUnitSubject
 	str r0, [r1]
 	adds r0, r5, #0
 	adds r1, r6, #0
 	bl InitTargets
-	ldr r0, _08025214  @ gBmMapRange
+	ldr r0, _08025214  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -509,7 +509,7 @@ MakeTargetListForWeapon: @ 0x080251B4
 	adds r0, r5, #0
 	adds r1, r6, #0
 	adds r2, r4, #0
-	bl MapAddInBoundedRange
+	bl MapIncInBoundedRange
 	ldr r0, _08025218  @ AddUnitToTargetListIfNotAllied
 	bl ForEachUnitInRange
 	bl TryAddTrapsToTargetList
@@ -519,8 +519,8 @@ MakeTargetListForWeapon: @ 0x080251B4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025210: .4byte gUnknown_02033F3C
-_08025214: .4byte gBmMapRange
+_08025210: .4byte gUnitSubject
+_08025214: .4byte gMapRange
 _08025218: .4byte AddUnitToTargetListIfNotAllied
 
 	THUMB_FUNC_END MakeTargetListForWeapon
@@ -529,14 +529,14 @@ _08025218: .4byte AddUnitToTargetListIfNotAllied
 TryAddUnitToTradeTargetList: @ 0x0802521C
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r5, _080252CC  @ gUnknown_02033F3C
+	ldr r5, _080252CC  @ gUnitSubject
 	ldr r0, [r5]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl IsSameAllegience
+	bl AreAllegiancesEqual
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080252C4
@@ -595,7 +595,7 @@ _08025288:
 	ands r0, r2
 	cmp r0, #0
 	bne _080252C4
-	ldr r0, _080252CC  @ gUnknown_02033F3C
+	ldr r0, _080252CC  @ gUnitSubject
 	ldr r0, [r0]
 	ldrh r0, [r0, #0x1e]
 	cmp r0, #0
@@ -615,7 +615,7 @@ _080252C4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080252CC: .4byte gUnknown_02033F3C
+_080252CC: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToTradeTargetList
 
@@ -626,9 +626,9 @@ MakeTradeTargetList: @ 0x080252D0
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r6, _08025338  @ gUnknown_02033F3C
+	ldr r6, _08025338  @ gUnitSubject
 	str r0, [r6]
-	ldr r0, _0802533C  @ gBmMapRange
+	ldr r0, _0802533C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -643,13 +643,13 @@ MakeTradeTargetList: @ 0x080252D0
 	ands r0, r1
 	cmp r0, #0
 	beq _08025332
-	bl sub_804FD28
+	bl GetTargetListSize
 	adds r4, r0, #0
 	ldr r0, [r6]
 	ldrb r0, [r0, #0x1b]
 	bl GetUnit
 	bl _call_via_r7
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r4, r0
 	beq _08025332
 	adds r0, r4, #0
@@ -667,8 +667,8 @@ _08025332:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025338: .4byte gUnknown_02033F3C
-_0802533C: .4byte gBmMapRange
+_08025338: .4byte gUnitSubject
+_0802533C: .4byte gMapRange
 _08025340: .4byte TryAddUnitToTradeTargetList
 
 	THUMB_FUNC_END MakeTradeTargetList
@@ -677,14 +677,14 @@ _08025340: .4byte TryAddUnitToTradeTargetList
 TryAddUnitToRescueTargetList: @ 0x08025344
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r5, _080253B0  @ gUnknown_02033F3C
+	ldr r5, _080253B0  @ gUnitSubject
 	ldr r0, [r5]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080253AA
@@ -711,7 +711,7 @@ TryAddUnitToRescueTargetList: @ 0x08025344
 	bne _080253AA
 	adds r0, r2, #0
 	adds r1, r4, #0
-	bl CanUnitRescue
+	bl CanUnitCarry
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080253AA
@@ -728,7 +728,7 @@ _080253AA:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080253B0: .4byte gUnknown_02033F3C
+_080253B0: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToRescueTargetList
 
@@ -739,9 +739,9 @@ MakeRescueTargetList: @ 0x080253B4
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _080253DC  @ gUnknown_02033F3C
+	ldr r1, _080253DC  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _080253E0  @ gBmMapRange
+	ldr r0, _080253E0  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -753,8 +753,8 @@ MakeRescueTargetList: @ 0x080253B4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080253DC: .4byte gUnknown_02033F3C
-_080253E0: .4byte gBmMapRange
+_080253DC: .4byte gUnitSubject
+_080253E0: .4byte gMapRange
 _080253E4: .4byte TryAddUnitToRescueTargetList
 
 	THUMB_FUNC_END MakeRescueTargetList
@@ -764,7 +764,7 @@ TryAddToDropTargetList: @ 0x080253E8
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r6, r1, #0
-	ldr r0, _08025434  @ gBmMapUnit
+	ldr r0, _08025434  @ gMapUnit
 	ldr r0, [r0]
 	lsls r5, r6, #2
 	adds r0, r5, r0
@@ -773,11 +773,11 @@ TryAddToDropTargetList: @ 0x080253E8
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _0802542C
-	ldr r0, _08025438  @ gUnknown_02033F3C
+	ldr r0, _08025438  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0x1b]
 	bl GetUnit
-	ldr r1, _0802543C  @ gBmMapTerrain
+	ldr r1, _0802543C  @ gMapTerrain
 	ldr r1, [r1]
 	adds r1, r5, r1
 	ldr r1, [r1]
@@ -797,9 +797,9 @@ _0802542C:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025434: .4byte gBmMapUnit
-_08025438: .4byte gUnknown_02033F3C
-_0802543C: .4byte gBmMapTerrain
+_08025434: .4byte gMapUnit
+_08025438: .4byte gUnitSubject
+_0802543C: .4byte gMapTerrain
 
 	THUMB_FUNC_END TryAddToDropTargetList
 
@@ -810,9 +810,9 @@ MakeDropTargetList: @ 0x08025440
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025468  @ gUnknown_02033F3C
+	ldr r1, _08025468  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _0802546C  @ gBmMapRange
+	ldr r0, _0802546C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -824,8 +824,8 @@ MakeDropTargetList: @ 0x08025440
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025468: .4byte gUnknown_02033F3C
-_0802546C: .4byte gBmMapRange
+_08025468: .4byte gUnitSubject
+_0802546C: .4byte gMapRange
 _08025470: .4byte TryAddToDropTargetList
 
 	THUMB_FUNC_END MakeDropTargetList
@@ -834,14 +834,14 @@ _08025470: .4byte TryAddToDropTargetList
 TryAddRescuedUnitToTakeTargetList: @ 0x08025474
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	ldr r4, _080254DC  @ gUnknown_02033F3C
+	ldr r4, _080254DC  @ gUnitSubject
 	ldr r0, [r4]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r5, r1]
-	bl IsSameAllegience
+	bl AreAllegiancesEqual
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080254D6
@@ -865,7 +865,7 @@ TryAddRescuedUnitToTakeTargetList: @ 0x08025474
 	bl GetUnit
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl CanUnitRescue
+	bl CanUnitCarry
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080254D6
@@ -882,7 +882,7 @@ _080254D6:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080254DC: .4byte gUnknown_02033F3C
+_080254DC: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddRescuedUnitToTakeTargetList
 
@@ -893,9 +893,9 @@ MakeTakeTargetList: @ 0x080254E0
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025508  @ gUnknown_02033F3C
+	ldr r1, _08025508  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _0802550C  @ gBmMapRange
+	ldr r0, _0802550C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -907,8 +907,8 @@ MakeTakeTargetList: @ 0x080254E0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025508: .4byte gUnknown_02033F3C
-_0802550C: .4byte gBmMapRange
+_08025508: .4byte gUnitSubject
+_0802550C: .4byte gMapRange
 _08025510: .4byte TryAddRescuedUnitToTakeTargetList
 
 	THUMB_FUNC_END MakeTakeTargetList
@@ -917,14 +917,14 @@ _08025510: .4byte TryAddRescuedUnitToTakeTargetList
 sub_8025514: @ 0x08025514
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r5, _08025590  @ gUnknown_02033F3C
+	ldr r5, _08025590  @ gUnitSubject
 	ldr r0, [r5]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl IsSameAllegience
+	bl AreAllegiancesEqual
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08025588
@@ -957,7 +957,7 @@ sub_8025514: @ 0x08025514
 	bl GetUnit
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl CanUnitRescue
+	bl CanUnitCarry
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08025588
@@ -974,7 +974,7 @@ _08025588:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025590: .4byte gUnknown_02033F3C
+_08025590: .4byte gUnitSubject
 
 	THUMB_FUNC_END sub_8025514
 
@@ -985,9 +985,9 @@ sub_8025594: @ 0x08025594
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _080255BC  @ gUnknown_02033F3C
+	ldr r1, _080255BC  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _080255C0  @ gBmMapRange
+	ldr r0, _080255C0  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -999,8 +999,8 @@ sub_8025594: @ 0x08025594
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080255BC: .4byte gUnknown_02033F3C
-_080255C0: .4byte gBmMapRange
+_080255BC: .4byte gUnitSubject
+_080255C0: .4byte gMapRange
 _080255C4: .4byte sub_8025514
 
 	THUMB_FUNC_END sub_8025594
@@ -1017,13 +1017,13 @@ sub_80255C8: @ 0x080255C8
 	beq _08025606
 	cmp r1, #2
 	beq _08025606
-	ldr r0, _0802560C  @ gUnknown_02033F3C
+	ldr r0, _0802560C  @ gUnitSubject
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrb r0, [r0, #4]
 	ldr r1, [r4]
 	ldrb r1, [r1, #4]
-	bl sub_8083F68
+	bl CheckForCharacterEvents
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08025606
@@ -1041,20 +1041,20 @@ _08025606:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0802560C: .4byte gUnknown_02033F3C
+_0802560C: .4byte gUnitSubject
 
 	THUMB_FUNC_END sub_80255C8
 
-	THUMB_FUNC_START sub_8025610
-sub_8025610: @ 0x08025610
+	THUMB_FUNC_START MakeTargetsForTalk
+MakeTargetsForTalk: @ 0x08025610
 	push {r4, r5, lr}
 	movs r4, #0x10
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025638  @ gUnknown_02033F3C
+	ldr r1, _08025638  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _0802563C  @ gBmMapRange
+	ldr r0, _0802563C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -1066,16 +1066,16 @@ sub_8025610: @ 0x08025610
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025638: .4byte gUnknown_02033F3C
-_0802563C: .4byte gBmMapRange
+_08025638: .4byte gUnitSubject
+_0802563C: .4byte gMapRange
 _08025640: .4byte sub_80255C8
 
-	THUMB_FUNC_END sub_8025610
+	THUMB_FUNC_END MakeTargetsForTalk
 
 	THUMB_FUNC_START MakeTargetListForSupport
 MakeTargetListForSupport: @ 0x08025644
 	push {r4, r5, r6, r7, lr}
-	ldr r4, _080256E8  @ gUnknown_02033F3C
+	ldr r4, _080256E8  @ gUnitSubject
 	str r0, [r4]
 	movs r2, #0x10
 	ldrsb r2, [r0, r2]
@@ -1157,7 +1157,7 @@ _080256E2:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080256E8: .4byte gUnknown_02033F3C
+_080256E8: .4byte gUnitSubject
 _080256EC: .4byte 0x0001002C
 
 	THUMB_FUNC_END MakeTargetListForSupport
@@ -1166,14 +1166,14 @@ _080256EC: .4byte 0x0001002C
 AddUnitToTargetListIfAllied: @ 0x080256F0
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08025724  @ gUnknown_02033F3C
+	ldr r0, _08025724  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0802571E
@@ -1190,7 +1190,7 @@ _0802571E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025724: .4byte gUnknown_02033F3C
+_08025724: .4byte gUnitSubject
 
 	THUMB_FUNC_END AddUnitToTargetListIfAllied
 
@@ -1201,7 +1201,7 @@ FillBallistaRangeMaybe: @ 0x08025728
 	ldrsb r5, [r0, r5]
 	movs r6, #0x11
 	ldrsb r6, [r0, r6]
-	ldr r1, _08025788  @ gUnknown_02033F3C
+	ldr r1, _08025788  @ gUnitSubject
 	str r0, [r1]
 	adds r0, r5, #0
 	adds r1, r6, #0
@@ -1212,7 +1212,7 @@ FillBallistaRangeMaybe: @ 0x08025728
 	adds r7, r0, #0
 	cmp r7, #0
 	beq _08025782
-	ldr r0, _0802578C  @ gBmMapRange
+	ldr r0, _0802578C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -1229,7 +1229,7 @@ FillBallistaRangeMaybe: @ 0x08025728
 	adds r0, r5, #0
 	adds r1, r6, #0
 	adds r2, r4, #0
-	bl MapAddInBoundedRange
+	bl MapIncInBoundedRange
 	ldr r0, _08025790  @ AddUnitToTargetListIfAllied
 	bl ForEachUnitInRange
 	bl TryAddTrapsToTargetList
@@ -1238,8 +1238,8 @@ _08025782:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025788: .4byte gUnknown_02033F3C
-_0802578C: .4byte gBmMapRange
+_08025788: .4byte gUnitSubject
+_0802578C: .4byte gMapRange
 _08025790: .4byte AddUnitToTargetListIfAllied
 
 	THUMB_FUNC_END FillBallistaRangeMaybe
@@ -1249,7 +1249,7 @@ TryAddClosedDoorToTargetList: @ 0x08025794
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	ldr r0, _080257D0  @ gBmMapTerrain
+	ldr r0, _080257D0  @ gMapTerrain
 	ldr r1, [r0]
 	lsls r0, r5, #2
 	adds r0, r0, r1
@@ -1276,7 +1276,7 @@ _080257CA:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080257D0: .4byte gBmMapTerrain
+_080257D0: .4byte gMapTerrain
 
 	THUMB_FUNC_END TryAddClosedDoorToTargetList
 
@@ -1285,7 +1285,7 @@ TryAddBridgeToTargetList: @ 0x080257D4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	ldr r0, _08025810  @ gBmMapTerrain
+	ldr r0, _08025810  @ gMapTerrain
 	ldr r1, [r0]
 	lsls r0, r5, #2
 	adds r0, r0, r1
@@ -1312,7 +1312,7 @@ _0802580A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025810: .4byte gBmMapTerrain
+_08025810: .4byte gMapTerrain
 
 	THUMB_FUNC_END TryAddBridgeToTargetList
 
@@ -1324,9 +1324,9 @@ MakeTargetListForDoorAndBridges: @ 0x08025814
 	ldrsb r5, [r0, r5]
 	movs r6, #0x11
 	ldrsb r6, [r0, r6]
-	ldr r1, _08025844  @ gUnknown_02033F3C
+	ldr r1, _08025844  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025848  @ gBmMapRange
+	ldr r0, _08025848  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -1340,8 +1340,8 @@ MakeTargetListForDoorAndBridges: @ 0x08025814
 	bl ForEachAdjacentPosition
 	b _0802585A
 	.align 2, 0
-_08025844: .4byte gUnknown_02033F3C
-_08025848: .4byte gBmMapRange
+_08025844: .4byte gUnitSubject
+_08025848: .4byte gMapRange
 _0802584C: .4byte TryAddClosedDoorToTargetList
 _08025850:
 	ldr r2, _08025860  @ TryAddBridgeToTargetList
@@ -1362,7 +1362,7 @@ sub_8025864: @ 0x08025864
 	push {lr}
 	adds r2, r0, #0
 	adds r3, r1, #0
-	ldr r0, _08025890  @ gBmMapTerrain
+	ldr r0, _08025890  @ gMapTerrain
 	ldr r1, [r0]
 	lsls r0, r3, #2
 	adds r0, r0, r1
@@ -1380,7 +1380,7 @@ sub_8025864: @ 0x08025864
 	bl AddTarget
 	b _080258A0
 	.align 2, 0
-_08025890: .4byte gBmMapTerrain
+_08025890: .4byte gMapTerrain
 _08025894:
 	adds r0, r2, #0
 	adds r1, r3, #0
@@ -1393,17 +1393,17 @@ _080258A0:
 
 	THUMB_FUNC_END sub_8025864
 
-	THUMB_FUNC_START sub_80258A4
-sub_80258A4: @ 0x080258A4
+	THUMB_FUNC_START MakeTargetListForPick
+MakeTargetListForPick: @ 0x080258A4
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	movs r5, #0x10
 	ldrsb r5, [r4, r5]
 	movs r6, #0x11
 	ldrsb r6, [r4, r6]
-	ldr r0, _080258F4  @ gUnknown_02033F3C
+	ldr r0, _080258F4  @ gUnitSubject
 	str r4, [r0]
-	ldr r0, _080258F8  @ gBmMapRange
+	ldr r0, _080258F8  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -1413,7 +1413,7 @@ sub_80258A4: @ 0x080258A4
 	bl ForEachAdjacentPosition
 	movs r0, #0x11
 	ldrsb r0, [r4, r0]
-	ldr r1, _08025900  @ gBmMapTerrain
+	ldr r1, _08025900  @ gMapTerrain
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -1434,15 +1434,15 @@ _080258EE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080258F4: .4byte gUnknown_02033F3C
-_080258F8: .4byte gBmMapRange
+_080258F4: .4byte gUnitSubject
+_080258F8: .4byte gMapRange
 _080258FC: .4byte sub_8025864
-_08025900: .4byte gBmMapTerrain
+_08025900: .4byte gMapTerrain
 
-	THUMB_FUNC_END sub_80258A4
+	THUMB_FUNC_END MakeTargetListForPick
 
-	THUMB_FUNC_START sub_8025904
-sub_8025904: @ 0x08025904
+	THUMB_FUNC_START MakeTerrainHealTargetList
+MakeTerrainHealTargetList: @ 0x08025904
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -1468,7 +1468,7 @@ _08025918:
 	bne _080259CE
 	movs r1, #0x11
 	ldrsb r1, [r5, r1]
-	ldr r0, _080259E8  @ gBmMapTerrain
+	ldr r0, _080259E8  @ gMapTerrain
 	ldr r0, [r0]
 	lsls r1, r1, #2
 	adds r1, r1, r0
@@ -1506,7 +1506,7 @@ _08025918:
 	bl AddTarget
 _0802598E:
 	adds r0, r6, #0
-	bl GetTerrainUnk
+	bl GetTerrainHealsStatus
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080259CE
@@ -1549,12 +1549,12 @@ _080259CE:
 	bx r0
 	.align 2, 0
 _080259E4: .4byte 0x0001002C
-_080259E8: .4byte gBmMapTerrain
+_080259E8: .4byte gMapTerrain
 
-	THUMB_FUNC_END sub_8025904
+	THUMB_FUNC_END MakeTerrainHealTargetList
 
-	THUMB_FUNC_START sub_80259EC
-sub_80259EC: @ 0x080259EC
+	THUMB_FUNC_START MakePoisonDamageTargetList
+MakePoisonDamageTargetList: @ 0x080259EC
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -1613,10 +1613,10 @@ _08025A4A:
 	.align 2, 0
 _08025A60: .4byte 0x0001002C
 
-	THUMB_FUNC_END sub_80259EC
+	THUMB_FUNC_END MakePoisonDamageTargetList
 
-	THUMB_FUNC_START sub_8025A64
-sub_8025A64: @ 0x08025A64
+	THUMB_FUNC_START MakeGorgonEggHatchTargetList
+MakeGorgonEggHatchTargetList: @ 0x08025A64
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -1658,7 +1658,7 @@ _08025A84:
 	movs r1, #0x11
 	ldrsb r1, [r4, r1]
 	movs r2, #0xc
-	bl GetTypedTrapAt
+	bl GetSpecificTrapAt
 	adds r2, r0, #0
 	cmp r2, #0
 	beq _08025B02
@@ -1706,20 +1706,20 @@ _08025B0C:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8025A64
+	THUMB_FUNC_END MakeGorgonEggHatchTargetList
 
 	THUMB_FUNC_START sub_8025B18
 sub_8025B18: @ 0x08025B18
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08025B68  @ gUnknown_02033F3C
+	ldr r0, _08025B68  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl IsSameAllegience
+	bl AreAllegiancesEqual
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08025B62
@@ -1750,7 +1750,7 @@ _08025B62:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025B68: .4byte gUnknown_02033F3C
+_08025B68: .4byte gUnitSubject
 
 	THUMB_FUNC_END sub_8025B18
 
@@ -1761,9 +1761,9 @@ sub_8025B6C: @ 0x08025B6C
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025B94  @ gUnknown_02033F3C
+	ldr r1, _08025B94  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025B98  @ gBmMapRange
+	ldr r0, _08025B98  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -1775,8 +1775,8 @@ sub_8025B6C: @ 0x08025B6C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025B94: .4byte gUnknown_02033F3C
-_08025B98: .4byte gBmMapRange
+_08025B94: .4byte gUnitSubject
+_08025B98: .4byte gMapRange
 _08025B9C: .4byte sub_8025B18
 
 	THUMB_FUNC_END sub_8025B6C
@@ -1840,9 +1840,9 @@ MakeTargetListForSteal: @ 0x08025C00
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025C28  @ gUnknown_02033F3C
+	ldr r1, _08025C28  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025C2C  @ gBmMapRange
+	ldr r0, _08025C2C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -1854,18 +1854,18 @@ MakeTargetListForSteal: @ 0x08025C00
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025C28: .4byte gUnknown_02033F3C
-_08025C2C: .4byte gBmMapRange
+_08025C28: .4byte gUnitSubject
+_08025C2C: .4byte gMapRange
 _08025C30: .4byte AddAsTarget_IfCanStealFrom
 
 	THUMB_FUNC_END MakeTargetListForSteal
 
-	THUMB_FUNC_START sub_8025C34
-sub_8025C34: @ 0x08025C34
+	THUMB_FUNC_START AddAsTarget_IfPositionCleanForSummon
+AddAsTarget_IfPositionCleanForSummon: @ 0x08025C34
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	ldr r0, _08025C90  @ gBmMapUnit
+	ldr r0, _08025C90  @ gMapUnit
 	ldr r0, [r0]
 	lsls r2, r5, #2
 	adds r0, r2, r0
@@ -1874,11 +1874,11 @@ sub_8025C34: @ 0x08025C34
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _08025C8A
-	ldr r0, _08025C94  @ gRAMChapterData
+	ldr r0, _08025C94  @ gPlaySt
 	ldrb r0, [r0, #0xd]
 	cmp r0, #0
 	beq _08025C64
-	ldr r0, _08025C98  @ gBmMapFog
+	ldr r0, _08025C98  @ gMapFog
 	ldr r0, [r0]
 	adds r0, r2, r0
 	ldr r0, [r0]
@@ -1887,9 +1887,9 @@ sub_8025C34: @ 0x08025C34
 	cmp r0, #0
 	beq _08025C8A
 _08025C64:
-	ldr r0, _08025C9C  @ gUnknown_02033F3C
+	ldr r0, _08025C9C  @ gUnitSubject
 	ldr r0, [r0]
-	ldr r1, _08025CA0  @ gBmMapTerrain
+	ldr r1, _08025CA0  @ gMapTerrain
 	ldr r1, [r1]
 	adds r1, r2, r1
 	ldr r1, [r1]
@@ -1909,28 +1909,28 @@ _08025C8A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025C90: .4byte gBmMapUnit
-_08025C94: .4byte gRAMChapterData
-_08025C98: .4byte gBmMapFog
-_08025C9C: .4byte gUnknown_02033F3C
-_08025CA0: .4byte gBmMapTerrain
+_08025C90: .4byte gMapUnit
+_08025C94: .4byte gPlaySt
+_08025C98: .4byte gMapFog
+_08025C9C: .4byte gUnitSubject
+_08025CA0: .4byte gMapTerrain
 
-	THUMB_FUNC_END sub_8025C34
+	THUMB_FUNC_END AddAsTarget_IfPositionCleanForSummon
 
-	THUMB_FUNC_START sub_8025CA4
-sub_8025CA4: @ 0x08025CA4
+	THUMB_FUNC_START ListSummonTargets
+ListSummonTargets: @ 0x08025CA4
 	push {r4, r5, lr}
 	movs r4, #0x10
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025CCC  @ gUnknown_02033F3C
+	ldr r1, _08025CCC  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025CD0  @ gBmMapRange
+	ldr r0, _08025CD0  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
-	ldr r2, _08025CD4  @ sub_8025C34
+	ldr r2, _08025CD4  @ AddAsTarget_IfPositionCleanForSummon
 	adds r0, r4, #0
 	adds r1, r5, #0
 	bl ForEachAdjacentPosition
@@ -1938,18 +1938,18 @@ sub_8025CA4: @ 0x08025CA4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025CCC: .4byte gUnknown_02033F3C
-_08025CD0: .4byte gBmMapRange
-_08025CD4: .4byte sub_8025C34
+_08025CCC: .4byte gUnitSubject
+_08025CD0: .4byte gMapRange
+_08025CD4: .4byte AddAsTarget_IfPositionCleanForSummon
 
-	THUMB_FUNC_END sub_8025CA4
+	THUMB_FUNC_END ListSummonTargets
 
 	THUMB_FUNC_START sub_8025CD8
 sub_8025CD8: @ 0x08025CD8
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	ldr r0, _08025D34  @ gBmMapUnit
+	ldr r0, _08025D34  @ gMapUnit
 	ldr r0, [r0]
 	lsls r2, r5, #2
 	adds r0, r2, r0
@@ -1958,11 +1958,11 @@ sub_8025CD8: @ 0x08025CD8
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _08025D2E
-	ldr r0, _08025D38  @ gRAMChapterData
+	ldr r0, _08025D38  @ gPlaySt
 	ldrb r0, [r0, #0xd]
 	cmp r0, #0
 	beq _08025D08
-	ldr r0, _08025D3C  @ gBmMapFog
+	ldr r0, _08025D3C  @ gMapFog
 	ldr r0, [r0]
 	adds r0, r2, r0
 	ldr r0, [r0]
@@ -1971,9 +1971,9 @@ sub_8025CD8: @ 0x08025CD8
 	cmp r0, #0
 	beq _08025D2E
 _08025D08:
-	ldr r0, _08025D40  @ gUnknown_02033F3C
+	ldr r0, _08025D40  @ gUnitSubject
 	ldr r0, [r0]
-	ldr r1, _08025D44  @ gBmMapTerrain
+	ldr r1, _08025D44  @ gMapTerrain
 	ldr r1, [r1]
 	adds r1, r2, r1
 	ldr r1, [r1]
@@ -1993,11 +1993,11 @@ _08025D2E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025D34: .4byte gBmMapUnit
-_08025D38: .4byte gRAMChapterData
-_08025D3C: .4byte gBmMapFog
-_08025D40: .4byte gUnknown_02033F3C
-_08025D44: .4byte gBmMapTerrain
+_08025D34: .4byte gMapUnit
+_08025D38: .4byte gPlaySt
+_08025D3C: .4byte gMapFog
+_08025D40: .4byte gUnitSubject
+_08025D44: .4byte gMapTerrain
 
 	THUMB_FUNC_END sub_8025CD8
 
@@ -2008,9 +2008,9 @@ sub_8025D48: @ 0x08025D48
 	ldrsb r5, [r0, r5]
 	movs r4, #0x11
 	ldrsb r4, [r0, r4]
-	ldr r1, _08025D74  @ gUnknown_02033F3C
+	ldr r1, _08025D74  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025D78  @ gBmMapRange
+	ldr r0, _08025D78  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2023,8 +2023,8 @@ sub_8025D48: @ 0x08025D48
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025D74: .4byte gUnknown_02033F3C
-_08025D78: .4byte gBmMapRange
+_08025D74: .4byte gUnitSubject
+_08025D78: .4byte gMapRange
 _08025D7C: .4byte sub_8025CD8
 
 	THUMB_FUNC_END sub_8025D48
@@ -2036,9 +2036,9 @@ sub_8025D80: @ 0x08025D80
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025DAC  @ gUnknown_02033F3C
+	ldr r1, _08025DAC  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025DB0  @ gBmMapRange
+	ldr r0, _08025DB0  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2051,8 +2051,8 @@ sub_8025D80: @ 0x08025D80
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025DAC: .4byte gUnknown_02033F3C
-_08025DB0: .4byte gBmMapRange
+_08025DAC: .4byte gUnitSubject
+_08025DB0: .4byte gMapRange
 _08025DB4: .4byte sub_8025CD8
 
 	THUMB_FUNC_END sub_8025D80
@@ -2064,9 +2064,9 @@ sub_8025DB8: @ 0x08025DB8
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025DE4  @ gUnknown_02033F3C
+	ldr r1, _08025DE4  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025DE8  @ gBmMapRange
+	ldr r0, _08025DE8  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2079,8 +2079,8 @@ sub_8025DB8: @ 0x08025DB8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025DE4: .4byte gUnknown_02033F3C
-_08025DE8: .4byte gBmMapRange
+_08025DE4: .4byte gUnitSubject
+_08025DE8: .4byte gMapRange
 _08025DEC: .4byte sub_8025CD8
 
 	THUMB_FUNC_END sub_8025DB8
@@ -2092,9 +2092,9 @@ sub_8025DF0: @ 0x08025DF0
 	ldrsb r5, [r0, r5]
 	movs r4, #0x11
 	ldrsb r4, [r0, r4]
-	ldr r1, _08025E1C  @ gUnknown_02033F3C
+	ldr r1, _08025E1C  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025E20  @ gBmMapRange
+	ldr r0, _08025E20  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2107,8 +2107,8 @@ sub_8025DF0: @ 0x08025DF0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025E1C: .4byte gUnknown_02033F3C
-_08025E20: .4byte gBmMapRange
+_08025E1C: .4byte gUnitSubject
+_08025E20: .4byte gMapRange
 _08025E24: .4byte sub_8025CD8
 
 	THUMB_FUNC_END sub_8025DF0
@@ -2117,14 +2117,14 @@ _08025E24: .4byte sub_8025CD8
 TryAddUnitToHealTargetList: @ 0x08025E28
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	ldr r0, _08025E78  @ gUnknown_02033F3C
+	ldr r0, _08025E78  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r5, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08025E72
@@ -2153,7 +2153,7 @@ _08025E72:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025E78: .4byte gUnknown_02033F3C
+_08025E78: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToHealTargetList
 
@@ -2164,9 +2164,9 @@ MakeTargetListForAdjacentHeal: @ 0x08025E7C
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025EA4  @ gUnknown_02033F3C
+	ldr r1, _08025EA4  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08025EA8  @ gBmMapRange
+	ldr r0, _08025EA8  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2178,8 +2178,8 @@ MakeTargetListForAdjacentHeal: @ 0x08025E7C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025EA4: .4byte gUnknown_02033F3C
-_08025EA8: .4byte gBmMapRange
+_08025EA4: .4byte gUnitSubject
+_08025EA8: .4byte gMapRange
 _08025EAC: .4byte TryAddUnitToHealTargetList
 
 	THUMB_FUNC_END MakeTargetListForAdjacentHeal
@@ -2191,17 +2191,17 @@ MakeTargetListForRangedHeal: @ 0x08025EB0
 	ldrsb r5, [r0, r5]
 	movs r6, #0x11
 	ldrsb r6, [r0, r6]
-	ldr r4, _08025EF0  @ gUnknown_02033F3C
+	ldr r4, _08025EF0  @ gUnitSubject
 	str r0, [r4]
 	adds r0, r5, #0
 	adds r1, r6, #0
 	bl InitTargets
-	ldr r0, _08025EF4  @ gBmMapRange
+	ldr r0, _08025EF4  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
 	ldr r0, [r4]
-	bl GetUnitMagBy2Range
+	bl GetUnitMagRange
 	adds r2, r0, #0
 	adds r0, r5, #0
 	adds r1, r6, #0
@@ -2213,8 +2213,8 @@ MakeTargetListForRangedHeal: @ 0x08025EB0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025EF0: .4byte gUnknown_02033F3C
-_08025EF4: .4byte gBmMapRange
+_08025EF0: .4byte gUnitSubject
+_08025EF4: .4byte gMapRange
 _08025EF8: .4byte TryAddUnitToHealTargetList
 
 	THUMB_FUNC_END MakeTargetListForRangedHeal
@@ -2223,14 +2223,14 @@ _08025EF8: .4byte TryAddUnitToHealTargetList
 AddToTargetListIfNotAllied: @ 0x08025EFC
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08025F40  @ gUnknown_02033F3C
+	ldr r0, _08025F40  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -2255,7 +2255,7 @@ _08025F3A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025F40: .4byte gUnknown_02033F3C
+_08025F40: .4byte gUnitSubject
 
 	THUMB_FUNC_END AddToTargetListIfNotAllied
 
@@ -2266,12 +2266,12 @@ MakeTargetListForFuckingNightmare: @ 0x08025F44
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08025F8C  @ gUnknown_02033F3C
+	ldr r1, _08025F8C  @ gUnitSubject
 	str r0, [r1]
 	adds r0, r4, #0
 	adds r1, r5, #0
 	bl InitTargets
-	ldr r0, _08025F90  @ gBmMapRange
+	ldr r0, _08025F90  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2292,8 +2292,8 @@ MakeTargetListForFuckingNightmare: @ 0x08025F44
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025F8C: .4byte gUnknown_02033F3C
-_08025F90: .4byte gBmMapRange
+_08025F8C: .4byte gUnitSubject
+_08025F90: .4byte gMapRange
 _08025F94: .4byte AddToTargetListIfNotAllied
 
 	THUMB_FUNC_END MakeTargetListForFuckingNightmare
@@ -2302,14 +2302,14 @@ _08025F94: .4byte AddToTargetListIfNotAllied
 TryAddUnitToRestoreTargetList: @ 0x08025F98
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08025FE4  @ gUnknown_02033F3C
+	ldr r0, _08025FE4  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08025FDE
@@ -2338,7 +2338,7 @@ _08025FDE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08025FE4: .4byte gUnknown_02033F3C
+_08025FE4: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToRestoreTargetList
 
@@ -2349,9 +2349,9 @@ MakeTargetListForRestore: @ 0x08025FE8
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08026010  @ gUnknown_02033F3C
+	ldr r1, _08026010  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08026014  @ gBmMapRange
+	ldr r0, _08026014  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2363,8 +2363,8 @@ MakeTargetListForRestore: @ 0x08025FE8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026010: .4byte gUnknown_02033F3C
-_08026014: .4byte gBmMapRange
+_08026010: .4byte gUnitSubject
+_08026014: .4byte gMapRange
 _08026018: .4byte TryAddUnitToRestoreTargetList
 
 	THUMB_FUNC_END MakeTargetListForRestore
@@ -2373,14 +2373,14 @@ _08026018: .4byte TryAddUnitToRestoreTargetList
 TryAddUnitToBarrierTargetList: @ 0x0802601C
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08026068  @ gUnknown_02033F3C
+	ldr r0, _08026068  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08026060
@@ -2408,7 +2408,7 @@ _08026060:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026068: .4byte gUnknown_02033F3C
+_08026068: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToBarrierTargetList
 
@@ -2419,9 +2419,9 @@ MakeTargetListForBarrier: @ 0x0802606C
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08026094  @ gUnknown_02033F3C
+	ldr r1, _08026094  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08026098  @ gBmMapRange
+	ldr r0, _08026098  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2433,8 +2433,8 @@ MakeTargetListForBarrier: @ 0x0802606C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026094: .4byte gUnknown_02033F3C
-_08026098: .4byte gBmMapRange
+_08026094: .4byte gUnitSubject
+_08026098: .4byte gMapRange
 _0802609C: .4byte TryAddUnitToBarrierTargetList
 
 	THUMB_FUNC_END MakeTargetListForBarrier
@@ -2443,14 +2443,14 @@ _0802609C: .4byte TryAddUnitToBarrierTargetList
 TryAddUnitToRescueStaffTargetList: @ 0x080260A0
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _080260D4  @ gUnknown_02033F3C
+	ldr r0, _080260D4  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080260CE
@@ -2467,16 +2467,16 @@ _080260CE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080260D4: .4byte gUnknown_02033F3C
+_080260D4: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToRescueStaffTargetList
 
 	THUMB_FUNC_START MakeTargetListForRescueStaff
 MakeTargetListForRescueStaff: @ 0x080260D8
 	push {lr}
-	ldr r1, _080260F4  @ gUnknown_02033F3C
+	ldr r1, _080260F4  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _080260F8  @ gBmMapRange
+	ldr r0, _080260F8  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2485,8 +2485,8 @@ MakeTargetListForRescueStaff: @ 0x080260D8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080260F4: .4byte gUnknown_02033F3C
-_080260F8: .4byte gBmMapRange
+_080260F4: .4byte gUnitSubject
+_080260F8: .4byte gMapRange
 _080260FC: .4byte TryAddUnitToRescueStaffTargetList
 
 	THUMB_FUNC_END MakeTargetListForRescueStaff
@@ -2495,14 +2495,14 @@ _080260FC: .4byte TryAddUnitToRescueStaffTargetList
 TryAddUnitToSilenceTargetList: @ 0x08026100
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08026148  @ gUnknown_02033F3C
+	ldr r0, _08026148  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08026140
@@ -2529,7 +2529,7 @@ _08026140:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026148: .4byte gUnknown_02033F3C
+_08026148: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToSilenceTargetList
 
@@ -2537,14 +2537,14 @@ _08026148: .4byte gUnknown_02033F3C
 TryAddUnitToSleepTargetList: @ 0x0802614C
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08026194  @ gUnknown_02033F3C
+	ldr r0, _08026194  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0802618C
@@ -2571,7 +2571,7 @@ _0802618C:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026194: .4byte gUnknown_02033F3C
+_08026194: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToSleepTargetList
 
@@ -2579,14 +2579,14 @@ _08026194: .4byte gUnknown_02033F3C
 TryAddUnitToBerzerkTargetList: @ 0x08026198
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _080261E0  @ gUnknown_02033F3C
+	ldr r0, _080261E0  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _080261D8
@@ -2613,16 +2613,16 @@ _080261D8:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080261E0: .4byte gUnknown_02033F3C
+_080261E0: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToBerzerkTargetList
 
 	THUMB_FUNC_START MakeTargetListForSilence
 MakeTargetListForSilence: @ 0x080261E4
 	push {lr}
-	ldr r1, _08026200  @ gUnknown_02033F3C
+	ldr r1, _08026200  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08026204  @ gBmMapRange
+	ldr r0, _08026204  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2631,8 +2631,8 @@ MakeTargetListForSilence: @ 0x080261E4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026200: .4byte gUnknown_02033F3C
-_08026204: .4byte gBmMapRange
+_08026200: .4byte gUnitSubject
+_08026204: .4byte gMapRange
 _08026208: .4byte TryAddUnitToSilenceTargetList
 
 	THUMB_FUNC_END MakeTargetListForSilence
@@ -2640,9 +2640,9 @@ _08026208: .4byte TryAddUnitToSilenceTargetList
 	THUMB_FUNC_START MakeTargetListForSleep
 MakeTargetListForSleep: @ 0x0802620C
 	push {lr}
-	ldr r1, _08026228  @ gUnknown_02033F3C
+	ldr r1, _08026228  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _0802622C  @ gBmMapRange
+	ldr r0, _0802622C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2651,8 +2651,8 @@ MakeTargetListForSleep: @ 0x0802620C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026228: .4byte gUnknown_02033F3C
-_0802622C: .4byte gBmMapRange
+_08026228: .4byte gUnitSubject
+_0802622C: .4byte gMapRange
 _08026230: .4byte TryAddUnitToSleepTargetList
 
 	THUMB_FUNC_END MakeTargetListForSleep
@@ -2660,9 +2660,9 @@ _08026230: .4byte TryAddUnitToSleepTargetList
 	THUMB_FUNC_START MakeTargetListForBerserk
 MakeTargetListForBerserk: @ 0x08026234
 	push {lr}
-	ldr r1, _08026250  @ gUnknown_02033F3C
+	ldr r1, _08026250  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08026254  @ gBmMapRange
+	ldr r0, _08026254  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2671,8 +2671,8 @@ MakeTargetListForBerserk: @ 0x08026234
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026250: .4byte gUnknown_02033F3C
-_08026254: .4byte gBmMapRange
+_08026250: .4byte gUnitSubject
+_08026254: .4byte gMapRange
 _08026258: .4byte TryAddUnitToBerzerkTargetList
 
 	THUMB_FUNC_END MakeTargetListForBerserk
@@ -2681,14 +2681,14 @@ _08026258: .4byte TryAddUnitToBerzerkTargetList
 TryAddUnitToWarpTargetList: @ 0x0802625C
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08026290  @ gUnknown_02033F3C
+	ldr r0, _08026290  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl AreUnitsAllied
+	bl AreAllegiancesAllied
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0802628A
@@ -2705,7 +2705,7 @@ _0802628A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026290: .4byte gUnknown_02033F3C
+_08026290: .4byte gUnitSubject
 
 	THUMB_FUNC_END TryAddUnitToWarpTargetList
 
@@ -2716,9 +2716,9 @@ MakeTargetListForWarp: @ 0x08026294
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _080262BC  @ gUnknown_02033F3C
+	ldr r1, _080262BC  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _080262C0  @ gBmMapRange
+	ldr r0, _080262C0  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2730,8 +2730,8 @@ MakeTargetListForWarp: @ 0x08026294
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080262BC: .4byte gUnknown_02033F3C
-_080262C0: .4byte gBmMapRange
+_080262BC: .4byte gUnitSubject
+_080262C0: .4byte gMapRange
 _080262C4: .4byte TryAddUnitToWarpTargetList
 
 	THUMB_FUNC_END MakeTargetListForWarp
@@ -2743,9 +2743,9 @@ MakeTargetListForUnlock: @ 0x080262C8
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _080262F0  @ gUnknown_02033F3C
+	ldr r1, _080262F0  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _080262F4  @ gBmMapRange
+	ldr r0, _080262F4  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2757,8 +2757,8 @@ MakeTargetListForUnlock: @ 0x080262C8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080262F0: .4byte gUnknown_02033F3C
-_080262F4: .4byte gBmMapRange
+_080262F0: .4byte gUnitSubject
+_080262F4: .4byte gMapRange
 _080262F8: .4byte TryAddClosedDoorToTargetList
 
 	THUMB_FUNC_END MakeTargetListForUnlock
@@ -2767,21 +2767,21 @@ _080262F8: .4byte TryAddClosedDoorToTargetList
 TryAddUnitToHammerneTargetList: @ 0x080262FC
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r0, _0802631C  @ gUnknown_02033F3C
+	ldr r0, _0802631C  @ gUnitSubject
 	ldr r0, [r0]
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	movs r1, #0xb
 	ldrsb r1, [r4, r1]
-	bl IsSameAllegience
+	bl AreAllegiancesEqual
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0802634C
 	movs r5, #0
 	b _08026322
 	.align 2, 0
-_0802631C: .4byte gUnknown_02033F3C
+_0802631C: .4byte gUnitSubject
 _08026320:
 	adds r5, #1
 _08026322:
@@ -2818,9 +2818,9 @@ MakeTargetListForHammerne: @ 0x08026354
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _0802637C  @ gUnknown_02033F3C
+	ldr r1, _0802637C  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08026380  @ gBmMapRange
+	ldr r0, _08026380  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -2832,8 +2832,8 @@ MakeTargetListForHammerne: @ 0x08026354
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0802637C: .4byte gUnknown_02033F3C
-_08026380: .4byte gBmMapRange
+_0802637C: .4byte gUnitSubject
+_08026380: .4byte gMapRange
 _08026384: .4byte TryAddUnitToHammerneTargetList
 
 	THUMB_FUNC_END MakeTargetListForHammerne
@@ -2917,7 +2917,7 @@ sub_8026414: @ 0x08026414
 	mov r7, r8
 	push {r7}
 	mov r8, r0
-	bl sub_804FD28
+	bl GetTargetListSize
 	adds r7, r0, #0
 	movs r6, #0
 	cmp r6, r7
@@ -2939,10 +2939,10 @@ _08026428:
 	ldrb r0, [r0, #4]
 	movs r1, #0
 	mov r2, r8
-	bl BWL_AddWinOrLossIdk
+	bl BWL_SetDeathStats
 	ldr r0, [r5]
 	ldrb r0, [r0, #4]
-	bl sub_80A4594
+	bl BWL_AddLoss
 _0802645A:
 	adds r6, #1
 	cmp r6, r7
@@ -2961,7 +2961,7 @@ sub_802646C: @ 0x0802646C
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	ldr r0, _080264DC  @ gBmMapUnit
+	ldr r0, _080264DC  @ gMapUnit
 	ldr r0, [r0]
 	lsls r2, r5, #2
 	adds r0, r2, r0
@@ -2970,11 +2970,11 @@ sub_802646C: @ 0x0802646C
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _080264D4
-	ldr r0, _080264E0  @ gRAMChapterData
+	ldr r0, _080264E0  @ gPlaySt
 	ldrb r0, [r0, #0xd]
 	cmp r0, #0
 	beq _0802649C
-	ldr r0, _080264E4  @ gBmMapFog
+	ldr r0, _080264E4  @ gMapFog
 	ldr r0, [r0]
 	adds r0, r2, r0
 	ldr r0, [r0]
@@ -2983,9 +2983,9 @@ sub_802646C: @ 0x0802646C
 	cmp r0, #0
 	beq _080264D4
 _0802649C:
-	ldr r0, _080264E8  @ gUnknown_02033F3C
+	ldr r0, _080264E8  @ gUnitSubject
 	ldr r0, [r0]
-	ldr r1, _080264EC  @ gBmMapTerrain
+	ldr r1, _080264EC  @ gMapTerrain
 	ldr r1, [r1]
 	adds r1, r2, r1
 	ldr r1, [r1]
@@ -3014,11 +3014,11 @@ _080264D4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080264DC: .4byte gBmMapUnit
-_080264E0: .4byte gRAMChapterData
-_080264E4: .4byte gBmMapFog
-_080264E8: .4byte gUnknown_02033F3C
-_080264EC: .4byte gBmMapTerrain
+_080264DC: .4byte gMapUnit
+_080264E0: .4byte gPlaySt
+_080264E4: .4byte gMapFog
+_080264E8: .4byte gUnitSubject
+_080264EC: .4byte gMapTerrain
 
 	THUMB_FUNC_END sub_802646C
 
@@ -3029,9 +3029,9 @@ MakeTargetListForMine: @ 0x080264F0
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _08026518  @ gUnknown_02033F3C
+	ldr r1, _08026518  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _0802651C  @ gBmMapRange
+	ldr r0, _0802651C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -3043,8 +3043,8 @@ MakeTargetListForMine: @ 0x080264F0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026518: .4byte gUnknown_02033F3C
-_0802651C: .4byte gBmMapRange
+_08026518: .4byte gUnitSubject
+_0802651C: .4byte gMapRange
 _08026520: .4byte sub_802646C
 
 	THUMB_FUNC_END MakeTargetListForMine
@@ -3054,7 +3054,7 @@ sub_8026524: @ 0x08026524
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	ldr r0, _08026574  @ gBmMapUnit
+	ldr r0, _08026574  @ gMapUnit
 	ldr r0, [r0]
 	lsls r6, r5, #2
 	adds r0, r6, r0
@@ -3068,7 +3068,7 @@ sub_8026524: @ 0x08026524
 	cmp r0, #0
 	bne _0802656C
 	ldr r1, _08026578  @ gUnknown_0880BB96
-	ldr r0, _0802657C  @ gBmMapTerrain
+	ldr r0, _0802657C  @ gMapTerrain
 	ldr r0, [r0]
 	adds r0, r6, r0
 	ldr r0, [r0]
@@ -3090,9 +3090,9 @@ _0802656C:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026574: .4byte gBmMapUnit
+_08026574: .4byte gMapUnit
 _08026578: .4byte gUnknown_0880BB96
-_0802657C: .4byte gBmMapTerrain
+_0802657C: .4byte gMapTerrain
 
 	THUMB_FUNC_END sub_8026524
 
@@ -3103,9 +3103,9 @@ MakeTargetListForLightRune: @ 0x08026580
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _080265A8  @ gUnknown_02033F3C
+	ldr r1, _080265A8  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _080265AC  @ gBmMapRange
+	ldr r0, _080265AC  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -3117,8 +3117,8 @@ MakeTargetListForLightRune: @ 0x08026580
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080265A8: .4byte gUnknown_02033F3C
-_080265AC: .4byte gBmMapRange
+_080265A8: .4byte gUnitSubject
+_080265AC: .4byte gMapRange
 _080265B0: .4byte sub_8026524
 
 	THUMB_FUNC_END MakeTargetListForLightRune
@@ -3159,9 +3159,9 @@ MakeTargetListForDanceRing: @ 0x080265E4
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
-	ldr r1, _0802660C  @ gUnknown_02033F3C
+	ldr r1, _0802660C  @ gUnitSubject
 	str r0, [r1]
-	ldr r0, _08026610  @ gBmMapRange
+	ldr r0, _08026610  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -3173,8 +3173,8 @@ MakeTargetListForDanceRing: @ 0x080265E4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0802660C: .4byte gUnknown_02033F3C
-_08026610: .4byte gBmMapRange
+_0802660C: .4byte gUnitSubject
+_08026610: .4byte gMapRange
 _08026614: .4byte TryAddUnitToDanceRingTargetList
 
 	THUMB_FUNC_END MakeTargetListForDanceRing

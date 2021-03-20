@@ -12,7 +12,7 @@ sub_801DD1C: @ 0x0801DD1C
 	movs r4, #0
 	movs r1, #0x10
 	strh r1, [r0]
-	bl InitBmBgLayers
+	bl ResetHLayers
 	str r4, [sp]
 	movs r0, #0
 	movs r1, #0
@@ -78,13 +78,13 @@ _0801DDA4: .4byte gBg2Tm
 Destruct6CBMXFADE: @ 0x0801DDA8
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetAllUnitNotBackSprite
+	bl ClearUnitsSeenFlag
 	adds r4, #0x4e
 	movs r1, #0
 	ldrsh r0, [r4, r1]
 	cmp r0, #0
 	beq _0801DDBE
-	bl SubSkipThread2
+	bl UnlockGameLogic
 _0801DDBE:
 	pop {r4}
 	pop {r0}
@@ -92,8 +92,8 @@ _0801DDBE:
 
 	THUMB_FUNC_END Destruct6CBMXFADE
 
-	THUMB_FUNC_START NewBMXFADE
-NewBMXFADE: @ 0x0801DDC4
+	THUMB_FUNC_START StartBMXFADE
+StartBMXFADE: @ 0x0801DDC4
 	push {r4, lr}
 	adds r4, r0, #0
 	lsls r4, r4, #0x18
@@ -107,7 +107,7 @@ NewBMXFADE: @ 0x0801DDC4
 	strh r4, [r0]
 	cmp r4, #0
 	beq _0801DDE4
-	bl AddSkipThread2
+	bl LockGameLogic
 _0801DDE4:
 	pop {r4}
 	pop {r0}
@@ -115,10 +115,10 @@ _0801DDE4:
 	.align 2, 0
 _0801DDEC: .4byte gUnknown_0859ADC8
 
-	THUMB_FUNC_END NewBMXFADE
+	THUMB_FUNC_END StartBMXFADE
 
-	THUMB_FUNC_START MakeNew6CBMXFADE2
-MakeNew6CBMXFADE2: @ 0x0801DDF0
+	THUMB_FUNC_START StartBlockingBMXFADE
+StartBlockingBMXFADE: @ 0x0801DDF0
 	push {r4, lr}
 	adds r4, r0, #0
 	lsls r4, r4, #0x18
@@ -131,7 +131,7 @@ MakeNew6CBMXFADE2: @ 0x0801DDF0
 	strh r4, [r0]
 	cmp r4, #0
 	beq _0801DE0E
-	bl AddSkipThread2
+	bl LockGameLogic
 _0801DE0E:
 	pop {r4}
 	pop {r0}
@@ -139,10 +139,10 @@ _0801DE0E:
 	.align 2, 0
 _0801DE14: .4byte gUnknown_0859ADC8
 
-	THUMB_FUNC_END MakeNew6CBMXFADE2
+	THUMB_FUNC_END StartBlockingBMXFADE
 
-	THUMB_FUNC_START DoesBMXFADEExist
-DoesBMXFADEExist: @ 0x0801DE18
+	THUMB_FUNC_START BMXFADEExists
+BMXFADEExists: @ 0x0801DE18
 	push {lr}
 	ldr r0, _0801DE2C  @ gUnknown_0859ADC8
 	bl FindProc
@@ -155,6 +155,6 @@ _0801DE26:
 	.align 2, 0
 _0801DE2C: .4byte gUnknown_0859ADC8
 
-	THUMB_FUNC_END DoesBMXFADEExist
+	THUMB_FUNC_END BMXFADEExists
 
 .align 2, 0 @ align with 0

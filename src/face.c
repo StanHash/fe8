@@ -72,11 +72,11 @@ extern u8 CONST_DATA gUnknown_08599F74[];
 void Face_UnpackImg(struct FaceProc* proc);
 void Face_OnIdle(struct FaceProc* proc);
 
-void sub_8005AD4(ProcPtr);
+void FaceChibiSpr_OnIdle(ProcPtr);
 void sub_8005D64(ProcPtr);
 void sub_8005D70(ProcPtr);
 void sub_8005D98(ProcPtr);
-void sub_8005ECC(ProcPtr);
+void EndFacePtr(ProcPtr);
 void sub_8005FD4(ProcPtr);
 void sub_8005FE0(ProcPtr);
 void sub_800623C(ProcPtr);
@@ -261,7 +261,7 @@ u8 CONST_DATA gUnknown_085911C4[] =
 
 struct ProcScr CONST_DATA gUnknown_085911D8[] =
 {
-    PROC_REPEAT(sub_8005AD4),
+    PROC_REPEAT(FaceChibiSpr_OnIdle),
     PROC_END,
 };
 
@@ -295,7 +295,7 @@ PROC_LABEL(0),
 struct ProcScr CONST_DATA gUnknown_08591234[] =
 {
     PROC_SLEEP(8),
-    PROC_CALL(sub_8005ECC),
+    PROC_CALL(EndFacePtr),
 
     PROC_END,
 };
@@ -392,7 +392,7 @@ u16 const gUnknown_080D77FC[] =
 
 extern struct FaceInfo CONST_DATA FaceInfoTable[];
 
-extern struct FaceVramEnt gUnknown_0202A68C[];
+extern struct FaceVramEnt gFaceConfig[];
 
 extern struct FaceProc* gFaces[];
 
@@ -424,8 +424,8 @@ void SetFaceConfig(struct FaceVramEnt const* config)
 
     for (i = 0; i < FACE_SLOT_COUNT; ++i)
     {
-        gUnknown_0202A68C[i].tileOffset = config[i].tileOffset;
-        gUnknown_0202A68C[i].paletteId = config[i].paletteId;
+        gFaceConfig[i].tileOffset = config[i].tileOffset;
+        gFaceConfig[i].paletteId = config[i].paletteId;
     }
 }
 
@@ -444,7 +444,7 @@ int GetFreeFaceSlot(void)
 
 void Face_UnpackImg(struct FaceProc* proc)
 {
-    Decompress(proc->info->img, (void*) VRAM + 0x10000 + gUnknown_0202A68C[proc->id].tileOffset);
+    Decompress(proc->info->img, (void*) VRAM + 0x10000 + gFaceConfig[proc->id].tileOffset);
 }
 
 #if NONMATCHING

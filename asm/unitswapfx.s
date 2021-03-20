@@ -136,7 +136,7 @@ sub_801EAE8: @ 0x0801EAE8
 	mov r1, sl
 	subs r4, r0, r1
 	add r9, r5
-	ldr r1, _0801EBE0  @ gUnknown_0202BCB0
+	ldr r1, _0801EBE0  @ gBmSt
 	movs r2, #0xc
 	ldrsh r0, [r1, r2]
 	mov r2, r9
@@ -168,7 +168,7 @@ sub_801EAE8: @ 0x0801EAE8
 	movs r0, #4
 	adds r1, r5, #0
 	adds r2, r4, #0
-	bl sub_8027B60
+	bl PutUnitSprite
 _0801EBB2:
 	ldrh r0, [r7, #0x3c]
 	adds r0, #1
@@ -192,7 +192,7 @@ _0801EBCA:
 	bx r0
 	.align 2, 0
 _0801EBDC: .4byte gSinLut
-_0801EBE0: .4byte gUnknown_0202BCB0
+_0801EBE0: .4byte gBmSt
 _0801EBE4: .4byte Sprite_16x16
 
 	THUMB_FUNC_END sub_801EAE8
@@ -224,8 +224,8 @@ _0801EC08:
 
 	THUMB_FUNC_END sub_801EBE8
 
-	THUMB_FUNC_START sub_801EC10
-sub_801EC10: @ 0x0801EC10
+	THUMB_FUNC_START StartUnitSwapAnimation
+StartUnitSwapAnimation: @ 0x0801EC10
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
@@ -243,7 +243,7 @@ sub_801EC10: @ 0x0801EC10
 	lsls r5, r5, #4
 	strh r5, [r0, #0x36]
 	mov r0, r8
-	bl HideUnitSMS
+	bl HideUnitSprite
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6}
@@ -252,10 +252,10 @@ sub_801EC10: @ 0x0801EC10
 	.align 2, 0
 _0801EC44: .4byte gUnknown_0859AEA0
 
-	THUMB_FUNC_END sub_801EC10
+	THUMB_FUNC_END StartUnitSwapAnimation
 
-	THUMB_FUNC_START sub_801EC48
-sub_801EC48: @ 0x0801EC48
+	THUMB_FUNC_START UnitSwapAnimationExists
+UnitSwapAnimationExists: @ 0x0801EC48
 	push {lr}
 	ldr r0, _0801EC58  @ gUnknown_0859AEA0
 	bl FindProc
@@ -271,6 +271,6 @@ _0801EC5E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_801EC48
+	THUMB_FUNC_END UnitSwapAnimationExists
 
 .align 2, 0 @ align with 0

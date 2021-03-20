@@ -35,8 +35,8 @@ gUnknown_08599F74:  @ 0x08599F74
 
     .global gUnknown_08599FB4
 gUnknown_08599FB4:  @ 0x08599FB4
-    .word CopyDirect
-    .word CopyDirect
+    .word PackRawCopy
+    .word PackRawCopy
     .word LZ77UnCompVram
     .word LZ77UnCompWram
     .word HuffUnComp
@@ -66,7 +66,7 @@ gUnknown_08599FD4:  @ 0x08599FD4
 gUnknown_08599FF4:  @ 0x08599FF4
     .2byte 2
     .2byte 0
-    .4byte AddSkipThread2
+    .4byte LockGameLogic
 
     .2byte 2
     .2byte 0
@@ -196,7 +196,7 @@ gUnknown_0859A0D4:  @ 0x0859A0D4
 
     .2byte 3
     .2byte 0
-    .4byte Timer6C_Countdown
+    .4byte Timer_Countdown
 
     .2byte 0
     .2byte 0
@@ -306,7 +306,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte sub_801550C
+    .4byte MapMain_StartIntroFx
 
     .2byte 14
     .2byte 0
@@ -318,7 +318,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte SetEventId_0x84
+    .4byte TriggerDisableMapIcons
 
     .2byte 2
     .2byte 0
@@ -326,11 +326,11 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 22
     .2byte 0
-    .4byte CallBeginningEvents
+    .4byte MapMain_CallBeginningEvent
 
     .2byte 2
     .2byte 0
-    .4byte UndeployEveryone
+    .4byte MapMain_DeployEveryone
 
     .2byte 11
     .2byte 11
@@ -338,7 +338,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte UnsetEventId_0x84
+    .4byte UnTriggerDisableMapIcons
 
     .2byte 11
     .2byte 3
@@ -346,11 +346,11 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 22
     .2byte 0
-    .4byte sub_8015410
+    .4byte MapMain_SwitchPhases
 
     .2byte 2
     .2byte 0
-    .4byte E_BMAPMAIN_SuspendGame
+    .4byte MapMain_Suspend
 
     .2byte 11
     .2byte 9
@@ -394,7 +394,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 22
     .2byte 0
-    .4byte sub_8015434
+    .4byte MapMain_ThisProbablyUsedToBeEventRelatedInEarlierGames
 
     .2byte 11
     .2byte 5
@@ -402,7 +402,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 3
     .2byte 0
-    .4byte MakePhaseController6C
+    .4byte MapMain_StartPhaseController
 
     .2byte 6
     .2byte 1
@@ -410,7 +410,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 22
     .2byte 0
-    .4byte sub_80154C8
+    .4byte MapMain_UpdateTraps
 
     .2byte 12
     .2byte 3
@@ -422,7 +422,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte sub_80155C4
+    .4byte MapMain_ChapterSwitch
 
     .2byte 14
     .2byte 0
@@ -450,15 +450,15 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte sub_80160D0
+    .4byte UpdatePlayMapMusic
 
     .2byte 2
     .2byte 0
-    .4byte sub_8013D8C
+    .4byte StartFadeOutBlackMedium
 
     .2byte 3
     .2byte 0
-    .4byte ContinueUntilSomeTransistion6CExists
+    .4byte WaitForFade
 
     .2byte 12
     .2byte 5
@@ -474,19 +474,19 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte sub_80160D0
+    .4byte UpdatePlayMapMusic
 
     .2byte 2
     .2byte 0
-    .4byte sub_8013D8C
+    .4byte StartFadeOutBlackMedium
 
     .2byte 3
     .2byte 0
-    .4byte ContinueUntilSomeTransistion6CExists
+    .4byte WaitForFade
 
     .2byte 3
     .2byte 0
-    .4byte NewPlayerPhase6C
+    .4byte MapMain_StartPlayerPhaseAndApplyAction
 
     .2byte 6
     .2byte 1
@@ -506,7 +506,7 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 3
     .2byte 0
-    .4byte NewPlayerPhase6C
+    .4byte MapMain_StartPlayerPhaseAndApplyAction
 
     .2byte 6
     .2byte 1
@@ -526,15 +526,15 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte sub_80160D0
+    .4byte UpdatePlayMapMusic
 
     .2byte 2
     .2byte 0
-    .4byte sub_8013D8C
+    .4byte StartFadeOutBlackMedium
 
     .2byte 3
     .2byte 0
-    .4byte ContinueUntilSomeTransistion6CExists
+    .4byte WaitForFade
 
     .2byte 12
     .2byte 9
@@ -550,15 +550,15 @@ gProc_BMapMain:  @ 0x0859A1F0
 
     .2byte 2
     .2byte 0
-    .4byte sub_80160D0
+    .4byte UpdatePlayMapMusic
 
     .2byte 2
     .2byte 0
-    .4byte sub_8013D8C
+    .4byte StartFadeOutBlackMedium
 
     .2byte 3
     .2byte 0
-    .4byte ContinueUntilSomeTransistion6CExists
+    .4byte WaitForFade
 
     .2byte 6
     .2byte 1
@@ -659,11 +659,11 @@ gUnknown_0859A548:  @ 0x0859A548
 
     .2byte 2
     .2byte 0
-    .4byte Init6C_GENS
+    .4byte CameraMovement_OnInit
 
     .2byte 3
     .2byte 0
-    .4byte Loop6C_GENS
+    .4byte CameraMovement_OnLoop
 
     .2byte 0
     .2byte 0

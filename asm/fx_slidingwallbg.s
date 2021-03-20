@@ -50,8 +50,8 @@ _08086BB4: .4byte 0x0400001C
 
 	THUMB_FUNC_END sub_8086B7C
 
-	THUMB_FUNC_START sub_8086BB8
-sub_8086BB8: @ 0x08086BB8
+	THUMB_FUNC_START StartScreenMenuScrollingBg
+StartScreenMenuScrollingBg: @ 0x08086BB8
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	adds r4, r1, #0
@@ -69,7 +69,7 @@ _08086BD2:
 	bge _08086BD8
 	movs r5, #0xe
 _08086BD8:
-	ldr r0, _08086BF4  @ gUnknown_0202BCB0
+	ldr r0, _08086BF4  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x40
 	ands r0, r1
@@ -82,7 +82,7 @@ _08086BD8:
 	b _08086C06
 	.align 2, 0
 _08086BF0: .4byte gBg3Tm
-_08086BF4: .4byte gUnknown_0202BCB0
+_08086BF4: .4byte gBmSt
 _08086BF8: .4byte gUnknown_08B1754C
 _08086BFC:
 	ldr r0, _08086C40  @ gUnknown_08B1754C
@@ -123,7 +123,7 @@ _08086C44: .4byte gUnknown_08B12DB4
 _08086C48: .4byte 0x0000027F
 _08086C4C: .4byte gUnknown_08A006E4
 
-	THUMB_FUNC_END sub_8086BB8
+	THUMB_FUNC_END StartScreenMenuScrollingBg
 
 	THUMB_FUNC_START sub_8086C50
 sub_8086C50: @ 0x08086C50

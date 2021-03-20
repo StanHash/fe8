@@ -66,7 +66,7 @@ _08034790:
 	adds r1, r6, #0
 	adds r2, r5, #0
 	movs r3, #0
-	bl sub_8027E4C
+	bl PutUnitSpriteExt
 _0803479E:
 	add sp, #0xc
 	pop {r4, r5, r6}
@@ -364,7 +364,7 @@ GetUnitInfoWindowX: @ 0x080349D4
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	lsls r0, r0, #4
-	ldr r1, _080349F0  @ gUnknown_0202BCB0
+	ldr r1, _080349F0  @ gBmSt
 	movs r3, #0xc
 	ldrsh r1, [r1, r3]
 	subs r0, r0, r1
@@ -373,7 +373,7 @@ GetUnitInfoWindowX: @ 0x080349D4
 	movs r0, #0
 	b _080349F8
 	.align 2, 0
-_080349F0: .4byte gUnknown_0202BCB0
+_080349F0: .4byte gBmSt
 _080349F4:
 	movs r0, #0x1e
 	subs r0, r0, r2
@@ -1341,7 +1341,7 @@ sub_803519C: @ 0x0803519C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	bl NewUnitInfoWindow
-	ldr r4, _080351C8  @ gUnknown_0203A9FC
+	ldr r4, _080351C8  @ gpUnitInfoWindowProcs
 	str r0, [r4]
 	adds r0, #0x38
 	movs r1, #8
@@ -1356,7 +1356,7 @@ sub_803519C: @ 0x0803519C
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080351C8: .4byte gUnknown_0203A9FC
+_080351C8: .4byte gpUnitInfoWindowProcs
 
 	THUMB_FUNC_END sub_803519C
 
@@ -1401,7 +1401,7 @@ SetupUnitRescueWindow: @ 0x08035204
 	bl GetUnitInfoWindowX
 	adds r4, r0, #0
 	bl ClearBg0Bg1
-	ldr r6, _080352AC  @ gUnknown_0203A9FC
+	ldr r6, _080352AC  @ gpUnitInfoWindowProcs
 	ldr r0, [r6]
 	ldr r5, _080352B0  @ gActiveUnit
 	ldr r1, [r5]
@@ -1464,7 +1464,7 @@ SetupUnitRescueWindow: @ 0x08035204
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080352AC: .4byte gUnknown_0203A9FC
+_080352AC: .4byte gpUnitInfoWindowProcs
 _080352B0: .4byte gActiveUnit
 _080352B4: .4byte gBg0Tm
 _080352B8: .4byte 0x00000121
@@ -1487,7 +1487,7 @@ sub_80352BC: @ 0x080352BC
 	ldrb r0, [r5, #0x1b]
 	bl GetUnit
 	adds r7, r0, #0
-	ldr r6, _08035370  @ gUnknown_0203A9FC
+	ldr r6, _08035370  @ gpUnitInfoWindowProcs
 	ldr r0, [r6]
 	ldr r5, _08035374  @ gActiveUnit
 	ldr r1, [r5]
@@ -1552,7 +1552,7 @@ sub_80352BC: @ 0x080352BC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035370: .4byte gUnknown_0203A9FC
+_08035370: .4byte gpUnitInfoWindowProcs
 _08035374: .4byte gActiveUnit
 _08035378: .4byte gBg0Tm
 _0803537C: .4byte 0x00000121
@@ -1605,7 +1605,7 @@ sub_80353B8: @ 0x080353B8
 	bl GetUnit
 	adds r6, r0, #0
 	bl ClearBg0Bg1
-	ldr r5, _08035470  @ gUnknown_0203A9FC
+	ldr r5, _08035470  @ gpUnitInfoWindowProcs
 	ldr r0, [r5]
 	movs r1, #0xa
 	mov sl, r1
@@ -1669,7 +1669,7 @@ sub_80353B8: @ 0x080353B8
 	bx r0
 	.align 2, 0
 _0803546C: .4byte gActiveUnit
-_08035470: .4byte gUnknown_0203A9FC
+_08035470: .4byte gpUnitInfoWindowProcs
 _08035474: .4byte gBg0Tm
 _08035478: .4byte 0x00000121
 

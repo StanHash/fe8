@@ -6,25 +6,25 @@
 
 	THUMB_FUNC_START sub_8026618
 sub_8026618: @ 0x08026618
-	ldr r1, _08026624  @ gUnknown_0203A4CC
+	ldr r1, _08026624  @ gSMSSyncFlag
 	ldr r0, [r1]
 	adds r0, #1
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_08026624: .4byte gUnknown_0203A4CC
+_08026624: .4byte gSMSSyncFlag
 
 	THUMB_FUNC_END sub_8026618
 
-	THUMB_FUNC_START SetupMapSpritesPalettes
-SetupMapSpritesPalettes: @ 0x08026628
+	THUMB_FUNC_START ApplyUnitSpritePalettes
+ApplyUnitSpritePalettes: @ 0x08026628
 	push {lr}
 	ldr r0, _08026650  @ unit_icon_pal_player
 	movs r1, #0xe0
 	lsls r1, r1, #2
 	movs r2, #0x80
 	bl ApplyPaletteExt
-	ldr r0, _08026654  @ gUnknown_0202BCB0
+	ldr r0, _08026654  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x40
 	ands r0, r1
@@ -38,7 +38,7 @@ SetupMapSpritesPalettes: @ 0x08026628
 	b _08026668
 	.align 2, 0
 _08026650: .4byte unit_icon_pal_player
-_08026654: .4byte gUnknown_0202BCB0
+_08026654: .4byte gBmSt
 _08026658: .4byte unit_icon_pal_p4
 _0802665C:
 	ldr r0, _0802666C  @ gUnknown_0859EEC0
@@ -52,7 +52,7 @@ _08026668:
 	.align 2, 0
 _0802666C: .4byte gUnknown_0859EEC0
 
-	THUMB_FUNC_END SetupMapSpritesPalettes
+	THUMB_FUNC_END ApplyUnitSpritePalettes
 
 	THUMB_FUNC_START sub_8026670
 sub_8026670: @ 0x08026670
@@ -69,13 +69,13 @@ _08026684: .4byte gUnknown_0859EEE0
 
 	THUMB_FUNC_END sub_8026670
 
-	THUMB_FUNC_START SMS_ClearUsageTable
-SMS_ClearUsageTable: @ 0x08026688
+	THUMB_FUNC_START ResetUnitSprites
+ResetUnitSprites: @ 0x08026688
 	push {r4, r5, r6, lr}
 	movs r2, #0xcf
-	ldr r5, _080266B0  @ gUnknown_0203A014
-	ldr r6, _080266B4  @ gUnknown_0203A010
-	ldr r4, _080266B8  @ gUnknown_02033F40
+	ldr r5, _080266B0  @ gSMS32xGfxIndexCounter
+	ldr r6, _080266B4  @ gSMS16xGfxIndexCounter
+	ldr r4, _080266B8  @ gSMSGfxIndexLookup
 	movs r3, #0xff
 _08026694:
 	adds r1, r2, r4
@@ -93,19 +93,19 @@ _08026694:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080266B0: .4byte gUnknown_0203A014
-_080266B4: .4byte gUnknown_0203A010
-_080266B8: .4byte gUnknown_02033F40
+_080266B0: .4byte gSMS32xGfxIndexCounter
+_080266B4: .4byte gSMS16xGfxIndexCounter
+_080266B8: .4byte gSMSGfxIndexLookup
 
-	THUMB_FUNC_END SMS_ClearUsageTable
+	THUMB_FUNC_END ResetUnitSprites
 
-	THUMB_FUNC_START sub_80266BC
-sub_80266BC: @ 0x080266BC
+	THUMB_FUNC_START ResetUnitSpritesB
+ResetUnitSpritesB: @ 0x080266BC
 	push {r4, r5, r6, lr}
 	movs r2, #0xcf
-	ldr r5, _080266E4  @ gUnknown_0203A014
-	ldr r6, _080266E8  @ gUnknown_0203A010
-	ldr r4, _080266EC  @ gUnknown_02033F40
+	ldr r5, _080266E4  @ gSMS32xGfxIndexCounter
+	ldr r6, _080266E8  @ gSMS16xGfxIndexCounter
+	ldr r4, _080266EC  @ gSMSGfxIndexLookup
 	movs r3, #0xff
 _080266C8:
 	adds r1, r2, r4
@@ -123,11 +123,11 @@ _080266C8:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080266E4: .4byte gUnknown_0203A014
-_080266E8: .4byte gUnknown_0203A010
-_080266EC: .4byte gUnknown_02033F40
+_080266E4: .4byte gSMS32xGfxIndexCounter
+_080266E8: .4byte gSMS16xGfxIndexCounter
+_080266EC: .4byte gSMSGfxIndexLookup
 
-	THUMB_FUNC_END sub_80266BC
+	THUMB_FUNC_END ResetUnitSpritesB
 
 	THUMB_FUNC_START SMS_80266F0
 SMS_80266F0: @ 0x080266F0
@@ -141,7 +141,7 @@ SMS_80266F0: @ 0x080266F0
 	lsls r0, r2, #2
 	adds r0, r0, r1
 	ldr r6, [r0]
-	ldr r5, _08026730  @ unit_icon_wait_table
+	ldr r5, _08026730  @ UnitSpriteTable
 	movs r4, #0x7f
 	ands r4, r7
 	lsls r4, r4, #3
@@ -162,7 +162,7 @@ SMS_80266F0: @ 0x080266F0
 	b _08026766
 	.align 2, 0
 _0802672C: .4byte gUnknown_0859B66C
-_08026730: .4byte unit_icon_wait_table
+_08026730: .4byte UnitSpriteTable
 _08026734: .4byte gUnknown_0859B668
 _08026738:
 	cmp r0, #2
@@ -176,21 +176,21 @@ _0802673E:
 _08026748:
 	adds r0, r6, #0
 	adds r1, r7, #0
-	bl SomethingSMS_16x32
+	bl ApplyUnitSpriteImage16x32
 	b _0802675A
 _08026752:
 	adds r0, r6, #0
 	adds r1, r7, #0
-	bl SomethingSMS_32x32
+	bl ApplyUnitSpriteImage32x32
 _0802675A:
-	ldr r2, _08026778  @ gUnknown_02033F40
+	ldr r2, _08026778  @ gSMSGfxIndexLookup
 	add r2, r8
 	lsrs r1, r0, #0x1f
 	adds r0, r0, r1
 	asrs r0, r0, #1
 	strb r0, [r2]
 _08026766:
-	ldr r0, _08026778  @ gUnknown_02033F40
+	ldr r0, _08026778  @ gSMSGfxIndexLookup
 	add r0, r8
 	ldrb r0, [r0]
 	lsls r0, r0, #1
@@ -200,7 +200,7 @@ _08026766:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08026778: .4byte gUnknown_02033F40
+_08026778: .4byte gSMSGfxIndexLookup
 
 	THUMB_FUNC_END SMS_80266F0
 
@@ -212,7 +212,7 @@ SMS_SomethingGmapUnit: @ 0x0802677C
 	adds r6, r0, #0
 	mov r8, r1
 	adds r7, r2, #0
-	ldr r5, _080267B0  @ unit_icon_wait_table
+	ldr r5, _080267B0  @ UnitSpriteTable
 	movs r4, #0x7f
 	ands r4, r6
 	lsls r4, r4, #3
@@ -232,7 +232,7 @@ SMS_SomethingGmapUnit: @ 0x0802677C
 	beq _080267BE
 	b _080267E6
 	.align 2, 0
-_080267B0: .4byte unit_icon_wait_table
+_080267B0: .4byte UnitSpriteTable
 _080267B4: .4byte gUnknown_0859B668
 _080267B8:
 	cmp r0, #2
@@ -246,21 +246,21 @@ _080267BE:
 _080267C8:
 	adds r0, r7, #0
 	adds r1, r6, #0
-	bl SomethingSMS_16x32
+	bl ApplyUnitSpriteImage16x32
 	b _080267DA
 _080267D2:
 	adds r0, r7, #0
 	adds r1, r6, #0
-	bl SomethingSMS_32x32
+	bl ApplyUnitSpriteImage32x32
 _080267DA:
-	ldr r2, _080267F8  @ gUnknown_02033F40
+	ldr r2, _080267F8  @ gSMSGfxIndexLookup
 	add r2, r8
 	lsrs r1, r0, #0x1f
 	adds r0, r0, r1
 	asrs r0, r0, #1
 	strb r0, [r2]
 _080267E6:
-	ldr r0, _080267F8  @ gUnknown_02033F40
+	ldr r0, _080267F8  @ gSMSGfxIndexLookup
 	add r0, r8
 	ldrb r0, [r0]
 	lsls r0, r0, #1
@@ -270,20 +270,20 @@ _080267E6:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080267F8: .4byte gUnknown_02033F40
+_080267F8: .4byte gSMSGfxIndexLookup
 
 	THUMB_FUNC_END SMS_SomethingGmapUnit
 
-	THUMB_FUNC_START SMS_RegisterUsage
-SMS_RegisterUsage: @ 0x080267FC
+	THUMB_FUNC_START UseUnitSprite
+UseUnitSprite: @ 0x080267FC
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
-	ldr r0, _08026834  @ gUnknown_02033F40
+	ldr r0, _08026834  @ gSMSGfxIndexLookup
 	adds r7, r6, r0
 	ldrb r1, [r7]
 	cmp r1, #0xff
 	bne _080268B0
-	ldr r5, _08026838  @ unit_icon_wait_table
+	ldr r5, _08026838  @ UnitSpriteTable
 	movs r4, #0x7f
 	ands r4, r6
 	lsls r4, r4, #3
@@ -303,18 +303,18 @@ SMS_RegisterUsage: @ 0x080267FC
 	beq _08026846
 	b _080268A6
 	.align 2, 0
-_08026834: .4byte gUnknown_02033F40
-_08026838: .4byte unit_icon_wait_table
+_08026834: .4byte gSMSGfxIndexLookup
+_08026838: .4byte UnitSpriteTable
 _0802683C: .4byte gUnknown_0859B668
 _08026840:
 	cmp r0, #2
 	beq _08026880
 	b _080268A6
 _08026846:
-	ldr r4, _08026860  @ gUnknown_0203A010
+	ldr r4, _08026860  @ gSMS16xGfxIndexCounter
 	ldr r0, [r4]
 	adds r1, r6, #0
-	bl SomethingSMS_16x16_0
+	bl ApplyUnitSpriteImage16x16
 	lsrs r1, r0, #0x1f
 	adds r0, r0, r1
 	asrs r0, r0, #1
@@ -323,12 +323,12 @@ _08026846:
 	subs r0, #1
 	b _080268A4
 	.align 2, 0
-_08026860: .4byte gUnknown_0203A010
+_08026860: .4byte gSMS16xGfxIndexCounter
 _08026864:
-	ldr r4, _0802687C  @ gUnknown_0203A014
+	ldr r4, _0802687C  @ gSMS32xGfxIndexCounter
 	ldr r0, [r4]
 	adds r1, r6, #0
-	bl SomethingSMS_16x32
+	bl ApplyUnitSpriteImage16x32
 	lsrs r1, r0, #0x1f
 	adds r0, r0, r1
 	asrs r0, r0, #1
@@ -337,9 +337,9 @@ _08026864:
 	adds r0, #2
 	b _080268A4
 	.align 2, 0
-_0802687C: .4byte gUnknown_0203A014
+_0802687C: .4byte gSMS32xGfxIndexCounter
 _08026880:
-	ldr r4, _080268BC  @ gUnknown_0203A014
+	ldr r4, _080268BC  @ gSMS32xGfxIndexCounter
 	ldr r1, [r4]
 	movs r0, #0x1e
 	ands r0, r1
@@ -350,7 +350,7 @@ _08026880:
 _08026890:
 	ldr r0, [r4]
 	adds r1, r6, #0
-	bl SomethingSMS_32x32
+	bl ApplyUnitSpriteImage32x32
 	lsrs r1, r0, #0x1f
 	adds r0, r0, r1
 	asrs r0, r0, #1
@@ -360,11 +360,11 @@ _08026890:
 _080268A4:
 	str r0, [r4]
 _080268A6:
-	ldr r1, _080268C0  @ gUnknown_0203A4CC
+	ldr r1, _080268C0  @ gSMSSyncFlag
 	ldr r0, [r1]
 	adds r0, #1
 	str r0, [r1]
-	ldr r0, _080268C4  @ gUnknown_02033F40
+	ldr r0, _080268C4  @ gSMSGfxIndexLookup
 _080268B0:
 	adds r0, r6, r0
 	ldrb r0, [r0]
@@ -373,14 +373,14 @@ _080268B0:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080268BC: .4byte gUnknown_0203A014
-_080268C0: .4byte gUnknown_0203A4CC
-_080268C4: .4byte gUnknown_02033F40
+_080268BC: .4byte gSMS32xGfxIndexCounter
+_080268C0: .4byte gSMSSyncFlag
+_080268C4: .4byte gSMSGfxIndexLookup
 
-	THUMB_FUNC_END SMS_RegisterUsage
+	THUMB_FUNC_END UseUnitSprite
 
-	THUMB_FUNC_START SomethingSMS_16x16_0
-SomethingSMS_16x16_0: @ 0x080268C8
+	THUMB_FUNC_START ApplyUnitSpriteImage16x16
+ApplyUnitSpriteImage16x16: @ 0x080268C8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -404,7 +404,7 @@ SomethingSMS_16x16_0: @ 0x080268C8
 	movs r0, #0x80
 	lsls r0, r0, #3
 	add r0, r9
-	ldr r2, _08026958  @ gUnknown_02034010
+	ldr r2, _08026958  @ gSMSGfxBuffer_Frame1
 	adds r4, r0, r2
 	movs r3, #0x40
 	mov r8, r3
@@ -415,7 +415,7 @@ _08026902:
 	ldr r0, [r1]
 	adds r0, r0, r7
 	lsls r1, r6, #0xd
-	ldr r2, _08026958  @ gUnknown_02034010
+	ldr r2, _08026958  @ gSMSGfxBuffer_Frame1
 	add r2, r9
 	adds r1, r1, r2
 	movs r2, #0x10
@@ -450,9 +450,9 @@ _08026902:
 	.align 2, 0
 _08026950: .4byte gUnknown_0859B67C
 _08026954: .4byte gUnknown_0859B668
-_08026958: .4byte gUnknown_02034010
+_08026958: .4byte gSMSGfxBuffer_Frame1
 
-	THUMB_FUNC_END SomethingSMS_16x16_0
+	THUMB_FUNC_END ApplyUnitSpriteImage16x16
 
 	THUMB_FUNC_START SomethingSMS_16x16
 SomethingSMS_16x16: @ 0x0802695C
@@ -480,7 +480,7 @@ SomethingSMS_16x16: @ 0x0802695C
 	mov r2, sp
 	adds r2, #4
 	str r2, [sp, #0xc]
-	ldr r0, _08026A2C  @ gUnknown_02034010
+	ldr r0, _08026A2C  @ gSMSGfxBuffer_Frame1
 	mov r8, r0
 	movs r1, #0xc0
 	lsls r1, r1, #4
@@ -556,14 +556,14 @@ _080269A2:
 	bx r1
 	.align 2, 0
 _08026A28: .4byte gUnknown_0859B67C
-_08026A2C: .4byte gUnknown_02034010
+_08026A2C: .4byte gSMSGfxBuffer_Frame1
 _08026A30: .4byte 0x01000010
 _08026A34: .4byte gUnknown_0859B668
 
 	THUMB_FUNC_END SomethingSMS_16x16
 
-	THUMB_FUNC_START SomethingSMS_16x32
-SomethingSMS_16x32: @ 0x08026A38
+	THUMB_FUNC_START ApplyUnitSpriteImage16x32
+ApplyUnitSpriteImage16x32: @ 0x08026A38
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -584,7 +584,7 @@ SomethingSMS_16x32: @ 0x08026A38
 	mov r9, r0
 	ldr r2, _08026B20  @ gUnknown_0859B668
 	mov r8, r2
-	ldr r3, _08026B24  @ gUnknown_02034010
+	ldr r3, _08026B24  @ gSMSGfxBuffer_Frame1
 	mov sl, r3
 	movs r2, #0xc0
 	lsls r2, r2, #4
@@ -677,12 +677,12 @@ _08026A7E:
 	.align 2, 0
 _08026B1C: .4byte gUnknown_0859B67C
 _08026B20: .4byte gUnknown_0859B668
-_08026B24: .4byte gUnknown_02034010
+_08026B24: .4byte gSMSGfxBuffer_Frame1
 
-	THUMB_FUNC_END SomethingSMS_16x32
+	THUMB_FUNC_END ApplyUnitSpriteImage16x32
 
-	THUMB_FUNC_START SomethingSMS_32x32
-SomethingSMS_32x32: @ 0x08026B28
+	THUMB_FUNC_START ApplyUnitSpriteImage32x32
+ApplyUnitSpriteImage32x32: @ 0x08026B28
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -703,7 +703,7 @@ SomethingSMS_32x32: @ 0x08026B28
 	mov r9, r0
 	ldr r2, _08026C14  @ gUnknown_0859B668
 	mov r8, r2
-	ldr r3, _08026C18  @ gUnknown_02034010
+	ldr r3, _08026C18  @ gSMSGfxBuffer_Frame1
 	mov sl, r3
 	movs r2, #0xc0
 	lsls r2, r2, #4
@@ -798,9 +798,9 @@ _08026B72:
 	.align 2, 0
 _08026C10: .4byte gUnknown_0859B67C
 _08026C14: .4byte gUnknown_0859B668
-_08026C18: .4byte gUnknown_02034010
+_08026C18: .4byte gSMSGfxBuffer_Frame1
 
-	THUMB_FUNC_END SomethingSMS_32x32
+	THUMB_FUNC_END ApplyUnitSpriteImage32x32
 
 	THUMB_FUNC_START sub_8026C1C
 sub_8026C1C: @ 0x08026C1C
@@ -811,9 +811,9 @@ sub_8026C1C: @ 0x08026C1C
 	push {r5, r6, r7}
 	sub sp, #0xc
 	str r1, [sp]
-	bl GetUnitSMSId
+	bl GetUnitSpriteId
 	str r0, [sp, #4]
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	lsls r7, r0, #5
 	ldr r1, _08026C84  @ gUnknown_0859B73C
 	ldr r2, [sp]
@@ -841,7 +841,7 @@ _08026C60:
 	blt _08026C66
 	movs r4, #0
 _08026C66:
-	ldr r1, _08026C88  @ unit_icon_wait_table
+	ldr r1, _08026C88  @ UnitSpriteTable
 	movs r0, #0x7f
 	ldr r2, [sp, #4]
 	ands r0, r2
@@ -857,7 +857,7 @@ _08026C66:
 	b _08026EF2
 	.align 2, 0
 _08026C84: .4byte gUnknown_0859B73C
-_08026C88: .4byte unit_icon_wait_table
+_08026C88: .4byte UnitSpriteTable
 _08026C8C:
 	cmp r0, #2
 	bne _08026C92
@@ -868,7 +868,7 @@ _08026C94:
 	movs r1, #0
 	lsls r4, r4, #0xd
 	str r4, [sp, #8]
-	ldr r0, _08026D0C  @ gUnknown_02034010
+	ldr r0, _08026D0C  @ gSMSGfxBuffer_Frame1
 	mov r8, r0
 	lsrs r5, r6, #1
 	movs r0, #1
@@ -909,7 +909,7 @@ _08026CC8:
 	mov r1, r9
 	cmp r1, #2
 	ble _08026CAA
-	ldr r2, _08026D0C  @ gUnknown_02034010
+	ldr r2, _08026D0C  @ gSMSGfxBuffer_Frame1
 	adds r0, r7, r2
 	ldr r1, [sp, #8]
 	adds r0, r1, r0
@@ -917,7 +917,7 @@ _08026CC8:
 	adds r1, r7, r2
 	movs r2, #0x10
 	bl CpuFastSet
-	ldr r1, _08026D0C  @ gUnknown_02034010
+	ldr r1, _08026D0C  @ gSMSGfxBuffer_Frame1
 	movs r2, #0x80
 	lsls r2, r2, #3
 	adds r0, r1, r2
@@ -927,14 +927,14 @@ _08026CC8:
 	ldr r2, _08026D14  @ 0x06011400
 	b _08026DF2
 	.align 2, 0
-_08026D0C: .4byte gUnknown_02034010
+_08026D0C: .4byte gSMSGfxBuffer_Frame1
 _08026D10: .4byte 0x06011000
 _08026D14: .4byte 0x06011400
 _08026D18:
 	movs r1, #0
 	lsls r4, r4, #0xd
 	str r4, [sp, #8]
-	ldr r2, _08026DFC  @ gUnknown_02034010
+	ldr r2, _08026DFC  @ gSMSGfxBuffer_Frame1
 	mov sl, r2
 	lsrs r2, r6, #1
 	mov ip, r2
@@ -1001,7 +1001,7 @@ _08026D46:
 	mov r1, r9
 	cmp r1, #2
 	ble _08026D32
-	ldr r1, _08026DFC  @ gUnknown_02034010
+	ldr r1, _08026DFC  @ gSMSGfxBuffer_Frame1
 	adds r0, r7, r1
 	ldr r2, [sp, #8]
 	adds r0, r2, r0
@@ -1009,7 +1009,7 @@ _08026D46:
 	adds r1, r7, r2
 	movs r2, #0x10
 	bl CpuFastSet
-	ldr r1, _08026DFC  @ gUnknown_02034010
+	ldr r1, _08026DFC  @ gSMSGfxBuffer_Frame1
 	movs r2, #0x80
 	lsls r2, r2, #3
 	adds r0, r1, r2
@@ -1020,7 +1020,7 @@ _08026D46:
 	adds r1, r7, r2
 	movs r2, #0x10
 	bl CpuFastSet
-	ldr r1, _08026DFC  @ gUnknown_02034010
+	ldr r1, _08026DFC  @ gSMSGfxBuffer_Frame1
 	movs r2, #0x80
 	lsls r2, r2, #4
 	adds r0, r1, r2
@@ -1031,7 +1031,7 @@ _08026D46:
 	adds r1, r7, r2
 	movs r2, #0x10
 	bl CpuFastSet
-	ldr r1, _08026DFC  @ gUnknown_02034010
+	ldr r1, _08026DFC  @ gSMSGfxBuffer_Frame1
 	movs r2, #0xc0
 	lsls r2, r2, #4
 	adds r0, r1, r2
@@ -1045,7 +1045,7 @@ _08026DF2:
 	bl CpuFastSet
 	b _08026EF2
 	.align 2, 0
-_08026DFC: .4byte gUnknown_02034010
+_08026DFC: .4byte gSMSGfxBuffer_Frame1
 _08026E00: .4byte 0x06011000
 _08026E04: .4byte 0x06011400
 _08026E08: .4byte 0x06011800
@@ -1054,7 +1054,7 @@ _08026E10:
 	movs r1, #0
 	lsls r4, r4, #0xd
 	str r4, [sp, #8]
-	ldr r0, _08026F14  @ gUnknown_02034010
+	ldr r0, _08026F14  @ gSMSGfxBuffer_Frame1
 	mov sl, r0
 	lsrs r2, r6, #1
 	mov ip, r2
@@ -1121,7 +1121,7 @@ _08026E3E:
 	mov r1, r9
 	cmp r1, #2
 	ble _08026E2C
-	ldr r1, _08026F14  @ gUnknown_02034010
+	ldr r1, _08026F14  @ gSMSGfxBuffer_Frame1
 	adds r0, r7, r1
 	ldr r2, [sp, #8]
 	adds r0, r2, r0
@@ -1129,7 +1129,7 @@ _08026E3E:
 	adds r1, r7, r2
 	movs r2, #0x20
 	bl CpuFastSet
-	ldr r1, _08026F14  @ gUnknown_02034010
+	ldr r1, _08026F14  @ gSMSGfxBuffer_Frame1
 	movs r2, #0x80
 	lsls r2, r2, #3
 	adds r0, r1, r2
@@ -1140,7 +1140,7 @@ _08026E3E:
 	adds r1, r7, r2
 	movs r2, #0x20
 	bl CpuFastSet
-	ldr r1, _08026F14  @ gUnknown_02034010
+	ldr r1, _08026F14  @ gSMSGfxBuffer_Frame1
 	movs r2, #0x80
 	lsls r2, r2, #4
 	adds r0, r1, r2
@@ -1151,7 +1151,7 @@ _08026E3E:
 	adds r1, r7, r2
 	movs r2, #0x20
 	bl CpuFastSet
-	ldr r1, _08026F14  @ gUnknown_02034010
+	ldr r1, _08026F14  @ gSMSGfxBuffer_Frame1
 	movs r2, #0xc0
 	lsls r2, r2, #4
 	adds r0, r1, r2
@@ -1166,7 +1166,7 @@ _08026EF2:
 	ldr r0, [sp]
 	cmp r0, #0x3f
 	bne _08026F02
-	ldr r0, _08026F28  @ gUnknown_02033F40
+	ldr r0, _08026F28  @ gSMSGfxIndexLookup
 	ldr r1, [sp, #4]
 	adds r0, r1, r0
 	movs r1, #0xff
@@ -1181,17 +1181,17 @@ _08026F02:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026F14: .4byte gUnknown_02034010
+_08026F14: .4byte gSMSGfxBuffer_Frame1
 _08026F18: .4byte 0x06011000
 _08026F1C: .4byte 0x06011400
 _08026F20: .4byte 0x06011800
 _08026F24: .4byte 0x06011C00
-_08026F28: .4byte gUnknown_02033F40
+_08026F28: .4byte gSMSGfxIndexLookup
 
 	THUMB_FUNC_END sub_8026C1C
 
-	THUMB_FUNC_START SMS_FlushDirect
-SMS_FlushDirect: @ 0x08026F2C
+	THUMB_FUNC_START SyncUnitSpriteSheet
+SyncUnitSpriteSheet: @ 0x08026F2C
 	push {r4, r5, lr}
 	bl GetGameTime
 	movs r1, #0x48
@@ -1200,7 +1200,7 @@ SMS_FlushDirect: @ 0x08026F2C
 	adds r5, r4, #0
 	cmp r4, #0
 	bne _08026F4C
-	ldr r0, _08026F84  @ gUnknown_02034010
+	ldr r0, _08026F84  @ gSMSGfxBuffer_Frame1
 	ldr r1, _08026F88  @ 0x06011000
 	movs r2, #0x80
 	lsls r2, r2, #4
@@ -1208,7 +1208,7 @@ SMS_FlushDirect: @ 0x08026F2C
 _08026F4C:
 	cmp r4, #0x20
 	bne _08026F5C
-	ldr r0, _08026F8C  @ gUnknown_02036010
+	ldr r0, _08026F8C  @ gSMSGfxBuffer_Frame2
 	ldr r1, _08026F88  @ 0x06011000
 	movs r2, #0x80
 	lsls r2, r2, #4
@@ -1216,7 +1216,7 @@ _08026F4C:
 _08026F5C:
 	cmp r4, #0x24
 	bne _08026F6C
-	ldr r0, _08026F90  @ gUnknown_02038010
+	ldr r0, _08026F90  @ gSMSGfxBuffer_Frame3
 	ldr r1, _08026F88  @ 0x06011000
 	movs r2, #0x80
 	lsls r2, r2, #4
@@ -1224,7 +1224,7 @@ _08026F5C:
 _08026F6C:
 	cmp r5, #0x44
 	bne _08026F7C
-	ldr r0, _08026F8C  @ gUnknown_02036010
+	ldr r0, _08026F8C  @ gSMSGfxBuffer_Frame2
 	ldr r1, _08026F88  @ 0x06011000
 	movs r2, #0x80
 	lsls r2, r2, #4
@@ -1234,17 +1234,17 @@ _08026F7C:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026F84: .4byte gUnknown_02034010
+_08026F84: .4byte gSMSGfxBuffer_Frame1
 _08026F88: .4byte 0x06011000
-_08026F8C: .4byte gUnknown_02036010
-_08026F90: .4byte gUnknown_02038010
+_08026F8C: .4byte gSMSGfxBuffer_Frame2
+_08026F90: .4byte gSMSGfxBuffer_Frame3
 
-	THUMB_FUNC_END SMS_FlushDirect
+	THUMB_FUNC_END SyncUnitSpriteSheet
 
-	THUMB_FUNC_START SMS_FlushIndirect
-SMS_FlushIndirect: @ 0x08026F94
+	THUMB_FUNC_START ForceSyncUnitSpriteSheet
+ForceSyncUnitSpriteSheet: @ 0x08026F94
 	push {lr}
-	ldr r0, _08026FB4  @ gUnknown_0203A4CC
+	ldr r0, _08026FB4  @ gSMSSyncFlag
 	movs r1, #0
 	str r1, [r0]
 	bl GetGameTime
@@ -1255,16 +1255,16 @@ SMS_FlushIndirect: @ 0x08026F94
 	bgt _08026FC0
 	cmp r0, #0x23
 	ble _08026FBC
-	ldr r0, _08026FB8  @ gUnknown_02038010
+	ldr r0, _08026FB8  @ gSMSGfxBuffer_Frame3
 	b _08026FC2
 	.align 2, 0
-_08026FB4: .4byte gUnknown_0203A4CC
-_08026FB8: .4byte gUnknown_02038010
+_08026FB4: .4byte gSMSSyncFlag
+_08026FB8: .4byte gSMSGfxBuffer_Frame3
 _08026FBC:
 	cmp r0, #0x1f
 	ble _08026FD8
 _08026FC0:
-	ldr r0, _08026FD0  @ gUnknown_02036010
+	ldr r0, _08026FD0  @ gSMSGfxBuffer_Frame2
 _08026FC2:
 	ldr r1, _08026FD4  @ 0x06011000
 	movs r2, #0x80
@@ -1272,12 +1272,12 @@ _08026FC2:
 	bl RegisterDataMove
 	b _08026FE8
 	.align 2, 0
-_08026FD0: .4byte gUnknown_02036010
+_08026FD0: .4byte gSMSGfxBuffer_Frame2
 _08026FD4: .4byte 0x06011000
 _08026FD8:
 	cmp r1, #0
 	blt _08026FE8
-	ldr r0, _08026FEC  @ gUnknown_02034010
+	ldr r0, _08026FEC  @ gSMSGfxBuffer_Frame1
 	ldr r1, _08026FF0  @ 0x06011000
 	movs r2, #0x80
 	lsls r2, r2, #6
@@ -1286,10 +1286,10 @@ _08026FE8:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08026FEC: .4byte gUnknown_02034010
+_08026FEC: .4byte gSMSGfxBuffer_Frame1
 _08026FF0: .4byte 0x06011000
 
-	THUMB_FUNC_END SMS_FlushIndirect
+	THUMB_FUNC_END ForceSyncUnitSpriteSheet
 
 	THUMB_FUNC_START sub_8026FF4
 sub_8026FF4: @ 0x08026FF4
@@ -1303,19 +1303,19 @@ sub_8026FF4: @ 0x08026FF4
 	movs r2, #0
 	cmp r0, #0
 	bne _0802700E
-	ldr r2, _08027058  @ gUnknown_02034010
+	ldr r2, _08027058  @ gSMSGfxBuffer_Frame1
 _0802700E:
 	cmp r0, #0x20
 	bne _08027014
-	ldr r2, _0802705C  @ gUnknown_02036010
+	ldr r2, _0802705C  @ gSMSGfxBuffer_Frame2
 _08027014:
 	cmp r0, #0x24
 	bne _0802701A
-	ldr r2, _08027060  @ gUnknown_02038010
+	ldr r2, _08027060  @ gSMSGfxBuffer_Frame3
 _0802701A:
 	cmp r1, #0x44
 	bne _08027020
-	ldr r2, _0802705C  @ gUnknown_02036010
+	ldr r2, _0802705C  @ gSMSGfxBuffer_Frame2
 _08027020:
 	cmp r2, #0
 	beq _08027050
@@ -1346,9 +1346,9 @@ _08027050:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08027058: .4byte gUnknown_02034010
-_0802705C: .4byte gUnknown_02036010
-_08027060: .4byte gUnknown_02038010
+_08027058: .4byte gSMSGfxBuffer_Frame1
+_0802705C: .4byte gSMSGfxBuffer_Frame2
+_08027060: .4byte gSMSGfxBuffer_Frame3
 _08027064: .4byte gUnknown_0859B66C
 
 	THUMB_FUNC_END sub_8026FF4
@@ -1367,22 +1367,22 @@ sub_8027068: @ 0x08027068
 	bgt _08027090
 	cmp r0, #0x23
 	ble _0802708C
-	ldr r2, _08027088  @ gUnknown_02038010
+	ldr r2, _08027088  @ gSMSGfxBuffer_Frame3
 	b _0802709E
 	.align 2, 0
-_08027088: .4byte gUnknown_02038010
+_08027088: .4byte gSMSGfxBuffer_Frame3
 _0802708C:
 	cmp r0, #0x1f
 	ble _08027098
 _08027090:
-	ldr r2, _08027094  @ gUnknown_02036010
+	ldr r2, _08027094  @ gSMSGfxBuffer_Frame2
 	b _0802709E
 	.align 2, 0
-_08027094: .4byte gUnknown_02036010
+_08027094: .4byte gSMSGfxBuffer_Frame2
 _08027098:
 	cmp r1, #0
 	blt _0802709E
-	ldr r2, _080270D4  @ gUnknown_02034010
+	ldr r2, _080270D4  @ gSMSGfxBuffer_Frame1
 _0802709E:
 	cmp r2, #0
 	beq _080270CE
@@ -1413,7 +1413,7 @@ _080270CE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080270D4: .4byte gUnknown_02034010
+_080270D4: .4byte gSMSGfxBuffer_Frame1
 _080270D8: .4byte gUnknown_0859B66C
 
 	THUMB_FUNC_END sub_8027068
@@ -1432,22 +1432,22 @@ sub_80270DC: @ 0x080270DC
 	bgt _08027104
 	cmp r0, #0x23
 	ble _08027100
-	ldr r5, _080270FC  @ gUnknown_02038010
+	ldr r5, _080270FC  @ gSMSGfxBuffer_Frame3
 	b _08027112
 	.align 2, 0
-_080270FC: .4byte gUnknown_02038010
+_080270FC: .4byte gSMSGfxBuffer_Frame3
 _08027100:
 	cmp r0, #0x1f
 	ble _0802710C
 _08027104:
-	ldr r5, _08027108  @ gUnknown_02036010
+	ldr r5, _08027108  @ gSMSGfxBuffer_Frame2
 	b _08027112
 	.align 2, 0
-_08027108: .4byte gUnknown_02036010
+_08027108: .4byte gSMSGfxBuffer_Frame2
 _0802710C:
 	cmp r1, #0
 	blt _08027112
-	ldr r5, _08027138  @ gUnknown_02034010
+	ldr r5, _08027138  @ gSMSGfxBuffer_Frame1
 _08027112:
 	cmp r5, #0
 	beq _08027130
@@ -1469,12 +1469,12 @@ _08027130:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08027138: .4byte gUnknown_02034010
+_08027138: .4byte gSMSGfxBuffer_Frame1
 
 	THUMB_FUNC_END sub_80270DC
 
-	THUMB_FUNC_START GetUnitSpritePaletteIndexWrapper
-GetUnitSpritePaletteIndexWrapper: @ 0x0802713C
+	THUMB_FUNC_START GetUnitDisplayedSpritePalette
+GetUnitDisplayedSpritePalette: @ 0x0802713C
 	push {lr}
 	adds r2, r0, #0
 	ldr r1, [r2, #0xc]
@@ -1491,7 +1491,7 @@ _08027150:
 	cmp r1, #0
 	bne _08027160
 	adds r0, r2, #0
-	bl GetUnitMapSpritePaletteIndex
+	bl GetUnitSpritePalette
 	b _08027162
 _08027160:
 	movs r0, #0xf
@@ -1499,10 +1499,10 @@ _08027162:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetUnitSpritePaletteIndexWrapper
+	THUMB_FUNC_END GetUnitDisplayedSpritePalette
 
-	THUMB_FUNC_START GetUnitMapSpritePaletteIndex
-GetUnitMapSpritePaletteIndex: @ 0x08027168
+	THUMB_FUNC_START GetUnitSpritePalette
+GetUnitSpritePalette: @ 0x08027168
 	push {lr}
 	adds r1, r0, #0
 	movs r2, #0xb
@@ -1537,18 +1537,18 @@ _0802719A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetUnitMapSpritePaletteIndex
+	THUMB_FUNC_END GetUnitSpritePalette
 
-	THUMB_FUNC_START SMS_UpdateFromGameData
-SMS_UpdateFromGameData: @ 0x080271A0
+	THUMB_FUNC_START RefreshUnitSprites
+RefreshUnitSprites: @ 0x080271A0
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
 	push {r6, r7}
 	movs r0, #0
 	mov r8, r0
-	ldr r0, _080272C0  @ gUnknown_0203A4C8
-	ldr r1, _080272C4  @ gUnknown_0203A018
+	ldr r0, _080272C0  @ gNextFreeMapSprite
+	ldr r1, _080272C4  @ gMapSprites
 	mov r2, r8
 	str r2, [r1]
 	movs r2, #0x80
@@ -1575,7 +1575,7 @@ _080271C0:
 	bne _08027282
 	movs r2, #0x11
 	ldrsb r2, [r6, r2]
-	ldr r0, _080272CC  @ gBmMapUnit
+	ldr r0, _080272CC  @ gMapUnit
 	ldr r1, [r0]
 	lsls r0, r2, #2
 	adds r0, r0, r1
@@ -1601,7 +1601,7 @@ _0802720C:
 	str r3, [r6, #0xc]
 _08027212:
 	lsls r0, r2, #4
-	bl SMS_GetNewInfoStruct
+	bl AddUnitSprite
 	adds r5, r0, #0
 	movs r0, #0x11
 	ldrsb r0, [r6, r0]
@@ -1612,11 +1612,11 @@ _08027212:
 	lsls r0, r0, #4
 	strh r0, [r5, #4]
 	adds r0, r6, #0
-	bl GetUnitSMSId
-	bl SMS_RegisterUsage
+	bl GetUnitSpriteId
+	bl UseUnitSprite
 	adds r4, r0, #0
 	adds r0, r6, #0
-	bl GetUnitSpritePaletteIndexWrapper
+	bl GetUnitDisplayedSpritePalette
 	adds r4, #0x80
 	movs r1, #0xf
 	ands r1, r0
@@ -1624,8 +1624,8 @@ _08027212:
 	adds r4, r4, r1
 	strh r4, [r5, #8]
 	adds r0, r6, #0
-	bl GetUnitSMSId
-	ldr r2, _080272D0  @ unit_icon_wait_table
+	bl GetUnitSpriteId
+	ldr r2, _080272D0  @ UnitSpriteTable
 	movs r1, #0x7f
 	ands r1, r0
 	lsls r1, r1, #3
@@ -1665,7 +1665,7 @@ _08027282:
 	beq _0802734C
 	ldr r1, _080272D4  @ 0xFFFFC080
 	adds r6, r1, #0
-	ldr r7, _080272D8  @ unit_icon_wait_table + 0x2DA @ [91].size ballista
+	ldr r7, _080272D8  @ UnitSpriteTable + 0x2DA @ [91].size ballista
 	movs r2, #0x58
 	adds r2, r2, r7
 	mov r9, r2
@@ -1685,13 +1685,13 @@ _080272A2:
 	beq _080272E2
 	b _080272F8
 	.align 2, 0
-_080272C0: .4byte gUnknown_0203A4C8
-_080272C4: .4byte gUnknown_0203A018
+_080272C0: .4byte gNextFreeMapSprite
+_080272C4: .4byte gMapSprites
 _080272C8: .4byte 0x00000201
-_080272CC: .4byte gBmMapUnit
-_080272D0: .4byte unit_icon_wait_table
+_080272CC: .4byte gMapUnit
+_080272D0: .4byte UnitSpriteTable
 _080272D4: .4byte 0xFFFFC080
-_080272D8: .4byte unit_icon_wait_table + 0x2DA @ [91].size ballista
+_080272D8: .4byte UnitSpriteTable + 0x2DA @ [91].size ballista
 _080272DC:
 	cmp r0, #0x37
 	beq _080272EA
@@ -1705,7 +1705,7 @@ _080272E6:
 _080272EA:
 	movs r0, #0x5d
 _080272EC:
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	adds r0, r0, r6
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
@@ -1713,7 +1713,7 @@ _080272EC:
 _080272F8:
 	ldrb r0, [r4, #1]
 	lsls r0, r0, #4
-	bl SMS_GetNewInfoStruct
+	bl AddUnitSprite
 	adds r5, r0, #0
 	ldrb r0, [r4, #1]
 	lsls r0, r0, #4
@@ -1731,7 +1731,7 @@ _08027316:
 	bne _08027344
 	ldrb r0, [r4, #1]
 	lsls r0, r0, #4
-	bl SMS_GetNewInfoStruct
+	bl AddUnitSprite
 	adds r5, r0, #0
 	ldrb r0, [r4, #1]
 	lsls r0, r0, #4
@@ -1740,7 +1740,7 @@ _08027316:
 	lsls r0, r0, #4
 	strh r0, [r5, #4]
 	movs r0, #0x66
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	ldr r1, _08027364  @ 0xFFFFB080
 	adds r0, r0, r1
 	strh r0, [r5, #8]
@@ -1753,11 +1753,11 @@ _08027344:
 	cmp r0, #0
 	bne _080272A2
 _0802734C:
-	ldr r0, _08027368  @ gUnknown_0203A4CC
+	ldr r0, _08027368  @ gSMSSyncFlag
 	ldr r0, [r0]
 	cmp r0, #0
 	beq _08027358
-	bl SMS_FlushIndirect
+	bl ForceSyncUnitSpriteSheet
 _08027358:
 	pop {r3, r4}
 	mov r8, r3
@@ -1767,16 +1767,16 @@ _08027358:
 	bx r0
 	.align 2, 0
 _08027364: .4byte 0xFFFFB080
-_08027368: .4byte gUnknown_0203A4CC
+_08027368: .4byte gSMSSyncFlag
 
-	THUMB_FUNC_END SMS_UpdateFromGameData
+	THUMB_FUNC_END RefreshUnitSprites
 
-	THUMB_FUNC_START SMS_GetNewInfoStruct
-SMS_GetNewInfoStruct: @ 0x0802736C
+	THUMB_FUNC_START AddUnitSprite
+AddUnitSprite: @ 0x0802736C
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r2, _08027388  @ gUnknown_0203A018
-	ldr r3, _0802738C  @ gUnknown_0203A4C8
+	ldr r2, _08027388  @ gMapSprites
+	ldr r3, _0802738C  @ gNextFreeMapSprite
 _08027374:
 	ldr r1, [r2]
 	cmp r1, #0
@@ -1788,8 +1788,8 @@ _08027374:
 	adds r2, r1, #0
 	b _08027374
 	.align 2, 0
-_08027388: .4byte gUnknown_0203A018
-_0802738C: .4byte gUnknown_0203A4C8
+_08027388: .4byte gMapSprites
+_0802738C: .4byte gNextFreeMapSprite
 _08027390:
 	ldr r0, [r3]
 	str r1, [r0]
@@ -1801,14 +1801,14 @@ _08027390:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END SMS_GetNewInfoStruct
+	THUMB_FUNC_END AddUnitSprite
 
-	THUMB_FUNC_START SMS_DisplayAllFromInfoStructs
-SMS_DisplayAllFromInfoStructs: @ 0x080273A4
+	THUMB_FUNC_START PutUnitSpritesOam
+PutUnitSpritesOam: @ 0x080273A4
 	push {r4, r5, r6, lr}
-	ldr r0, _0802741C  @ gUnknown_0203A018
+	ldr r0, _0802741C  @ gMapSprites
 	ldr r6, [r0]
-	bl DisplayUnitAdditionalBlinkingIcons
+	bl PutUnitSpriteIconsOam
 	cmp r6, #0
 	bne _080273B4
 	b _08027526
@@ -1816,7 +1816,7 @@ _080273B4:
 	movs r3, #0
 	movs r0, #4
 	ldrsh r1, [r6, r0]
-	ldr r2, _08027420  @ gUnknown_0202BCB0
+	ldr r2, _08027420  @ gBmSt
 	movs r4, #0xc
 	ldrsh r0, [r2, r4]
 	subs r4, r1, r0
@@ -1870,8 +1870,8 @@ _08027412:
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_0802741C: .4byte gUnknown_0203A018
-_08027420: .4byte gUnknown_0202BCB0
+_0802741C: .4byte gMapSprites
+_08027420: .4byte gBmSt
 _08027424: .4byte _08027428
 _08027428: @ jump table
 	.4byte _08027440 @ case 0
@@ -2006,20 +2006,20 @@ _08027526:
 	.align 2, 0
 _0802752C: .4byte Sprite_32x32
 
-	THUMB_FUNC_END SMS_DisplayAllFromInfoStructs
+	THUMB_FUNC_END PutUnitSpritesOam
 
-	THUMB_FUNC_START DisplayChapterTileMarker
-DisplayChapterTileMarker: @ 0x08027530
+	THUMB_FUNC_START PutChapterMarkedTileIconOam
+PutChapterMarkedTileIconOam: @ 0x08027530
 	push {r4, r5, lr}
-	ldr r4, _080275CC  @ gRAMChapterData
+	ldr r4, _080275CC  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x8f
 	ldrb r5, [r0]
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x90
 	ldrb r4, [r0]
 	bl GetGameTime
@@ -2034,7 +2034,7 @@ _0802755C:
 	beq _080275C6
 	cmp r2, #0
 	beq _080275C6
-	ldr r0, _080275D0  @ gBmMapFog
+	ldr r0, _080275D0  @ gMapFog
 	ldr r0, [r0]
 	lsls r1, r4, #2
 	adds r0, r1, r0
@@ -2043,7 +2043,7 @@ _0802755C:
 	ldrb r0, [r0]
 	cmp r0, #0
 	beq _080275C6
-	ldr r0, _080275D4  @ gBmMapTerrain
+	ldr r0, _080275D4  @ gMapTerrain
 	ldr r0, [r0]
 	adds r0, r1, r0
 	ldr r0, [r0]
@@ -2052,7 +2052,7 @@ _0802755C:
 	cmp r0, #0x22
 	beq _080275C6
 	lsls r1, r5, #4
-	ldr r2, _080275D8  @ gUnknown_0202BCB0
+	ldr r2, _080275D8  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r2, r3]
 	subs r3, r1, r0
@@ -2087,18 +2087,18 @@ _080275C6:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080275CC: .4byte gRAMChapterData
-_080275D0: .4byte gBmMapFog
-_080275D4: .4byte gBmMapTerrain
-_080275D8: .4byte gUnknown_0202BCB0
+_080275CC: .4byte gPlaySt
+_080275D0: .4byte gMapFog
+_080275D4: .4byte gMapTerrain
+_080275D8: .4byte gBmSt
 _080275DC: .4byte 0x00000107
 _080275E0: .4byte Sprite_8x8
 _080275E4: .4byte 0x00000C51
 
-	THUMB_FUNC_END DisplayChapterTileMarker
+	THUMB_FUNC_END PutChapterMarkedTileIconOam
 
-	THUMB_FUNC_START DisplayUnitAdditionalBlinkingIcons
-DisplayUnitAdditionalBlinkingIcons: @ 0x080275E8
+	THUMB_FUNC_START PutUnitSpriteIconsOam
+PutUnitSpriteIconsOam: @ 0x080275E8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -2109,20 +2109,20 @@ DisplayUnitAdditionalBlinkingIcons: @ 0x080275E8
 	mov r0, sp
 	movs r2, #6
 	bl memcpy
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08027620
-	ldr r0, _0802761C  @ gRAMChapterData
+	ldr r0, _0802761C  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x8e
 	ldrb r0, [r0]
 	b _08027622
 	.align 2, 0
 _08027618: .4byte gUnknown_080D7C0C
-_0802761C: .4byte gRAMChapterData
+_0802761C: .4byte gPlaySt
 _08027620:
 	movs r0, #0
 _08027622:
@@ -2157,13 +2157,13 @@ _08027634:
 	bl __umodsi3
 	mov sl, r0
 	movs r0, #0x84
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0802767C
 	b _08027A08
 _0802767C:
-	bl DisplayChapterTileMarker
+	bl PutChapterMarkedTileIconOam
 	movs r1, #1
 	mov r8, r1
 _08027684:
@@ -2187,7 +2187,7 @@ _0802769A:
 	b _080279FC
 _080276A6:
 	adds r0, r4, #0
-	bl GetUnitStandingSpriteDataFlagThing
+	bl GetUnitSpriteHideFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080276B4
@@ -2226,7 +2226,7 @@ _08027700:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _0802774C  @ gUnknown_0202BCB0
+	ldr r2, _0802774C  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r2, r3]
 	subs r3, r1, r0
@@ -2264,13 +2264,13 @@ _08027734:
 	ldr r5, [sp, #8]
 	b _0802783C
 	.align 2, 0
-_0802774C: .4byte gUnknown_0202BCB0
+_0802774C: .4byte gBmSt
 _08027750: .4byte gUnknown_0859B938
 _08027754:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _080277A0  @ gUnknown_0202BCB0
+	ldr r2, _080277A0  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r2, r3]
 	subs r3, r1, r0
@@ -2308,13 +2308,13 @@ _08027788:
 	mov r5, sl
 	b _0802783C
 	.align 2, 0
-_080277A0: .4byte gUnknown_0202BCB0
+_080277A0: .4byte gBmSt
 _080277A4: .4byte gUnknown_0859B898
 _080277A8:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _080277EC  @ gUnknown_0202BCB0
+	ldr r2, _080277EC  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r2, r3]
 	subs r3, r1, r0
@@ -2346,14 +2346,14 @@ _080277A8:
 	ldr r5, [sp, #0xc]
 	b _0802783C
 	.align 2, 0
-_080277EC: .4byte gUnknown_0202BCB0
+_080277EC: .4byte gBmSt
 _080277F0: .4byte 0x00000202
 _080277F4: .4byte gUnknown_0859B7F4
 _080277F8:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _0802784C  @ gUnknown_0202BCB0
+	ldr r2, _0802784C  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r2, r3]
 	subs r3, r1, r0
@@ -2392,7 +2392,7 @@ _0802783C:
 	bl PutOamHiRam
 	b _080278A6
 	.align 2, 0
-_0802784C: .4byte gUnknown_0202BCB0
+_0802784C: .4byte gBmSt
 _08027850: .4byte 0x00000201
 _08027854: .4byte gUnknown_0859B858
 _08027858:
@@ -2405,7 +2405,7 @@ _08027862:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _08027914  @ gUnknown_0202BCB0
+	ldr r2, _08027914  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r2, r3]
 	subs r3, r1, r0
@@ -2448,7 +2448,7 @@ _080278AC:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _08027914  @ gUnknown_0202BCB0
+	ldr r2, _08027914  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r2, r3]
 	subs r3, r1, r0
@@ -2494,7 +2494,7 @@ _080278E8:
 	bl PutOamHiRam
 	b _080279FC
 	.align 2, 0
-_08027914: .4byte gUnknown_0202BCB0
+_08027914: .4byte gBmSt
 _08027918: .4byte 0x000001FF
 _0802791C: .4byte gUnknown_0859B968
 _08027920: .4byte 0x00000209
@@ -2521,7 +2521,7 @@ _08027930:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _0802799C  @ gUnknown_0202BCB0
+	ldr r2, _0802799C  @ gBmSt
 	movs r5, #0xc
 	ldrsh r0, [r2, r5]
 	subs r3, r1, r0
@@ -2555,7 +2555,7 @@ _08027930:
 	bl PutOamHiRam
 	b _080279FC
 	.align 2, 0
-_0802799C: .4byte gUnknown_0202BCB0
+_0802799C: .4byte gBmSt
 _080279A0: .4byte 0x00000209
 _080279A4: .4byte 0x000001FF
 _080279A8: .4byte 0x00000107
@@ -2567,7 +2567,7 @@ _080279B0:
 	movs r1, #0x10
 	ldrsb r1, [r4, r1]
 	lsls r1, r1, #4
-	ldr r2, _08027A18  @ gUnknown_0202BCB0
+	ldr r2, _08027A18  @ gBmSt
 	movs r5, #0xc
 	ldrsh r0, [r2, r5]
 	subs r3, r1, r0
@@ -2615,45 +2615,45 @@ _08027A08:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08027A18: .4byte gUnknown_0202BCB0
+_08027A18: .4byte gBmSt
 _08027A1C: .4byte 0x00000209
 _08027A20: .4byte 0x000001FF
 _08027A24: .4byte 0x00000107
 _08027A28: .4byte Sprite_8x8
 _08027A2C: .4byte 0x00000811
 
-	THUMB_FUNC_END DisplayUnitAdditionalBlinkingIcons
+	THUMB_FUNC_END PutUnitSpriteIconsOam
 
 	THUMB_FUNC_START sub_8027A30
 sub_8027A30: @ 0x08027A30
-	ldr r1, _08027A38  @ gUnknown_0202BCB0
+	ldr r1, _08027A38  @ gBmSt
 	ldr r0, _08027A3C  @ 0x0000FFFF
 	strh r0, [r1, #0x18]
 	bx lr
 	.align 2, 0
-_08027A38: .4byte gUnknown_0202BCB0
+_08027A38: .4byte gBmSt
 _08027A3C: .4byte 0x0000FFFF
 
 	THUMB_FUNC_END sub_8027A30
 
-	THUMB_FUNC_START sub_8027A40
-sub_8027A40: @ 0x08027A40
-	ldr r1, _08027A48  @ gUnknown_0203A4D0
+	THUMB_FUNC_START ResetUnitSpriteHover
+ResetUnitSpriteHover: @ 0x08027A40
+	ldr r1, _08027A48  @ gMapSpriteHoverCounter
 	movs r0, #0
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_08027A48: .4byte gUnknown_0203A4D0
+_08027A48: .4byte gMapSpriteHoverCounter
 
-	THUMB_FUNC_END sub_8027A40
+	THUMB_FUNC_END ResetUnitSpriteHover
 
-	THUMB_FUNC_START sub_8027A4C
-sub_8027A4C: @ 0x08027A4C
+	THUMB_FUNC_START UnitSpriteHoverUpdate
+UnitSpriteHoverUpdate: @ 0x08027A4C
 	push {r4, lr}
-	ldr r2, _08027AB4  @ gUnknown_0202BCB0
+	ldr r2, _08027AB4  @ gBmSt
 	movs r1, #0x16
 	ldrsh r0, [r2, r1]
-	ldr r1, _08027AB8  @ gBmMapUnit
+	ldr r1, _08027AB8  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -2686,7 +2686,7 @@ sub_8027A4C: @ 0x08027A4C
 	beq _08027AC0
 	cmp r1, #2
 	beq _08027AC0
-	ldr r1, _08027ABC  @ gUnknown_0203A4D0
+	ldr r1, _08027ABC  @ gMapSpriteHoverCounter
 	ldr r0, [r1]
 	adds r0, #1
 	str r0, [r1]
@@ -2695,24 +2695,24 @@ sub_8027A4C: @ 0x08027A4C
 	adds r0, r4, #0
 	bl MU_Create
 	adds r0, r4, #0
-	bl HideUnitSMS
+	bl HideUnitSprite
 	b _08027AFA
 	.align 2, 0
-_08027AB4: .4byte gUnknown_0202BCB0
-_08027AB8: .4byte gBmMapUnit
-_08027ABC: .4byte gUnknown_0203A4D0
+_08027AB4: .4byte gBmSt
+_08027AB8: .4byte gMapUnit
+_08027ABC: .4byte gMapSpriteHoverCounter
 _08027AC0:
-	ldr r2, _08027B00  @ gUnknown_0202BCB0
+	ldr r2, _08027B00  @ gBmSt
 	ldr r1, [r2, #0x18]
 	ldr r0, [r2, #0x14]
 	cmp r1, r0
 	beq _08027AFA
-	ldr r1, _08027B04  @ gUnknown_0203A4D0
+	ldr r1, _08027B04  @ gMapSpriteHoverCounter
 	movs r0, #0
 	str r0, [r1]
 	movs r1, #0x1a
 	ldrsh r0, [r2, r1]
-	ldr r1, _08027B08  @ gBmMapUnit
+	ldr r1, _08027B08  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -2727,22 +2727,22 @@ _08027AC0:
 	beq _08027AFA
 	bl MU_EndAll
 	adds r0, r4, #0
-	bl ShowUnitSMS
+	bl ShowUnitSprite
 _08027AFA:
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08027B00: .4byte gUnknown_0202BCB0
-_08027B04: .4byte gUnknown_0203A4D0
-_08027B08: .4byte gBmMapUnit
+_08027B00: .4byte gBmSt
+_08027B04: .4byte gMapSpriteHoverCounter
+_08027B08: .4byte gMapUnit
 
-	THUMB_FUNC_END sub_8027A4C
+	THUMB_FUNC_END UnitSpriteHoverUpdate
 
-	THUMB_FUNC_START sub_8027B0C
-sub_8027B0C: @ 0x08027B0C
+	THUMB_FUNC_START IsUnitSpriteHoverEnabledAt
+IsUnitSpriteHoverEnabledAt: @ 0x08027B0C
 	push {lr}
-	ldr r2, _08027B54  @ gBmMapUnit
+	ldr r2, _08027B54  @ gMapUnit
 	ldr r2, [r2]
 	lsls r1, r1, #2
 	adds r1, r1, r2
@@ -2776,17 +2776,17 @@ sub_8027B0C: @ 0x08027B0C
 	movs r0, #1
 	b _08027B5A
 	.align 2, 0
-_08027B54: .4byte gBmMapUnit
+_08027B54: .4byte gMapUnit
 _08027B58:
 	movs r0, #0
 _08027B5A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8027B0C
+	THUMB_FUNC_END IsUnitSpriteHoverEnabledAt
 
-	THUMB_FUNC_START sub_8027B60
-sub_8027B60: @ 0x08027B60
+	THUMB_FUNC_START PutUnitSprite
+PutUnitSprite: @ 0x08027B60
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -2797,9 +2797,9 @@ sub_8027B60: @ 0x08027B60
 	adds r7, r2, #0
 	adds r4, r3, #0
 	adds r0, r4, #0
-	bl GetUnitSMSId
+	bl GetUnitSpriteId
 	adds r5, r0, #0
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	adds r6, r0, #0
 	mov r1, r8
 	adds r1, #0x10
@@ -2811,7 +2811,7 @@ sub_8027B60: @ 0x08027B60
 	adds r0, #0x20
 	cmp r0, #0xc0
 	bhi _08027C36
-	ldr r1, _08027BB0  @ unit_icon_wait_table
+	ldr r1, _08027BB0  @ UnitSpriteTable
 	movs r0, #0x7f
 	ands r0, r5
 	lsls r0, r0, #3
@@ -2825,14 +2825,14 @@ sub_8027B60: @ 0x08027B60
 	beq _08027BBA
 	b _08027C36
 	.align 2, 0
-_08027BB0: .4byte unit_icon_wait_table
+_08027BB0: .4byte UnitSpriteTable
 _08027BB4:
 	cmp r0, #2
 	beq _08027C10
 	b _08027C36
 _08027BBA:
 	adds r0, r4, #0
-	bl GetUnitSpritePaletteIndexWrapper
+	bl GetUnitDisplayedSpritePalette
 	movs r1, #0xf
 	ands r1, r0
 	lsls r1, r1, #0xc
@@ -2851,7 +2851,7 @@ _08027BBA:
 _08027BE0: .4byte Sprite_16x16
 _08027BE4:
 	adds r0, r4, #0
-	bl GetUnitSpritePaletteIndexWrapper
+	bl GetUnitDisplayedSpritePalette
 	movs r1, #0xf
 	ands r1, r0
 	lsls r1, r1, #0xc
@@ -2871,7 +2871,7 @@ _08027BE4:
 _08027C0C: .4byte Sprite_16x32
 _08027C10:
 	adds r0, r4, #0
-	bl GetUnitSpritePaletteIndexWrapper
+	bl GetUnitDisplayedSpritePalette
 	movs r4, #0xf
 	ands r4, r0
 	lsls r4, r4, #0xc
@@ -2898,10 +2898,10 @@ _08027C36:
 	.align 2, 0
 _08027C44: .4byte Sprite_32x32
 
-	THUMB_FUNC_END sub_8027B60
+	THUMB_FUNC_END PutUnitSprite
 
-	THUMB_FUNC_START sub_8027C48
-sub_8027C48: @ 0x08027C48
+	THUMB_FUNC_START PutUnitSpriteForJid
+PutUnitSpriteForJid: @ 0x08027C48
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -2913,9 +2913,9 @@ sub_8027C48: @ 0x08027C48
 	ldr r0, [sp, #0x20]
 	lsls r3, r3, #0x10
 	lsrs r7, r3, #0x10
-	bl GetClassSMSId
+	bl GetUnitSpriteByJid
 	mov r8, r0
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	adds r4, r0, #0
 	adds r4, #0x80
 	adds r1, r6, #0
@@ -2928,7 +2928,7 @@ sub_8027C48: @ 0x08027C48
 	adds r0, #0x20
 	cmp r0, #0xc0
 	bhi _08027CE8
-	ldr r1, _08027C9C  @ unit_icon_wait_table
+	ldr r1, _08027C9C  @ UnitSpriteTable
 	movs r0, #0x7f
 	mov r2, r8
 	ands r0, r2
@@ -2943,7 +2943,7 @@ sub_8027C48: @ 0x08027C48
 	beq _08027CA6
 	b _08027CE8
 	.align 2, 0
-_08027C9C: .4byte unit_icon_wait_table
+_08027C9C: .4byte UnitSpriteTable
 _08027CA0:
 	cmp r0, #2
 	beq _08027CD4
@@ -2992,7 +2992,7 @@ _08027CE8:
 	.align 2, 0
 _08027CF8: .4byte Sprite_32x32
 
-	THUMB_FUNC_END sub_8027C48
+	THUMB_FUNC_END PutUnitSpriteForJid
 
 	THUMB_FUNC_START sub_8027CFC
 sub_8027CFC: @ 0x08027CFC
@@ -3004,9 +3004,9 @@ sub_8027CFC: @ 0x08027CFC
 	adds r5, r1, #0
 	adds r4, r2, #0
 	adds r0, r3, #0
-	bl GetClassSMSId
+	bl GetUnitSpriteByJid
 	adds r6, r0, #0
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	adds r7, r0, #0
 	adds r7, #0x80
 	adds r1, r5, #0
@@ -3019,7 +3019,7 @@ sub_8027CFC: @ 0x08027CFC
 	adds r0, #0x20
 	cmp r0, #0xc0
 	bhi _08027DA0
-	ldr r1, _08027D48  @ unit_icon_wait_table
+	ldr r1, _08027D48  @ UnitSpriteTable
 	movs r0, #0x7f
 	ands r0, r6
 	lsls r0, r0, #3
@@ -3033,7 +3033,7 @@ sub_8027CFC: @ 0x08027CFC
 	beq _08027D52
 	b _08027DA0
 	.align 2, 0
-_08027D48: .4byte unit_icon_wait_table
+_08027D48: .4byte UnitSpriteTable
 _08027D4C:
 	cmp r0, #2
 	beq _08027D80
@@ -3105,7 +3105,7 @@ sub_8027DB4: @ 0x08027DB4
 	ldr r4, [sp, #0x20]
 	lsls r3, r3, #0x10
 	lsrs r7, r3, #0x10
-	bl GetClassSMSId
+	bl GetUnitSpriteByJid
 	adds r2, r0, #0
 	ldr r0, _08027E08  @ gUnknown_0859B66C
 	lsls r4, r4, #2
@@ -3122,7 +3122,7 @@ sub_8027DB4: @ 0x08027DB4
 	adds r0, #0x20
 	cmp r0, #0xc0
 	bhi _08027E3C
-	ldr r1, _08027E0C  @ unit_icon_wait_table
+	ldr r1, _08027E0C  @ UnitSpriteTable
 	movs r0, #0x7f
 	ands r0, r2
 	lsls r0, r0, #3
@@ -3137,7 +3137,7 @@ sub_8027DB4: @ 0x08027DB4
 	b _08027E3C
 	.align 2, 0
 _08027E08: .4byte gUnknown_0859B66C
-_08027E0C: .4byte unit_icon_wait_table
+_08027E0C: .4byte UnitSpriteTable
 _08027E10:
 	adds r2, r5, #0
 	subs r2, #0x10
@@ -3172,8 +3172,8 @@ _08027E48: .4byte Sprite_32x32
 
 	THUMB_FUNC_END sub_8027DB4
 
-	THUMB_FUNC_START sub_8027E4C
-sub_8027E4C: @ 0x08027E4C
+	THUMB_FUNC_START PutUnitSpriteExt
+PutUnitSpriteExt: @ 0x08027E4C
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -3184,9 +3184,9 @@ sub_8027E4C: @ 0x08027E4C
 	adds r6, r2, #0
 	adds r7, r3, #0
 	ldr r0, [sp, #0x20]
-	bl GetUnitSMSId
+	bl GetUnitSpriteId
 	adds r4, r0, #0
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	adds r5, r0, #0
 	adds r5, #0x80
 	mov r1, r8
@@ -3199,7 +3199,7 @@ sub_8027E4C: @ 0x08027E4C
 	adds r0, #0x20
 	cmp r0, #0xc0
 	bhi _08027F16
-	ldr r1, _08027E9C  @ unit_icon_wait_table
+	ldr r1, _08027E9C  @ UnitSpriteTable
 	movs r0, #0x7f
 	ands r0, r4
 	lsls r0, r0, #3
@@ -3213,14 +3213,14 @@ sub_8027E4C: @ 0x08027E4C
 	beq _08027EA6
 	b _08027F16
 	.align 2, 0
-_08027E9C: .4byte unit_icon_wait_table
+_08027E9C: .4byte UnitSpriteTable
 _08027EA0:
 	cmp r0, #2
 	beq _08027EF4
 	b _08027F16
 _08027EA6:
 	ldr r0, [sp, #0x20]
-	bl GetUnitMapSpritePaletteIndex
+	bl GetUnitSpritePalette
 	movs r1, #0xf
 	ands r1, r0
 	lsls r1, r1, #0xc
@@ -3237,7 +3237,7 @@ _08027EA6:
 _08027EC8: .4byte Sprite_16x16
 _08027ECC:
 	ldr r0, [sp, #0x20]
-	bl GetUnitMapSpritePaletteIndex
+	bl GetUnitSpritePalette
 	movs r1, #0xf
 	ands r1, r0
 	lsls r1, r1, #0xc
@@ -3255,7 +3255,7 @@ _08027ECC:
 _08027EF0: .4byte Sprite_16x32
 _08027EF4:
 	ldr r0, [sp, #0x20]
-	bl GetUnitMapSpritePaletteIndex
+	bl GetUnitSpritePalette
 	movs r4, #0xf
 	ands r4, r0
 	lsls r4, r4, #0xc
@@ -3280,10 +3280,10 @@ _08027F16:
 	.align 2, 0
 _08027F24: .4byte Sprite_32x32
 
-	THUMB_FUNC_END sub_8027E4C
+	THUMB_FUNC_END PutUnitSpriteExt
 
-	THUMB_FUNC_START SMS_DisplayOne
-SMS_DisplayOne: @ 0x08027F28
+	THUMB_FUNC_START sub_8027F28
+sub_8027F28: @ 0x08027F28
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -3305,9 +3305,9 @@ SMS_DisplayOne: @ 0x08027F28
 	adds r0, #0x20
 	cmp r0, #0xe0
 	bhi _08027FFE
-	ldr r4, _08027F74  @ unit_icon_wait_table
+	ldr r4, _08027F74  @ UnitSpriteTable
 	mov r0, ip
-	bl GetClassSMSId
+	bl GetUnitSpriteByJid
 	movs r1, #0x7f
 	ands r1, r0
 	lsls r1, r1, #3
@@ -3321,7 +3321,7 @@ SMS_DisplayOne: @ 0x08027F28
 	beq _08027F7E
 	b _08027FFE
 	.align 2, 0
-_08027F74: .4byte unit_icon_wait_table
+_08027F74: .4byte UnitSpriteTable
 _08027F78:
 	cmp r0, #2
 	beq _08027FD8
@@ -3404,10 +3404,10 @@ _08027FFE:
 _0802800C: .4byte 0x000001FF
 _08028010: .4byte Sprite_32x32
 
-	THUMB_FUNC_END SMS_DisplayOne
+	THUMB_FUNC_END sub_8027F28
 
-	THUMB_FUNC_START sub_8028014
-sub_8028014: @ 0x08028014
+	THUMB_FUNC_START PutBlendWindowUnitSprite
+PutBlendWindowUnitSprite: @ 0x08028014
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -3418,9 +3418,9 @@ sub_8028014: @ 0x08028014
 	adds r6, r2, #0
 	mov r8, r3
 	ldr r0, [sp, #0x20]
-	bl GetUnitSMSId
+	bl GetUnitSpriteId
 	adds r5, r0, #0
-	bl SMS_RegisterUsage
+	bl UseUnitSprite
 	adds r4, r0, #0
 	adds r4, #0x80
 	adds r1, r7, #0
@@ -3433,7 +3433,7 @@ sub_8028014: @ 0x08028014
 	adds r0, #0x20
 	cmp r0, #0xc0
 	bhi _080280E8
-	ldr r1, _08028064  @ unit_icon_wait_table
+	ldr r1, _08028064  @ UnitSpriteTable
 	movs r0, #0x7f
 	ands r0, r5
 	lsls r0, r0, #3
@@ -3447,7 +3447,7 @@ sub_8028014: @ 0x08028014
 	beq _0802806E
 	b _080280E8
 	.align 2, 0
-_08028064: .4byte unit_icon_wait_table
+_08028064: .4byte UnitSpriteTable
 _08028068:
 	cmp r0, #2
 	beq _080280C4
@@ -3519,26 +3519,26 @@ _080280E8:
 _080280F8: .4byte gUnknown_0859B986
 _080280FC: .4byte gUnknown_0859B99E
 
-	THUMB_FUNC_END sub_8028014
+	THUMB_FUNC_END PutBlendWindowUnitSprite
 
 	THUMB_FUNC_START sub_8028100
 sub_8028100: @ 0x08028100
-	ldr r1, _08028108  @ gUnknown_0203A018
+	ldr r1, _08028108  @ gMapSprites
 	movs r0, #0
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_08028108: .4byte gUnknown_0203A018
+_08028108: .4byte gMapSprites
 
 	THUMB_FUNC_END sub_8028100
 
-	THUMB_FUNC_START HideUnitSMS
-HideUnitSMS: @ 0x0802810C
+	THUMB_FUNC_START HideUnitSprite
+HideUnitSprite: @ 0x0802810C
 	push {r4, lr}
 	adds r4, r0, #0
 	cmp r4, #0
 	bne _08028118
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _08028118:
 	ldr r2, [r4, #0x3c]
 	cmp r2, #0
@@ -3554,10 +3554,10 @@ _0802812A:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END HideUnitSMS
+	THUMB_FUNC_END HideUnitSprite
 
-	THUMB_FUNC_START ShowUnitSMS
-ShowUnitSMS: @ 0x08028130
+	THUMB_FUNC_START ShowUnitSprite
+ShowUnitSprite: @ 0x08028130
 	push {lr}
 	ldr r2, [r0, #0x3c]
 	cmp r2, #0
@@ -3570,10 +3570,10 @@ _08028140:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END ShowUnitSMS
+	THUMB_FUNC_END ShowUnitSprite
 
-	THUMB_FUNC_START GetUnitStandingSpriteDataFlagThing
-GetUnitStandingSpriteDataFlagThing: @ 0x08028144
+	THUMB_FUNC_START GetUnitSpriteHideFlag
+GetUnitSpriteHideFlag: @ 0x08028144
 	push {lr}
 	ldr r0, [r0, #0x3c]
 	cmp r0, #0
@@ -3591,7 +3591,7 @@ _0802815C:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetUnitStandingSpriteDataFlagThing
+	THUMB_FUNC_END GetUnitSpriteHideFlag
 
 	THUMB_FUNC_START sub_8028160
 sub_8028160: @ 0x08028160
@@ -3654,4 +3654,4 @@ _080281C4: .4byte gUnknown_0859B73C
 
 	THUMB_FUNC_END sub_8028160
 
-.align 2, 0
+	.align 2, 0

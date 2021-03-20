@@ -66,7 +66,7 @@ _08005664:
 	cmp r0, #0
 	beq _080056B4
 	str r7, [sp]
-	ldr r1, _080056A8  @ gUnknown_0202A68C
+	ldr r1, _080056A8  @ gFaceConfig
 	lsls r0, r6, #3
 	adds r0, r0, r1
 	ldrh r1, [r0, #4]
@@ -80,12 +80,12 @@ _08005664:
 	b _080056C8
 	.align 2, 0
 _080056A4: .4byte ProcScr_Face
-_080056A8: .4byte gUnknown_0202A68C
+_080056A8: .4byte gFaceConfig
 _080056AC: .4byte gPal+0x200
 _080056B0: .4byte 0x01000008
 _080056B4:
 	ldr r0, [r5, #8]
-	ldr r2, _080056F8  @ gUnknown_0202A68C
+	ldr r2, _080056F8  @ gFaceConfig
 	lsls r1, r6, #3
 	adds r1, r1, r2
 	ldrh r1, [r1, #4]
@@ -119,7 +119,7 @@ _080056C8:
 	str r2, [r4, #0x48]
 	b _08005710
 	.align 2, 0
-_080056F8: .4byte gUnknown_0202A68C
+_080056F8: .4byte gFaceConfig
 _080056FC:
 	ldr r0, _08005730  @ gUnknown_0859124C
 	adds r1, r4, #0
@@ -344,7 +344,7 @@ _08005866:
 	movs r4, #0x80
 	lsls r4, r4, #4
 _0800586A:
-	ldr r1, _08005890  @ gUnknown_0202A68C
+	ldr r1, _08005890  @ gFaceConfig
 	adds r0, r3, #0
 	adds r0, #0x40
 	ldrb r0, [r0]
@@ -363,12 +363,12 @@ _0800586A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08005890: .4byte gUnknown_0202A68C
+_08005890: .4byte gFaceConfig
 
 	THUMB_FUNC_END FaceRefreshSprite
 
-	THUMB_FUNC_START sub_8005894
-sub_8005894: @ 0x08005894
+	THUMB_FUNC_START PutFaceTm
+PutFaceTm: @ 0x08005894
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -451,10 +451,10 @@ _08005918:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8005894
+	THUMB_FUNC_END PutFaceTm
 
-	THUMB_FUNC_START sub_8005924
-sub_8005924: @ 0x08005924
+	THUMB_FUNC_START UnpackFaceChibiGraphics
+UnpackFaceChibiGraphics: @ 0x08005924
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -463,7 +463,7 @@ sub_8005924: @ 0x08005924
 	cmp r4, r0
 	ble _08005960
 	adds r0, r4, #0
-	bl sub_8005F6C
+	bl GetFactionFaceImg
 	lsls r1, r5, #5
 	movs r3, #0xc0
 	lsls r3, r3, #0x13
@@ -476,7 +476,7 @@ sub_8005924: @ 0x08005924
 	bl RegisterDataMove
 	adds r0, r4, #0
 	adds r1, r6, #0
-	bl sub_8005F9C
+	bl ApplyFactionFacePal
 	b _08005980
 	.align 2, 0
 _08005958: .4byte 0x00007EFF
@@ -500,10 +500,10 @@ _08005980:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8005924
+	THUMB_FUNC_END UnpackFaceChibiGraphics
 
-	THUMB_FUNC_START sub_8005988
-sub_8005988: @ 0x08005988
+	THUMB_FUNC_START PutFaceChibi
+PutFaceChibi: @ 0x08005988
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
@@ -515,7 +515,7 @@ sub_8005988: @ 0x08005988
 	lsrs r4, r4, #0x18
 	adds r1, r6, #0
 	adds r2, r5, #0
-	bl sub_8005924
+	bl UnpackFaceChibiGraphics
 	ldr r2, _080059C4  @ 0x000003FF
 	ands r2, r6
 	ldr r1, _080059C8  @ gUnknown_085911C4
@@ -525,7 +525,7 @@ sub_8005988: @ 0x08005988
 	asrs r4, r4, #0x18
 	mov r0, r8
 	adds r3, r4, #0
-	bl sub_8005894
+	bl PutFaceTm
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6}
@@ -535,10 +535,10 @@ sub_8005988: @ 0x08005988
 _080059C4: .4byte 0x000003FF
 _080059C8: .4byte gUnknown_085911C4
 
-	THUMB_FUNC_END sub_8005988
+	THUMB_FUNC_END PutFaceChibi
 
-	THUMB_FUNC_START sub_80059CC
-sub_80059CC: @ 0x080059CC
+	THUMB_FUNC_START UnpackFaceChibiSprGraphics
+UnpackFaceChibiSprGraphics: @ 0x080059CC
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -554,7 +554,7 @@ sub_80059CC: @ 0x080059CC
 	cmp r6, r0
 	ble _08005A68
 	adds r0, r6, #0
-	bl sub_8005F6C
+	bl GetFactionFaceImg
 	lsls r1, r7, #5
 	ldr r5, _08005A64  @ 0x0001FFFF
 	ands r1, r5
@@ -564,7 +564,7 @@ sub_80059CC: @ 0x080059CC
 	movs r2, #0x80
 	bl RegisterDataMove
 	adds r0, r6, #0
-	bl sub_8005F6C
+	bl GetFactionFaceImg
 	adds r0, #0x80
 	adds r1, r7, #0
 	adds r1, #0x20
@@ -574,7 +574,7 @@ sub_80059CC: @ 0x080059CC
 	movs r2, #0x80
 	bl RegisterDataMove
 	adds r0, r6, #0
-	bl sub_8005F6C
+	bl GetFactionFaceImg
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r0, r1
@@ -585,7 +585,7 @@ sub_80059CC: @ 0x080059CC
 	movs r2, #0x80
 	bl RegisterDataMove
 	adds r0, r6, #0
-	bl sub_8005F6C
+	bl GetFactionFaceImg
 	movs r1, #0xc0
 	lsls r1, r1, #1
 	adds r0, r0, r1
@@ -599,7 +599,7 @@ sub_80059CC: @ 0x080059CC
 	mov r1, r8
 	adds r1, #0x10
 	adds r0, r6, #0
-	bl sub_8005F9C
+	bl ApplyFactionFacePal
 	b _08005AC4
 	.align 2, 0
 _08005A5C: .4byte 0xFFFFFE00
@@ -655,10 +655,10 @@ _08005AC4:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_80059CC
+	THUMB_FUNC_END UnpackFaceChibiSprGraphics
 
-	THUMB_FUNC_START sub_8005AD4
-sub_8005AD4: @ 0x08005AD4
+	THUMB_FUNC_START FaceChibiSpr_OnIdle
+FaceChibiSpr_OnIdle: @ 0x08005AD4
 	push {r4, lr}
 	sub sp, #4
 	movs r2, #0x34
@@ -682,10 +682,10 @@ sub_8005AD4: @ 0x08005AD4
 	.align 2, 0
 _08005B00: .4byte gDispIo
 
-	THUMB_FUNC_END sub_8005AD4
+	THUMB_FUNC_END FaceChibiSpr_OnIdle
 
-	THUMB_FUNC_START sub_8005B04
-sub_8005B04: @ 0x08005B04
+	THUMB_FUNC_START StartFaceChibiStr
+StartFaceChibiStr: @ 0x08005B04
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -701,7 +701,7 @@ sub_8005B04: @ 0x08005B04
 	lsrs r5, r5, #0x18
 	adds r1, r6, #0
 	adds r2, r4, #0
-	bl sub_80059CC
+	bl UnpackFaceChibiSprGraphics
 	ldr r0, _08005B4C  @ gUnknown_085911D8
 	adds r1, r7, #0
 	bl SpawnProc
@@ -735,10 +735,10 @@ _08005B56:
 	.align 2, 0
 _08005B64: .4byte gUnknown_085911E8
 
-	THUMB_FUNC_END sub_8005B04
+	THUMB_FUNC_END StartFaceChibiStr
 
-	THUMB_FUNC_START sub_8005B68
-sub_8005B68: @ 0x08005B68
+	THUMB_FUNC_START EndFaceChibiSpr
+EndFaceChibiSpr: @ 0x08005B68
 	push {lr}
 	ldr r0, _08005B74  @ gUnknown_085911D8
 	bl EndEachProc
@@ -747,10 +747,10 @@ sub_8005B68: @ 0x08005B68
 	.align 2, 0
 _08005B74: .4byte gUnknown_085911D8
 
-	THUMB_FUNC_END sub_8005B68
+	THUMB_FUNC_END EndFaceChibiSpr
 
-	THUMB_FUNC_START sub_8005B78
-sub_8005B78: @ 0x08005B78
+	THUMB_FUNC_START PutFace80x72_Standard
+PutFace80x72_Standard: @ 0x08005B78
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	adds r7, r1, #0
@@ -793,10 +793,10 @@ sub_8005B78: @ 0x08005B78
 	.align 2, 0
 _08005BC8: .4byte gUnknown_085A0838
 
-	THUMB_FUNC_END sub_8005B78
+	THUMB_FUNC_END PutFace80x72_Standard
 
-	THUMB_FUNC_START sub_8005BCC
-sub_8005BCC: @ 0x08005BCC
+	THUMB_FUNC_START PutFace80x72_Raised
+PutFace80x72_Raised: @ 0x08005BCC
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	adds r7, r1, #0
@@ -840,7 +840,7 @@ sub_8005BCC: @ 0x08005BCC
 	.align 2, 0
 _08005C20: .4byte gUnknown_085A08F0
 
-	THUMB_FUNC_END sub_8005BCC
+	THUMB_FUNC_END PutFace80x72_Raised
 
 	THUMB_FUNC_START IsSmallFid
 IsSmallFid: @ 0x08005C24
@@ -890,8 +890,8 @@ _08005C9E:
 
 	THUMB_FUNC_END IsSmallFid
 
-	THUMB_FUNC_START sub_8005CA4
-sub_8005CA4: @ 0x08005CA4
+	THUMB_FUNC_START PutFace80x72_Core
+PutFace80x72_Core: @ 0x08005CA4
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -933,7 +933,7 @@ sub_8005CA4: @ 0x08005CA4
 	adds r1, r1, r0
 	mov r0, r9
 	adds r2, r4, #0
-	bl sub_8005BCC
+	bl PutFace80x72_Raised
 	b _08005D1C
 	.align 2, 0
 _08005D08: .4byte 0x000003FF
@@ -944,7 +944,7 @@ _08005D0C:
 	adds r1, r1, r0
 	mov r0, r9
 	adds r2, r4, #0
-	bl sub_8005B78
+	bl PutFace80x72_Standard
 _08005D1C:
 	movs r2, #0
 	mov r0, r9
@@ -984,7 +984,7 @@ _08005D54:
 	.align 2, 0
 _08005D60: .4byte 0x000003FF
 
-	THUMB_FUNC_END sub_8005CA4
+	THUMB_FUNC_END PutFace80x72_Core
 
 	THUMB_FUNC_START sub_8005D64
 sub_8005D64: @ 0x08005D64
@@ -1007,7 +1007,7 @@ sub_8005D70: @ 0x08005D70
 	cmp r0, #0
 	bge _08005D90
 	adds r0, r4, #0
-	bl sub_8006470
+	bl FaceBlinkProc_GenBlinkInterval
 	str r0, [r4, #0x38]
 	movs r0, #0
 	strh r0, [r4, #0x34]
@@ -1080,7 +1080,7 @@ _08005E04:
 	ands r2, r3
 	adds r1, r1, r2
 	adds r2, r5, #0
-	bl sub_8005B78
+	bl PutFace80x72_Standard
 	ldr r0, [r4, #0x3c]
 	bl GetBgFromTm
 	bl EnableBgSyncById
@@ -1139,8 +1139,8 @@ _08005E90:
 
 	THUMB_FUNC_END sub_8005D98
 
-	THUMB_FUNC_START sub_8005E98
-sub_8005E98: @ 0x08005E98
+	THUMB_FUNC_START PutFace80x72
+PutFace80x72: @ 0x08005E98
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
@@ -1154,7 +1154,7 @@ sub_8005E98: @ 0x08005E98
 	mov r1, r8
 	adds r2, r5, #0
 	adds r3, r6, #0
-	bl sub_8005CA4
+	bl PutFace80x72_Core
 	mov r0, r8
 	bl GetFaceInfo
 	pop {r3}
@@ -1165,20 +1165,20 @@ sub_8005E98: @ 0x08005E98
 	.align 2, 0
 _08005EC8: .4byte gUnknown_08591204
 
-	THUMB_FUNC_END sub_8005E98
+	THUMB_FUNC_END PutFace80x72
 
-	THUMB_FUNC_START sub_8005ECC
-sub_8005ECC: @ 0x08005ECC
+	THUMB_FUNC_START EndFacePtr
+EndFacePtr: @ 0x08005ECC
 	push {lr}
 	ldr r0, [r0, #0x54]
 	bl EndFace
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8005ECC
+	THUMB_FUNC_END EndFacePtr
 
-	THUMB_FUNC_START sub_8005ED8
-sub_8005ED8: @ 0x08005ED8
+	THUMB_FUNC_START EndFaceIn8Frames
+EndFaceIn8Frames: @ 0x08005ED8
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08005EEC  @ gUnknown_08591234
@@ -1191,10 +1191,10 @@ sub_8005ED8: @ 0x08005ED8
 	.align 2, 0
 _08005EEC: .4byte gUnknown_08591234
 
-	THUMB_FUNC_END sub_8005ED8
+	THUMB_FUNC_END EndFaceIn8Frames
 
-	THUMB_FUNC_START sub_8005EF0
-sub_8005EF0: @ 0x08005EF0
+	THUMB_FUNC_START StartFaceFadeIn
+StartFaceFadeIn: @ 0x08005EF0
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
@@ -1202,7 +1202,7 @@ sub_8005EF0: @ 0x08005EF0
 	ldrh r0, [r4, #0x3e]
 	bl GetFaceInfo
 	mov r8, r0
-	ldr r6, _08005F34  @ gUnknown_0202A68C
+	ldr r6, _08005F34  @ gFaceConfig
 	adds r5, r4, #0
 	adds r5, #0x40
 	ldrb r0, [r5]
@@ -1227,17 +1227,17 @@ sub_8005EF0: @ 0x08005EF0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08005F34: .4byte gUnknown_0202A68C
+_08005F34: .4byte gFaceConfig
 
-	THUMB_FUNC_END sub_8005EF0
+	THUMB_FUNC_END StartFaceFadeIn
 
-	THUMB_FUNC_START sub_8005F38
-sub_8005F38: @ 0x08005F38
+	THUMB_FUNC_START StartFaceFadeOut
+StartFaceFadeOut: @ 0x08005F38
 	push {r4, lr}
 	adds r4, r0, #0
 	ldrh r0, [r4, #0x3e]
 	bl GetFaceInfo
-	ldr r1, _08005F68  @ gUnknown_0202A68C
+	ldr r1, _08005F68  @ gFaceConfig
 	adds r0, r4, #0
 	adds r0, #0x40
 	ldrb r0, [r0]
@@ -1249,17 +1249,17 @@ sub_8005F38: @ 0x08005F38
 	adds r2, r4, #0
 	bl sub_80138F0
 	adds r0, r4, #0
-	bl sub_8005ED8
+	bl EndFaceIn8Frames
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08005F68: .4byte gUnknown_0202A68C
+_08005F68: .4byte gFaceConfig
 
-	THUMB_FUNC_END sub_8005F38
+	THUMB_FUNC_END StartFaceFadeOut
 
-	THUMB_FUNC_START sub_8005F6C
-sub_8005F6C: @ 0x08005F6C
+	THUMB_FUNC_START GetFactionFaceImg
+GetFactionFaceImg: @ 0x08005F6C
 	push {r4, r5, lr}
 	sub sp, #0x20
 	mov r2, sp
@@ -1283,10 +1283,10 @@ sub_8005F6C: @ 0x08005F6C
 _08005F94: .4byte gUnknown_080D77BC
 _08005F98: .4byte 0xFFFF8100
 
-	THUMB_FUNC_END sub_8005F6C
+	THUMB_FUNC_END GetFactionFaceImg
 
-	THUMB_FUNC_START sub_8005F9C
-sub_8005F9C: @ 0x08005F9C
+	THUMB_FUNC_START ApplyFactionFacePal
+ApplyFactionFacePal: @ 0x08005F9C
 	push {r4, r5, r6, lr}
 	sub sp, #0x20
 	mov r3, sp
@@ -1313,7 +1313,7 @@ sub_8005F9C: @ 0x08005F9C
 _08005FCC: .4byte gUnknown_080D77DC
 _08005FD0: .4byte 0xFFFF8100
 
-	THUMB_FUNC_END sub_8005F9C
+	THUMB_FUNC_END ApplyFactionFacePal
 
 	THUMB_FUNC_START sub_8005FD4
 sub_8005FD4: @ 0x08005FD4
@@ -1644,7 +1644,7 @@ sub_800623C: @ 0x0800623C
 	movs r4, #0
 	strh r0, [r5, #0x30]
 	adds r0, r5, #0
-	bl sub_8006470
+	bl FaceBlinkProc_GenBlinkInterval
 	str r0, [r5, #0x38]
 	strh r4, [r5, #0x32]
 	movs r0, #0x30
@@ -1689,7 +1689,7 @@ _0800629C:
 	cmp r0, #0
 	bge _080062B2
 	adds r0, r4, #0
-	bl sub_8006470
+	bl FaceBlinkProc_GenBlinkInterval
 	str r0, [r4, #0x38]
 	strh r5, [r4, #0x34]
 	adds r0, r4, #0
@@ -1905,8 +1905,8 @@ _08006420:
 
 	THUMB_FUNC_END sub_80063C4
 
-	THUMB_FUNC_START sub_8006438
-sub_8006438: @ 0x08006438
+	THUMB_FUNC_START SetFaceBlinkControl
+SetFaceBlinkControl: @ 0x08006438
 	push {r4, lr}
 	adds r2, r0, #0
 	cmp r1, #0
@@ -1917,31 +1917,31 @@ _08006444:
 	ldr r4, [r2, #0x48]
 	strh r1, [r4, #0x30]
 	adds r0, r4, #0
-	bl sub_8006470
+	bl FaceBlinkProc_GenBlinkInterval
 	str r0, [r4, #0x38]
 	pop {r4}
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8006438
+	THUMB_FUNC_END SetFaceBlinkControl
 
-	THUMB_FUNC_START sub_8006458
-sub_8006458: @ 0x08006458
+	THUMB_FUNC_START SetFaceBlinkControlById
+SetFaceBlinkControlById: @ 0x08006458
 	push {lr}
 	ldr r2, _0800646C  @ gFaces
 	lsls r0, r0, #2
 	adds r0, r0, r2
 	ldr r0, [r0]
-	bl sub_8006438
+	bl SetFaceBlinkControl
 	pop {r0}
 	bx r0
 	.align 2, 0
 _0800646C: .4byte gFaces
 
-	THUMB_FUNC_END sub_8006458
+	THUMB_FUNC_END SetFaceBlinkControlById
 
-	THUMB_FUNC_START sub_8006470
-sub_8006470: @ 0x08006470
+	THUMB_FUNC_START FaceBlinkProc_GenBlinkInterval
+FaceBlinkProc_GenBlinkInterval: @ 0x08006470
 	push {r4, lr}
 	adds r4, r0, #0
 	bl RandNextB
@@ -1992,7 +1992,7 @@ _080064C8:
 	.align 2, 0
 _080064D0: .4byte 0x7FFFFFFF
 
-	THUMB_FUNC_END sub_8006470
+	THUMB_FUNC_END FaceBlinkProc_GenBlinkInterval
 
 	THUMB_FUNC_START sub_80064D4
 sub_80064D4: @ 0x080064D4
@@ -2017,8 +2017,8 @@ _080064F0: .4byte gFaces
 
 	THUMB_FUNC_END sub_80064DC
 
-	THUMB_FUNC_START sub_80064F4
-sub_80064F4: @ 0x080064F4
+	THUMB_FUNC_START NewFace2
+NewFace2: @ 0x080064F4
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -2055,7 +2055,7 @@ _0800651C:
 	cmp r0, #0
 	beq _0800656C
 	str r6, [sp]
-	ldr r0, _08006560  @ gUnknown_0202A68C
+	ldr r0, _08006560  @ gFaceConfig
 	lsls r4, r7, #3
 	adds r0, r4, r0
 	ldrh r1, [r0, #4]
@@ -2069,13 +2069,13 @@ _0800651C:
 	b _08006582
 	.align 2, 0
 _0800655C: .4byte gUnknown_0859118C
-_08006560: .4byte gUnknown_0202A68C
+_08006560: .4byte gFaceConfig
 _08006564: .4byte gPal+0x200
 _08006568: .4byte 0x01000008
 _0800656C:
 	mov r2, r8
 	ldr r0, [r2, #8]
-	ldr r1, _080065C8  @ gUnknown_0202A68C
+	ldr r1, _080065C8  @ gFaceConfig
 	lsls r4, r7, #3
 	adds r1, r4, r1
 	ldrh r1, [r1, #4]
@@ -2119,7 +2119,7 @@ _08006582:
 	beq _080065D6
 	b _080065E6
 	.align 2, 0
-_080065C8: .4byte gUnknown_0202A68C
+_080065C8: .4byte gFaceConfig
 _080065CC:
 	movs r0, #0x80
 	lsls r0, r0, #2
@@ -2141,7 +2141,7 @@ _080065E6:
 	movs r3, #0x80
 	lsls r3, r3, #4
 _080065EA:
-	ldr r0, _08006614  @ gUnknown_0202A68C
+	ldr r0, _08006614  @ gFaceConfig
 	adds r0, r4, r0
 	ldr r1, [r0]
 	lsrs r1, r1, #5
@@ -2163,9 +2163,9 @@ _08006602:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08006614: .4byte gUnknown_0202A68C
+_08006614: .4byte gFaceConfig
 
-	THUMB_FUNC_END sub_80064F4
+	THUMB_FUNC_END NewFace2
 
 	THUMB_FUNC_START sub_8006618
 sub_8006618: @ 0x08006618
@@ -2212,7 +2212,7 @@ sub_8006650: @ 0x08006650
 	bl GetFaceInfo
 	str r0, [r4, #0x30]
 	ldr r0, [r0]
-	ldr r5, _080066A0  @ gUnknown_0202A68C
+	ldr r5, _080066A0  @ gFaceConfig
 	ldr r1, [r4, #0x2c]
 	adds r1, #0x40
 	ldrb r1, [r1]
@@ -2243,7 +2243,7 @@ sub_8006650: @ 0x08006650
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080066A0: .4byte gUnknown_0202A68C
+_080066A0: .4byte gFaceConfig
 _080066A4: .4byte 0x06010000
 
 	THUMB_FUNC_END sub_8006650

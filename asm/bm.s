@@ -2,8 +2,8 @@
 
 	.SYNTAX UNIFIED
 
-	THUMB_FUNC_START LoadObjUIGfx
-LoadObjUIGfx: @ 0x08015680
+	THUMB_FUNC_START LoadObjUiGfx
+LoadObjUiGfx: @ 0x08015680
 	push {r4, lr}
 	ldr r0, _080156AC  @ gUnknown_0859E8E0
 	ldr r4, _080156B0  @ gBuf
@@ -28,7 +28,7 @@ _080156B0: .4byte gBuf
 _080156B4: .4byte 0x06010000
 _080156B8: .4byte gUnknown_0859ED70
 
-	THUMB_FUNC_END LoadObjUIGfx
+	THUMB_FUNC_END LoadObjUiGfx
 
 	THUMB_FUNC_START sub_80156BC
 sub_80156BC: @ 0x080156BC
@@ -54,7 +54,7 @@ sub_80156D4: @ 0x080156D4
 	bl InitIcons
 	movs r0, #4
 	bl ApplyIconPalettes
-	bl LoadObjUIGfx
+	bl LoadObjUiGfx
 	pop {r0}
 	bx r0
 
@@ -69,7 +69,7 @@ LoadGameCoreGfx: @ 0x080156F4
 	bl InitIcons
 	movs r0, #4
 	bl ApplyIconPalettes
-	bl LoadObjUIGfx
+	bl LoadObjUiGfx
 	pop {r0}
 	bx r0
 
@@ -84,7 +84,7 @@ HandleCursorMovement: @ 0x08015714
 	lsrs r7, r0, #0x14
 	movs r0, #0xf
 	ands r7, r0
-	ldr r3, _08015814  @ gUnknown_0202BCB0
+	ldr r3, _08015814  @ gBmSt
 	ldr r4, _08015818  @ gUnknown_0859A438
 	lsls r2, r7, #1
 	adds r0, r2, r4
@@ -110,7 +110,7 @@ HandleCursorMovement: @ 0x08015714
 	beq _08015792
 	movs r3, #0x16
 	ldrsh r0, [r5, r3]
-	ldr r1, _0801581C  @ gBmMapMovement
+	ldr r1, _0801581C  @ gMapMovement
 	ldr r2, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r2
@@ -145,7 +145,7 @@ _08015792:
 	asrs r1, r0, #0x10
 	cmp r1, #0
 	blt _080157BC
-	ldr r0, _08015824  @ gBmMapSize
+	ldr r0, _08015824  @ gMapSize
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r1, r0
@@ -167,7 +167,7 @@ _080157BC:
 	adds r1, r2, #0
 	cmp r1, #0
 	blt _080157E8
-	ldr r0, _08015824  @ gBmMapSize
+	ldr r0, _08015824  @ gMapSize
 	movs r3, #2
 	ldrsh r0, [r0, r3]
 	cmp r1, r0
@@ -195,7 +195,7 @@ _080157E8:
 	ldr r0, [r5, #0x18]
 	cmp r1, r0
 	beq _08015832
-	ldr r0, _08015828  @ gRAMChapterData
+	ldr r0, _08015828  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -209,12 +209,12 @@ _0801580C:
 	orrs r0, r1
 	b _08015830
 	.align 2, 0
-_08015814: .4byte gUnknown_0202BCB0
+_08015814: .4byte gBmSt
 _08015818: .4byte gUnknown_0859A438
-_0801581C: .4byte gBmMapMovement
+_0801581C: .4byte gMapMovement
 _08015820: .4byte gKeySt
-_08015824: .4byte gBmMapSize
-_08015828: .4byte gRAMChapterData
+_08015824: .4byte gMapSize
+_08015828: .4byte gPlaySt
 _0801582C:
 	movs r0, #0xfb
 	ands r0, r1
@@ -231,7 +231,7 @@ _08015832:
 MoveCameraByStepMaybe: @ 0x08015838
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r2, _08015888  @ gUnknown_0202BCB0
+	ldr r2, _08015888  @ gBmSt
 	ldrh r3, [r2, #0x20]
 	movs r0, #0x20
 	ldrsh r1, [r2, r0]
@@ -274,7 +274,7 @@ _08015882:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08015888: .4byte gUnknown_0202BCB0
+_08015888: .4byte gBmSt
 
 	THUMB_FUNC_END MoveCameraByStepMaybe
 
@@ -283,7 +283,7 @@ sub_801588C: @ 0x0801588C
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	movs r6, #0
-	ldr r1, _080158B4  @ gUnknown_0202BCB0
+	ldr r1, _080158B4  @ gBmSt
 	movs r0, #0x20
 	ldrsh r3, [r1, r0]
 	movs r2, #0x22
@@ -301,7 +301,7 @@ sub_801588C: @ 0x0801588C
 	strh r6, [r2, #0xc]
 	b _080158D0
 	.align 2, 0
-_080158B4: .4byte gUnknown_0202BCB0
+_080158B4: .4byte gBmSt
 _080158B8:
 	movs r6, #1
 	ldrh r0, [r2, #0xc]
@@ -447,7 +447,7 @@ _080159B2:
 GetSomeAdjustedCameraX: @ 0x080159B8
 	push {r4, lr}
 	adds r3, r0, #0
-	ldr r0, _080159F8  @ gUnknown_0202BCB0
+	ldr r0, _080159F8  @ gBmSt
 	movs r1, #0xc
 	ldrsh r2, [r0, r1]
 	adds r1, r2, #0
@@ -480,7 +480,7 @@ _080159EE:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080159F8: .4byte gUnknown_0202BCB0
+_080159F8: .4byte gBmSt
 
 	THUMB_FUNC_END GetSomeAdjustedCameraX
 
@@ -488,7 +488,7 @@ _080159F8: .4byte gUnknown_0202BCB0
 GetSomeAdjustedCameraY: @ 0x080159FC
 	push {r4, lr}
 	adds r3, r0, #0
-	ldr r0, _08015A3C  @ gUnknown_0202BCB0
+	ldr r0, _08015A3C  @ gBmSt
 	movs r1, #0xe
 	ldrsh r2, [r0, r1]
 	adds r1, r2, #0
@@ -521,7 +521,7 @@ _08015A32:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08015A3C: .4byte gUnknown_0202BCB0
+_08015A3C: .4byte gBmSt
 
 	THUMB_FUNC_END GetSomeAdjustedCameraY
 
@@ -534,7 +534,7 @@ sub_8015A40: @ 0x08015A40
 	bge _08015A4C
 	movs r1, #0
 _08015A4C:
-	ldr r0, _08015A68  @ gUnknown_0202BCB0
+	ldr r0, _08015A68  @ gBmSt
 	movs r2, #0x28
 	ldrsh r0, [r0, r2]
 	cmp r1, r0
@@ -550,7 +550,7 @@ _08015A58:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08015A68: .4byte gUnknown_0202BCB0
+_08015A68: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8015A40
 
@@ -563,7 +563,7 @@ sub_8015A6C: @ 0x08015A6C
 	bge _08015A78
 	movs r1, #0
 _08015A78:
-	ldr r0, _08015A94  @ gUnknown_0202BCB0
+	ldr r0, _08015A94  @ gBmSt
 	movs r2, #0x2a
 	ldrsh r0, [r0, r2]
 	cmp r1, r0
@@ -579,7 +579,7 @@ _08015A84:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08015A94: .4byte gUnknown_0202BCB0
+_08015A94: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8015A6C
 
@@ -627,11 +627,11 @@ _08015AEC: .4byte gUnknown_0859A4C0
 _08015AF0:
 	bl GetGameTime
 	subs r0, #1
-	ldr r5, _08015B2C  @ gUnknown_0202BD40
+	ldr r5, _08015B2C  @ gCursorAnimationClockReference
 	ldr r1, [r5]
 	cmp r0, r1
 	bne _08015B10
-	ldr r0, _08015B30  @ gUnknown_0202BD3C
+	ldr r0, _08015B30  @ gPreviousCursorDisplayPosition
 	movs r2, #0
 	ldrsh r1, [r0, r2]
 	adds r1, r6, r1
@@ -648,15 +648,15 @@ _08015B10:
 	adds r0, r0, r1
 	ldr r0, [r0]
 	mov r8, r0
-	ldr r0, _08015B30  @ gUnknown_0202BD3C
+	ldr r0, _08015B30  @ gPreviousCursorDisplayPosition
 	strh r6, [r0]
 	strh r7, [r0, #2]
 	bl GetGameTime
 	str r0, [r5]
 	b _08015B52
 	.align 2, 0
-_08015B2C: .4byte gUnknown_0202BD40
-_08015B30: .4byte gUnknown_0202BD3C
+_08015B2C: .4byte gCursorAnimationClockReference
+_08015B30: .4byte gPreviousCursorDisplayPosition
 _08015B34: .4byte gUnknown_0859A4C0
 _08015B38:
 	movs r0, #2
@@ -674,7 +674,7 @@ _08015B4E:
 	ldr r0, [r0]
 	mov r8, r0
 _08015B52:
-	ldr r0, _08015B84  @ gUnknown_0202BCB0
+	ldr r0, _08015B84  @ gBmSt
 	movs r2, #0xc
 	ldrsh r1, [r0, r2]
 	subs r6, r6, r1
@@ -697,7 +697,7 @@ _08015B52:
 	bx r0
 	.align 2, 0
 _08015B80: .4byte gUnknown_0859A4C0
-_08015B84: .4byte gUnknown_0202BCB0
+_08015B84: .4byte gBmSt
 
 	THUMB_FUNC_END DisplayCursor
 
@@ -732,7 +732,7 @@ _08015BB8: .4byte gUnknown_0859A4C0
 
 	THUMB_FUNC_START SetCursorMapPosition
 SetCursorMapPosition: @ 0x08015BBC
-	ldr r2, _08015BD0  @ gUnknown_0202BCB0
+	ldr r2, _08015BD0  @ gBmSt
 	strh r0, [r2, #0x14]
 	strh r1, [r2, #0x16]
 	lsls r0, r0, #4
@@ -743,7 +743,7 @@ SetCursorMapPosition: @ 0x08015BBC
 	strh r1, [r2, #0x22]
 	bx lr
 	.align 2, 0
-_08015BD0: .4byte gUnknown_0202BCB0
+_08015BD0: .4byte gBmSt
 
 	THUMB_FUNC_END SetCursorMapPosition
 
@@ -786,8 +786,8 @@ _08015C18: .4byte gUnknown_0859A530
 
 	THUMB_FUNC_END sub_8015BD4
 
-	THUMB_FUNC_START Init6C_GENS
-Init6C_GENS: @ 0x08015C1C
+	THUMB_FUNC_START CameraMovement_OnInit
+CameraMovement_OnInit: @ 0x08015C1C
 	push {r4, r5, r6, lr}
 	mov ip, r0
 	movs r5, #1
@@ -833,13 +833,13 @@ _08015C60:
 	lsls r0, r5, #0x18
 	asrs r0, r0, #0x19
 	subs r0, r3, r0
-	ldr r6, _08015C78  @ gUnknown_0202BD44
+	ldr r6, _08015C78  @ gSomeCameraMovementTableMaybe
 	cmp r0, #0
 	bge _08015C7C
 	strb r3, [r6]
 	b _08015CA2
 	.align 2, 0
-_08015C78: .4byte gUnknown_0202BD44
+_08015C78: .4byte gSomeCameraMovementTableMaybe
 _08015C7C:
 	lsls r1, r5, #0x18
 	asrs r2, r1, #0x18
@@ -870,16 +870,16 @@ _08015CA2:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END Init6C_GENS
+	THUMB_FUNC_END CameraMovement_OnInit
 
-	THUMB_FUNC_START Loop6C_GENS
-Loop6C_GENS: @ 0x08015CB0
+	THUMB_FUNC_START CameraMovement_OnLoop
+CameraMovement_OnLoop: @ 0x08015CB0
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r2, [r5, #0x3c]
 	cmp r2, #0
 	bne _08015CD0
-	ldr r0, _08015CCC  @ gUnknown_0202BCB0
+	ldr r0, _08015CCC  @ gBmSt
 	ldrh r1, [r0, #0xc]
 	strh r1, [r5, #0x2c]
 	ldrh r0, [r0, #0xe]
@@ -888,9 +888,9 @@ Loop6C_GENS: @ 0x08015CB0
 	bl Proc_End
 	b _08015D20
 	.align 2, 0
-_08015CCC: .4byte gUnknown_0202BCB0
+_08015CCC: .4byte gBmSt
 _08015CD0:
-	ldr r0, _08015D28  @ gUnknown_0202BD44
+	ldr r0, _08015D28  @ gSomeCameraMovementTableMaybe
 	adds r0, r2, r0
 	movs r1, #0
 	ldrsb r1, [r0, r1]
@@ -899,7 +899,7 @@ _08015CD0:
 	strh r0, [r5, #0x3a]
 	subs r0, r2, #1
 	str r0, [r5, #0x3c]
-	ldr r4, _08015D2C  @ gUnknown_0202BCB0
+	ldr r4, _08015D2C  @ gBmSt
 	movs r1, #0x30
 	ldrsh r0, [r5, r1]
 	movs r2, #0x2c
@@ -933,13 +933,13 @@ _08015D20:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08015D28: .4byte gUnknown_0202BD44
-_08015D2C: .4byte gUnknown_0202BCB0
+_08015D28: .4byte gSomeCameraMovementTableMaybe
+_08015D2C: .4byte gBmSt
 
-	THUMB_FUNC_END Loop6C_GENS
+	THUMB_FUNC_END CameraMovement_OnLoop
 
-	THUMB_FUNC_START StoreAdjustedCameraPositions
-StoreAdjustedCameraPositions: @ 0x08015D30
+	THUMB_FUNC_START GetCenteredCameraPosition
+GetCenteredCameraPosition: @ 0x08015D30
 	push {r4, r5, lr}
 	adds r4, r2, #0
 	subs r0, #7
@@ -960,7 +960,7 @@ _08015D46:
 _08015D50:
 	ldr r1, [r4]
 	adds r1, #8
-	ldr r5, _08015D80  @ gBmMapSize
+	ldr r5, _08015D80  @ gMapSize
 	movs r0, #0
 	ldrsh r2, [r5, r0]
 	subs r0, r2, #1
@@ -984,12 +984,12 @@ _08015D78:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08015D80: .4byte gBmMapSize
+_08015D80: .4byte gMapSize
 
-	THUMB_FUNC_END StoreAdjustedCameraPositions
+	THUMB_FUNC_END GetCenteredCameraPosition
 
-	THUMB_FUNC_START sub_8015D84
-sub_8015D84: @ 0x08015D84
+	THUMB_FUNC_START CenterCameraOntoPosition
+CenterCameraOntoPosition: @ 0x08015D84
 	push {r4, r5, r6, r7, lr}
 	sub sp, #8
 	adds r5, r0, #0
@@ -999,14 +999,14 @@ sub_8015D84: @ 0x08015D84
 	adds r0, r6, #0
 	adds r1, r7, #0
 	mov r2, sp
-	bl StoreAdjustedCameraPositions
+	bl GetCenteredCameraPosition
 	ldr r1, [sp]
 	lsls r1, r1, #4
 	str r1, [sp]
 	ldr r0, [sp, #4]
 	lsls r2, r0, #4
 	str r2, [sp, #4]
-	ldr r3, _08015DC8  @ gUnknown_0202BCB0
+	ldr r3, _08015DC8  @ gBmSt
 	movs r4, #0xc
 	ldrsh r0, [r3, r4]
 	cmp r1, r0
@@ -1025,7 +1025,7 @@ _08015DC4:
 	movs r0, #0
 	b _08015E00
 	.align 2, 0
-_08015DC8: .4byte gUnknown_0202BCB0
+_08015DC8: .4byte gBmSt
 _08015DCC: .4byte gUnknown_0859A548
 _08015DD0:
 	cmp r5, #0
@@ -1040,7 +1040,7 @@ _08015DDE:
 	bl SpawnProc
 _08015DE6:
 	adds r2, r0, #0
-	ldr r1, _08015E08  @ gUnknown_0202BCB0
+	ldr r1, _08015E08  @ gBmSt
 	ldrh r0, [r1, #0xc]
 	strh r0, [r2, #0x30]
 	ldrh r0, [r1, #0xe]
@@ -1058,9 +1058,9 @@ _08015E00:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08015E08: .4byte gUnknown_0202BCB0
+_08015E08: .4byte gBmSt
 
-	THUMB_FUNC_END sub_8015D84
+	THUMB_FUNC_END CenterCameraOntoPosition
 
 	THUMB_FUNC_START EnsureCameraOntoPosition
 EnsureCameraOntoPosition: @ 0x08015E0C
@@ -1080,7 +1080,7 @@ EnsureCameraOntoPosition: @ 0x08015E0C
 	bl GetSomeAdjustedCameraY
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
-	ldr r1, _08015E54  @ gUnknown_0202BCB0
+	ldr r1, _08015E54  @ gBmSt
 	movs r2, #0xc
 	ldrsh r0, [r1, r2]
 	cmp r7, r0
@@ -1099,7 +1099,7 @@ _08015E4E:
 	movs r0, #0
 	b _08015E8C
 	.align 2, 0
-_08015E54: .4byte gUnknown_0202BCB0
+_08015E54: .4byte gBmSt
 _08015E58: .4byte gUnknown_0859A548
 _08015E5C:
 	cmp r5, #0
@@ -1114,7 +1114,7 @@ _08015E6A:
 	bl SpawnProc
 _08015E72:
 	adds r2, r0, #0
-	ldr r0, _08015E98  @ gUnknown_0202BCB0
+	ldr r0, _08015E98  @ gBmSt
 	ldrh r1, [r0, #0xc]
 	strh r1, [r2, #0x30]
 	ldrh r0, [r0, #0xe]
@@ -1134,7 +1134,7 @@ _08015E8C:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08015E98: .4byte gUnknown_0202BCB0
+_08015E98: .4byte gBmSt
 
 	THUMB_FUNC_END EnsureCameraOntoPosition
 
@@ -1152,7 +1152,7 @@ ShouldMoveCameraPosSomething: @ 0x08015E9C
 	bl GetSomeAdjustedCameraY
 	lsls r0, r0, #0x10
 	lsrs r2, r0, #0x10
-	ldr r1, _08015ED0  @ gUnknown_0202BCB0
+	ldr r1, _08015ED0  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r1, r3]
 	cmp r4, r0
@@ -1164,7 +1164,7 @@ ShouldMoveCameraPosSomething: @ 0x08015E9C
 	movs r0, #0
 	b _08015ED6
 	.align 2, 0
-_08015ED0: .4byte gUnknown_0202BCB0
+_08015ED0: .4byte gBmSt
 _08015ED4:
 	movs r0, #1
 _08015ED6:
@@ -1178,7 +1178,7 @@ _08015ED6:
 sub_8015EDC: @ 0x08015EDC
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	ldr r0, _08015F00  @ gUnknown_0202BCB0
+	ldr r0, _08015F00  @ gBmSt
 	movs r2, #0xe
 	ldrsh r1, [r0, r2]
 	movs r2, #0x2a
@@ -1194,7 +1194,7 @@ _08015EFA:
 	movs r0, #0
 	b _08015F34
 	.align 2, 0
-_08015F00: .4byte gUnknown_0202BCB0
+_08015F00: .4byte gBmSt
 _08015F04: .4byte gUnknown_0859A548
 _08015F08:
 	cmp r5, #0
@@ -1209,7 +1209,7 @@ _08015F16:
 	bl SpawnProc
 _08015F1E:
 	adds r2, r0, #0
-	ldr r1, _08015F3C  @ gUnknown_0202BCB0
+	ldr r1, _08015F3C  @ gBmSt
 	ldrh r0, [r1, #0xc]
 	strh r0, [r2, #0x30]
 	ldrh r0, [r1, #0xe]
@@ -1224,7 +1224,7 @@ _08015F34:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08015F3C: .4byte gUnknown_0202BCB0
+_08015F3C: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8015EDC
 
@@ -1278,7 +1278,7 @@ sub_8015F90: @ 0x08015F90
 	ldr r0, _08015FC0  @ gUnknown_0859A570
 	movs r1, #3
 	bl SpawnProc
-	ldr r2, _08015FC4  @ gUnknown_0202BCB0
+	ldr r2, _08015FC4  @ gBmSt
 	ldrh r1, [r2, #0x14]
 	lsls r1, r1, #4
 	strh r1, [r0, #0x2c]
@@ -1296,7 +1296,7 @@ sub_8015F90: @ 0x08015F90
 	bx r0
 	.align 2, 0
 _08015FC0: .4byte gUnknown_0859A570
-_08015FC4: .4byte gUnknown_0202BCB0
+_08015FC4: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8015F90
 
@@ -1304,7 +1304,7 @@ _08015FC4: .4byte gUnknown_0202BCB0
 GetCurrentMapMusicIndex: @ 0x08015FC8
 	push {r4, r5, r6, r7, lr}
 	movs r0, #4
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	movs r1, #6
 	cmp r0, #0
@@ -1313,7 +1313,7 @@ GetCurrentMapMusicIndex: @ 0x08015FC8
 _08015FDA:
 	adds r7, r1, #0
 	movs r0, #4
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	movs r1, #7
 	cmp r0, #0
@@ -1322,7 +1322,7 @@ _08015FDA:
 _08015FEC:
 	adds r6, r1, #0
 	movs r0, #4
-	bl CheckEventId
+	bl CheckFlag
 	adds r1, r0, #0
 	lsls r1, r1, #0x18
 	cmp r1, #0
@@ -1332,7 +1332,7 @@ _08015FEC:
 _08016000:
 	movs r4, #6
 _08016002:
-	ldr r5, _08016014  @ gRAMChapterData
+	ldr r5, _08016014  @ gPlaySt
 	ldrb r1, [r5, #0xf]
 	cmp r1, #0x40
 	beq _0801602E
@@ -1342,13 +1342,13 @@ _08016002:
 	beq _08016040
 	b _080160C4
 	.align 2, 0
-_08016014: .4byte gRAMChapterData
+_08016014: .4byte gPlaySt
 _08016018:
 	cmp r1, #0x80
 	bne _080160C4
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	lsls r1, r6, #1
 	adds r0, #0x16
 	adds r0, r0, r1
@@ -1357,7 +1357,7 @@ _08016018:
 _0801602E:
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	lsls r1, r4, #1
 	adds r0, #0x16
 	adds r0, r0, r1
@@ -1365,25 +1365,25 @@ _0801602E:
 	b _080160C4
 _08016040:
 	movs r0, #4
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0801605E
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	lsls r1, r7, #1
 	adds r0, #0x16
 	adds r0, r0, r1
 	ldrh r0, [r0]
 	b _080160C4
 _0801605E:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _0801607A
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x86
 	ldrb r0, [r0]
 	lsls r0, r0, #0x18
@@ -1395,12 +1395,12 @@ _0801607A:
 	movs r0, #0x80
 	bl sub_8024D50
 	adds r4, r0, #0
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _080160A8
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x86
 	ldrb r0, [r0]
 	lsls r0, r0, #0x18
@@ -1417,11 +1417,11 @@ _080160AC:
 	movs r0, #0x10
 	b _080160C4
 _080160B0:
-	ldr r0, _080160CC  @ gRAMChapterData
+	ldr r0, _080160CC  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	lsls r1, r7, #1
 	adds r0, #0x16
 	adds r0, r0, r1
@@ -1431,12 +1431,12 @@ _080160C4:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080160CC: .4byte gRAMChapterData
+_080160CC: .4byte gPlaySt
 
 	THUMB_FUNC_END GetCurrentMapMusicIndex
 
-	THUMB_FUNC_START sub_80160D0
-sub_80160D0: @ 0x080160D0
+	THUMB_FUNC_START UpdatePlayMapMusic
+UpdatePlayMapMusic: @ 0x080160D0
 	push {lr}
 	bl GetCurrentMapMusicIndex
 	movs r1, #0
@@ -1444,7 +1444,7 @@ sub_80160D0: @ 0x080160D0
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_80160D0
+	THUMB_FUNC_END UpdatePlayMapMusic
 
 	THUMB_FUNC_START sub_80160E0
 sub_80160E0: @ 0x080160E0
@@ -1472,7 +1472,7 @@ sub_80160E0: @ 0x080160E0
 	str r0, [sp]
 	movs r0, #0
 	bl Interpolate
-	ldr r1, _08016138  @ gUnknown_0202BCB0
+	ldr r1, _08016138  @ gBmSt
 	strh r4, [r1, #0xc]
 	strh r0, [r1, #0xe]
 	ldr r0, [r5, #0x3c]
@@ -1490,7 +1490,7 @@ _0801612E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08016138: .4byte gUnknown_0202BCB0
+_08016138: .4byte gBmSt
 
 	THUMB_FUNC_END sub_80160E0
 
@@ -1521,7 +1521,7 @@ _0801615C:
 	bl SpawnProc
 _08016164:
 	adds r3, r0, #0
-	ldr r1, _08016188  @ gUnknown_0202BCB0
+	ldr r1, _08016188  @ gBmSt
 	ldrh r0, [r1, #0xc]
 	movs r2, #0
 	strh r0, [r3, #0x30]
@@ -1538,7 +1538,7 @@ _08016164:
 	bx r0
 	.align 2, 0
 _08016184: .4byte gUnknown_0859A580
-_08016188: .4byte gUnknown_0202BCB0
+_08016188: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8016140
 

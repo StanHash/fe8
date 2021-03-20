@@ -6,8 +6,8 @@ struct Proc;
 struct Unit;
 
 // Forward declarations for types that may need to be declared elsewhere later?
-struct BattleUnit; // currently in bmunit.h
-struct UnitDefinition; // currently in bmunit.h
+struct BattleUnit; // currently in unit.h
+struct UnitInfo; // currently in unit.h
 struct Trap;
 struct BattleHit;
 
@@ -77,11 +77,11 @@ struct RAMChapterData { // Chapter Data Struct
     /* 00 */ u32 unk0; // a time value
     /* 04 */ u32 unk4; // a time value
 
-    /* 08 */ u32 partyGoldAmount;
+    /* 08 */ int gold;
     /* 0C */ u8  gameSaveSlot;
 
     /* 0D */ u8  chapterVisionRange; // 0 means no fog
-    /* 0E */ s8  chapterIndex;
+    /* 0E */ s8  chapter;
 
     /* 0F */ u8  chapterPhaseIndex; // 0x00 = Player phase, 0x40 = NPC phase, 0x80 = Enemy phase (0xC0 = link arena 4th team?)
 
@@ -109,19 +109,19 @@ struct RAMChapterData { // Chapter Data Struct
     u32 unk40_1:1; // 1
     u32 unk40_2:1; // 1
     u32 unk40_3:2; // 2
-    u32 unk40_5:1; // 1
-    u32 cfgTextSpeed:2;
-    u32 unk40_8:1; // 1
+    u32 configNoAutoCursor:1; // 1
+    u32 configTextSpeed:2;
+    u32 configWalkSpeed:1; // 1
     u32 configBgmDisable:1; // 1
     u32 configSeDisable:1; // 1
-    u32 cfgWindowColor:2;
+    u32 configWindowColor:2;
     u32 unk41_5:1; // 1
     u32 unk41_6:1; // unk
     u32 unk41_7:1; // 1
     u32 unk41_8:1; // 1
     u32 unk42_1:1; // unk
-    u32 unk42_2:2; // 2
-    u32 unk42_4:2; // 2
+    u32 configBattleAnim:2; // 2
+    u32 configBattlePreviewKind:2; // 2
     u32 unk42_6:1; // 1
     u32 unk42_7:1; // unk
     u32 unk42_8:2; // 2 (!)
@@ -274,9 +274,9 @@ enum
     WEATHER_CLOUDS = 7
 };
 
-struct SMSHandle
+struct MapSprite
 {
-    /* 00 */ struct SMSHandle* pNext;
+    /* 00 */ struct MapSprite* pNext;
 
     /* 04 */ short xDisplay;
     /* 06 */ short yDisplay;
@@ -289,7 +289,7 @@ struct SMSHandle
 
 struct MapAnimActorState
 {
-    /* 00 */ struct Unit* pUnit;
+    /* 00 */ struct Unit* unit;
     /* 04 */ struct BattleUnit* pBattleUnit;
     /* 08 */ struct MUProc* pMUProc;
     /* 0C */ u8 u0C;

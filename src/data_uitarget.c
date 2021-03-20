@@ -14,7 +14,7 @@ PROC_LABEL(0),
     PROC_REPEAT(TargetSelection_Loop),
     PROC_SLEEP(1),
 
-    PROC_CALL(RefreshBMapGraphics),
+    PROC_CALL(ReloadGameCoreGraphics),
     PROC_GOTO(0),
 
     PROC_END,

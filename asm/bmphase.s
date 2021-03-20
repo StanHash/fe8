@@ -96,8 +96,8 @@ _08024D7C:
 
 	THUMB_FUNC_END sub_8024D50
 
-	THUMB_FUNC_START AreUnitsAllied
-AreUnitsAllied: @ 0x08024D8C
+	THUMB_FUNC_START AreAllegiancesAllied
+AreAllegiancesAllied: @ 0x08024D8C
 	push {lr}
 	movs r2, #0x80
 	ands r1, r2
@@ -111,10 +111,10 @@ _08024D9C:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END AreUnitsAllied
+	THUMB_FUNC_END AreAllegiancesAllied
 
-	THUMB_FUNC_START IsSameAllegience
-IsSameAllegience: @ 0x08024DA4
+	THUMB_FUNC_START AreAllegiancesEqual
+AreAllegiancesEqual: @ 0x08024DA4
 	push {lr}
 	movs r2, #0xc0
 	ands r1, r2
@@ -128,11 +128,11 @@ _08024DB4:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END IsSameAllegience
+	THUMB_FUNC_END AreAllegiancesEqual
 
 	THUMB_FUNC_START GetCurrentPhase
 GetCurrentPhase: @ 0x08024DBC
-	ldr r0, _08024DCC  @ gRAMChapterData
+	ldr r0, _08024DCC  @ gPlaySt
 	ldrb r1, [r0, #0xf]
 	movs r0, #0x80
 	ands r0, r1
@@ -140,13 +140,13 @@ GetCurrentPhase: @ 0x08024DBC
 	lsrs r0, r0, #0x18
 	bx lr
 	.align 2, 0
-_08024DCC: .4byte gRAMChapterData
+_08024DCC: .4byte gPlaySt
 
 	THUMB_FUNC_END GetCurrentPhase
 
 	THUMB_FUNC_START IsNotEnemyPhaseMaybe
 IsNotEnemyPhaseMaybe: @ 0x08024DD0
-	ldr r0, _08024DE4  @ gRAMChapterData
+	ldr r0, _08024DE4  @ gPlaySt
 	ldrb r1, [r0, #0xf]
 	movs r2, #0x80
 	movs r0, #0x80
@@ -156,7 +156,7 @@ IsNotEnemyPhaseMaybe: @ 0x08024DD0
 	lsrs r0, r0, #0x18
 	bx lr
 	.align 2, 0
-_08024DE4: .4byte gRAMChapterData
+_08024DE4: .4byte gPlaySt
 
 	THUMB_FUNC_END IsNotEnemyPhaseMaybe
 

@@ -1,7 +1,7 @@
 #ifndef GUARD_CHAPTERDATA_H
 #define GUARD_CHAPTERDATA_H
 
-struct ROMChapterData {
+struct ChapterInfo {
     /* 00 */ const char* internalName;
 
     /* 04 */ u8  mapObj1Id;
@@ -61,15 +61,15 @@ struct ROMChapterData {
     /* 91 */ u8 _unk91[0x94 - 0x91];
 };
 
-extern const struct ROMChapterData gChapterDataTable[];
+extern const struct ChapterInfo gChapterDataTable[];
 extern const void** gUnknown_08A1FB34;
 extern const void* gChapterDataAssetTable[];
 
-const struct ROMChapterData* GetROMChapterStruct(unsigned chIndex);
-const void* GetChapterMapPointer(unsigned chIndex);
-const void* GetChapterMapChangesPointer(unsigned chIndex);
-const void* GetChapterEventDataPointer(unsigned chIndex);
-const char* sub_80346E0(unsigned chIndex);
-int IsDifficultMode(void);
+const struct ChapterInfo* GetChapterInfo(unsigned chapter);
+const void* GetChapterMapData(unsigned chapter);
+const void* GetChapterMapChanges(unsigned chapter);
+const void* GetChapterEventInfo(unsigned chapter);
+const char* sub_80346E0(unsigned chapter);
+int GetRankingRefId(void);
 
 #endif // GUARD_CHAPTERDATA_H

@@ -12,26 +12,26 @@ sub_801E2E0: @ 0x0801E2E0
 	adds r4, r0, #0
 	cmp r4, #0
 	bge _0801E2F6
-	ldr r0, _0801E318  @ gRAMChapterData
+	ldr r0, _0801E318  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r4, [r0, #0xc]
 _0801E2F6:
 	bl RenderBmMapOnBg2
-	ldr r0, _0801E318  @ gRAMChapterData
+	ldr r0, _0801E318  @ gPlaySt
 	strb r4, [r0, #0xd]
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl RenderBmMap
 	movs r0, #1
-	bl NewBMXFADE
+	bl StartBMXFADE
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801E318: .4byte gRAMChapterData
+_0801E318: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_801E2E0
 
@@ -41,22 +41,22 @@ sub_801E31C: @ 0x0801E31C
 	adds r1, r0, #0
 	cmp r1, #0
 	bge _0801E332
-	ldr r0, _0801E348  @ gRAMChapterData
+	ldr r0, _0801E348  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0xc]
 _0801E332:
-	ldr r0, _0801E348  @ gRAMChapterData
+	ldr r0, _0801E348  @ gPlaySt
 	strb r1, [r0, #0xd]
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl RenderBmMap
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801E348: .4byte gRAMChapterData
+_0801E348: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_801E31C
 
@@ -68,36 +68,36 @@ FillWarpRangeMap: @ 0x0801E34C
 	push {r6, r7}
 	mov r9, r0
 	mov r8, r1
-	ldr r6, _0801E418  @ gBmMapMovement
+	ldr r6, _0801E418  @ gMapMovement
 	ldr r0, [r6]
 	movs r1, #1
 	negs r1, r1
 	bl BmMapFill
-	ldr r0, _0801E41C  @ gBmMapRange
+	ldr r0, _0801E41C  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
 	ldr r0, [r6]
-	bl SetWorkingBmMap
+	bl SetSubjectMap
 	mov r0, r8
 	movs r4, #0x10
 	ldrsb r4, [r0, r4]
 	movs r5, #0x11
 	ldrsb r5, [r0, r5]
 	mov r0, r9
-	bl GetUnitMagBy2Range
+	bl GetUnitMagRange
 	adds r3, r0, #0
 	lsls r3, r3, #0x10
 	asrs r3, r3, #0x10
 	adds r0, r4, #0
 	adds r1, r5, #0
 	movs r2, #1
-	bl MapAddInBoundedRange
-	ldr r0, _0801E420  @ gRAMChapterData
+	bl MapIncInBoundedRange
+	ldr r0, _0801E420  @ gPlaySt
 	ldrb r0, [r0, #0xd]
 	cmp r0, #0
 	bne _0801E430
-	ldr r0, _0801E424  @ gBmMapSize
+	ldr r0, _0801E424  @ gMapSize
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	subs r3, r0, #1
@@ -106,14 +106,14 @@ FillWarpRangeMap: @ 0x0801E34C
 	bge _0801E3AC
 	b _0801E4B4
 _0801E3AC:
-	ldr r0, _0801E424  @ gBmMapSize
+	ldr r0, _0801E424  @ gMapSize
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r0, #1
 	subs r7, r3, #1
 	cmp r4, #0
 	blt _0801E40E
-	ldr r6, _0801E418  @ gBmMapMovement
+	ldr r6, _0801E418  @ gMapMovement
 	lsls r5, r3, #2
 _0801E3BE:
 	ldr r0, [r6]
@@ -123,7 +123,7 @@ _0801E3BE:
 	ldrb r0, [r0]
 	cmp r0, #0x78
 	bhi _0801E408
-	ldr r0, _0801E428  @ gBmMapTerrain
+	ldr r0, _0801E428  @ gMapTerrain
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -134,13 +134,13 @@ _0801E3BE:
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0801E3F6
-	ldr r0, _0801E42C  @ gBmMapUnit
+	ldr r0, _0801E42C  @ gMapUnit
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
 	adds r0, r0, r4
 	ldrb r0, [r0]
-	ldr r2, _0801E418  @ gBmMapMovement
+	ldr r2, _0801E418  @ gMapMovement
 	cmp r0, #0
 	beq _0801E408
 _0801E3F6:
@@ -152,7 +152,7 @@ _0801E3F6:
 	negs r2, r2
 	adds r1, r2, #0
 	strb r1, [r0]
-	ldr r2, _0801E418  @ gBmMapMovement
+	ldr r2, _0801E418  @ gMapMovement
 _0801E408:
 	subs r4, #1
 	cmp r4, #0
@@ -163,14 +163,14 @@ _0801E40E:
 	bge _0801E3AC
 	b _0801E4B4
 	.align 2, 0
-_0801E418: .4byte gBmMapMovement
-_0801E41C: .4byte gBmMapRange
-_0801E420: .4byte gRAMChapterData
-_0801E424: .4byte gBmMapSize
-_0801E428: .4byte gBmMapTerrain
-_0801E42C: .4byte gBmMapUnit
+_0801E418: .4byte gMapMovement
+_0801E41C: .4byte gMapRange
+_0801E420: .4byte gPlaySt
+_0801E424: .4byte gMapSize
+_0801E428: .4byte gMapTerrain
+_0801E42C: .4byte gMapUnit
 _0801E430:
-	ldr r0, _0801E4E0  @ gBmMapSize
+	ldr r0, _0801E4E0  @ gMapSize
 	movs r3, #2
 	ldrsh r0, [r0, r3]
 	subs r3, r0, #1
@@ -178,7 +178,7 @@ _0801E430:
 	cmp r3, #0
 	blt _0801E4B4
 _0801E43E:
-	ldr r0, _0801E4E0  @ gBmMapSize
+	ldr r0, _0801E4E0  @ gMapSize
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r0, #1
@@ -194,7 +194,7 @@ _0801E44E:
 	ldrb r0, [r0]
 	cmp r0, #0x78
 	bhi _0801E4A8
-	ldr r0, _0801E4E4  @ gBmMapTerrain
+	ldr r0, _0801E4E4  @ gMapTerrain
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -205,7 +205,7 @@ _0801E44E:
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0801E496
-	ldr r0, _0801E4E8  @ gBmMapUnit
+	ldr r0, _0801E4E8  @ gMapUnit
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -213,17 +213,17 @@ _0801E44E:
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _0801E496
-	ldr r0, _0801E4EC  @ gBmMapFog
+	ldr r0, _0801E4EC  @ gMapFog
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
 	adds r0, r0, r4
 	ldrb r0, [r0]
-	ldr r2, _0801E4F0  @ gBmMapMovement
+	ldr r2, _0801E4F0  @ gMapMovement
 	cmp r0, #0
 	bne _0801E4A8
 _0801E496:
-	ldr r2, _0801E4F0  @ gBmMapMovement
+	ldr r2, _0801E4F0  @ gMapMovement
 	ldr r0, [r2]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -263,11 +263,11 @@ _0801E4B4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801E4E0: .4byte gBmMapSize
-_0801E4E4: .4byte gBmMapTerrain
-_0801E4E8: .4byte gBmMapUnit
-_0801E4EC: .4byte gBmMapFog
-_0801E4F0: .4byte gBmMapMovement
+_0801E4E0: .4byte gMapSize
+_0801E4E4: .4byte gMapTerrain
+_0801E4E8: .4byte gMapUnit
+_0801E4EC: .4byte gMapFog
+_0801E4F0: .4byte gMapMovement
 
 	THUMB_FUNC_END FillWarpRangeMap
 

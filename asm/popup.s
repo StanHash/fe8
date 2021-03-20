@@ -6,7 +6,7 @@
 sub_8010DC0: @ 0x08010DC0
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
-	bl sub_8010E50
+	bl ClearDialogueAndFaces
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
@@ -66,27 +66,27 @@ _08010E4C: .4byte gPal
 
 	THUMB_FUNC_END sub_8010DC0
 
-	THUMB_FUNC_START sub_8010E50
-sub_8010E50: @ 0x08010E50
+	THUMB_FUNC_START ClearDialogueAndFaces
+ClearDialogueAndFaces: @ 0x08010E50
 	push {lr}
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	ldr r0, _08010E68  @ ProcScr_Face
 	bl EndEachProc
 	bl InitFaces
-	bl sub_80067E8
+	bl ClearTalkFaceRefs
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08010E68: .4byte ProcScr_Face
 
-	THUMB_FUNC_END sub_8010E50
+	THUMB_FUNC_END ClearDialogueAndFaces
 
-	THUMB_FUNC_START sub_8010E6C
-sub_8010E6C: @ 0x08010E6C
+	THUMB_FUNC_START DisplayFlashingCursor
+DisplayFlashingCursor: @ 0x08010E6C
 	push {r4, r5, lr}
 	lsls r5, r2, #0x10
 	lsrs r4, r5, #0x10
-	ldr r3, _08010EBC  @ gUnknown_0202BCB0
+	ldr r3, _08010EBC  @ gBmSt
 	ldrh r2, [r3, #0xc]
 	lsls r0, r0, #0x14
 	asrs r0, r0, #0x10
@@ -122,7 +122,7 @@ sub_8010E6C: @ 0x08010E6C
 	lsrs r4, r0, #0x10
 	b _08010EE0
 	.align 2, 0
-_08010EBC: .4byte gUnknown_0202BCB0
+_08010EBC: .4byte gBmSt
 _08010EC0: .4byte gUnknown_085921AC
 _08010EC4: .4byte 0x00002822
 _08010EC8:
@@ -143,7 +143,7 @@ _08010EE0:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8010E6C
+	THUMB_FUNC_END DisplayFlashingCursor
 
 	THUMB_FUNC_START sub_8010EE8
 sub_8010EE8: @ 0x08010EE8
@@ -170,7 +170,7 @@ sub_8010EE8: @ 0x08010EE8
 	movs r1, #0x12
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	bl EnablePalSync
 	add sp, #4
 	pop {r4, r5}
@@ -183,8 +183,8 @@ _08010F34: .4byte 0xFFFFFDC0
 
 	THUMB_FUNC_END sub_8010EE8
 
-	THUMB_FUNC_START GetSomeLongPopupLength
-GetSomeLongPopupLength: @ 0x08010F38
+	THUMB_FUNC_START PopupProc_GetInnerLength
+PopupProc_GetInnerLength: @ 0x08010F38
 	push {r4, r5, r6, lr}
 	sub sp, #0x10
 	adds r6, r0, #0
@@ -225,19 +225,19 @@ _08010F8C:
 	strh r1, [r0]
 	b _08011058
 _08010F96:
-	ldr r0, _08010FA4  @ gUnknown_030005F8
+	ldr r0, _08010FA4  @ gPopupNumber
 	ldr r0, [r0]
 	mov r1, sp
 	bl String_FromNumber
 	lsls r0, r0, #3
 	b _08011056
 	.align 2, 0
-_08010FA4: .4byte gUnknown_030005F8
+_08010FA4: .4byte gPopupNumber
 _08010FA8:
 	adds r0, r6, #0
 	adds r0, #0x44
 	strb r4, [r0]
-	ldr r0, _08010FC4  @ gUnknown_030005F4
+	ldr r0, _08010FC4  @ gPopupItem
 	ldrh r0, [r0]
 	bl GetItemIconId
 	strh r0, [r6, #0x3e]
@@ -247,12 +247,12 @@ _08010FA8:
 	movs r0, #0
 	b _08010FDE
 	.align 2, 0
-_08010FC4: .4byte gUnknown_030005F4
+_08010FC4: .4byte gPopupItem
 _08010FC8:
 	adds r0, r6, #0
 	adds r0, #0x44
 	strb r4, [r0]
-	ldr r0, _08010FE8  @ gUnknown_030005F4
+	ldr r0, _08010FE8  @ gPopupItem
 	ldrh r0, [r0]
 	adds r0, #0x70
 	strh r0, [r6, #0x3e]
@@ -265,7 +265,7 @@ _08010FDE:
 	adds r4, #0x10
 	b _08011058
 	.align 2, 0
-_08010FE8: .4byte gUnknown_030005F4
+_08010FE8: .4byte gPopupItem
 _08010FEC:
 	ldr r0, [r5, #4]
 	bl GetMsg
@@ -276,7 +276,7 @@ _08010FF8:
 	bl GetStringTextLen
 	b _08011056
 _08011000:
-	ldr r0, _08011014  @ gUnknown_030005F0
+	ldr r0, _08011014  @ gpPopupUnit
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
@@ -284,33 +284,33 @@ _08011000:
 	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
-_08011014: .4byte gUnknown_030005F0
+_08011014: .4byte gpPopupUnit
 _08011018:
-	ldr r0, _08011028  @ gUnknown_030005F4
+	ldr r0, _08011028  @ gPopupItem
 	ldrh r0, [r0]
 	bl GetItemName
 	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
-_08011028: .4byte gUnknown_030005F4
+_08011028: .4byte gPopupItem
 _0801102C:
-	ldr r0, _0801103C  @ gUnknown_030005F4
+	ldr r0, _0801103C  @ gPopupItem
 	ldrh r0, [r0]
 	movs r1, #1
 	bl GetItemNameWithArticle
 	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
-_0801103C: .4byte gUnknown_030005F4
+_0801103C: .4byte gPopupItem
 _08011040:
-	ldr r0, _08011050  @ gUnknown_030005F4
+	ldr r0, _08011050  @ gPopupItem
 	ldrh r0, [r0]
 	movs r1, #0
 	bl GetItemNameWithArticle
 	bl GetStringTextLen
 	b _08011056
 	.align 2, 0
-_08011050: .4byte gUnknown_030005F4
+_08011050: .4byte gPopupItem
 _08011054:
 	ldr r0, [r5, #4]
 _08011056:
@@ -329,7 +329,7 @@ _08011062:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetSomeLongPopupLength
+	THUMB_FUNC_END PopupProc_GetInnerLength
 
 	THUMB_FUNC_START GenSomeLongPopupText
 GenSomeLongPopupText: @ 0x0801106C
@@ -364,7 +364,7 @@ _08011090: @ jump table
 	.4byte _080110D4 @ case 9
 	.4byte _080110BC @ case 10
 _080110BC:
-	ldr r0, _080110D0  @ gUnknown_030005F8
+	ldr r0, _080110D0  @ gPopupNumber
 	ldr r0, [r0]
 	mov r1, sp
 	bl String_FromNumber
@@ -373,7 +373,7 @@ _080110BC:
 	bl Text_DrawString
 	b _08011154
 	.align 2, 0
-_080110D0: .4byte gUnknown_030005F8
+_080110D0: .4byte gPopupNumber
 _080110D4:
 	add r0, sp, #0x10
 	movs r1, #0x10
@@ -396,33 +396,33 @@ _080110F2:
 	b _08011154
 _080110FC:
 	add r4, sp, #0x10
-	ldr r0, _0801110C  @ gUnknown_030005F0
+	ldr r0, _0801110C  @ gpPopupUnit
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
 	bl GetMsg
 	b _0801113C
 	.align 2, 0
-_0801110C: .4byte gUnknown_030005F0
+_0801110C: .4byte gpPopupUnit
 _08011110:
 	add r4, sp, #0x10
-	ldr r0, _0801111C  @ gUnknown_030005F4
+	ldr r0, _0801111C  @ gPopupItem
 	ldrh r0, [r0]
 	bl GetItemName
 	b _0801113C
 	.align 2, 0
-_0801111C: .4byte gUnknown_030005F4
+_0801111C: .4byte gPopupItem
 _08011120:
 	add r4, sp, #0x10
-	ldr r0, _0801112C  @ gUnknown_030005F4
+	ldr r0, _0801112C  @ gPopupItem
 	ldrh r0, [r0]
 	movs r1, #1
 	b _08011138
 	.align 2, 0
-_0801112C: .4byte gUnknown_030005F4
+_0801112C: .4byte gPopupItem
 _08011130:
 	add r4, sp, #0x10
-	ldr r0, _08011148  @ gUnknown_030005F4
+	ldr r0, _08011148  @ gPopupItem
 	ldrh r0, [r0]
 	movs r1, #0
 _08011138:
@@ -433,7 +433,7 @@ _0801113C:
 	bl Text_DrawString
 	b _08011154
 	.align 2, 0
-_08011148: .4byte gUnknown_030005F4
+_08011148: .4byte gPopupItem
 _0801114C:
 	add r0, sp, #0x10
 	ldr r1, [r5, #4]
@@ -481,8 +481,8 @@ _08011198: .4byte 0x0000FFFF
 
 	THUMB_FUNC_END sub_801116C
 
-	THUMB_FUNC_START LongPopup_PrepareGfx
-LongPopup_PrepareGfx: @ 0x0801119C
+	THUMB_FUNC_START PopupProc_InitGfx
+PopupProc_InitGfx: @ 0x0801119C
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #0
@@ -510,7 +510,7 @@ LongPopup_PrepareGfx: @ 0x0801119C
 	ands r0, r1
 	strb r0, [r2, #1]
 	adds r0, r4, #0
-	bl GetSomeLongPopupLength
+	bl PopupProc_GetInnerLength
 	adds r4, #0x46
 	strh r0, [r4]
 	pop {r4}
@@ -520,7 +520,7 @@ LongPopup_PrepareGfx: @ 0x0801119C
 _080111EC: .4byte 0x06002000
 _080111F0: .4byte gDispIo
 
-	THUMB_FUNC_END LongPopup_PrepareGfx
+	THUMB_FUNC_END PopupProc_InitGfx
 
 	THUMB_FUNC_START sub_80111F4
 sub_80111F4: @ 0x080111F4
@@ -541,15 +541,15 @@ _0801120C:
 
 	THUMB_FUNC_END sub_80111F4
 
-	THUMB_FUNC_START LongPopup_PlaySound
-LongPopup_PlaySound: @ 0x08011210
+	THUMB_FUNC_START PopupProc_PlaySound
+PopupProc_PlaySound: @ 0x08011210
 	push {lr}
 	adds r1, r0, #0
 	adds r1, #0x48
 	ldrh r0, [r1]
 	cmp r0, #0
 	beq _0801122E
-	ldr r0, _08011234  @ gRAMChapterData
+	ldr r0, _08011234  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -561,9 +561,9 @@ _0801122E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08011234: .4byte gRAMChapterData
+_08011234: .4byte gPlaySt
 
-	THUMB_FUNC_END LongPopup_PlaySound
+	THUMB_FUNC_END PopupProc_PlaySound
 
 	THUMB_FUNC_START sub_8011238
 sub_8011238: @ 0x08011238
@@ -584,8 +584,8 @@ _08011250:
 
 	THUMB_FUNC_END sub_8011238
 
-	THUMB_FUNC_START IconOAMUpdater_Loop
-IconOAMUpdater_Loop: @ 0x08011254
+	THUMB_FUNC_START PopupIconUpdaterLoop
+PopupIconUpdaterLoop: @ 0x08011254
 	push {r4, lr}
 	ldr r4, [r0, #0x2c]
 	ldr r1, [r0, #0x30]
@@ -600,10 +600,10 @@ IconOAMUpdater_Loop: @ 0x08011254
 	.align 2, 0
 _0801126C: .4byte Sprite_16x16
 
-	THUMB_FUNC_END IconOAMUpdater_Loop
+	THUMB_FUNC_END PopupIconUpdaterLoop
 
-	THUMB_FUNC_START LongPopup_Draw
-LongPopup_Draw: @ 0x08011270
+	THUMB_FUNC_START PopupProc_Display
+PopupProc_Display: @ 0x08011270
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -611,7 +611,7 @@ LongPopup_Draw: @ 0x08011270
 	push {r5, r6, r7}
 	sub sp, #0x10
 	adds r5, r0, #0
-	bl GetSomeLongPopupLength
+	bl PopupProc_GetInnerLength
 	adds r2, r5, #0
 	adds r2, #0x46
 	strh r0, [r2]
@@ -767,10 +767,10 @@ _080113B4: .4byte 0x0000FFFF
 _080113B8: .4byte gBg0Tm
 _080113BC: .4byte gUnknown_08592228
 
-	THUMB_FUNC_END LongPopup_Draw
+	THUMB_FUNC_END PopupProc_Display
 
-	THUMB_FUNC_START LongPopup_WaitForPress
-LongPopup_WaitForPress: @ 0x080113C0
+	THUMB_FUNC_START PopupProc_WaitForPress
+PopupProc_WaitForPress: @ 0x080113C0
 	push {lr}
 	adds r1, r0, #0
 	ldr r0, [r1, #0x30]
@@ -799,7 +799,7 @@ _080113F2:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END LongPopup_WaitForPress
+	THUMB_FUNC_END PopupProc_WaitForPress
 
 	THUMB_FUNC_START LongPopup_Clear
 LongPopup_Clear: @ 0x080113F8
@@ -848,36 +848,36 @@ _0801144C: .4byte gBg1Tm
 
 	THUMB_FUNC_START SetPopupUnit
 SetPopupUnit: @ 0x08011450
-	ldr r1, _08011458  @ gUnknown_030005F0
+	ldr r1, _08011458  @ gpPopupUnit
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_08011458: .4byte gUnknown_030005F0
+_08011458: .4byte gpPopupUnit
 
 	THUMB_FUNC_END SetPopupUnit
 
 	THUMB_FUNC_START SetPopupItem
 SetPopupItem: @ 0x0801145C
-	ldr r1, _08011464  @ gUnknown_030005F4
+	ldr r1, _08011464  @ gPopupItem
 	strh r0, [r1]
 	bx lr
 	.align 2, 0
-_08011464: .4byte gUnknown_030005F4
+_08011464: .4byte gPopupItem
 
 	THUMB_FUNC_END SetPopupItem
 
 	THUMB_FUNC_START SetPopupNumber
 SetPopupNumber: @ 0x08011468
-	ldr r1, _08011470  @ gUnknown_030005F8
+	ldr r1, _08011470  @ gPopupNumber
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_08011470: .4byte gUnknown_030005F8
+_08011470: .4byte gPopupNumber
 
 	THUMB_FUNC_END SetPopupNumber
 
-	THUMB_FUNC_START NewPopupSimple
-NewPopupSimple: @ 0x08011474
+	THUMB_FUNC_START Popup_Create
+Popup_Create: @ 0x08011474
 	push {r4, r5, lr}
 	sub sp, #8
 	movs r5, #0x90
@@ -886,16 +886,16 @@ NewPopupSimple: @ 0x08011474
 	str r4, [sp]
 	str r3, [sp, #4]
 	adds r3, r5, #0
-	bl NewPopup
+	bl Popup_CreateExt
 	add sp, #8
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END NewPopupSimple
+	THUMB_FUNC_END Popup_Create
 
-	THUMB_FUNC_START NewPopup
-NewPopup: @ 0x08011490
+	THUMB_FUNC_START Popup_CreateExt
+Popup_CreateExt: @ 0x08011490
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
@@ -934,7 +934,7 @@ _080114B4:
 	.align 2, 0
 _080114D8: .4byte gUnknown_085921C8
 
-	THUMB_FUNC_END NewPopup
+	THUMB_FUNC_END Popup_CreateExt
 
 	THUMB_FUNC_START NewGotItemPopup
 NewGotItemPopup: @ 0x080114DC
@@ -955,7 +955,7 @@ NewGotItemPopup: @ 0x080114DC
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r5, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	b _08011518
 	.align 2, 0
 _08011508: .4byte gUnknown_08592230
@@ -964,7 +964,7 @@ _0801150C:
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r5, #0
-	bl NewPopupSimple
+	bl Popup_Create
 _08011518:
 	pop {r4, r5}
 	pop {r0}
@@ -1101,7 +1101,7 @@ sub_80115DC: @ 0x080115DC
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	b _08011618
 	.align 2, 0
 _08011604: .4byte gActiveUnit
@@ -1111,7 +1111,7 @@ _0801160C:
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 _08011618:
 	pop {r4}
 	pop {r0}
@@ -1130,7 +1130,7 @@ sub_8011624: @ 0x08011624
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -1153,15 +1153,15 @@ NewGoldGotPopup: @ 0x08011644
 	ands r0, r1
 	cmp r0, #0
 	bne _0801167C
-	bl GetPartyGoldAmount
+	bl GetGold
 	adds r5, r5, r0
 	adds r0, r5, #0
-	bl SetPartyGoldAmount
+	bl SetGold
 	ldr r0, _08011678  @ gUnknown_08592300
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r6, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	b _08011688
 	.align 2, 0
 _08011678: .4byte gUnknown_08592300
@@ -1170,7 +1170,7 @@ _0801167C:
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r6, #0
-	bl NewPopupSimple
+	bl Popup_Create
 _08011688:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -1180,8 +1180,8 @@ _08011690: .4byte gUnknown_08592348
 
 	THUMB_FUNC_END NewGoldGotPopup
 
-	THUMB_FUNC_START sub_8011694
-sub_8011694: @ 0x08011694
+	THUMB_FUNC_START CreateItemStealingPopup
+CreateItemStealingPopup: @ 0x08011694
 	push {r4, lr}
 	adds r4, r1, #0
 	lsls r0, r0, #0x10
@@ -1200,7 +1200,7 @@ sub_8011694: @ 0x08011694
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	b _080116D4
 	.align 2, 0
 _080116C0: .4byte gActiveUnit
@@ -1210,7 +1210,7 @@ _080116C8:
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 _080116D4:
 	pop {r4}
 	pop {r0}
@@ -1218,7 +1218,7 @@ _080116D4:
 	.align 2, 0
 _080116DC: .4byte gUnknown_085923D8
 
-	THUMB_FUNC_END sub_8011694
+	THUMB_FUNC_END CreateItemStealingPopup
 
 	THUMB_FUNC_START NewPopup_WeaponBroke
 NewPopup_WeaponBroke: @ 0x080116E0
@@ -1231,7 +1231,7 @@ NewPopup_WeaponBroke: @ 0x080116E0
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -1251,7 +1251,7 @@ NewPopup_WRankIncrease: @ 0x08011704
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -1260,26 +1260,26 @@ _08011724: .4byte gUnknown_08592468
 
 	THUMB_FUNC_END NewPopup_WRankIncrease
 
-	THUMB_FUNC_START sub_8011728
-sub_8011728: @ 0x08011728
+	THUMB_FUNC_START CreateNewUnitPopup
+CreateNewUnitPopup: @ 0x08011728
 	push {r4, lr}
 	adds r4, r0, #0
 	lsls r0, r1, #0x18
 	lsrs r0, r0, #0x18
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	bl SetPopupUnit
 	ldr r0, _0801174C  @ gUnknown_08592490
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r4, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
 _0801174C: .4byte gUnknown_08592490
 
-	THUMB_FUNC_END sub_8011728
+	THUMB_FUNC_END CreateNewUnitPopup
 
 	THUMB_FUNC_START sub_8011750
 sub_8011750: @ 0x08011750
@@ -1301,7 +1301,7 @@ sub_8011750: @ 0x08011750
 	str r4, [r0, #0x1c]
 	movs r1, #0x60
 	movs r2, #0
-	bl NewPopupSimple
+	bl Popup_Create
 	pop {r4, r5}
 	pop {r0}
 	bx r0

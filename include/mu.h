@@ -103,7 +103,7 @@ struct MUConfig;
 struct MUProc {
     PROC_HEADER;
 
-    /* 2C */ struct Unit* pUnit;
+    /* 2C */ struct Unit* unit;
     /* 30 */ struct APHandle* pAPHandle;
     /* 34 */ struct MUConfig* pMUConfig;
     /* 38 */ void* pGfxVRAM;
@@ -149,17 +149,17 @@ extern u8 gMUGfxBuffer[];
 
 // FUNCTIONS
 
-void InitMus();
+void MU_Init();
 
-struct MUProc* MU_CreateExt(struct Unit* pUnit, unsigned classIndex, unsigned palId);
-struct MUProc* MU_Create(struct Unit* pUnit);
+struct MUProc* MU_CreateExt(struct Unit* unit, unsigned jid, unsigned palId);
+struct MUProc* MU_Create(struct Unit* unit);
 
 void MU_ManualUpdate(struct MUProc* proc);
 
 void MU_EnableAttractCamera(struct MUProc* proc);
 void MU_DisableAttractCamera(struct MUProc* proc);
 
-struct MUProc* MU_CreateForUI(struct Unit* pUnit, int x, int y);
+struct MUProc* MU_CreateForUI(struct Unit* unit, int x, int y);
 
 void MU_8078524(struct MUProc* proc);
 
@@ -174,7 +174,7 @@ int MU_IsAnyActive(void);
 int MU_IsActive(struct MUProc* proc);
 void MU_StartMoveScript(struct MUProc* proc, const u8 commands[MU_COMMAND_MAX_COUNT]);
 
-struct MUProc* MU_CreateScripted(u16 x, u16 y, u16 classIndex, unsigned palId, const u8 commands[MU_COMMAND_MAX_COUNT]);
+struct MUProc* MU_CreateScripted(u16 x, u16 y, u16 jid, unsigned palId, const u8 commands[MU_COMMAND_MAX_COUNT]);
 
 void MU_StartStepSfx(int soundId, int b, int hPosition);
 

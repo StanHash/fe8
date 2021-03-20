@@ -3,8 +3,8 @@
 
 struct UnkMovMapFill
 {
-    /* 00 */ s8 xPos;
-    /* 01 */ s8 yPos;
+    /* 00 */ s8 x;
+    /* 01 */ s8 y;
     /* 02 */ u8 connexion;
     /* 03 */ u8 leastMoveCost;
 };
@@ -19,32 +19,32 @@ struct MovMapFillState
     /* 0B */ u8 maxMovementValue;
 };
 
-void GenerateUnitMovementMap(struct Unit* unit);
-void GenerateUnitMovementMapExt(struct Unit* unit, s8 movement);
-void GenerateUnitExtendedMovementMap(struct Unit* unit);
-void GenerateExtendedMovementMapOnRange(int x, int y, const s8 mct[]);
-void GenerateExtendedMovementMap(int x, int y, const s8 mct[]);
-void GenerateMovementMapOnWorkingMap(struct Unit* unit, int x, int y, int movement);
-void SetWorkingMoveCosts(const s8 mct[]);
-void GenerateMovementMap(int x, int y, int movement, int unitId);
+void FillMovementMapForUnit(struct Unit* unit);
+void FillMovementMapForUnitAndMovement(struct Unit* unit, s8 movement);
+void MapMovementFillMovementFromUnit(struct Unit* unit);
+void MapRangeFillMovementFromPosition(int x, int y, const s8 mct[]);
+void MapMovementFillMovementFromPosition(int x, int y, const s8 mct[]);
+void MapFillMovementFromUnitAt(struct Unit* unit, int x, int y, int movement);
+void SetMovCostTable(const s8 mct[]);
+void MapFillMovement(int x, int y, int movement, int unitId);
 void sub_801A570(int connexion, int x, int y);
-void GenerateBestMovementScript(int x, int y, u8 output[]);
-void UnitApplyWorkingMovementScript(struct Unit* unit, int x, int y);
-void MarkMovementMapEdges(void);
-void MarkWorkingMapEdges(void);
+void GenerateMovementInstructionsToPoint(int x, int y, u8 output[]);
+void ProcessUnitMovement(struct Unit* unit, int x, int y);
+void MapMovementMarkMovementEdges(void);
+void MapMarkMovementEdges(void);
 void MapAddInRange(int x, int y, int range, int value);
 void MapSetInRange(int x, int y, int range, int value);
-void GenerateUnitCompleteAttackRange(struct Unit* unit);
-void GenerateUnitStandingReachRange(struct Unit* unit, int reach);
-void GenerateUnitCompleteStaffRange(struct Unit* unit);
-void GenerateDangerZoneRange(s8 boolDisplayStaffRange);
-void GenerateMagicSealMap(int value);
-void SetWorkingBmMap(u8** map);
-void MapAddInBoundedRange(short x, short y, short minRange, short maxRange);
-u8* GetWorkingMoveCosts(void);
+void FillMapAttackRangeForUnit(struct Unit* unit);
+void FillRangeMapByRangeMask(struct Unit* unit, int reach);
+void FillMapStaffRangeForUnit(struct Unit* unit);
+void FillRangeMapForDangerZone(s8 boolDisplayStaffRange);
+void MapSetInMagicSealedRange(int value);
+void SetSubjectMap(u8** map);
+void MapIncInBoundedRange(short x, short y, short minRange, short maxRange);
+u8* GetCurrentMovCostTable(void);
 
-extern u8** gWorkingBmMap;
-extern u8 gWorkingTerrainMoveCosts[];
+extern u8** gWorkingMap;
+extern u8 gWorkingMovTable[];
 
 extern struct UnkMovMapFill gUnknown_030049B0[];
 extern struct UnkMovMapFill gUnknown_03004C50[];

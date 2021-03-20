@@ -186,7 +186,7 @@ _080355E0:
 	subs r0, #0x80
 	adds r0, r0, r1
 	ldrb r2, [r0]
-	ldr r0, _0803560C  @ gUnknown_0202BCB0
+	ldr r0, _0803560C  @ gBmSt
 	adds r0, #0x38
 	ldrb r0, [r0]
 	subs r2, r2, r0
@@ -204,7 +204,7 @@ _08035602:
 	bx r0
 	.align 2, 0
 _08035608: .4byte gUnknown_0859E166
-_0803560C: .4byte gUnknown_0202BCB0
+_0803560C: .4byte gBmSt
 _08035610: .4byte 0x04000050
 
 	THUMB_FUNC_END sub_80355AC
@@ -212,7 +212,7 @@ _08035610: .4byte 0x04000050
 	THUMB_FUNC_START sub_8035614
 sub_8035614: @ 0x08035614
 	push {lr}
-	ldr r0, _08035628  @ gUnknown_0202BCB0
+	ldr r0, _08035628  @ gBmSt
 	adds r0, #0x38
 	movs r1, #8
 	strb r1, [r0]
@@ -221,7 +221,7 @@ sub_8035614: @ 0x08035614
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035628: .4byte gUnknown_0202BCB0
+_08035628: .4byte gBmSt
 _0803562C: .4byte sub_80355AC
 
 	THUMB_FUNC_END sub_8035614
@@ -229,7 +229,7 @@ _0803562C: .4byte sub_80355AC
 	THUMB_FUNC_START sub_8035630
 sub_8035630: @ 0x08035630
 	push {lr}
-	ldr r0, _08035648  @ gUnknown_0202BCB0
+	ldr r0, _08035648  @ gBmSt
 	adds r1, r0, #0
 	adds r1, #0x38
 	ldrb r0, [r1]
@@ -241,7 +241,7 @@ _08035642:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035648: .4byte gUnknown_0202BCB0
+_08035648: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8035630
 
@@ -249,7 +249,7 @@ _08035648: .4byte gUnknown_0202BCB0
 sub_803564C: @ 0x0803564C
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r1, _08035674  @ gUnknown_0202BCB0
+	ldr r1, _08035674  @ gBmSt
 	adds r1, #0x38
 	ldrb r0, [r1]
 	adds r0, #1
@@ -267,7 +267,7 @@ _0803566E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035674: .4byte gUnknown_0202BCB0
+_08035674: .4byte gBmSt
 
 	THUMB_FUNC_END sub_803564C
 
@@ -294,7 +294,7 @@ _08035694: .4byte gUnknown_0859E188
 	THUMB_FUNC_START sub_8035698
 sub_8035698: @ 0x08035698
 	push {lr}
-	ldr r0, _080356B4  @ gUnknown_0202BCB0
+	ldr r0, _080356B4  @ gBmSt
 	ldrh r1, [r0, #0x2a]
 	subs r1, #0x10
 	strh r1, [r0, #0x2a]
@@ -305,7 +305,7 @@ sub_8035698: @ 0x08035698
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080356B4: .4byte gUnknown_0202BCB0
+_080356B4: .4byte gBmSt
 _080356B8: .4byte gUnknown_0859E188
 
 	THUMB_FUNC_END sub_8035698
@@ -354,12 +354,12 @@ _08035704: .4byte gUnknown_0859E1B0
 
 	THUMB_FUNC_END sub_80356BC
 
-	THUMB_FUNC_START NewBottomHelpText
-NewBottomHelpText: @ 0x08035708
+	THUMB_FUNC_START StartBottomHelpText
+StartBottomHelpText: @ 0x08035708
 	push {r4, lr}
 	adds r2, r0, #0
 	adds r4, r1, #0
-	ldr r0, _0803573C  @ gRAMChapterData
+	ldr r0, _0803573C  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsrs r0, r0, #7
@@ -371,7 +371,7 @@ NewBottomHelpText: @ 0x08035708
 	str r4, [r0, #0x2c]
 	bl sub_80354E0
 	bl sub_801A278
-	ldr r1, _08035744  @ gUnknown_0202BCB0
+	ldr r1, _08035744  @ gBmSt
 	ldrh r0, [r1, #0x2a]
 	adds r0, #0x10
 	strh r0, [r1, #0x2a]
@@ -380,14 +380,14 @@ _08035734:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803573C: .4byte gRAMChapterData
+_0803573C: .4byte gPlaySt
 _08035740: .4byte gUnknown_0859E1B8
-_08035744: .4byte gUnknown_0202BCB0
+_08035744: .4byte gBmSt
 
-	THUMB_FUNC_END NewBottomHelpText
+	THUMB_FUNC_END StartBottomHelpText
 
-	THUMB_FUNC_START DeleteEach6CBB
-DeleteEach6CBB: @ 0x08035748
+	THUMB_FUNC_START EndBottomHelpText
+EndBottomHelpText: @ 0x08035748
 	push {lr}
 	ldr r0, _08035754  @ gUnknown_0859E1B8
 	bl EndEachProc
@@ -396,10 +396,10 @@ DeleteEach6CBB: @ 0x08035748
 	.align 2, 0
 _08035754: .4byte gUnknown_0859E1B8
 
-	THUMB_FUNC_END DeleteEach6CBB
+	THUMB_FUNC_END EndBottomHelpText
 
-	THUMB_FUNC_START sub_8035758
-sub_8035758: @ 0x08035758
+	THUMB_FUNC_START IsBottomHelpTextActive
+IsBottomHelpTextActive: @ 0x08035758
 	push {lr}
 	ldr r0, _0803576C  @ gUnknown_0859E1B8
 	bl FindProc
@@ -412,7 +412,7 @@ _08035766:
 	.align 2, 0
 _0803576C: .4byte gUnknown_0859E1B8
 
-	THUMB_FUNC_END sub_8035758
+	THUMB_FUNC_END IsBottomHelpTextActive
 
 	THUMB_FUNC_START sub_8035770
 sub_8035770: @ 0x08035770
@@ -465,11 +465,11 @@ _080357BC:
 	cmp r0, #0
 	bgt _080357D4
 	adds r0, r4, #0
-	bl UnitKill
+	bl KillUnit
 _080357D4:
 	adds r0, r6, #0
 	adds r1, r4, #0
-	bl sub_8032674
+	bl DropRescuedUnitIfDead
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -482,7 +482,7 @@ sub_80357E4: @ 0x080357E4
 	bl GetUnitCurrentHp
 	cmp r0, #0
 	bne _080357FA
-	ldr r0, _08035800  @ gRAMChapterData
+	ldr r0, _08035800  @ gPlaySt
 	ldrb r0, [r0, #0xd]
 	cmp r0, #0
 	beq _080357FA
@@ -491,7 +491,7 @@ _080357FA:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035800: .4byte gRAMChapterData
+_08035800: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80357E4
 
@@ -502,7 +502,7 @@ sub_8035804: @ 0x08035804
 	movs r1, #1
 	negs r1, r1
 	bl BattleInitItemEffect
-	ldr r5, _08035844  @ gBattleActor
+	ldr r5, _08035844  @ gBattleUnitA
 	adds r0, r5, #0
 	adds r0, #0x48
 	movs r1, #0x6c
@@ -526,7 +526,7 @@ sub_8035804: @ 0x08035804
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035844: .4byte gBattleActor
+_08035844: .4byte gBattleUnitA
 _08035848: .4byte gBattleHitIterator
 
 	THUMB_FUNC_END sub_8035804
@@ -539,7 +539,7 @@ sub_803584C: @ 0x0803584C
 	movs r1, #1
 	negs r1, r1
 	bl BattleInitItemEffect
-	ldr r5, _080358B8  @ gBattleActor
+	ldr r5, _080358B8  @ gBattleUnitA
 	negs r4, r4
 	adds r0, r5, #0
 	adds r1, r4, #0
@@ -584,7 +584,7 @@ _080358A2:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080358B8: .4byte gBattleActor
+_080358B8: .4byte gBattleUnitA
 _080358BC: .4byte gBattleHitIterator
 
 	THUMB_FUNC_END sub_803584C
@@ -596,7 +596,7 @@ sub_80358C0: @ 0x080358C0
 	movs r1, #1
 	negs r1, r1
 	bl BattleInitItemEffect
-	ldr r5, _08035924  @ gBattleActor
+	ldr r5, _08035924  @ gBattleUnitA
 	negs r4, r4
 	adds r0, r5, #0
 	adds r1, r4, #0
@@ -639,20 +639,20 @@ _08035914:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08035924: .4byte gBattleActor
+_08035924: .4byte gBattleUnitA
 _08035928: .4byte gBattleHitIterator
 
 	THUMB_FUNC_END sub_80358C0
 
-	THUMB_FUNC_START sub_803592C
-sub_803592C: @ 0x0803592C
+	THUMB_FUNC_START ExecSelfDamage
+ExecSelfDamage: @ 0x0803592C
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	adds r4, r1, #0
 	movs r1, #1
 	negs r1, r1
 	bl BattleInitItemEffect
-	ldr r5, _080359A8  @ gBattleActor
+	ldr r5, _080359A8  @ gBattleUnitA
 	negs r4, r4
 	adds r0, r5, #0
 	adds r1, r4, #0
@@ -698,18 +698,18 @@ _08035952:
 	strb r0, [r3, #2]
 _08035992:
 	bl BattleHitTerminate
-	bl sub_807B68C
+	bl StartSomeMapAnim_807B68C
 	adds r0, r6, #0
 	bl sub_80357E4
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080359A8: .4byte gBattleActor
+_080359A8: .4byte gBattleUnitA
 _080359AC: .4byte gBattleHitIterator
 _080359B0: .4byte 0xFFF80000
 
-	THUMB_FUNC_END sub_803592C
+	THUMB_FUNC_END ExecSelfDamage
 
 	THUMB_FUNC_START sub_80359B4
 sub_80359B4: @ 0x080359B4
@@ -766,7 +766,7 @@ sub_8035A0C: @ 0x08035A0C
 	adds r6, #0x4c
 	movs r0, #0
 	ldrsh r4, [r6, r0]
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r4, r0
 	bne _08035A2A
 	adds r0, r5, #0
@@ -782,13 +782,13 @@ _08035A2A:
 	asrs r0, r0, #0x18
 	bl GetUnit
 	adds r4, r0, #0
-	bl HideUnitSMS
+	bl HideUnitSprite
 	adds r0, r4, #0
-	bl UnitKill
+	bl KillUnit
 	movs r2, #0x10
 	ldrsb r2, [r4, r2]
 	lsls r2, r2, #4
-	ldr r1, _08035A84  @ gUnknown_0202BCB0
+	ldr r1, _08035A84  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r1, r3]
 	subs r2, r2, r0
@@ -815,7 +815,7 @@ _08035A6E:
 	bl Proc_Goto
 	b _08035A9E
 	.align 2, 0
-_08035A84: .4byte gUnknown_0202BCB0
+_08035A84: .4byte gBmSt
 _08035A88:
 	adds r0, r4, #0
 	bl MU_Create

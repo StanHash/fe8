@@ -23,14 +23,14 @@ _0803432C:
 	movs r0, #1
 	b _08034394
 _08034330:
-	ldr r0, _0803439C  @ gBmMapSize
+	ldr r0, _0803439C  @ gMapSize
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	subs r5, r0, #1
 	cmp r5, #0
 	blt _08034392
 _0803433C:
-	ldr r0, _0803439C  @ gBmMapSize
+	ldr r0, _0803439C  @ gMapSize
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r0, #1
@@ -39,7 +39,7 @@ _0803433C:
 	lsls r6, r5, #2
 	lsls r7, r5, #0x18
 _0803434C:
-	ldr r0, _080343A0  @ gBmMapMovement
+	ldr r0, _080343A0  @ gMapMovement
 	ldr r0, [r0]
 	adds r0, r6, r0
 	ldr r0, [r0]
@@ -47,7 +47,7 @@ _0803434C:
 	ldrb r0, [r0]
 	cmp r0, #0x78
 	bhi _08034386
-	ldr r0, _080343A4  @ gBmMapTerrain
+	ldr r0, _080343A4  @ gMapTerrain
 	ldr r0, [r0]
 	adds r0, r6, r0
 	ldr r0, [r0]
@@ -65,7 +65,7 @@ _08034378:
 	lsls r0, r4, #0x18
 	asrs r0, r0, #0x18
 	asrs r1, r7, #0x18
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	cmp r0, #0x10
 	beq _0803432C
 _08034386:
@@ -83,9 +83,9 @@ _08034394:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0803439C: .4byte gBmMapSize
-_080343A0: .4byte gBmMapMovement
-_080343A4: .4byte gBmMapTerrain
+_0803439C: .4byte gMapSize
+_080343A0: .4byte gMapMovement
+_080343A4: .4byte gMapTerrain
 
 	THUMB_FUNC_END CanUnitUseVisit
 
@@ -111,14 +111,14 @@ _080343CC:
 	movs r0, #1
 	b _08034418
 _080343D0:
-	ldr r0, _08034420  @ gBmMapSize
+	ldr r0, _08034420  @ gMapSize
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	subs r5, r0, #1
 	cmp r5, #0
 	blt _08034416
 _080343DC:
-	ldr r0, _08034420  @ gBmMapSize
+	ldr r0, _08034420  @ gMapSize
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r0, #1
@@ -126,7 +126,7 @@ _080343DC:
 	blt _08034410
 	lsls r6, r5, #0x18
 _080343EA:
-	ldr r0, _08034424  @ gBmMapMovement
+	ldr r0, _08034424  @ gMapMovement
 	ldr r1, [r0]
 	lsls r0, r5, #2
 	adds r0, r0, r1
@@ -138,7 +138,7 @@ _080343EA:
 	lsls r0, r4, #0x18
 	asrs r0, r0, #0x18
 	asrs r1, r6, #0x18
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	cmp r0, #0x11
 	beq _080343CC
 _0803440A:
@@ -156,8 +156,8 @@ _08034418:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08034420: .4byte gBmMapSize
-_08034424: .4byte gBmMapMovement
+_08034420: .4byte gMapSize
+_08034424: .4byte gMapMovement
 
 	THUMB_FUNC_END CanUnitUseSeize
 
@@ -167,19 +167,19 @@ CanUnitUseAttack: @ 0x08034428
 	movs r0, #0
 	movs r1, #0
 	bl InitTargets
-	ldr r0, _08034460  @ gBmMapRange
+	ldr r0, _08034460  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
 	ldr r4, _08034464  @ gActiveUnit
 	ldr r0, [r4]
-	bl GenerateUnitCompleteAttackRange
-	ldr r1, _08034468  @ gUnknown_02033F3C
+	bl FillMapAttackRangeForUnit
+	ldr r1, _08034468  @ gUnitSubject
 	ldr r0, [r4]
 	str r0, [r1]
 	ldr r0, _0803446C  @ AddUnitToTargetListIfNotAllied
 	bl ForEachUnitInRange
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _0803445A
 	movs r0, #1
@@ -188,9 +188,9 @@ _0803445A:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08034460: .4byte gBmMapRange
+_08034460: .4byte gMapRange
 _08034464: .4byte gActiveUnit
-_08034468: .4byte gUnknown_02033F3C
+_08034468: .4byte gUnitSubject
 _0803446C: .4byte AddUnitToTargetListIfNotAllied
 
 	THUMB_FUNC_END CanUnitUseAttack
@@ -201,7 +201,7 @@ CanActiveUnitUseRescue: @ 0x08034470
 	ldr r0, _08034488  @ gActiveUnit
 	ldr r0, [r0]
 	bl MakeRescueTargetList
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08034484
 	movs r0, #1
@@ -219,7 +219,7 @@ CanActiveUnitUseTrade: @ 0x0803448C
 	ldr r0, _080344A4  @ gActiveUnit
 	ldr r0, [r0]
 	bl MakeTradeTargetList
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _080344A0
 	movs r0, #1
@@ -271,25 +271,25 @@ sub_80344E8: @ 0x080344E8
 	ldrb r1, [r1, #0x12]
 	ldrb r2, [r0, #0x1d]
 	adds r1, r1, r2
-	ldr r2, _08034510  @ gActionData
+	ldr r2, _08034510  @ gAction
 	ldrb r2, [r2, #0x10]
 	subs r1, r1, r2
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GenerateUnitMovementMapExt
+	bl FillMovementMapForUnitAndMovement
 	bl GetUnitCommandUseFlags
 	pop {r1}
 	bx r1
 	.align 2, 0
 _0803450C: .4byte gActiveUnit
-_08034510: .4byte gActionData
+_08034510: .4byte gAction
 
 	THUMB_FUNC_END sub_80344E8
 
 	THUMB_FUNC_START sub_8034514
 sub_8034514: @ 0x08034514
 	push {r4, lr}
-	ldr r4, _08034548  @ gBmMapMovement
+	ldr r4, _08034548  @ gMapMovement
 	ldr r0, [r4]
 	movs r1, #1
 	negs r1, r1
@@ -312,7 +312,7 @@ sub_8034514: @ 0x08034514
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08034548: .4byte gBmMapMovement
+_08034548: .4byte gMapMovement
 _0803454C: .4byte gActiveUnit
 
 	THUMB_FUNC_END sub_8034514
@@ -324,12 +324,12 @@ sub_8034550: @ 0x08034550
 	negs r1, r1
 	bl GetUnitWeaponReachBits
 	adds r7, r0, #0
-	ldr r0, _08034604  @ gBmMapUnk
+	ldr r0, _08034604  @ gMapMovement2
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
 	movs r5, #0x81
-	ldr r6, _08034608  @ gActionData
+	ldr r6, _08034608  @ gAction
 _0803456A:
 	adds r0, r5, #0
 	bl GetUnit
@@ -341,7 +341,7 @@ _0803456A:
 	beq _0803458C
 	adds r0, r4, #0
 	adds r1, r7, #0
-	bl GenerateUnitStandingReachRange
+	bl FillRangeMapByRangeMask
 	ldrb r0, [r4, #0x10]
 	strb r0, [r6, #0x13]
 	ldrb r0, [r4, #0x11]
@@ -353,14 +353,14 @@ _0803458C:
 	movs r0, #0
 	movs r1, #0
 	bl InitTargets
-	ldr r0, _0803460C  @ gBmMapSize
+	ldr r0, _0803460C  @ gMapSize
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	subs r6, r0, #1
 	cmp r6, #0
 	blt _080345FE
 _080345A6:
-	ldr r0, _0803460C  @ gBmMapSize
+	ldr r0, _0803460C  @ gMapSize
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	subs r4, r0, #1
@@ -369,7 +369,7 @@ _080345A6:
 	blt _080345F8
 	lsls r5, r6, #2
 _080345B6:
-	ldr r0, _08034610  @ gBmMapMovement
+	ldr r0, _08034610  @ gMapMovement
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -377,7 +377,7 @@ _080345B6:
 	ldrb r0, [r0]
 	cmp r0, #0x78
 	bhi _080345F2
-	ldr r0, _08034614  @ gBmMapUnit
+	ldr r0, _08034614  @ gMapUnit
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -385,7 +385,7 @@ _080345B6:
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _080345F2
-	ldr r0, _08034604  @ gBmMapUnk
+	ldr r0, _08034604  @ gMapMovement2
 	ldr r0, [r0]
 	adds r0, r5, r0
 	ldr r0, [r0]
@@ -411,11 +411,11 @@ _080345FE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08034604: .4byte gBmMapUnk
-_08034608: .4byte gActionData
-_0803460C: .4byte gBmMapSize
-_08034610: .4byte gBmMapMovement
-_08034614: .4byte gBmMapUnit
+_08034604: .4byte gMapMovement2
+_08034608: .4byte gAction
+_0803460C: .4byte gMapSize
+_08034610: .4byte gMapMovement
+_08034614: .4byte gMapUnit
 
 	THUMB_FUNC_END sub_8034550
 

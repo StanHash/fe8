@@ -2,7 +2,7 @@
 
 #include "constants/terrains.h"
 
-#include "bmunit.h"
+#include "unit.h"
 #include "bmmap.h"
 #include "chapterdata.h"
 #include "proc.h"
@@ -22,7 +22,7 @@ inline struct Trap* GetTrap(int id)
     return sTrapPool + id;
 }
 
-void ClearTraps(void)
+void ResetTraps(void)
 {
     int i;
 
@@ -40,14 +40,14 @@ lop:
     for (it = GetTrap(0); it->type != TRAP_NONE; ++it)
     {
         // Check trap position
-        if ((x == it->xPos) && (y == it->yPos))
+        if ((x == it->x) && (y == it->y))
             return it;
 
         // Check if we on a wall, and there is a wall above
         // In which case the trap would be on the topmost wall tile
-        if (gBmMapTerrain[y][x] == TERRAIN_WALL_1B)
+        if (gMapTerrain[y][x] == TERRAIN_WALL_1B)
         {
-            if ((y > 0) && gBmMapTerrain[y-1][x] == TERRAIN_WALL_1B)
+            if ((y > 0) && gMapTerrain[y-1][x] == TERRAIN_WALL_1B)
             {
                 y = y-1;
                 goto lop;
@@ -58,14 +58,14 @@ lop:
     return NULL;
 }
 
-struct Trap* GetTypedTrapAt(int x, int y, int trapType)
+struct Trap* GetSpecificTrapAt(int x, int y, int trapType)
 {
     struct Trap* it;
 
     for (it = GetTrap(0); it->type != TRAP_NONE; ++it)
     {
         // Check trap position
-        if ((it->xPos == x) && (it->yPos == y) && (it->type == trapType))
+        if ((it->x == x) && (it->y == y) && (it->type == trapType))
             return it;
 
         // Check if we want a wall
@@ -73,9 +73,9 @@ struct Trap* GetTypedTrapAt(int x, int y, int trapType)
         {
             // Check if we on a wall, and there is a wall above
             // In which case the trap would be on the topmost wall tile
-            if (gBmMapTerrain[y][x] == TERRAIN_WALL_1B)
+            if (gMapTerrain[y][x] == TERRAIN_WALL_1B)
             {
-                if ((y > 0) && gBmMapTerrain[y-1][x] == TERRAIN_WALL_1B)
+                if ((y > 0) && gMapTerrain[y-1][x] == TERRAIN_WALL_1B)
                 {
                     return GetTrapAt(x, y-1);
                 }
@@ -93,15 +93,15 @@ struct Trap* AddTrap(int x, int y, int trapType, int meta)
     // Find first free trap
     for (trap = GetTrap(0); trap->type != TRAP_NONE; ++trap) {}
 
-    trap->xPos = x;
-    trap->yPos = y;
+    trap->x = x;
+    trap->y = y;
     trap->type = trapType;
     trap->extra = meta;
 
     return trap;
 }
 
-struct Trap* AddDamagingTrap(int x, int y, int trapType, int meta, int turnCountdown, int turnInterval, int damage)
+struct Trap* AddTrapExt(int x, int y, int trapType, int meta, int turnCountdown, int turnInterval, int damage)
 {
     struct Trap* trap = AddTrap(x, y, trapType, meta);
 
@@ -123,24 +123,24 @@ struct Trap* RemoveTrap(struct Trap* trap)
     // return trap; // BUG
 }
 
-void AddFireTile(int x, int y, int turnCountdown, int turnInterval)
+void AddFireTrap(int x, int y, int turnCountdown, int turnInterval)
 {
-    AddDamagingTrap(x, y, TRAP_FIRETILE, 0, turnCountdown, turnInterval, 10);
+    AddTrapExt(x, y, TRAP_FIRETILE, 0, turnCountdown, turnInterval, 10);
 }
 
 void AddGasTrap(int x, int y, int facing, int turnCountdown, int turnInterval)
 {
-    AddDamagingTrap(x, y, TRAP_GAS, facing, turnCountdown, turnInterval, 3);
+    AddTrapExt(x, y, TRAP_GAS, facing, turnCountdown, turnInterval, 3);
 }
 
 void AddArrowTrap(int x, int turnCountdown, int turnInterval)
 {
-    AddDamagingTrap(x, 0, TRAP_LIGHTARROW, 0, turnCountdown, turnInterval, 10);
+    AddTrapExt(x, 0, TRAP_LIGHTARROW, 0, turnCountdown, turnInterval, 10);
 }
 
 void sub_802E36C(int x, int y, int turnCountdown, int turnInterval)
 {
-    AddDamagingTrap(x, y, TRAP_MAPCHANGE2, 0, turnCountdown, turnInterval, 0);
+    AddTrapExt(x, y, TRAP_MAPCHANGE2, 0, turnCountdown, turnInterval, 0);
 }
 
 void AddTrap8(int x, int y)
@@ -153,24 +153,24 @@ void AddTrap9(int x, int y, int meta)
     AddTrap(x, y, TRAP_9, meta);
 }
 
-void InitMapObstacles(void)
+void AddSnagsAndWalls(void)
 {
     int ix, iy;
 
-    for (iy = gBmMapSize.y - 1; iy >= 0; --iy)
+    for (iy = gMapSize.y - 1; iy >= 0; --iy)
     {
-        for (ix = gBmMapSize.x - 1; ix >= 0; --ix)
+        for (ix = gMapSize.x - 1; ix >= 0; --ix)
         {
-            switch (gBmMapTerrain[iy][ix])
+            switch (gMapTerrain[iy][ix])
             {
 
             case TERRAIN_WALL_1B:
-                if (gBmMapTerrain[iy-1][ix] == TERRAIN_WALL_1B)
+                if (gMapTerrain[iy-1][ix] == TERRAIN_WALL_1B)
                     continue; // walls are stacked, only the topmost tile gets a trap
 
                 AddTrap(
                     ix, iy, TRAP_OBSTACLE,
-                    GetROMChapterStruct(gRAMChapterData.chapterIndex)->mapCrackedWallHeath);
+                    GetChapterInfo(gPlaySt.chapter)->mapCrackedWallHeath);
 
                 break;
 
@@ -178,12 +178,12 @@ void InitMapObstacles(void)
                 AddTrap(ix, iy, TRAP_OBSTACLE, 20);
                 break;
 
-            } // switch (gBmMapTerrain[iy][ix])
+            } // switch (gMapTerrain[iy][ix])
         }
     }
 }
 
-void ApplyEnabledMapChanges(void)
+void ApplyTrapMapChanges(void)
 {
     struct Trap* trap;
 
@@ -198,14 +198,14 @@ void ApplyEnabledMapChanges(void)
 
         case TRAP_MAPCHANGE2:
             // this is a mystery
-            ApplyMapChangesById(trap->extra ? trap->yPos : trap->xPos);
+            ApplyMapChangesById(trap->extra ? trap->y : trap->x);
             break;
 
         } // switch (trap->type)
     }
 }
 
-void RefreshAllLightRunes(void)
+void UpdateAllLightRunes(void)
 {
     struct Trap* trap;
 
@@ -215,14 +215,14 @@ void RefreshAllLightRunes(void)
         {
 
         case TRAP_LIGHT_RUNE:
-            gBmMapTerrain[trap->yPos][trap->xPos] = TERRAIN_TILE_00;
+            gMapTerrain[trap->y][trap->x] = TERRAIN_TILE_00;
             break;
 
         }
     }
 }
 
-int GetObstacleHpAt(int x, int y)
+int GetTrapExt1At(int x, int y)
 {
     struct Trap* trap;
 
@@ -231,7 +231,7 @@ int GetObstacleHpAt(int x, int y)
         return trap->extra;
     }
 
-    if ((gBmMapTerrain[y][x] == TERRAIN_WALL_1B) && (gBmMapTerrain[y-1][x] == TERRAIN_WALL_1B))
+    if ((gMapTerrain[y][x] == TERRAIN_WALL_1B) && (gMapTerrain[y-1][x] == TERRAIN_WALL_1B))
     {
         if ((trap = GetTrapAt(x, y-1)) != NULL)
         {
@@ -242,9 +242,9 @@ int GetObstacleHpAt(int x, int y)
     return 0;
 }
 
-const struct MapChange* GetMapChange(int id)
+const struct MapChange* GetMapChangesPointerById(int id)
 {
-    const struct MapChange* mapChange = GetChapterMapChangesPointer(gRAMChapterData.chapterIndex);
+    const struct MapChange* mapChange = GetChapterMapChanges(gPlaySt.chapter);
 
     if (!mapChange)
         return NULL;
@@ -260,11 +260,11 @@ const struct MapChange* GetMapChange(int id)
     return NULL;
 }
 
-int GetMapChangeIdAt(int x, int y)
+int GetMapChangesIdAt(int x, int y)
 {
     int result = -1;
 
-    const struct MapChange* mapChange = GetChapterMapChangesPointer(gRAMChapterData.chapterIndex);
+    const struct MapChange* mapChange = GetChapterMapChanges(gPlaySt.chapter);
 
     if (!mapChange)
         return result;
@@ -287,7 +287,7 @@ void ApplyMapChangesById(int id)
 {
     int ix = 0, iy = 0;
 
-    const struct MapChange* mapChange = GetMapChange(id);
+    const struct MapChange* mapChange = GetMapChangesPointerById(id);
     const u16* tileDataIt = mapChange->data;
 
     for (iy = 0; iy < mapChange->ySize; ++iy)
@@ -306,12 +306,12 @@ void ApplyMapChangesById(int id)
     }
 }
 
-void EnableMapChange(int id)
+void AddMapChange(int id)
 {
     AddTrap(0, 0, TRAP_MAPCHANGE, id);
 }
 
-void DisableMapChange(int id)
+void RemoveMapChange(int id)
 {
     struct Trap* trap;
 
@@ -322,7 +322,7 @@ void DisableMapChange(int id)
     }
 }
 
-s8 IsMapChangeEnabled(int id)
+s8 AreMapChangeTriggered(int id)
 {
     struct Trap* trap;
 
@@ -335,15 +335,15 @@ s8 IsMapChangeEnabled(int id)
     return FALSE;
 }
 
-void UnitHideIfUnderRoof(struct Unit* unit)
+void HideIfUnderRoof(struct Unit* unit)
 {
-    if (gBmMapTerrain[unit->yPos][unit->xPos] == TERRAIN_ROOF)
+    if (gMapTerrain[unit->y][unit->x] == TERRAIN_ROOF)
     {
-        unit->state |= (US_HIDDEN | US_UNDER_A_ROOF);
+        unit->flags |= (UNIT_FLAG_HIDDEN | UNIT_FLAG_UNDER_ROOF);
     }
 }
 
-void UpdateRoofedUnits(void)
+void UpdateUnitsUnderRoof(void)
 {
     int i;
 
@@ -354,32 +354,32 @@ void UpdateRoofedUnits(void)
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (!(unit->state & US_UNDER_A_ROOF))
+        if (!(unit->flags & UNIT_FLAG_UNDER_ROOF))
             continue;
 
-        if (gBmMapTerrain[unit->yPos][unit->xPos] != TERRAIN_ROOF)
+        if (gMapTerrain[unit->y][unit->x] != TERRAIN_ROOF)
         {
-            unit->state = (unit->state &~ (US_UNDER_A_ROOF | US_HIDDEN)) | US_BIT8;
+            unit->flags = (unit->flags &~ (UNIT_FLAG_UNDER_ROOF | UNIT_FLAG_HIDDEN)) | UNIT_FLAG_SEEN;
         }
     }
 
     RefreshEntityBmMaps();
-    SMS_UpdateFromGameData();
+    RefreshUnitSprites();
 }
 
 void GenerateFireTileTrapTargets(int x, int y, int damage)
 {
-    AddTarget(x, y, gBmMapUnit[y][x], damage);
+    AddTarget(x, y, gMapUnit[y][x], damage);
 }
 
 void GenerateArrowTrapTargets(int x, int y, int damage)
 {
     int iy;
 
-    for (iy = 0; iy < gBmMapSize.y; ++iy)
+    for (iy = 0; iy < gMapSize.y; ++iy)
     {
-        if (gBmMapUnit[iy][x])
-            AddTarget(x, iy, gBmMapUnit[iy][x], damage);
+        if (gMapUnit[iy][x])
+            AddTarget(x, iy, gMapUnit[iy][x], damage);
     }
 }
 
@@ -424,8 +424,8 @@ void GenerateGasTrapTargets(int x, int y, int damage, int facing)
         x += xInc;
         y += yInc;
 
-        if (gBmMapUnit[y][x])
-            AddTarget(x, y, gBmMapUnit[y][x], damage);
+        if (gMapUnit[y][x])
+            AddTarget(x, y, gMapUnit[y][x], damage);
     }
 }
 
@@ -472,14 +472,14 @@ s8 ShouldSkipGasTrapDisplay(int x, int y, int facing)
         x += xInc;
         y += yInc;
 
-        if (gBmMapUnit[y][x])
+        if (gMapUnit[y][x])
             boolHasNoEffect = FALSE;
     }
 
     return boolHasNoEffect;
 }
 
-void GenerateTrapDamageTargets(void)
+void MakeTargetListForTurnTrapDamage(void)
 {
     struct Trap* trap;
 
@@ -493,15 +493,15 @@ void GenerateTrapDamageTargets(void)
             {
 
             case TRAP_FIRETILE:
-                GenerateFireTileTrapTargets(trap->xPos, trap->yPos, (s8) trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
+                GenerateFireTileTrapTargets(trap->x, trap->y, (s8) trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
                 break;
 
             case TRAP_LIGHTARROW:
-                GenerateArrowTrapTargets(trap->xPos, trap->yPos, (s8) trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
+                GenerateArrowTrapTargets(trap->x, trap->y, (s8) trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
                 break;
 
             case TRAP_GAS:
-                GenerateGasTrapTargets(trap->xPos, trap->yPos, (s8) trap->data[TRAP_EXTDATA_TRAP_DAMAGE], trap->extra);
+                GenerateGasTrapTargets(trap->x, trap->y, (s8) trap->data[TRAP_EXTDATA_TRAP_DAMAGE], trap->extra);
                 break;
 
             }
@@ -525,10 +525,10 @@ void GenerateDisplayedTrapDamageTargets(void)
             {
 
             case TRAP_FIRETILE:
-                if (gBmMapUnit[trap->yPos][trap->xPos])
+                if (gMapUnit[trap->y][trap->x])
                 {
-                    AddTarget(trap->xPos, trap->yPos, 0, TRAP_FIRETILE);
-                    GenerateFireTileTrapTargets(trap->xPos, trap->yPos, trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
+                    AddTarget(trap->x, trap->y, 0, TRAP_FIRETILE);
+                    GenerateFireTileTrapTargets(trap->x, trap->y, trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
                 }
 
                 break;
@@ -557,21 +557,21 @@ void GenerateDisplayedTrapDamageTargets(void)
 
                 } // switch (trap->data[TRAP_EXTDATA_GAS_FACING])
 
-                if (!ShouldSkipGasTrapDisplay(trap->xPos, trap->yPos, trap->extra))
+                if (!ShouldSkipGasTrapDisplay(trap->x, trap->y, trap->extra))
                 {
-                    AddTarget(trap->xPos, trap->yPos, 0, specialType);
-                    GenerateGasTrapTargets(trap->xPos, trap->yPos, trap->data[TRAP_EXTDATA_TRAP_DAMAGE], trap->extra);
+                    AddTarget(trap->x, trap->y, 0, specialType);
+                    GenerateGasTrapTargets(trap->x, trap->y, trap->data[TRAP_EXTDATA_TRAP_DAMAGE], trap->extra);
                 }
 
                 break;
 
             case TRAP_LIGHTARROW:
-                AddTarget(trap->xPos, trap->yPos, 0, TRAP_LIGHTARROW);
-                GenerateArrowTrapTargets(trap->xPos, trap->yPos, trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
+                AddTarget(trap->x, trap->y, 0, TRAP_LIGHTARROW);
+                GenerateArrowTrapTargets(trap->x, trap->y, trap->data[TRAP_EXTDATA_TRAP_DAMAGE]);
                 break;
 
             case TRAP_MAPCHANGE2:
-                AddTarget(trap->extra ? trap->xPos : trap->yPos, TRAP_INDEX(trap), 0, trap->type);
+                AddTarget(trap->extra ? trap->x : trap->y, TRAP_INDEX(trap), 0, trap->type);
                 break;
 
             } // switch (trap->type)
@@ -599,7 +599,7 @@ void CountDownTraps(void)
     }
 }
 
-void ResetCountedDownTraps(void)
+void ResetCounterForCountedDownTraps(void)
 {
     struct Trap* trap;
 
@@ -623,12 +623,12 @@ void ResetCountedDownTraps(void)
 
 void sub_802EA00(void)
 {
-    int truePhase = gRAMChapterData.chapterPhaseIndex;
-    gRAMChapterData.chapterPhaseIndex = FACTION_RED;
+    int truePhase = gPlaySt.chapterPhaseIndex;
+    gPlaySt.chapterPhaseIndex = FACTION_RED;
 
     RefreshEntityBmMaps();
 
-    gRAMChapterData.chapterPhaseIndex = truePhase;
+    gPlaySt.chapterPhaseIndex = truePhase;
 }
 
 void sub_802EA1C(void)
@@ -640,32 +640,32 @@ void sub_802EA28(void)
 {
     // TODO: EID/FLAG DEFINITIONS
 
-    if (CheckEventId(0x65) || CountAvailableBlueUnits() == 0)
+    if (CheckFlag(0x65) || CountAvailableBlueUnits() == 0)
     {
         CallGameOverEvent();
     }
 
-    if (!AreAnyEnemyUnitDead())
-        SetEventId(0x06);
+    if (!IsAnyEnemyUnitAlive())
+        SetFlag(0x06);
 }
 
 struct Trap* AddLightRune(int x, int y)
 {
-    struct Trap* trap = AddTrap(x, y, TRAP_LIGHT_RUNE, gBmMapTerrain[y][x]);
+    struct Trap* trap = AddTrap(x, y, TRAP_LIGHT_RUNE, gMapTerrain[y][x]);
 
     trap->data[TRAP_EXTDATA_RUNE_TURNSLEFT] = 3;
-    gBmMapTerrain[y][x] = TERRAIN_TILE_00;
+    gMapTerrain[y][x] = TERRAIN_TILE_00;
 
     // return trap; // BUG
 }
 
 struct Trap* RemoveLightRune(struct Trap* trap)
 {
-    gBmMapTerrain[trap->yPos][trap->xPos] = GetTrueTerrainAt(trap->xPos, trap->yPos);
+    gMapTerrain[trap->y][trap->x] = GetTrueTerrainAt(trap->x, trap->y);
     return RemoveTrap(trap);
 }
 
-void DecayTraps(void)
+void HandleTrapDecay(void)
 {
     struct Trap* trap;
 
@@ -700,7 +700,7 @@ void DecayTraps(void)
     }
 }
 
-void DisableAllLightRunes(void)
+void BattleSomethingTrapChangeTerrain(void)
 {
     struct Trap* trap;
 
@@ -710,14 +710,14 @@ void DisableAllLightRunes(void)
         {
 
         case TRAP_LIGHT_RUNE:
-            gBmMapTerrain[trap->yPos][trap->xPos] = GetTrueTerrainAt(trap->xPos, trap->yPos);
+            gMapTerrain[trap->y][trap->x] = GetTrueTerrainAt(trap->x, trap->y);
             break;
 
         } // switch (trap->type)
     }
 }
 
-void EnableAllLightRunes(void)
+void NullAllLightRunesTerrain(void)
 {
     struct Trap* trap;
 
@@ -727,7 +727,7 @@ void EnableAllLightRunes(void)
         {
 
         case TRAP_LIGHT_RUNE:
-            gBmMapTerrain[trap->yPos][trap->xPos] = TERRAIN_TILE_00;
+            gMapTerrain[trap->y][trap->x] = TERRAIN_TILE_00;
             break;
 
         } // switch (trap->type)

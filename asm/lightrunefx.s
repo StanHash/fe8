@@ -39,7 +39,7 @@ _08021568:
 	bl TmFill
 	movs r0, #1
 	bl EnableBgSync
-	ldr r0, _080215EC  @ gRAMChapterData
+	ldr r0, _080215EC  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -81,7 +81,7 @@ _080215DC: .4byte gUnknown_085A5760
 _080215E0: .4byte gUnknown_085A5780
 _080215E4: .4byte gBmFrameTmap0
 _080215E8: .4byte gBg0Tm
-_080215EC: .4byte gRAMChapterData
+_080215EC: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_802153C
 
@@ -120,7 +120,7 @@ _08021630:
 	bne _0802163C
 	cmp r5, #9
 	bne _0802163C
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _0802163C:
 	lsls r0, r5, #5
 	adds r0, r0, r4
@@ -160,8 +160,8 @@ _08021680: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8021668
 
-	THUMB_FUNC_START sub_8021684
-sub_8021684: @ 0x08021684
+	THUMB_FUNC_START BeginLightRuneMapAnim
+BeginLightRuneMapAnim: @ 0x08021684
 	push {r4, r5, lr}
 	adds r3, r0, #0
 	adds r4, r1, #0
@@ -170,7 +170,7 @@ sub_8021684: @ 0x08021684
 	adds r1, r3, #0
 	bl SpawnProcLocking
 	lsls r0, r4, #4
-	ldr r2, _080216CC  @ gUnknown_0202BCB0
+	ldr r2, _080216CC  @ gBmSt
 	movs r3, #0xc
 	ldrsh r1, [r2, r3]
 	subs r0, r0, r1
@@ -195,9 +195,9 @@ sub_8021684: @ 0x08021684
 	bx r0
 	.align 2, 0
 _080216C8: .4byte gUnknown_0859B3B0
-_080216CC: .4byte gUnknown_0202BCB0
+_080216CC: .4byte gBmSt
 
-	THUMB_FUNC_END sub_8021684
+	THUMB_FUNC_END BeginLightRuneMapAnim
 
 	THUMB_FUNC_START sub_80216D0
 sub_80216D0: @ 0x080216D0
@@ -234,7 +234,7 @@ _080216FC:
 	bl TmFill
 	movs r0, #1
 	bl EnableBgSync
-	ldr r0, _08021780  @ gRAMChapterData
+	ldr r0, _08021780  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -276,7 +276,7 @@ _08021770: .4byte gUnknown_085A5760
 _08021774: .4byte gUnknown_085A5780
 _08021778: .4byte gBmFrameTmap0
 _0802177C: .4byte gBg0Tm
-_08021780: .4byte gRAMChapterData
+_08021780: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80216D0
 
@@ -315,7 +315,7 @@ _080217C4:
 	bne _080217D0
 	cmp r5, #9
 	bne _080217D0
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _080217D0:
 	lsls r0, r5, #5
 	adds r0, r0, r4
@@ -365,7 +365,7 @@ sub_8021818: @ 0x08021818
 	adds r1, r3, #0
 	bl SpawnProcLocking
 	lsls r0, r4, #4
-	ldr r2, _08021860  @ gUnknown_0202BCB0
+	ldr r2, _08021860  @ gBmSt
 	movs r3, #0xc
 	ldrsh r1, [r2, r3]
 	subs r0, r0, r1
@@ -390,7 +390,7 @@ sub_8021818: @ 0x08021818
 	bx r0
 	.align 2, 0
 _0802185C: .4byte gUnknown_0859B3D0
-_08021860: .4byte gUnknown_0202BCB0
+_08021860: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8021818
 
@@ -429,7 +429,7 @@ _08021890:
 	bl TmFill
 	movs r0, #1
 	bl EnableBgSync
-	ldr r0, _08021914  @ gRAMChapterData
+	ldr r0, _08021914  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -471,7 +471,7 @@ _08021904: .4byte gUnknown_085A5760
 _08021908: .4byte gUnknown_085A5780
 _0802190C: .4byte gBmFrameTmap0
 _08021910: .4byte gBg0Tm
-_08021914: .4byte gRAMChapterData
+_08021914: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8021864
 
@@ -510,7 +510,7 @@ _08021958:
 	bne _08021964
 	cmp r5, #9
 	bne _08021964
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _08021964:
 	lsls r0, r5, #5
 	adds r0, r0, r4
@@ -560,7 +560,7 @@ sub_80219AC: @ 0x080219AC
 	adds r1, r3, #0
 	bl SpawnProcLocking
 	lsls r0, r4, #4
-	ldr r2, _080219F4  @ gUnknown_0202BCB0
+	ldr r2, _080219F4  @ gBmSt
 	movs r3, #0xc
 	ldrsh r1, [r2, r3]
 	subs r0, r0, r1
@@ -585,7 +585,7 @@ sub_80219AC: @ 0x080219AC
 	bx r0
 	.align 2, 0
 _080219F0: .4byte gUnknown_0859B3F0
-_080219F4: .4byte gUnknown_0202BCB0
+_080219F4: .4byte gBmSt
 
 	THUMB_FUNC_END sub_80219AC
 

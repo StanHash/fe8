@@ -193,8 +193,8 @@ SetSomeRealCamPos: @ 0x0800BA5C
 	bne _0800BA88
 	add r3, sp, #4
 	mov r2, sp
-	bl StoreAdjustedCameraPositions
-	ldr r1, _0800BA84  @ gUnknown_0202BCB0
+	bl GetCenteredCameraPosition
+	ldr r1, _0800BA84  @ gBmSt
 	ldr r0, [sp]
 	lsls r0, r0, #4
 	strh r0, [r1, #0xc]
@@ -203,11 +203,11 @@ SetSomeRealCamPos: @ 0x0800BA5C
 	strh r0, [r1, #0xe]
 	b _0800BA9A
 	.align 2, 0
-_0800BA84: .4byte gUnknown_0202BCB0
+_0800BA84: .4byte gBmSt
 _0800BA88:
 	lsls r0, r0, #4
 	bl GetSomeAdjustedCameraX
-	ldr r4, _0800BAA4  @ gUnknown_0202BCB0
+	ldr r4, _0800BAA4  @ gBmSt
 	strh r0, [r4, #0xc]
 	lsls r0, r5, #4
 	bl GetSomeAdjustedCameraY
@@ -218,7 +218,7 @@ _0800BA9A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800BAA4: .4byte gUnknown_0202BCB0
+_0800BAA4: .4byte gBmSt
 
 	THUMB_FUNC_END SetSomeRealCamPos
 
@@ -232,11 +232,11 @@ sub_800BAA8: @ 0x0800BAA8
 	lsrs r5, r0, #0x10
 	cmp r0, #0
 	bge _0800BAC6
-	ldr r0, _0800BAF4  @ gRAMChapterData
+	ldr r0, _0800BAF4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r5, [r0, #0xc]
 _0800BAC6:
 	lsls r0, r4, #0x18
@@ -245,22 +245,22 @@ _0800BAC6:
 	bne _0800BAD2
 	bl RenderBmMapOnBg2
 _0800BAD2:
-	ldr r0, _0800BAF4  @ gRAMChapterData
+	ldr r0, _0800BAF4  @ gPlaySt
 	strb r5, [r0, #0xd]
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl RenderBmMap
 	cmp r4, #1
 	bne _0800BAEE
 	movs r0, #1
 	adds r1, r6, #0
-	bl MakeNew6CBMXFADE2
+	bl StartBlockingBMXFADE
 _0800BAEE:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800BAF4: .4byte gRAMChapterData
+_0800BAF4: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_800BAA8
 
@@ -273,7 +273,7 @@ TriggerMapChanges: @ 0x0800BAF8
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r5, r1, #0x18
-	bl IsMapChangeEnabled
+	bl AreMapChangeTriggered
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0800BB40
@@ -286,15 +286,15 @@ _0800BB1C:
 	adds r0, r4, #0
 	bl ApplyMapChangesById
 	adds r0, r4, #0
-	bl EnableMapChange
+	bl AddMapChange
 	bl RefreshTerrainBmMap
-	bl UpdateRoofedUnits
+	bl UpdateUnitsUnderRoof
 	bl RenderBmMap
 	cmp r5, #1
 	bne _0800BB40
 	movs r0, #1
 	adds r1, r6, #0
-	bl MakeNew6CBMXFADE2
+	bl StartBlockingBMXFADE
 _0800BB40:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -302,8 +302,8 @@ _0800BB40:
 
 	THUMB_FUNC_END TriggerMapChanges
 
-	THUMB_FUNC_START sub_800BB48
-sub_800BB48: @ 0x0800BB48
+	THUMB_FUNC_START UntriggerMapChange
+UntriggerMapChange: @ 0x0800BB48
 	push {r4, r5, r6, lr}
 	adds r6, r2, #0
 	lsls r0, r0, #0x10
@@ -311,7 +311,7 @@ sub_800BB48: @ 0x0800BB48
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
 	lsrs r5, r1, #0x18
-	bl IsMapChangeEnabled
+	bl AreMapChangeTriggered
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -325,21 +325,21 @@ _0800BB6E:
 	adds r0, r4, #0
 	bl RevertMapChange
 	adds r0, r4, #0
-	bl DisableMapChange
+	bl RemoveMapChange
 	bl RefreshTerrainBmMap
-	bl UpdateRoofedUnits
+	bl UpdateUnitsUnderRoof
 	bl RenderBmMap
 	cmp r5, #1
 	bne _0800BB92
 	movs r0, #1
 	adds r1, r6, #0
-	bl MakeNew6CBMXFADE2
+	bl StartBlockingBMXFADE
 _0800BB92:
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_800BB48
+	THUMB_FUNC_END UntriggerMapChange
 
 	THUMB_FUNC_START sub_800BB98
 sub_800BB98: @ 0x0800BB98
@@ -493,7 +493,7 @@ _0800BC8C: .4byte gEventSlots
 _0800BC90:
 	ldr r2, _0800BCB0  @ gUnknown_030004E6
 	ldrh r1, [r2]
-	ldr r0, _0800BCB4  @ gBmMapUnit
+	ldr r0, _0800BCB4  @ gMapUnit
 	ldr r0, [r0]
 	lsls r1, r1, #2
 	adds r1, r1, r0
@@ -508,7 +508,7 @@ _0800BC90:
 	b _0800BCD8
 	.align 2, 0
 _0800BCB0: .4byte gUnknown_030004E6
-_0800BCB4: .4byte gBmMapUnit
+_0800BCB4: .4byte gMapUnit
 _0800BCB8:
 	movs r0, #0
 	b _0800BCD8
@@ -519,13 +519,13 @@ _0800BCBC:
 	.align 2, 0
 _0800BCC4: .4byte gActiveUnit
 _0800BCC8:
-	bl GetPlayerLeaderUnitId
+	bl GetPlayerLeaderPid
 	lsls r0, r0, #0x10
 	lsrs r2, r0, #0x10
 _0800BCD0:
 	lsls r0, r2, #0x10
 	asrs r0, r0, #0x10
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 _0800BCD8:
 	pop {r1}
 	bx r1
@@ -540,7 +540,7 @@ sub_800BCDC: @ 0x0800BCDC
 	bl IsBattleDeamonActive
 	cmp r0, #0
 	bne _0800BDC0
-	bl SetupMapSpritesPalettes
+	bl ApplyUnitSpritePalettes
 	movs r0, #0xf
 	ands r0, r4
 	cmp r0, #3
@@ -660,8 +660,8 @@ _0800BDC8: .4byte gUnknown_0859EEE0
 
 	THUMB_FUNC_END sub_800BCDC
 
-	THUMB_FUNC_START Event80_
-Event80_: @ 0x0800BDCC
+	THUMB_FUNC_START Event80_WmSkip_Unsure
+Event80_WmSkip_Unsure: @ 0x0800BDCC
 	push {r4, lr}
 	ldr r0, [r0, #0x38]
 	ldr r4, [r0, #4]
@@ -674,10 +674,10 @@ Event80_: @ 0x0800BDCC
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event80_
+	THUMB_FUNC_END Event80_WmSkip_Unsure
 
-	THUMB_FUNC_START Event81_
-Event81_: @ 0x0800BDE8
+	THUMB_FUNC_START Event81_WmFadeOut
+Event81_WmFadeOut: @ 0x0800BDE8
 	push {lr}
 	adds r2, r0, #0
 	ldrh r0, [r2, #0x3c]
@@ -687,7 +687,7 @@ Event81_: @ 0x0800BDE8
 	cmp r0, #0
 	bne _0800BE02
 	adds r0, r2, #0
-	bl sub_8013DC0
+	bl StartBlockingFadeInBlackSlow
 	movs r0, #2
 	b _0800BE22
 _0800BE02:
@@ -713,35 +713,35 @@ _0800BE22:
 	.align 2, 0
 _0800BE28: .4byte gDispIo
 
-	THUMB_FUNC_END Event81_
+	THUMB_FUNC_END Event81_WmFadeOut
 
-	THUMB_FUNC_START Event82_EndWM
-Event82_EndWM: @ 0x0800BE2C
+	THUMB_FUNC_START Event82_WmEnd
+Event82_WmEnd: @ 0x0800BE2C
 	push {lr}
-	bl EndWM
+	bl GM_End
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event82_EndWM
+	THUMB_FUNC_END Event82_WmEnd
 
-	THUMB_FUNC_START Event83_WM_SETCAM
-Event83_WM_SETCAM: @ 0x0800BE38
+	THUMB_FUNC_START Event83_WmSetCamera
+Event83_WmSetCamera: @ 0x0800BE38
 	ldr r0, [r0, #0x38]
 	ldrh r1, [r0, #4]
 	ldrh r2, [r0, #6]
-	ldr r0, _0800BE48  @ gUnknown_03005280
+	ldr r0, _0800BE48  @ gGmData
 	strh r1, [r0, #2]
 	strh r2, [r0, #4]
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800BE48: .4byte gUnknown_03005280
+_0800BE48: .4byte gGmData
 
-	THUMB_FUNC_END Event83_WM_SETCAM
+	THUMB_FUNC_END Event83_WmSetCamera
 
-	THUMB_FUNC_START Event84_WM_SETCAMONLOC
-Event84_WM_SETCAMONLOC: @ 0x0800BE4C
+	THUMB_FUNC_START Event84_WmSetCameraOntoNode
+Event84_WmSetCameraOntoNode: @ 0x0800BE4C
 	push {r4, lr}
 	sub sp, #4
 	ldr r0, [r0, #0x38]
@@ -757,8 +757,8 @@ Event84_WM_SETCAMONLOC: @ 0x0800BE4C
 	adds r4, #2
 	mov r2, sp
 	adds r3, r4, #0
-	bl GetWMCenteredCameraPosition
-	ldr r1, _0800BE88  @ gUnknown_03005280
+	bl GetGmCameraCenteredPosition
+	ldr r1, _0800BE88  @ gGmData
 	mov r0, sp
 	ldrh r0, [r0]
 	strh r0, [r1, #2]
@@ -771,17 +771,17 @@ Event84_WM_SETCAMONLOC: @ 0x0800BE4C
 	bx r1
 	.align 2, 0
 _0800BE84: .4byte gUnknown_082060B0
-_0800BE88: .4byte gUnknown_03005280
+_0800BE88: .4byte gGmData
 
-	THUMB_FUNC_END Event84_WM_SETCAMONLOC
+	THUMB_FUNC_END Event84_WmSetCameraOntoNode
 
-	THUMB_FUNC_START Event85_WM_SETCAMONSPRITE
-Event85_WM_SETCAMONSPRITE: @ 0x0800BE8C
+	THUMB_FUNC_START Event85_WmSetCameraOntoUnit
+Event85_WmSetCameraOntoUnit: @ 0x0800BE8C
 	push {r4, r5, lr}
 	sub sp, #4
 	ldr r0, [r0, #0x38]
 	ldr r0, [r0, #4]
-	ldr r4, _0800BECC  @ gUnknown_03005280
+	ldr r4, _0800BECC  @ gGmData
 	lsls r0, r0, #2
 	adds r0, r0, r4
 	ldrb r1, [r0, #0x11]
@@ -796,7 +796,7 @@ Event85_WM_SETCAMONSPRITE: @ 0x0800BE8C
 	adds r5, #2
 	mov r2, sp
 	adds r3, r5, #0
-	bl GetWMCenteredCameraPosition
+	bl GetGmCameraCenteredPosition
 	mov r0, sp
 	ldrh r0, [r0]
 	strh r0, [r4, #2]
@@ -808,13 +808,13 @@ Event85_WM_SETCAMONSPRITE: @ 0x0800BE8C
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800BECC: .4byte gUnknown_03005280
+_0800BECC: .4byte gGmData
 _0800BED0: .4byte gUnknown_082060B0
 
-	THUMB_FUNC_END Event85_WM_SETCAMONSPRITE
+	THUMB_FUNC_END Event85_WmSetCameraOntoUnit
 
-	THUMB_FUNC_START Event86_WM_MOVECAM
-Event86_WM_MOVECAM: @ 0x0800BED4
+	THUMB_FUNC_START Event86_WmScrollCamera
+Event86_WmScrollCamera: @ 0x0800BED4
 	push {r4, r5, r6, r7, lr}
 	sub sp, #8
 	ldr r1, [r0, #0x38]
@@ -839,13 +839,13 @@ Event86_WM_MOVECAM: @ 0x0800BED4
 	cmp r5, #0
 	bne _0800BF10
 _0800BF02:
-	ldr r0, _0800BF0C  @ gUnknown_03005280
+	ldr r0, _0800BF0C  @ gGmData
 	strh r3, [r0, #2]
 	strh r6, [r0, #4]
 	movs r0, #0
 	b _0800BF30
 	.align 2, 0
-_0800BF0C: .4byte gUnknown_03005280
+_0800BF0C: .4byte gGmData
 _0800BF10:
 	lsls r0, r7, #0x10
 	asrs r0, r0, #0x10
@@ -860,7 +860,7 @@ _0800BF10:
 	str r4, [sp]
 	asrs r4, r5, #0x10
 	str r4, [sp, #4]
-	bl sub_80BF404
+	bl StartGmScroll
 	movs r0, #2
 _0800BF30:
 	add sp, #8
@@ -868,10 +868,10 @@ _0800BF30:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event86_WM_MOVECAM
+	THUMB_FUNC_END Event86_WmScrollCamera
 
-	THUMB_FUNC_START Event87_
-Event87_: @ 0x0800BF38
+	THUMB_FUNC_START Event87_WmScrollCameraOntoNode
+Event87_WmScrollCameraOntoNode: @ 0x0800BF38
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -897,7 +897,7 @@ Event87_: @ 0x0800BF38
 	adds r4, #0xa
 	add r2, sp, #8
 	adds r3, r4, #0
-	bl GetWMCenteredCameraPosition
+	bl GetGmCameraCenteredPosition
 	ldrh r0, [r5, #0x3c]
 	lsrs r0, r0, #2
 	movs r1, #1
@@ -913,7 +913,7 @@ Event87_: @ 0x0800BF38
 	cmp r5, #0
 	bne _0800BFA4
 _0800BF8A:
-	ldr r1, _0800BFA0  @ gUnknown_03005280
+	ldr r1, _0800BFA0  @ gGmData
 	add r0, sp, #8
 	ldrh r0, [r0]
 	strh r0, [r1, #2]
@@ -923,7 +923,7 @@ _0800BF8A:
 	b _0800BFC8
 	.align 2, 0
 _0800BF9C: .4byte gUnknown_082060B0
-_0800BFA0: .4byte gUnknown_03005280
+_0800BFA0: .4byte gGmData
 _0800BFA4:
 	mov r6, r8
 	lsls r0, r6, #0x10
@@ -940,7 +940,7 @@ _0800BFA4:
 	str r4, [sp]
 	asrs r4, r5, #0x10
 	str r4, [sp, #4]
-	bl sub_80BF404
+	bl StartGmScroll
 	movs r0, #2
 _0800BFC8:
 	add sp, #0xc
@@ -951,10 +951,10 @@ _0800BFC8:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event87_
+	THUMB_FUNC_END Event87_WmScrollCameraOntoNode
 
-	THUMB_FUNC_START Event88_
-Event88_: @ 0x0800BFD8
+	THUMB_FUNC_START Event88_WmScrollCameraOntoUnit
+Event88_WmScrollCameraOntoUnit: @ 0x0800BFD8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -971,7 +971,7 @@ Event88_: @ 0x0800BFD8
 	ldrh r7, [r0, #0xa]
 	ldrh r0, [r0, #0xc]
 	mov r8, r0
-	ldr r6, _0800C048  @ gUnknown_03005280
+	ldr r6, _0800C048  @ gGmData
 	lsls r1, r1, #2
 	adds r1, r1, r6
 	ldrb r1, [r1, #0x11]
@@ -986,7 +986,7 @@ Event88_: @ 0x0800BFD8
 	adds r4, #0xa
 	add r2, sp, #8
 	adds r3, r4, #0
-	bl GetWMCenteredCameraPosition
+	bl GetGmCameraCenteredPosition
 	ldrh r0, [r5, #0x3c]
 	lsrs r0, r0, #2
 	movs r1, #1
@@ -1011,7 +1011,7 @@ _0800C038:
 	movs r0, #0
 	b _0800C074
 	.align 2, 0
-_0800C048: .4byte gUnknown_03005280
+_0800C048: .4byte gGmData
 _0800C04C: .4byte gUnknown_082060B0
 _0800C050:
 	mov r1, r9
@@ -1029,7 +1029,7 @@ _0800C050:
 	str r4, [sp]
 	asrs r4, r5, #0x10
 	str r4, [sp, #4]
-	bl sub_80BF404
+	bl StartGmScroll
 	movs r0, #2
 _0800C074:
 	add sp, #0xc
@@ -1041,10 +1041,10 @@ _0800C074:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event88_
+	THUMB_FUNC_END Event88_WmScrollCameraOntoUnit
 
-	THUMB_FUNC_START Event89_
-Event89_: @ 0x0800C084
+	THUMB_FUNC_START Event89_WmScrollWait
+Event89_WmScrollWait: @ 0x0800C084
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -1052,16 +1052,16 @@ Event89_: @ 0x0800C084
 	ands r0, r1
 	cmp r0, #0
 	beq _0800C0A4
-	bl sub_80BF3F4
+	bl FindGmScrollManage
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C0A0
-	bl sub_80BF4A8
+	bl EndGmScroll
 _0800C0A0:
 	movs r0, #0
 	b _0800C0B4
 _0800C0A4:
-	bl sub_80BF3F4
+	bl FindGmScrollManage
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C0B2
@@ -1073,36 +1073,36 @@ _0800C0B4:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event89_
+	THUMB_FUNC_END Event89_WmScrollWait
 
-	THUMB_FUNC_START Event8A_
-Event8A_: @ 0x0800C0B8
-	ldr r1, _0800C0C4  @ gUnknown_03005280
+	THUMB_FUNC_START Event8A_WmShowCursor_Unsure
+Event8A_WmShowCursor_Unsure: @ 0x0800C0B8
+	ldr r1, _0800C0C4  @ gGmData
 	movs r0, #1
 	strb r0, [r1, #1]
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800C0C4: .4byte gUnknown_03005280
+_0800C0C4: .4byte gGmData
 
-	THUMB_FUNC_END Event8A_
+	THUMB_FUNC_END Event8A_WmShowCursor_Unsure
 
-	THUMB_FUNC_START Event8B_
-Event8B_: @ 0x0800C0C8
-	ldr r1, _0800C0D0  @ gUnknown_03005280
+	THUMB_FUNC_START Event8B_WmHideCursor_Unsure
+Event8B_WmHideCursor_Unsure: @ 0x0800C0C8
+	ldr r1, _0800C0D0  @ gGmData
 	movs r0, #0
 	strb r0, [r1, #1]
 	bx lr
 	.align 2, 0
-_0800C0D0: .4byte gUnknown_03005280
+_0800C0D0: .4byte gGmData
 
-	THUMB_FUNC_END Event8B_
+	THUMB_FUNC_END Event8B_WmHideCursor_Unsure
 
-	THUMB_FUNC_START Event8C_
-Event8C_: @ 0x0800C0D4
+	THUMB_FUNC_START Event8C_WmSetCursor_Unsure
+Event8C_WmSetCursor_Unsure: @ 0x0800C0D4
 	ldr r0, [r0, #0x38]
 	ldrh r1, [r0, #6]
-	ldr r2, _0800C0EC  @ gUnknown_03005280
+	ldr r2, _0800C0EC  @ gGmData
 	movs r3, #4
 	ldrsh r0, [r0, r3]
 	lsls r0, r0, #8
@@ -1113,12 +1113,12 @@ Event8C_: @ 0x0800C0D4
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800C0EC: .4byte gUnknown_03005280
+_0800C0EC: .4byte gGmData
 
-	THUMB_FUNC_END Event8C_
+	THUMB_FUNC_END Event8C_WmSetCursor_Unsure
 
-	THUMB_FUNC_START Event8D_
-Event8D_: @ 0x0800C0F0
+	THUMB_FUNC_START Event8D_WmNop
+Event8D_WmNop: @ 0x0800C0F0
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -1134,10 +1134,10 @@ _0800C104:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event8D_
+	THUMB_FUNC_END Event8D_WmNop
 
-	THUMB_FUNC_START Event8E_
-Event8E_: @ 0x0800C108
+	THUMB_FUNC_START Event8E_WmNop
+Event8E_WmNop: @ 0x0800C108
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -1153,10 +1153,10 @@ _0800C11C:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event8E_
+	THUMB_FUNC_END Event8E_WmNop
 
-	THUMB_FUNC_START Event8F_
-Event8F_: @ 0x0800C120
+	THUMB_FUNC_START Event8F_WmNop
+Event8F_WmNop: @ 0x0800C120
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -1172,10 +1172,10 @@ _0800C134:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event8F_
+	THUMB_FUNC_END Event8F_WmNop
 
-	THUMB_FUNC_START Event90_WM_DRAWPATH
-Event90_WM_DRAWPATH: @ 0x0800C138
+	THUMB_FUNC_START Event90_WmAddPathDisplayed
+Event90_WmAddPathDisplayed: @ 0x0800C138
 	push {lr}
 	ldr r1, [r0, #0x38]
 	ldr r2, [r1, #4]
@@ -1187,29 +1187,29 @@ Event90_WM_DRAWPATH: @ 0x0800C138
 	bne _0800C156
 	adds r0, r2, #0
 	movs r1, #0x1e
-	bl WM_DrawPath
+	bl AddAndDrawGmPath
 	movs r0, #2
 	b _0800C160
 _0800C156:
 	adds r0, r2, #0
 	movs r1, #0
-	bl WM_DrawPath
+	bl AddAndDrawGmPath
 	movs r0, #0
 _0800C160:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event90_WM_DRAWPATH
+	THUMB_FUNC_END Event90_WmAddPathDisplayed
 
-	THUMB_FUNC_START Event91_WM_DRAWPATH_Silent
-Event91_WM_DRAWPATH_Silent: @ 0x0800C164
+	THUMB_FUNC_START Event91_WmAddPath
+Event91_WmAddPath: @ 0x0800C164
 	push {lr}
 	ldr r0, [r0, #0x38]
 	ldr r2, [r0, #4]
-	ldr r0, _0800C190  @ gUnknown_03005280
+	ldr r0, _0800C190  @ gGmData
 	adds r1, r0, #0
 	adds r1, #0xa4
-	bl SetupNewWMRoute
+	bl AddGmPath
 	ldr r0, _0800C194  @ gUnknown_08A3D748
 	bl FindProc
 	ldr r0, [r0, #0x44]
@@ -1223,20 +1223,20 @@ Event91_WM_DRAWPATH_Silent: @ 0x0800C164
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800C190: .4byte gUnknown_03005280
+_0800C190: .4byte gGmData
 _0800C194: .4byte gUnknown_08A3D748
 
-	THUMB_FUNC_END Event91_WM_DRAWPATH_Silent
+	THUMB_FUNC_END Event91_WmAddPath
 
-	THUMB_FUNC_START Event92_REMOVEPATH
-Event92_REMOVEPATH: @ 0x0800C198
+	THUMB_FUNC_START Event92_WmRemovePath
+Event92_WmRemovePath: @ 0x0800C198
 	push {lr}
 	ldr r0, [r0, #0x38]
 	ldr r2, [r0, #4]
-	ldr r0, _0800C1C4  @ gUnknown_03005280
+	ldr r0, _0800C1C4  @ gGmData
 	adds r1, r0, #0
 	adds r1, #0xa4
-	bl WM_RemovePath
+	bl RemoveGmPath
 	ldr r0, _0800C1C8  @ gUnknown_08A3D748
 	bl FindProc
 	ldr r0, [r0, #0x44]
@@ -1250,16 +1250,16 @@ Event92_REMOVEPATH: @ 0x0800C198
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800C1C4: .4byte gUnknown_03005280
+_0800C1C4: .4byte gGmData
 _0800C1C8: .4byte gUnknown_08A3D748
 
-	THUMB_FUNC_END Event92_REMOVEPATH
+	THUMB_FUNC_END Event92_WmRemovePath
 
-	THUMB_FUNC_START Event93_
-Event93_: @ 0x0800C1CC
+	THUMB_FUNC_START Event93_WmEnableNode
+Event93_WmEnableNode: @ 0x0800C1CC
 	ldr r0, [r0, #0x38]
 	ldr r1, [r0, #4]
-	ldr r0, _0800C1E4  @ gUnknown_03005280
+	ldr r0, _0800C1E4  @ gGmData
 	lsls r1, r1, #2
 	adds r1, r1, r0
 	adds r1, #0x30
@@ -1270,15 +1270,15 @@ Event93_: @ 0x0800C1CC
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800C1E4: .4byte gUnknown_03005280
+_0800C1E4: .4byte gGmData
 
-	THUMB_FUNC_END Event93_
+	THUMB_FUNC_END Event93_WmEnableNode
 
-	THUMB_FUNC_START Event94_
-Event94_: @ 0x0800C1E8
+	THUMB_FUNC_START Event94_WmDisableNode
+Event94_WmDisableNode: @ 0x0800C1E8
 	ldr r0, [r0, #0x38]
 	ldr r1, [r0, #4]
-	ldr r0, _0800C200  @ gUnknown_03005280
+	ldr r0, _0800C200  @ gGmData
 	lsls r1, r1, #2
 	adds r1, r1, r0
 	adds r1, #0x30
@@ -1289,12 +1289,12 @@ Event94_: @ 0x0800C1E8
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800C200: .4byte gUnknown_03005280
+_0800C200: .4byte gGmData
 
-	THUMB_FUNC_END Event94_
+	THUMB_FUNC_END Event94_WmDisableNode
 
-	THUMB_FUNC_START Event95_
-Event95_: @ 0x0800C204
+	THUMB_FUNC_START Event95_WmEnableNodeDisplayed
+Event95_WmEnableNodeDisplayed: @ 0x0800C204
 	push {lr}
 	ldr r1, [r0, #0x38]
 	ldr r2, [r1, #4]
@@ -1304,7 +1304,7 @@ Event95_: @ 0x0800C204
 	ands r0, r1
 	cmp r0, #0
 	beq _0800C22C
-	ldr r0, _0800C228  @ gUnknown_03005280
+	ldr r0, _0800C228  @ gGmData
 	lsls r1, r2, #2
 	adds r1, r1, r0
 	adds r1, #0x30
@@ -1314,9 +1314,9 @@ Event95_: @ 0x0800C204
 	strb r0, [r1]
 	b _0800C248
 	.align 2, 0
-_0800C228: .4byte gUnknown_03005280
+_0800C228: .4byte gGmData
 _0800C22C:
-	ldr r1, _0800C250  @ gUnknown_03005280
+	ldr r1, _0800C250  @ gGmData
 	lsls r0, r2, #2
 	adds r0, r0, r1
 	adds r0, #0x30
@@ -1328,18 +1328,18 @@ _0800C22C:
 	adds r0, r2, #0
 	movs r1, #0
 	movs r2, #0
-	bl sub_80BFAEC
+	bl StartGmBaseEntry
 _0800C248:
 	movs r0, #0
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800C250: .4byte gUnknown_03005280
+_0800C250: .4byte gGmData
 
-	THUMB_FUNC_END Event95_
+	THUMB_FUNC_END Event95_WmEnableNodeDisplayed
 
-	THUMB_FUNC_START Event96_
-Event96_: @ 0x0800C254
+	THUMB_FUNC_START Event96_WmEnablePathTargetDisplayed
+Event96_WmEnablePathTargetDisplayed: @ 0x0800C254
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	ldr r0, [r7, #0x38]
@@ -1352,7 +1352,7 @@ Event96_: @ 0x0800C254
 	adds r5, r0, r1
 	movs r3, #4
 	ldrsb r3, [r5, r3]
-	ldr r2, _0800C2C4  @ gUnknown_03005280
+	ldr r2, _0800C2C4  @ gGmData
 	lsls r0, r3, #2
 	adds r0, r0, r2
 	adds r0, #0x30
@@ -1397,29 +1397,29 @@ _0800C2A0:
 	b _0800C2D2
 	.align 2, 0
 _0800C2C0: .4byte gUnknown_08206674
-_0800C2C4: .4byte gUnknown_03005280
+_0800C2C4: .4byte gGmData
 _0800C2C8:
 	adds r0, r3, #0
 	movs r1, #0
 	movs r2, #0
-	bl sub_80BFAEC
+	bl StartGmBaseEntry
 _0800C2D2:
 	movs r0, #0
 	pop {r4, r5, r6, r7}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event96_
+	THUMB_FUNC_END Event96_WmEnablePathTargetDisplayed
 
-	THUMB_FUNC_START Event97_
-Event97_: @ 0x0800C2DC
+	THUMB_FUNC_START Event97_WmInitNextStoryNode
+Event97_WmInitNextStoryNode: @ 0x0800C2DC
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
-	ldr r5, _0800C334  @ gUnknown_03005280
+	ldr r5, _0800C334  @ gGmData
 	adds r0, r5, #0
 	adds r0, #0xc8
 	ldrb r0, [r0]
-	bl WMLoc_GetNextLocId
+	bl GetWmNodeNext
 	adds r6, r0, #0
 	cmp r6, #0
 	blt _0800C364
@@ -1429,7 +1429,7 @@ Event97_: @ 0x0800C2DC
 	ands r0, r1
 	cmp r0, #0
 	beq _0800C33C
-	bl sub_80BCFB4
+	bl ResetGmStoryNode
 	lsls r1, r6, #2
 	adds r1, r1, r5
 	adds r1, #0x30
@@ -1454,7 +1454,7 @@ Event97_: @ 0x0800C2DC
 	strb r0, [r1]
 	b _0800C364
 	.align 2, 0
-_0800C334: .4byte gUnknown_03005280
+_0800C334: .4byte gGmData
 _0800C338: .4byte gUnknown_08A3D748
 _0800C33C:
 	lsls r0, r6, #2
@@ -1469,8 +1469,8 @@ _0800C33C:
 	adds r0, r6, #0
 	movs r1, #0
 	movs r2, #0
-	bl sub_80BFAEC
-	bl sub_80BCFB4
+	bl StartGmBaseEntry
+	bl ResetGmStoryNode
 	ldrb r1, [r4]
 	movs r0, #2
 	orrs r0, r1
@@ -1481,10 +1481,10 @@ _0800C364:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event97_
+	THUMB_FUNC_END Event97_WmInitNextStoryNode
 
-	THUMB_FUNC_START Event98_
-Event98_: @ 0x0800C36C
+	THUMB_FUNC_START Event98_WmSetNextStoryNodePath
+Event98_WmSetNextStoryNodePath: @ 0x0800C36C
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	ldr r0, [r7, #0x38]
@@ -1497,7 +1497,7 @@ Event98_: @ 0x0800C36C
 	adds r4, r0, r1
 	movs r6, #4
 	ldrsb r6, [r4, r6]
-	ldr r2, _0800C400  @ gUnknown_03005280
+	ldr r2, _0800C400  @ gGmData
 	lsls r0, r6, #2
 	adds r0, r0, r2
 	adds r0, #0x30
@@ -1558,15 +1558,15 @@ _0800C3BA:
 	b _0800C424
 	.align 2, 0
 _0800C3FC: .4byte gUnknown_08206674
-_0800C400: .4byte gUnknown_03005280
+_0800C400: .4byte gGmData
 _0800C404: .4byte gUnknown_08A3D748
 _0800C408:
 	adds r0, r6, #0
 	movs r1, #0
 	movs r2, #0
-	bl sub_80BFAEC
-	bl sub_80BCFB4
-	ldr r0, _0800C430  @ gUnknown_03005280
+	bl StartGmBaseEntry
+	bl ResetGmStoryNode
+	ldr r0, _0800C430  @ gGmData
 	lsls r1, r6, #2
 	adds r1, r1, r0
 	adds r1, #0x30
@@ -1581,12 +1581,12 @@ _0800C426:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800C430: .4byte gUnknown_03005280
+_0800C430: .4byte gGmData
 
-	THUMB_FUNC_END Event98_
+	THUMB_FUNC_END Event98_WmSetNextStoryNodePath
 
-	THUMB_FUNC_START Event99_
-Event99_: @ 0x0800C434
+	THUMB_FUNC_START Event99_GmNodeDisplayWait
+Event99_GmNodeDisplayWait: @ 0x0800C434
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -1594,16 +1594,16 @@ Event99_: @ 0x0800C434
 	ands r0, r1
 	cmp r0, #0
 	beq _0800C454
-	bl sub_80BFB34
+	bl GmBaseEntryExists
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C450
-	bl sub_80BFB24
+	bl EndGmBaseEntry
 _0800C450:
 	movs r0, #0
 	b _0800C464
 _0800C454:
-	bl sub_80BFB34
+	bl GmBaseEntryExists
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C462
@@ -1615,17 +1615,17 @@ _0800C464:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event99_
+	THUMB_FUNC_END Event99_GmNodeDisplayWait
 
-	THUMB_FUNC_START Event9A_
-Event9A_: @ 0x0800C468
+	THUMB_FUNC_START Event9A_WmSetStoryNodeSilent
+Event9A_WmSetStoryNodeSilent: @ 0x0800C468
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
 	mov r8, r0
 	ldr r0, [r0, #0x38]
 	ldr r5, [r0, #4]
-	ldr r1, _0800C4B4  @ gUnknown_03005280
+	ldr r1, _0800C4B4  @ gGmData
 	lsls r0, r5, #2
 	adds r0, r0, r1
 	adds r0, #0x30
@@ -1656,7 +1656,7 @@ Event9A_: @ 0x0800C468
 	movs r0, #2
 	b _0800C4BE
 	.align 2, 0
-_0800C4B4: .4byte gUnknown_03005280
+_0800C4B4: .4byte gGmData
 _0800C4B8: .4byte gUnknown_08A3D748
 _0800C4BC:
 	movs r0, #0
@@ -1667,13 +1667,13 @@ _0800C4BE:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event9A_
+	THUMB_FUNC_END Event9A_WmSetStoryNodeSilent
 
-	THUMB_FUNC_START Event9B_
-Event9B_: @ 0x0800C4C8
+	THUMB_FUNC_START Event9B_WmSetNextStoryNodeSilentNoFlag
+Event9B_WmSetNextStoryNodeSilentNoFlag: @ 0x0800C4C8
 	ldr r0, [r0, #0x38]
 	ldr r1, [r0, #4]
-	ldr r0, _0800C4E0  @ gUnknown_03005280
+	ldr r0, _0800C4E0  @ gGmData
 	lsls r1, r1, #2
 	adds r1, r1, r0
 	adds r1, #0x30
@@ -1684,22 +1684,22 @@ Event9B_: @ 0x0800C4C8
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800C4E0: .4byte gUnknown_03005280
+_0800C4E0: .4byte gGmData
 
-	THUMB_FUNC_END Event9B_
+	THUMB_FUNC_END Event9B_WmSetNextStoryNodeSilentNoFlag
 
 	THUMB_FUNC_START Event9C_
 Event9C_: @ 0x0800C4E4
 	push {r4, r5, lr}
-	ldr r5, _0800C520  @ gUnknown_03005280
+	ldr r5, _0800C520  @ gGmData
 	adds r0, r5, #0
 	adds r0, #0xc8
 	ldrb r0, [r0]
-	bl WMLoc_GetNextLocId
+	bl GetWmNodeNext
 	adds r4, r0, #0
 	cmp r4, #0
 	blt _0800C516
-	bl sub_80BCFB4
+	bl ResetGmStoryNode
 	lsls r1, r4, #2
 	adds r1, r1, r5
 	adds r1, #0x30
@@ -1718,7 +1718,7 @@ _0800C516:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800C520: .4byte gUnknown_03005280
+_0800C520: .4byte gGmData
 _0800C524: .4byte gUnknown_08A3D748
 
 	THUMB_FUNC_END Event9C_
@@ -1728,7 +1728,7 @@ Event9D_: @ 0x0800C528
 	push {lr}
 	ldr r1, [r0, #0x38]
 	ldr r2, [r1, #4]
-	ldr r1, _0800C550  @ gUnknown_03005280
+	ldr r1, _0800C550  @ gGmData
 	lsls r2, r2, #2
 	adds r2, r2, r1
 	adds r2, #0x30
@@ -1745,7 +1745,7 @@ Event9D_: @ 0x0800C528
 	movs r0, #2
 	b _0800C556
 	.align 2, 0
-_0800C550: .4byte gUnknown_03005280
+_0800C550: .4byte gGmData
 _0800C554:
 	movs r0, #0
 _0800C556:
@@ -1754,74 +1754,74 @@ _0800C556:
 
 	THUMB_FUNC_END Event9D_
 
-	THUMB_FUNC_START Event9E_PUTSPRITE
-Event9E_PUTSPRITE: @ 0x0800C55C
+	THUMB_FUNC_START Event9E_WmSetClassUnit
+Event9E_WmSetClassUnit: @ 0x0800C55C
 	push {lr}
 	ldr r3, [r0, #0x38]
 	ldrh r0, [r3, #4]
 	ldrh r1, [r3, #6]
 	ldrh r2, [r3, #8]
 	ldrh r3, [r3, #0xa]
-	bl WM_PutClassSprite
+	bl SetGmClassUnit
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event9E_PUTSPRITE
+	THUMB_FUNC_END Event9E_WmSetClassUnit
 
-	THUMB_FUNC_START Event9F_
-Event9F_: @ 0x0800C574
+	THUMB_FUNC_START Event9F_WmSetCharUnit
+Event9F_WmSetCharUnit: @ 0x0800C574
 	push {lr}
 	ldr r3, [r0, #0x38]
 	ldrh r0, [r3, #4]
 	ldrh r1, [r3, #6]
 	ldrh r2, [r3, #8]
 	ldrh r3, [r3, #0xa]
-	bl WM_PutCharSprite
+	bl SetGmCharUnit
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event9F_
+	THUMB_FUNC_END Event9F_WmSetCharUnit
 
-	THUMB_FUNC_START EventA0_REMSPRITE
-EventA0_REMSPRITE: @ 0x0800C58C
+	THUMB_FUNC_START EventA0_WmRemoveUnit
+EventA0_WmRemoveUnit: @ 0x0800C58C
 	push {lr}
 	ldr r0, [r0, #0x38]
 	ldr r0, [r0, #4]
-	bl WM_RemoveUnit
+	bl RemoveGmUnit
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA0_REMSPRITE
+	THUMB_FUNC_END EventA0_WmRemoveUnit
 
-	THUMB_FUNC_START EventA1_
-EventA1_: @ 0x0800C59C
+	THUMB_FUNC_START EventA1_WmShowUnit
+EventA1_WmShowUnit: @ 0x0800C59C
 	push {lr}
 	ldr r0, [r0, #0x38]
 	ldr r0, [r0, #4]
-	bl sub_80BF554
+	bl ShowGmUnit
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA1_
+	THUMB_FUNC_END EventA1_WmShowUnit
 
-	THUMB_FUNC_START EventA2_
-EventA2_: @ 0x0800C5AC
+	THUMB_FUNC_START EventA2_WmHideUnit
+EventA2_WmHideUnit: @ 0x0800C5AC
 	push {lr}
 	ldr r0, [r0, #0x38]
 	ldr r0, [r0, #4]
-	bl sub_80BF570
+	bl HideGmUnit
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA2_
+	THUMB_FUNC_END EventA2_WmHideUnit
 
-	THUMB_FUNC_START EventA3_
-EventA3_: @ 0x0800C5BC
+	THUMB_FUNC_START EventA3_WmShowUnitFaded
+EventA3_WmShowUnitFaded: @ 0x0800C5BC
 	push {r4, r5, lr}
 	ldr r1, [r0, #0x38]
 	ldrh r4, [r1, #4]
@@ -1838,23 +1838,23 @@ EventA3_: @ 0x0800C5BC
 	lsls r2, r5, #0x10
 	asrs r2, r2, #0x10
 	adds r1, r4, #0
-	bl sub_80BE40C
+	bl GmMu_StartFadeIn
 	b _0800C5EE
 	.align 2, 0
 _0800C5E4: .4byte gUnknown_08A3D748
 _0800C5E8:
 	adds r0, r4, #0
-	bl sub_80BF554
+	bl ShowGmUnit
 _0800C5EE:
 	movs r0, #0
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA3_
+	THUMB_FUNC_END EventA3_WmShowUnitFaded
 
-	THUMB_FUNC_START EventA4_
-EventA4_: @ 0x0800C5F8
+	THUMB_FUNC_START EventA4_WmHideUnitFaded
+EventA4_WmHideUnitFaded: @ 0x0800C5F8
 	push {r4, r5, lr}
 	ldr r1, [r0, #0x38]
 	ldrh r4, [r1, #4]
@@ -1871,23 +1871,23 @@ EventA4_: @ 0x0800C5F8
 	lsls r2, r5, #0x10
 	asrs r2, r2, #0x10
 	adds r1, r4, #0
-	bl sub_80BE42C
+	bl GmMu_StartFadeOut
 	b _0800C62A
 	.align 2, 0
 _0800C620: .4byte gUnknown_08A3D748
 _0800C624:
 	adds r0, r4, #0
-	bl sub_80BF570
+	bl HideGmUnit
 _0800C62A:
 	movs r0, #0
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA4_
+	THUMB_FUNC_END EventA4_WmHideUnitFaded
 
-	THUMB_FUNC_START EventA5_
-EventA5_: @ 0x0800C634
+	THUMB_FUNC_START EventA5_WmUnitFadeWait
+EventA5_WmUnitFadeWait: @ 0x0800C634
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -1895,9 +1895,9 @@ EventA5_: @ 0x0800C634
 	ands r0, r1
 	cmp r0, #0
 	beq _0800C646
-	bl sub_80BB47C
+	bl EndGmUnitFade
 _0800C646:
-	bl sub_80BE44C
+	bl GmUnitFadeExists
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C654
@@ -1909,15 +1909,15 @@ _0800C656:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA5_
+	THUMB_FUNC_END EventA5_WmUnitFadeWait
 
-	THUMB_FUNC_START EventA6_
-EventA6_: @ 0x0800C65C
+	THUMB_FUNC_START EventA6_WmUnitSetOnNode
+EventA6_WmUnitSetOnNode: @ 0x0800C65C
 	push {r4, r5, lr}
 	ldr r0, [r0, #0x38]
 	ldrh r4, [r0, #4]
 	ldrh r5, [r0, #6]
-	ldr r1, _0800C684  @ gUnknown_03005280
+	ldr r1, _0800C684  @ gGmData
 	lsls r0, r4, #2
 	adds r0, r0, r1
 	strb r5, [r0, #0x11]
@@ -1926,19 +1926,19 @@ EventA6_: @ 0x0800C65C
 	ldr r0, [r0, #0x54]
 	adds r1, r4, #0
 	adds r2, r5, #0
-	bl sub_80BE3C8
+	bl GmMu_SetNode
 	movs r0, #0
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800C684: .4byte gUnknown_03005280
+_0800C684: .4byte gGmData
 _0800C688: .4byte gUnknown_08A3D748
 
-	THUMB_FUNC_END EventA6_
+	THUMB_FUNC_END EventA6_WmUnitSetOnNode
 
-	THUMB_FUNC_START EventA7_
-EventA7_: @ 0x0800C68C
+	THUMB_FUNC_START EventA7_WmUnitSetPosition
+EventA7_WmUnitSetPosition: @ 0x0800C68C
 	push {r4, r5, r6, lr}
 	ldr r0, [r0, #0x38]
 	ldrh r4, [r0, #4]
@@ -1956,7 +1956,7 @@ EventA7_: @ 0x0800C68C
 	adds r1, r4, #0
 	adds r2, r5, #0
 	adds r3, r6, #0
-	bl sub_80BE35C
+	bl GmMu_SetPosition
 	movs r0, #0
 	pop {r4, r5, r6}
 	pop {r1}
@@ -1964,10 +1964,10 @@ EventA7_: @ 0x0800C68C
 	.align 2, 0
 _0800C6BC: .4byte gUnknown_08A3D748
 
-	THUMB_FUNC_END EventA7_
+	THUMB_FUNC_END EventA7_WmUnitSetPosition
 
-	THUMB_FUNC_START EventA8_
-EventA8_: @ 0x0800C6C0
+	THUMB_FUNC_START EventA8_WmUnitMoveFree
+EventA8_WmUnitMoveFree: @ 0x0800C6C0
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -2002,13 +2002,13 @@ EventA8_: @ 0x0800C6C0
 	lsls r3, r7, #0x10
 	asrs r3, r3, #0x10
 	adds r1, r5, #0
-	bl sub_80BE35C
+	bl GmMu_SetPosition
 	movs r0, #2
 	ands r4, r0
 	cmp r4, #0
 	beq _0800C744
 	adds r0, r5, #0
-	bl sub_80BF570
+	bl HideGmUnit
 	b _0800C744
 	.align 2, 0
 _0800C71C: .4byte gUnknown_08A3D748
@@ -2029,7 +2029,7 @@ _0800C720:
 	strh r1, [r0, #0xe]
 	adds r1, r4, #0
 	movs r2, #0
-	bl sub_80C33D4
+	bl StartGmAutoMu_Free
 _0800C744:
 	movs r0, #0
 	add sp, #0x14
@@ -2040,10 +2040,10 @@ _0800C744:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA8_
+	THUMB_FUNC_END EventA8_WmUnitMoveFree
 
-	THUMB_FUNC_START EventA9_
-EventA9_: @ 0x0800C754
+	THUMB_FUNC_START EventA9_WmUnitMovePaths
+EventA9_WmUnitMovePaths: @ 0x0800C754
 	push {r4, r5, r6, r7, lr}
 	sub sp, #0x10
 	ldr r1, [r0, #0x38]
@@ -2059,7 +2059,7 @@ EventA9_: @ 0x0800C754
 	ands r1, r0
 	cmp r1, #0
 	beq _0800C794
-	ldr r1, _0800C790  @ gUnknown_03005280
+	ldr r1, _0800C790  @ gGmData
 	lsls r0, r3, #0x10
 	asrs r3, r0, #0x10
 	lsls r0, r3, #2
@@ -2070,10 +2070,10 @@ EventA9_: @ 0x0800C754
 	cmp r2, #0
 	beq _0800C7AA
 	adds r0, r3, #0
-	bl sub_80BF570
+	bl HideGmUnit
 	b _0800C7AA
 	.align 2, 0
-_0800C790: .4byte gUnknown_03005280
+_0800C790: .4byte gGmData
 _0800C794:
 	mov r0, sp
 	strb r3, [r0]
@@ -2084,7 +2084,7 @@ _0800C794:
 	strh r7, [r0, #0xa]
 	adds r1, r2, #0
 	movs r2, #0
-	bl sub_80C3378
+	bl StartGmMuAuto_Paths
 _0800C7AA:
 	movs r0, #0
 	add sp, #0x10
@@ -2092,10 +2092,10 @@ _0800C7AA:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventA9_
+	THUMB_FUNC_END EventA9_WmUnitMovePaths
 
-	THUMB_FUNC_START EventAA_
-EventAA_: @ 0x0800C7B4
+	THUMB_FUNC_START EventAA_WmUnitPauseMove
+EventAA_WmUnitPauseMove: @ 0x0800C7B4
 	push {r4, lr}
 	ldr r1, [r0, #0x38]
 	ldrh r4, [r1, #4]
@@ -2110,7 +2110,7 @@ EventAA_: @ 0x0800C7B4
 	ldr r0, [r0, #0x54]
 	lsls r1, r4, #0x10
 	asrs r1, r1, #0x10
-	bl sub_80BE054
+	bl GmMu_PauseMovement
 _0800C7D6:
 	movs r0, #0
 	pop {r4}
@@ -2119,10 +2119,10 @@ _0800C7D6:
 	.align 2, 0
 _0800C7E0: .4byte gUnknown_08A3D748
 
-	THUMB_FUNC_END EventAA_
+	THUMB_FUNC_END EventAA_WmUnitPauseMove
 
-	THUMB_FUNC_START EventAB_
-EventAB_: @ 0x0800C7E4
+	THUMB_FUNC_START EventAB_WmUnitResumeMove
+EventAB_WmUnitResumeMove: @ 0x0800C7E4
 	push {r4, lr}
 	ldr r1, [r0, #0x38]
 	ldrh r4, [r1, #4]
@@ -2137,7 +2137,7 @@ EventAB_: @ 0x0800C7E4
 	ldr r0, [r0, #0x54]
 	lsls r1, r4, #0x10
 	asrs r1, r1, #0x10
-	bl sub_80BE068
+	bl GmMu_ResumeMovement
 _0800C806:
 	movs r0, #0
 	pop {r4}
@@ -2146,10 +2146,10 @@ _0800C806:
 	.align 2, 0
 _0800C810: .4byte gUnknown_08A3D748
 
-	THUMB_FUNC_END EventAB_
+	THUMB_FUNC_END EventAB_WmUnitResumeMove
 
-	THUMB_FUNC_START EventAC_
-EventAC_: @ 0x0800C814
+	THUMB_FUNC_START EventAC_WmUnitMoveWait
+EventAC_WmUnitMoveWait: @ 0x0800C814
 	push {r4, lr}
 	ldr r1, [r0, #0x38]
 	ldrh r2, [r1, #4]
@@ -2162,19 +2162,19 @@ EventAC_: @ 0x0800C814
 	lsls r0, r2, #0x10
 	asrs r4, r0, #0x10
 	adds r0, r4, #0
-	bl sub_80C3484
+	bl GmAutoMuActiveFor
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C83C
 	adds r0, r4, #0
-	bl sub_80C343C
+	bl EndGmAutoMuFor
 _0800C83C:
 	movs r0, #0
 	b _0800C854
 _0800C840:
 	lsls r0, r2, #0x10
 	asrs r0, r0, #0x10
-	bl sub_80C3484
+	bl GmAutoMuActiveFor
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C852
@@ -2187,10 +2187,10 @@ _0800C854:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventAC_
+	THUMB_FUNC_END EventAC_WmUnitMoveWait
 
-	THUMB_FUNC_START EventAD_
-EventAD_: @ 0x0800C85C
+	THUMB_FUNC_START EventAD_WmFadeToDarker
+EventAD_WmFadeToDarker: @ 0x0800C85C
 	push {lr}
 	ldr r1, [r0, #0x38]
 	ldr r2, [r1, #4]
@@ -2207,15 +2207,15 @@ _0800C874:
 	movs r0, #0
 	movs r1, #0
 _0800C878:
-	bl sub_80BF788
+	bl StartGmPalFade_
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventAD_
+	THUMB_FUNC_END EventAD_WmFadeToDarker
 
-	THUMB_FUNC_START EventAE_
-EventAE_: @ 0x0800C884
+	THUMB_FUNC_START EventAE_WmFadeToDarkerWait
+EventAE_WmFadeToDarkerWait: @ 0x0800C884
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -2223,11 +2223,11 @@ EventAE_: @ 0x0800C884
 	ands r0, r1
 	cmp r0, #0
 	beq _0800C89A
-	bl sub_80BF748
+	bl EndGmPalFade
 	movs r0, #0
 	b _0800C8AA
 _0800C89A:
-	bl sub_80BF730
+	bl GmPalFadeActive
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800C8A8
@@ -2239,10 +2239,10 @@ _0800C8AA:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventAE_
+	THUMB_FUNC_END EventAE_WmFadeToDarkerWait
 
-	THUMB_FUNC_START EventAF_
-EventAF_: @ 0x0800C8B0
+	THUMB_FUNC_START EventAF_WmShowTextBox
+EventAF_WmShowTextBox: @ 0x0800C8B0
 	push {lr}
 	ldr r1, [r0, #0x38]
 	ldrh r2, [r1, #4]
@@ -2255,16 +2255,16 @@ EventAF_: @ 0x0800C8B0
 	bne _0800C8CC
 	adds r0, r2, #0
 	adds r1, r3, #0
-	bl sub_80C0240
+	bl GmMuEntryStartShow
 _0800C8CC:
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventAF_
+	THUMB_FUNC_END EventAF_WmShowTextBox
 
-	THUMB_FUNC_START EventB0_
-EventB0_: @ 0x0800C8D4
+	THUMB_FUNC_START EventB0_WmHideTextBox_Bugged
+EventB0_WmHideTextBox_Bugged: @ 0x0800C8D4
 	push {lr}
 	ldr r1, [r0, #0x38]
 	ldrh r2, [r1, #4]
@@ -2277,16 +2277,16 @@ EventB0_: @ 0x0800C8D4
 	bne _0800C8F0
 	adds r0, r2, #0
 	adds r1, r3, #0
-	bl sub_80C02A4
+	bl GmMuEntryStartHide
 _0800C8F0:
 	movs r0, #0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB0_
+	THUMB_FUNC_END EventB0_WmHideTextBox_Bugged
 
-	THUMB_FUNC_START EventB1_
-EventB1_: @ 0x0800C8F8
+	THUMB_FUNC_START EventB1_WmTextBoxWait
+EventB1_WmTextBoxWait: @ 0x0800C8F8
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -2310,10 +2310,10 @@ _0800C91E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB1_
+	THUMB_FUNC_END EventB1_WmTextBoxWait
 
-	THUMB_FUNC_START EventB2_
-EventB2_: @ 0x0800C924
+	THUMB_FUNC_START EventB2_WmFancyFade
+EventB2_WmFancyFade: @ 0x0800C924
 	push {lr}
 	ldr r0, [r0, #0x38]
 	ldr r0, [r0, #4]
@@ -2323,10 +2323,10 @@ EventB2_: @ 0x0800C924
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB2_
+	THUMB_FUNC_END EventB2_WmFancyFade
 
-	THUMB_FUNC_START EventB3_
-EventB3_: @ 0x0800C938
+	THUMB_FUNC_START EventB3_WmFancyFadeWait
+EventB3_WmFancyFadeWait: @ 0x0800C938
 	push {lr}
 	bl sub_80C0530
 	lsls r0, r0, #0x18
@@ -2340,10 +2340,10 @@ _0800C94A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB3_
+	THUMB_FUNC_END EventB3_WmFancyFadeWait
 
-	THUMB_FUNC_START EventB4_
-EventB4_: @ 0x0800C950
+	THUMB_FUNC_START EventB4_WmDisplayBigMap
+EventB4_WmDisplayBigMap: @ 0x0800C950
 	push {r4, lr}
 	ldr r1, [r0, #0x38]
 	ldrh r3, [r1, #4]
@@ -2361,17 +2361,17 @@ EventB4_: @ 0x0800C950
 	asrs r1, r1, #0x10
 	adds r2, r4, #0
 	movs r3, #0
-	bl Make6C_Gmap_RM
+	bl StartGmRm
 _0800C976:
 	movs r0, #0
 	pop {r4}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB4_
+	THUMB_FUNC_END EventB4_WmDisplayBigMap
 
-	THUMB_FUNC_START EventB5_
-EventB5_: @ 0x0800C980
+	THUMB_FUNC_START EventB5_WmHideBigMap
+EventB5_WmHideBigMap: @ 0x0800C980
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -2388,10 +2388,10 @@ _0800C998:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB5_
+	THUMB_FUNC_END EventB5_WmHideBigMap
 
-	THUMB_FUNC_START EventB6_
-EventB6_: @ 0x0800C9A0
+	THUMB_FUNC_START EventB6_WmMoveBigMap
+EventB6_WmMoveBigMap: @ 0x0800C9A0
 	push {r4, r5, r6, r7, lr}
 	sub sp, #0xc
 	ldr r1, [r0, #0x38]
@@ -2424,7 +2424,7 @@ EventB6_: @ 0x0800C9A0
 	asrs r4, r4, #0x10
 	str r4, [sp, #4]
 	str r5, [sp, #8]
-	bl sub_80C1F18
+	bl StartGmRmUpdate2
 _0800C9E4:
 	movs r0, #0
 	add sp, #0xc
@@ -2432,10 +2432,10 @@ _0800C9E4:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB6_
+	THUMB_FUNC_END EventB6_WmMoveBigMap
 
-	THUMB_FUNC_START EventB7_
-EventB7_: @ 0x0800C9F0
+	THUMB_FUNC_START EventB7_WmBigMapWait
+EventB7_WmBigMapWait: @ 0x0800C9F0
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -2458,10 +2458,10 @@ _0800CA14:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB7_
+	THUMB_FUNC_END EventB7_WmBigMapWait
 
-	THUMB_FUNC_START EventB8_
-EventB8_: @ 0x0800CA18
+	THUMB_FUNC_START EventB8_WmShowBigMapHighlight
+EventB8_WmShowBigMapHighlight: @ 0x0800CA18
 	push {lr}
 	ldr r1, [r0, #0x38]
 	ldr r2, [r1, #4]
@@ -2479,7 +2479,7 @@ _0800CA32:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END EventB8_
+	THUMB_FUNC_END EventB8_WmShowBigMapHighlight
 
 	THUMB_FUNC_START EventB9_
 EventB9_: @ 0x0800CA38
@@ -2709,7 +2709,7 @@ EventBF_: @ 0x0800CBAC
 	bl FindProc
 	bl sub_80B9810
 	adds r0, r5, #0
-	bl Make6C_savemenu2
+	bl Start_savemenu2
 	movs r0, #2
 	pop {r4, r5}
 	pop {r1}
@@ -2724,7 +2724,7 @@ EventC0_: @ 0x0800CBD8
 	push {lr}
 	ldr r0, _0800CBEC  @ gUnknown_08A3D748
 	bl FindProc
-	bl sub_80B9154
+	bl GMProc_80B9154
 	movs r0, #2
 	pop {r1}
 	bx r1
@@ -2735,7 +2735,7 @@ _0800CBEC: .4byte gUnknown_08A3D748
 
 	THUMB_FUNC_START EventC1_SKIPWM
 EventC1_SKIPWM: @ 0x0800CBF0
-	ldr r0, _0800CC00  @ gUnknown_03005280
+	ldr r0, _0800CC00  @ gGmData
 	ldrb r1, [r0]
 	movs r2, #0x40
 	orrs r1, r2
@@ -2743,13 +2743,13 @@ EventC1_SKIPWM: @ 0x0800CBF0
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800CC00: .4byte gUnknown_03005280
+_0800CC00: .4byte gGmData
 
 	THUMB_FUNC_END EventC1_SKIPWM
 
 	THUMB_FUNC_START EventC2_
 EventC2_: @ 0x0800CC04
-	ldr r0, _0800CC14  @ gUnknown_03005280
+	ldr r0, _0800CC14  @ gGmData
 	ldrb r1, [r0]
 	movs r2, #0x80
 	orrs r1, r2
@@ -2757,7 +2757,7 @@ EventC2_: @ 0x0800CC04
 	movs r0, #0
 	bx lr
 	.align 2, 0
-_0800CC14: .4byte gUnknown_03005280
+_0800CC14: .4byte gGmData
 
 	THUMB_FUNC_END EventC2_
 
@@ -2768,7 +2768,7 @@ EventC3_: @ 0x0800CC18
 	ldrh r4, [r0, #4]
 	ldrh r3, [r0, #6]
 	ldr r5, [r0, #8]
-	ldr r1, _0800CC3C  @ gUnknown_03005280
+	ldr r1, _0800CC3C  @ gGmData
 	lsls r0, r4, #2
 	adds r2, r0, r1
 	ldrb r1, [r2, #0x10]
@@ -2782,7 +2782,7 @@ EventC3_: @ 0x0800CC18
 	bne _0800CC44
 	b _0800CC52
 	.align 2, 0
-_0800CC3C: .4byte gUnknown_03005280
+_0800CC3C: .4byte gGmData
 _0800CC40:
 	cmp r3, #0
 	beq _0800CC52
@@ -2792,7 +2792,7 @@ _0800CC44:
 	adds r0, r4, #0
 	adds r1, r3, #0
 	adds r3, r5, #0
-	bl WM_PutCharSprite
+	bl SetGmCharUnit
 _0800CC52:
 	movs r0, #0
 	pop {r4, r5}
@@ -2990,7 +2990,7 @@ _0800CD64:
 	cmp r0, #0
 	beq _0800CD80
 	movs r0, #4
-	bl sub_8006AA8
+	bl SetTalkFlag
 _0800CD80:
 	movs r0, #2
 _0800CD82:
@@ -3108,7 +3108,7 @@ EventCC_: @ 0x0800CDF8
 	asrs r1, r1, #0x10
 	lsls r2, r4, #0x10
 	asrs r2, r2, #0x10
-	bl sub_80B8188
+	bl nullsub_6
 _0800CE1E:
 	movs r0, #0
 	pop {r4}

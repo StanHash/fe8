@@ -13,7 +13,7 @@ sub_802237C: @ 0x0802237C
 	push {r5, r6, r7}
 	sub sp, #4
 	str r0, [sp]
-	ldr r1, _080223A4  @ gRAMChapterData
+	ldr r1, _080223A4  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r1, r0]
 	cmp r0, #0x16
@@ -26,10 +26,10 @@ _08022398:
 	bl Proc_Goto
 	b _080224BE
 	.align 2, 0
-_080223A4: .4byte gRAMChapterData
+_080223A4: .4byte gPlaySt
 _080223A8: .4byte 0x000003E7
 _080223AC:
-	bl InitBmBgLayers
+	bl ResetHLayers
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
@@ -123,11 +123,11 @@ _080223AC:
 	bl sub_80895B4
 	movs r4, #0x80
 	lsls r4, r4, #1
-	ldr r0, _080224E4  @ gRAMChapterData
+	ldr r0, _080224E4  @ gPlaySt
 	bl sub_808979C
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl sub_8089624
+	bl LoadChapterTitleGfx
 	ldr r2, _080224E8  @ 0x00000246
 	add r8, r2
 	mov r0, r8
@@ -166,7 +166,7 @@ _080224D4: .4byte gBg1Tm
 _080224D8: .4byte gBg2Tm
 _080224DC: .4byte gBg3Tm
 _080224E0: .4byte gDispIo
-_080224E4: .4byte gRAMChapterData
+_080224E4: .4byte gPlaySt
 _080224E8: .4byte 0x00000246
 
 	THUMB_FUNC_END sub_802237C
@@ -213,15 +213,15 @@ sub_8022528: @ 0x08022528
 	movs r0, #4
 	bl EnableBgSync
 	bl DisableMapPaletteAnimations
-	ldr r4, _080225A4  @ gRAMChapterData
+	ldr r4, _080225A4  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
 	bl UnpackChapterMapGraphics
-	bl SetupMapSpritesPalettes
-	bl LoadObjUIGfx
+	bl ApplyUnitSpritePalettes
+	bl LoadObjUiGfx
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x10]
 	lsls r0, r0, #4
 	bl sub_8015A40
@@ -231,11 +231,11 @@ sub_8022528: @ 0x08022528
 	movs r1, #0xf8
 	lsls r1, r1, #1
 	ands r0, r1
-	ldr r5, _080225A8  @ gUnknown_0202BCB0
+	ldr r5, _080225A8  @ gBmSt
 	strh r0, [r5, #0xc]
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x11]
 	lsls r0, r0, #4
 	bl sub_8015A6C
@@ -253,8 +253,8 @@ sub_8022528: @ 0x08022528
 	bx r0
 	.align 2, 0
 _080225A0: .4byte gBg2Tm
-_080225A4: .4byte gRAMChapterData
-_080225A8: .4byte gUnknown_0202BCB0
+_080225A4: .4byte gPlaySt
+_080225A8: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8022528
 

@@ -6,8 +6,8 @@
 	@ This is what reads codes such as TURN, CHAR or LOCA ("""main codes""")
 	@ Also includes getters for knowing who is force deployed when
 
-	THUMB_FUNC_START CallEventsFromBuffer
-CallEventsFromBuffer: @ 0x08082E80
+	THUMB_FUNC_START CallEventDefinition
+CallEventDefinition: @ 0x08082E80
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
@@ -16,32 +16,32 @@ CallEventsFromBuffer: @ 0x08082E80
 	cmp r0, #0
 	beq _08082EBE
 	ldr r0, [r4, #8]
-	bl SetEventId
+	bl SetFlag
 	ldr r0, [r4, #4]
 	cmp r0, #1
 	beq _08082EBE
 	ldrh r1, [r4, #8]
-	bl sub_80845B8
+	bl RegisterEventActivation
 	ldr r0, [r4, #4]
 	adds r1, r5, #0
 	bl CallEvent
 	movs r0, #3
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08082EBE
 	bl sub_8019108
 	movs r0, #0x84
-	bl SetEventId
+	bl SetFlag
 _08082EBE:
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END CallEventsFromBuffer
+	THUMB_FUNC_END CallEventDefinition
 
-	THUMB_FUNC_START CheckForEvents
-CheckForEvents: @ 0x08082EC4
+	THUMB_FUNC_START CheckEventDefinition
+CheckEventDefinition: @ 0x08082EC4
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -57,7 +57,7 @@ _08082ED8:
 	ldrh r5, [r0]
 	adds r6, r5, #0
 	ldrh r0, [r0, #2]
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08082EFA
@@ -94,10 +94,10 @@ _08082F1C:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckForEvents
+	THUMB_FUNC_END CheckEventDefinition
 
-	THUMB_FUNC_START CheckForNextEvents
-CheckForNextEvents: @ 0x08082F28
+	THUMB_FUNC_START CheckNextEventDefinition
+CheckNextEventDefinition: @ 0x08082F28
 	push {lr}
 	adds r3, r0, #0
 	cmp r3, #0
@@ -116,14 +116,14 @@ _08082F34:
 	adds r2, r2, r0
 	str r2, [r3]
 	adds r0, r3, #0
-	bl CheckForEvents
+	bl CheckEventDefinition
 _08082F4E:
 	pop {r1}
 	bx r1
 	.align 2, 0
 _08082F54: .4byte gUnknown_089E84F4
 
-	THUMB_FUNC_END CheckForNextEvents
+	THUMB_FUNC_END CheckNextEventDefinition
 
 	THUMB_FUNC_START sub_8082F58
 sub_8082F58: @ 0x08082F58
@@ -243,7 +243,7 @@ _0808300C:
 	THUMB_FUNC_START sub_8083018
 sub_8083018: @ 0x08083018
 	push {lr}
-	ldr r0, _08083038  @ gRAMChapterData
+	ldr r0, _08083038  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	cmp r0, #0x80
 	bne _0808303C
@@ -258,7 +258,7 @@ sub_8083018: @ 0x08083018
 	movs r0, #1
 	b _0808303E
 	.align 2, 0
-_08083038: .4byte gRAMChapterData
+_08083038: .4byte gPlaySt
 _0808303C:
 	movs r0, #0
 _0808303E:
@@ -270,7 +270,7 @@ _0808303E:
 	THUMB_FUNC_START sub_8083044
 sub_8083044: @ 0x08083044
 	push {lr}
-	ldr r0, _08083088  @ gRAMChapterData
+	ldr r0, _08083088  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	cmp r0, #0x80
 	bne _08083084
@@ -302,7 +302,7 @@ _08083084:
 	movs r0, #0
 	b _0808308E
 	.align 2, 0
-_08083088: .4byte gRAMChapterData
+_08083088: .4byte gPlaySt
 _0808308C:
 	movs r0, #1
 _0808308E:
@@ -329,7 +329,7 @@ sub_8083094: @ 0x08083094
 	THUMB_FUNC_START sub_80830AC
 sub_80830AC: @ 0x080830AC
 	push {lr}
-	ldr r0, _080830C8  @ gRAMChapterData
+	ldr r0, _080830C8  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	cmp r0, #0x80
 	bne _080830CC
@@ -342,7 +342,7 @@ sub_80830AC: @ 0x080830AC
 	asrs r0, r0, #0x18
 	b _080830CE
 	.align 2, 0
-_080830C8: .4byte gRAMChapterData
+_080830C8: .4byte gPlaySt
 _080830CC:
 	movs r0, #0
 _080830CE:
@@ -354,7 +354,7 @@ _080830CE:
 	THUMB_FUNC_START sub_80830D4
 sub_80830D4: @ 0x080830D4
 	push {lr}
-	ldr r0, _080830F0  @ gRAMChapterData
+	ldr r0, _080830F0  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	cmp r0, #0x80
 	bne _080830F4
@@ -367,7 +367,7 @@ sub_80830D4: @ 0x080830D4
 	asrs r0, r0, #0x18
 	b _080830F6
 	.align 2, 0
-_080830F0: .4byte gRAMChapterData
+_080830F0: .4byte gPlaySt
 _080830F4:
 	movs r0, #0
 _080830F6:
@@ -379,7 +379,7 @@ _080830F6:
 	THUMB_FUNC_START sub_80830FC
 sub_80830FC: @ 0x080830FC
 	push {lr}
-	ldr r0, _08083118  @ gRAMChapterData
+	ldr r0, _08083118  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	cmp r0, #0x80
 	bne _0808311C
@@ -392,7 +392,7 @@ sub_80830FC: @ 0x080830FC
 	asrs r0, r0, #0x18
 	b _0808311E
 	.align 2, 0
-_08083118: .4byte gRAMChapterData
+_08083118: .4byte gPlaySt
 _0808311C:
 	movs r0, #0
 _0808311E:
@@ -404,7 +404,7 @@ _0808311E:
 	THUMB_FUNC_START sub_8083124
 sub_8083124: @ 0x08083124
 	push {lr}
-	ldr r0, _08083140  @ gRAMChapterData
+	ldr r0, _08083140  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	cmp r0, #0x80
 	bne _08083144
@@ -417,7 +417,7 @@ sub_8083124: @ 0x08083124
 	asrs r0, r0, #0x18
 	b _08083146
 	.align 2, 0
-_08083140: .4byte gRAMChapterData
+_08083140: .4byte gPlaySt
 _08083144:
 	movs r0, #0
 _08083146:
@@ -487,7 +487,7 @@ IsThereClosedChestAt: @ 0x080831AC
 	asrs r0, r0, #0x18
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	cmp r0, #0x14
 	beq _080831C2
 	movs r0, #0
@@ -515,7 +515,7 @@ sub_80831C8: @ 0x080831C8
 	beq _080831E8
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl sub_80840C4
+	bl RunLocationEvents
 _080831E8:
 	pop {r4, r5}
 	pop {r0}
@@ -530,7 +530,7 @@ IsThereClosedDoorAt: @ 0x080831F0
 	asrs r0, r0, #0x18
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	cmp r0, #0x12
 	beq _08083206
 	movs r0, #0
@@ -558,7 +558,7 @@ sub_808320C: @ 0x0808320C
 	beq _0808322C
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl sub_80840C4
+	bl RunLocationEvents
 _0808322C:
 	pop {r4, r5}
 	pop {r0}
@@ -573,7 +573,7 @@ sub_8083234: @ 0x08083234
 	asrs r0, r0, #0x18
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	cmp r0, #0x15
 	beq _0808324A
 	movs r0, #0
@@ -586,13 +586,13 @@ _0808324C:
 
 	THUMB_FUNC_END sub_8083234
 
-	THUMB_FUNC_START sub_8083250
-sub_8083250: @ 0x08083250
+	THUMB_FUNC_START ShouldCallEndEvent
+ShouldCallEndEvent: @ 0x08083250
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08083264
-	bl CheckEventId3
+	bl CheckWin
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	b _08083266
@@ -602,31 +602,31 @@ _08083266:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083250
+	THUMB_FUNC_END ShouldCallEndEvent
 
-	THUMB_FUNC_START sub_808326C
-sub_808326C: @ 0x0808326C
+	THUMB_FUNC_START MaybeCallEndEvent_
+MaybeCallEndEvent_: @ 0x0808326C
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _0808327A
-	bl sub_80832E8
+	bl MaybeCallEndEvent
 _0808327A:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_808326C
+	THUMB_FUNC_END MaybeCallEndEvent_
 
-	THUMB_FUNC_START sub_8083280
-sub_8083280: @ 0x08083280
+	THUMB_FUNC_START CallEndEvent
+CallEndEvent: @ 0x08083280
 	push {r4, lr}
-	ldr r0, _080832A4  @ gRAMChapterData
+	ldr r0, _080832A4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	adds r4, r0, #0
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _080832A8
 	ldr r0, [r4, #0x4c]
@@ -634,7 +634,7 @@ sub_8083280: @ 0x08083280
 	bl CallEvent
 	b _080832B0
 	.align 2, 0
-_080832A4: .4byte gRAMChapterData
+_080832A4: .4byte gPlaySt
 _080832A8:
 	ldr r0, _080832C0  @ gUnknown_089FFD64
 	movs r1, #1
@@ -642,14 +642,14 @@ _080832A8:
 _080832B0:
 	bl sub_8019108
 	movs r0, #0x84
-	bl SetEventId
+	bl SetFlag
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
 _080832C0: .4byte gUnknown_089FFD64
 
-	THUMB_FUNC_END sub_8083280
+	THUMB_FUNC_END CallEndEvent
 
 	THUMB_FUNC_START sub_80832C4
 sub_80832C4: @ 0x080832C4
@@ -686,60 +686,60 @@ sub_80832D4: @ 0x080832D4
 
 	THUMB_FUNC_END sub_80832D4
 
-	THUMB_FUNC_START CheckEventId3
-CheckEventId3: @ 0x080832D8
+	THUMB_FUNC_START CheckWin
+CheckWin: @ 0x080832D8
 	push {lr}
 	movs r0, #3
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckEventId3
+	THUMB_FUNC_END CheckWin
 
-	THUMB_FUNC_START sub_80832E8
-sub_80832E8: @ 0x080832E8
+	THUMB_FUNC_START MaybeCallEndEvent
+MaybeCallEndEvent: @ 0x080832E8
 	push {lr}
 	movs r0, #3
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08083304
-	bl sub_8083250
+	bl ShouldCallEndEvent
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08083304
-	bl sub_8083280
+	bl CallEndEvent
 _08083304:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_80832E8
+	THUMB_FUNC_END MaybeCallEndEvent
 
 	THUMB_FUNC_START GetCurrentChapterBallistaePtr
 GetCurrentChapterBallistaePtr: @ 0x08083308
 	push {lr}
-	ldr r0, _0808331C  @ gRAMChapterData
+	ldr r0, _0808331C  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #0x20]
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0808331C: .4byte gRAMChapterData
+_0808331C: .4byte gPlaySt
 
 	THUMB_FUNC_END GetCurrentChapterBallistaePtr
 
 	THUMB_FUNC_START GetCurrentChapterBallistae2Ptr
 GetCurrentChapterBallistae2Ptr: @ 0x08083320
 	push {r4, lr}
-	ldr r4, _0808333C  @ gRAMChapterData
+	ldr r4, _0808333C  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	adds r2, r0, #0
 	ldrb r1, [r4, #0x14]
 	movs r0, #0x40
@@ -749,7 +749,7 @@ GetCurrentChapterBallistae2Ptr: @ 0x08083320
 	movs r0, #0
 	b _08083342
 	.align 2, 0
-_0808333C: .4byte gRAMChapterData
+_0808333C: .4byte gPlaySt
 _08083340:
 	ldr r0, [r2, #0x24]
 _08083342:
@@ -759,15 +759,15 @@ _08083342:
 
 	THUMB_FUNC_END GetCurrentChapterBallistae2Ptr
 
-	THUMB_FUNC_START GetChapterAllyUnitDataPointer
-GetChapterAllyUnitDataPointer: @ 0x08083348
+	THUMB_FUNC_START GetChapterAllyUnitDefinitions
+GetChapterAllyUnitDefinitions: @ 0x08083348
 	push {r4, r5, lr}
-	ldr r5, _08083370  @ gRAMChapterData
+	ldr r5, _08083370  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	adds r4, r0, #0
-	bl GetChapterThing
+	bl GetBattleMapKind
 	adds r1, r0, #0
 	cmp r1, #2
 	beq _08083378
@@ -779,12 +779,12 @@ GetChapterAllyUnitDataPointer: @ 0x08083348
 	ldr r0, [r4, #0x2c]
 	b _080833A8
 	.align 2, 0
-_08083370: .4byte gRAMChapterData
+_08083370: .4byte gPlaySt
 _08083374:
 	ldr r0, [r4, #0x28]
 	b _080833A8
 _08083378:
-	ldr r1, _08083394  @ gUnknown_03005280
+	ldr r1, _08083394  @ gGmData
 	adds r2, r1, #0
 	adds r2, #0xcc
 	adds r1, #0xc9
@@ -799,7 +799,7 @@ _08083378:
 	beq _0808339E
 	b _080833A8
 	.align 2, 0
-_08083394: .4byte gUnknown_03005280
+_08083394: .4byte gGmData
 _08083398:
 	cmp r1, #2
 	beq _080833A6
@@ -817,19 +817,19 @@ _080833A8:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetChapterAllyUnitDataPointer
+	THUMB_FUNC_END GetChapterAllyUnitDefinitions
 
-	THUMB_FUNC_START sub_80833B0
-sub_80833B0: @ 0x080833B0
+	THUMB_FUNC_START GetChapterEnemyUnitDefinitions
+GetChapterEnemyUnitDefinitions: @ 0x080833B0
 	push {lr}
-	ldr r0, _080833E0  @ gRAMChapterData
+	ldr r0, _080833E0  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	adds r2, r0, #0
 	movs r3, #0
-	ldr r0, _080833E4  @ gUnknown_03005280
+	ldr r0, _080833E4  @ gGmData
 	adds r1, r0, #0
 	adds r1, #0xcc
 	adds r0, #0xc9
@@ -844,8 +844,8 @@ sub_80833B0: @ 0x080833B0
 	beq _080833EE
 	b _080833F8
 	.align 2, 0
-_080833E0: .4byte gRAMChapterData
-_080833E4: .4byte gUnknown_03005280
+_080833E0: .4byte gPlaySt
+_080833E4: .4byte gGmData
 _080833E8:
 	cmp r0, #2
 	beq _080833F6
@@ -863,15 +863,15 @@ _080833F8:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_80833B0
+	THUMB_FUNC_END GetChapterEnemyUnitDefinitions
 
-	THUMB_FUNC_START sub_8083400
-sub_8083400: @ 0x08083400
+	THUMB_FUNC_START GetChapterSkirmishLeaderClasses
+GetChapterSkirmishLeaderClasses: @ 0x08083400
 	push {r4, lr}
 	adds r4, r1, #0
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r1, [r0, #0x3c]
 	ldrb r1, [r1, #1]
 	strb r1, [r4]
@@ -885,16 +885,16 @@ sub_8083400: @ 0x08083400
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8083400
+	THUMB_FUNC_END GetChapterSkirmishLeaderClasses
 
 	THUMB_FUNC_START sub_8083424
 sub_8083424: @ 0x08083424
 	push {lr}
-	ldr r0, _0808345C  @ gRAMChapterData
+	ldr r0, _0808345C  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	adds r1, r0, #0
 	ldr r0, [r1, #0x30]
 	cmp r0, #0
@@ -917,7 +917,7 @@ sub_8083424: @ 0x08083424
 	movs r0, #1
 	b _08083462
 	.align 2, 0
-_0808345C: .4byte gRAMChapterData
+_0808345C: .4byte gPlaySt
 _08083460:
 	movs r0, #0
 _08083462:
@@ -935,7 +935,7 @@ sub_8083468: @ 0x08083468
 	b _080834A2
 _08083472:
 	ldr r0, [r4, #8]
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _080834A0
@@ -945,7 +945,7 @@ _08083472:
 	ldrb r0, [r4, #1]
 	cmp r0, #0x4f
 	beq _08083498
-	ldr r0, _0808349C  @ gRAMChapterData
+	ldr r0, _0808349C  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -956,7 +956,7 @@ _08083498:
 	adds r0, r4, #0
 	b _080834AA
 	.align 2, 0
-_0808349C: .4byte gRAMChapterData
+_0808349C: .4byte gPlaySt
 _080834A0:
 	adds r4, #0xc
 _080834A2:
@@ -980,10 +980,10 @@ ShouldCallBattleQuote: @ 0x080834B0
 	lsls r1, r1, #0x18
 	lsrs r4, r1, #0x18
 	adds r7, r4, #0
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _080834F2
-	ldr r0, _080834F8  @ gActionData
+	ldr r0, _080834F8  @ gAction
 	ldrb r0, [r0, #0x11]
 	cmp r0, #2
 	bne _080834F2
@@ -1006,7 +1006,7 @@ _080834F2:
 	movs r0, #0
 	b _080834FE
 	.align 2, 0
-_080834F8: .4byte gActionData
+_080834F8: .4byte gAction
 _080834FC:
 	movs r0, #1
 _080834FE:
@@ -1023,10 +1023,10 @@ CallBattleQuoteEventsIfAny: @ 0x08083504
 	lsrs r5, r0, #0x18
 	lsls r1, r1, #0x18
 	lsrs r6, r1, #0x18
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08083568
-	ldr r0, _08083554  @ gActionData
+	ldr r0, _08083554  @ gAction
 	ldrb r0, [r0, #0x11]
 	cmp r0, #2
 	bne _08083568
@@ -1055,7 +1055,7 @@ _08083548:
 	bl CallBattleQuoteEventInBattle
 	b _08083562
 	.align 2, 0
-_08083554: .4byte gActionData
+_08083554: .4byte gAction
 _08083558:
 	ldr r0, [r4, #0xc]
 	cmp r0, #0
@@ -1063,7 +1063,7 @@ _08083558:
 	bl EventEngine_CreateBattle
 _08083562:
 	ldrh r0, [r4, #6]
-	bl SetEventId
+	bl SetFlag
 _08083568:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -1077,14 +1077,14 @@ sub_8083570: @ 0x08083570
 	adds r4, r1, #0
 	lsls r0, r0, #0x18
 	lsrs r5, r0, #0x18
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #0
 	beq _08083598
-	ldr r0, _080835A4  @ gRAMChapterData
+	ldr r0, _080835A4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x8e
 	ldrb r0, [r0]
 	cmp r5, r0
@@ -1093,23 +1093,23 @@ sub_8083570: @ 0x08083570
 	beq _0808359E
 _08083598:
 	adds r0, r4, #0
-	bl SetEventId
+	bl SetFlag
 _0808359E:
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080835A4: .4byte gRAMChapterData
+_080835A4: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8083570
 
-	THUMB_FUNC_START sub_80835A8
-sub_80835A8: @ 0x080835A8
+	THUMB_FUNC_START ShouldDisplayDeathQuoteForChar
+ShouldDisplayDeathQuoteForChar: @ 0x080835A8
 	push {r4, lr}
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
 	adds r0, r4, #0
-	bl sub_80846E4
+	bl GetCharDeathQuoteEntry
 	adds r1, r0, #0
 	cmp r1, #0
 	beq _080835D4
@@ -1133,15 +1133,15 @@ _080835D6:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_80835A8
+	THUMB_FUNC_END ShouldDisplayDeathQuoteForChar
 
-	THUMB_FUNC_START sub_80835DC
-sub_80835DC: @ 0x080835DC
+	THUMB_FUNC_START DisplayDeathQuoteForChar
+DisplayDeathQuoteForChar: @ 0x080835DC
 	push {r4, r5, lr}
 	lsls r0, r0, #0x18
 	lsrs r5, r0, #0x18
 	adds r0, r5, #0
-	bl sub_80846E4
+	bl GetCharDeathQuoteEntry
 	adds r4, r0, #0
 	cmp r4, #0
 	beq _0808364E
@@ -1154,7 +1154,7 @@ sub_80835DC: @ 0x080835DC
 	movs r0, #0x3e
 	movs r1, #0
 	bl StartBgm
-	ldr r0, _08083610  @ gRAMChapterData
+	ldr r0, _08083610  @ gPlaySt
 	adds r0, #0x41
 	ldrb r1, [r0]
 	movs r2, #1
@@ -1162,10 +1162,10 @@ sub_80835DC: @ 0x080835DC
 	strb r1, [r0]
 	b _08083630
 	.align 2, 0
-_08083610: .4byte gRAMChapterData
+_08083610: .4byte gPlaySt
 _08083614:
 	adds r0, r5, #0
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -1196,7 +1196,7 @@ _0808364E:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_80835DC
+	THUMB_FUNC_END DisplayDeathQuoteForChar
 
 	THUMB_FUNC_START sub_8083654
 sub_8083654: @ 0x08083654
@@ -1226,13 +1226,13 @@ _0808365E:
 	lsrs r0, r0, #0x18
 	movs r1, #0
 	movs r2, #7
-	bl BWL_AddWinOrLossIdk
+	bl BWL_SetDeathStats
 	adds r0, r4, #0
-	bl UnitKill
+	bl KillUnit
 	adds r0, r4, #0
 	movs r1, #0
 	bl SetUnitHp
-	ldr r2, _08083704  @ gBattleActor
+	ldr r2, _08083704  @ gBattleUnitA
 	movs r1, #0xb
 	ldrsb r1, [r2, r1]
 	movs r0, #0xb
@@ -1244,7 +1244,7 @@ _0808365E:
 	movs r2, #0x48
 	bl memcpy
 _080836B2:
-	ldr r2, _08083708  @ gBattleTarget
+	ldr r2, _08083708  @ gBattleUnitB
 	movs r1, #0xb
 	ldrsb r1, [r2, r1]
 	movs r0, #0xb
@@ -1265,7 +1265,7 @@ _080836CA:
 	bl GetUnit
 	movs r1, #0
 	movs r2, #0
-	bl UnitDrop
+	bl UnitDropRescue
 _080836E2:
 	ldr r0, [r4, #0xc]
 	movs r1, #0x10
@@ -1275,15 +1275,15 @@ _080836E2:
 	adds r0, r4, #0
 	mov r1, sp
 	add r2, sp, #4
-	bl UnitGetDeathDropLocation
+	bl UnitGetDropPositionOnDeath
 	ldr r1, [sp]
 	ldr r2, [sp, #4]
 	adds r0, r4, #0
-	bl UnitDrop
+	bl UnitDropRescue
 	b _08083712
 	.align 2, 0
-_08083704: .4byte gBattleActor
-_08083708: .4byte gBattleTarget
+_08083704: .4byte gBattleUnitA
+_08083708: .4byte gBattleUnitB
 _0808370C:
 	adds r5, #1
 	cmp r5, #0x3f
@@ -1296,8 +1296,8 @@ _08083712:
 
 	THUMB_FUNC_END sub_8083654
 
-	THUMB_FUNC_START sub_808371C
-sub_808371C: @ 0x0808371C
+	THUMB_FUNC_START StartSupportTalk
+StartSupportTalk: @ 0x0808371C
 	push {r4, r5, r6, r7, lr}
 	adds r6, r2, #0
 	lsls r0, r0, #0x18
@@ -1306,7 +1306,7 @@ sub_808371C: @ 0x0808371C
 	lsrs r4, r1, #0x18
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl sub_8084748
+	bl GetSupportTalkInfoForCharacters
 	adds r7, r0, #0
 	cmp r7, #0
 	beq _0808375E
@@ -1314,7 +1314,7 @@ sub_808371C: @ 0x0808371C
 	lsrs r2, r2, #0x18
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl sub_808478C
+	bl GetSupportTalkSong
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	subs r2, r6, #1
@@ -1326,23 +1326,23 @@ sub_808371C: @ 0x0808371C
 	adds r0, r5, #0
 	adds r1, r4, #0
 	adds r2, r6, #0
-	bl sub_80A3724
+	bl SGM_SetSupportLevelKnown
 _0808375E:
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_808371C
+	THUMB_FUNC_END StartSupportTalk
 
-	THUMB_FUNC_START sub_8083764
-sub_8083764: @ 0x08083764
+	THUMB_FUNC_START StartSupportViewerTalk
+StartSupportViewerTalk: @ 0x08083764
 	push {r4, lr}
 	adds r4, r2, #0
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	lsls r1, r1, #0x18
 	lsrs r1, r1, #0x18
-	bl sub_8084748
+	bl GetSupportTalkInfoForCharacters
 	adds r1, r0, #0
 	cmp r1, #0
 	beq _08083788
@@ -1357,7 +1357,7 @@ _08083788:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8083764
+	THUMB_FUNC_END StartSupportViewerTalk
 
 	THUMB_FUNC_START sub_8083790
 sub_8083790: @ 0x08083790
@@ -1371,7 +1371,7 @@ sub_8083790: @ 0x08083790
 	lsrs r1, r1, #0x18
 	lsls r2, r2, #0x18
 	lsrs r2, r2, #0x18
-	bl sub_808478C
+	bl GetSupportTalkSong
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	pop {r1}
@@ -1383,11 +1383,11 @@ sub_8083790: @ 0x08083790
 sub_80837B0: @ 0x080837B0
 	push {lr}
 	movs r0, #0x65
-	bl SetEventId
+	bl SetFlag
 	movs r0, #0x3e
 	movs r1, #0
 	bl StartBgm
-	ldr r0, _080837D4  @ gRAMChapterData
+	ldr r0, _080837D4  @ gPlaySt
 	adds r0, #0x41
 	ldrb r1, [r0]
 	movs r2, #1
@@ -1397,14 +1397,14 @@ sub_80837B0: @ 0x080837B0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080837D4: .4byte gRAMChapterData
+_080837D4: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80837B0
 
 	THUMB_FUNC_START sub_80837D8
 sub_80837D8: @ 0x080837D8
 	push {lr}
-	ldr r0, _080837EC  @ gRAMChapterData
+	ldr r0, _080837EC  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #0x40
 	ands r0, r1
@@ -1413,7 +1413,7 @@ sub_80837D8: @ 0x080837D8
 	movs r0, #0
 	b _080837F2
 	.align 2, 0
-_080837EC: .4byte gRAMChapterData
+_080837EC: .4byte gPlaySt
 _080837F0:
 	movs r0, #1
 _080837F2:
@@ -1426,7 +1426,7 @@ _080837F2:
 sub_80837F8: @ 0x080837F8
 	push {lr}
 	movs r3, #0
-	ldr r2, _0808382C  @ gRAMChapterData
+	ldr r2, _0808382C  @ gPlaySt
 	ldrb r1, [r2, #0x14]
 	movs r0, #0x40
 	ands r0, r1
@@ -1439,7 +1439,7 @@ sub_80837F8: @ 0x080837F8
 	cmp r0, #0
 	blt _08083824
 	movs r0, #0x87
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	negs r1, r0
@@ -1450,19 +1450,19 @@ _08083824:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0808382C: .4byte gRAMChapterData
+_0808382C: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80837F8
 
-	THUMB_FUNC_START sub_8083830
-sub_8083830: @ 0x08083830
+	THUMB_FUNC_START EvCheck00_Always
+EvCheck00_Always: @ 0x08083830
 	movs r0, #1
 	bx lr
 
-	THUMB_FUNC_END sub_8083830
+	THUMB_FUNC_END EvCheck00_Always
 
-	THUMB_FUNC_START CheckAFEV
-CheckAFEV: @ 0x08083834
+	THUMB_FUNC_START EvCheck01_AFEV
+EvCheck01_AFEV: @ 0x08083834
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r4, [r5]
@@ -1471,7 +1471,7 @@ CheckAFEV: @ 0x08083834
 	beq _08083850
 	cmp r0, #0x64
 	beq _08083850
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -1490,10 +1490,10 @@ _0808385E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckAFEV
+	THUMB_FUNC_END EvCheck01_AFEV
 
-	THUMB_FUNC_START CheckTURN
-CheckTURN: @ 0x08083864
+	THUMB_FUNC_START EvCheck02_TURN
+EvCheck02_TURN: @ 0x08083864
 	push {r4, r5, r6, lr}
 	adds r3, r0, #0
 	ldr r2, [r3]
@@ -1509,7 +1509,7 @@ _08083878:
 	bne _0808387E
 	ldr r0, _0808389C  @ 0x7FFFFFFF
 _0808387E:
-	ldr r5, _080838A0  @ gRAMChapterData
+	ldr r5, _080838A0  @ gPlaySt
 	ldrh r1, [r5, #0x10]
 	cmp r4, r1
 	bgt _080838A4
@@ -1526,7 +1526,7 @@ _0808387E:
 	b _080838A6
 	.align 2, 0
 _0808389C: .4byte 0x7FFFFFFF
-_080838A0: .4byte gRAMChapterData
+_080838A0: .4byte gPlaySt
 _080838A4:
 	movs r0, #0
 _080838A6:
@@ -1534,10 +1534,10 @@ _080838A6:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckTURN
+	THUMB_FUNC_END EvCheck02_TURN
 
-	THUMB_FUNC_START CheckCHAR
-CheckCHAR: @ 0x080838AC
+	THUMB_FUNC_START EvCheck03_CHAR
+EvCheck03_CHAR: @ 0x080838AC
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	ldr r4, [r5]
@@ -1555,7 +1555,7 @@ _080838C6:
 	cmp r0, #3
 	bne _080838D6
 	ldrh r0, [r4, #0xe]
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080838F2
@@ -1582,10 +1582,10 @@ _080838F4:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckCHAR
+	THUMB_FUNC_END EvCheck03_CHAR
 
-	THUMB_FUNC_START CheckCHARASM
-CheckCHARASM: @ 0x080838FC
+	THUMB_FUNC_START EvCheck04_CHARASM
+EvCheck04_CHARASM: @ 0x080838FC
 	push {r4, r5, r6, r7, lr}
 	adds r4, r0, #0
 	ldr r5, [r4]
@@ -1618,10 +1618,10 @@ _08083930:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckCHARASM
+	THUMB_FUNC_END EvCheck04_CHARASM
 
-	THUMB_FUNC_START CheckLOCA
-CheckLOCA: @ 0x08083938
+	THUMB_FUNC_START EvCheck05_LOCA
+EvCheck05_LOCA: @ 0x08083938
 	push {r4, r5, r6, lr}
 	adds r2, r0, #0
 	ldr r3, [r2]
@@ -1657,23 +1657,23 @@ _08083970:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckLOCA
+	THUMB_FUNC_END EvCheck05_LOCA
 
-	THUMB_FUNC_START CheckVILL
-CheckVILL: @ 0x08083978
+	THUMB_FUNC_START EvCheck06_VILL
+EvCheck06_VILL: @ 0x08083978
 	push {r4, lr}
 	adds r4, r0, #0
-	bl CheckLOCA
+	bl EvCheck05_LOCA
 	movs r1, #3
 	str r1, [r4, #0x10]
 	pop {r4}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckVILL
+	THUMB_FUNC_END EvCheck06_VILL
 
-	THUMB_FUNC_START CheckCHES
-CheckCHES: @ 0x0808398C
+	THUMB_FUNC_START EvCheck07_CHES
+EvCheck07_CHES: @ 0x0808398C
 	push {r4, lr}
 	adds r2, r0, #0
 	ldr r3, [r2]
@@ -1706,10 +1706,10 @@ _080839C0:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckCHES
+	THUMB_FUNC_END EvCheck07_CHES
 
-	THUMB_FUNC_START CheckDOOR
-CheckDOOR: @ 0x080839C8
+	THUMB_FUNC_START EvCheck08_DOOR
+EvCheck08_DOOR: @ 0x080839C8
 	push {r4, r5, r6, lr}
 	adds r3, r0, #0
 	ldr r4, [r3]
@@ -1748,10 +1748,10 @@ _08083A08:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckDOOR
+	THUMB_FUNC_END EvCheck08_DOOR
 
-	THUMB_FUNC_START sub_8083A10
-sub_8083A10: @ 0x08083A10
+	THUMB_FUNC_START EvCheck09_
+EvCheck09_: @ 0x08083A10
 	push {r4, r5, r6, lr}
 	adds r3, r0, #0
 	ldr r4, [r3]
@@ -1790,10 +1790,10 @@ _08083A50:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083A10
+	THUMB_FUNC_END EvCheck09_
 
-	THUMB_FUNC_START CheckSHOP
-CheckSHOP: @ 0x08083A58
+	THUMB_FUNC_START EvCheck0A_SHOP
+EvCheck0A_SHOP: @ 0x08083A58
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r5, [r4]
@@ -1835,10 +1835,10 @@ _08083A9E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckSHOP
+	THUMB_FUNC_END EvCheck0A_SHOP
 
-	THUMB_FUNC_START CheckAREA
-CheckAREA: @ 0x08083AA4
+	THUMB_FUNC_START EvCheck0B_AREA
+EvCheck0B_AREA: @ 0x08083AA4
 	push {r4, r5, r6, r7, lr}
 	adds r4, r0, #0
 	ldr r0, _08083B18  @ gActiveUnit
@@ -1909,24 +1909,24 @@ _08083B1E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckAREA
+	THUMB_FUNC_END EvCheck0B_AREA
 
-	THUMB_FUNC_START sub_8083B24
-sub_8083B24: @ 0x08083B24
+	THUMB_FUNC_START EvCheck0C_Never
+EvCheck0C_Never: @ 0x08083B24
 	movs r0, #0
 	bx lr
 
-	THUMB_FUNC_END sub_8083B24
+	THUMB_FUNC_END EvCheck0C_Never
 
-	THUMB_FUNC_START sub_8083B28
-sub_8083B28: @ 0x08083B28
+	THUMB_FUNC_START EvCheck0D_Never
+EvCheck0D_Never: @ 0x08083B28
 	movs r0, #0
 	bx lr
 
-	THUMB_FUNC_END sub_8083B28
+	THUMB_FUNC_END EvCheck0D_Never
 
-	THUMB_FUNC_START sub_8083B2C
-sub_8083B2C: @ 0x08083B2C
+	THUMB_FUNC_START EvCheck0E_FuncCondition
+EvCheck0E_FuncCondition: @ 0x08083B2C
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4]
@@ -1950,22 +1950,22 @@ _08083B50:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083B2C
+	THUMB_FUNC_END EvCheck0E_FuncCondition
 
-	THUMB_FUNC_START sub_8083B58
-sub_8083B58: @ 0x08083B58
+	THUMB_FUNC_START EvCheck0F_
+EvCheck0F_: @ 0x08083B58
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4]
 	ldrh r5, [r0, #0xc]
 	ldr r6, _08083B8C  @ 0xFFFF0000
 	ldrh r0, [r0, #2]
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08083B90
 	adds r0, r5, #0
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08083B90
@@ -1987,22 +1987,22 @@ _08083B92:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083B58
+	THUMB_FUNC_END EvCheck0F_
 
-	THUMB_FUNC_START sub_8083B98
-sub_8083B98: @ 0x08083B98
+	THUMB_FUNC_START EvCheck10_
+EvCheck10_: @ 0x08083B98
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4]
 	ldrh r5, [r0, #0xc]
 	ldr r6, _08083BCC  @ 0xFFFF0000
 	ldrh r0, [r0, #2]
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08083BD0
 	adds r0, r5, #0
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08083BD0
@@ -2024,16 +2024,16 @@ _08083BD2:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083B98
+	THUMB_FUNC_END EvCheck10_
 
-	THUMB_FUNC_START SetLocalEventId
-SetLocalEventId: @ 0x08083BD8
+	THUMB_FUNC_START SetTemporaryFlag
+SetTemporaryFlag: @ 0x08083BD8
 	push {lr}
 	adds r3, r0, #0
 	cmp r3, #0
 	beq _08083C00
 	subs r3, #1
-	ldr r1, _08083C04  @ gUnknown_03005270
+	ldr r1, _08083C04  @ gTemporaryFlagData
 	adds r0, r3, #0
 	cmp r3, #0
 	bge _08083BEC
@@ -2053,13 +2053,13 @@ _08083C00:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08083C04: .4byte gUnknown_03005270
+_08083C04: .4byte gTemporaryFlagData
 _08083C08: .4byte gUnknown_089E857C
 
-	THUMB_FUNC_END SetLocalEventId
+	THUMB_FUNC_END SetTemporaryFlag
 
-	THUMB_FUNC_START UnsetLocalEventId
-UnsetLocalEventId: @ 0x08083C0C
+	THUMB_FUNC_START ClearTemporaryFlag
+ClearTemporaryFlag: @ 0x08083C0C
 	push {lr}
 	adds r2, r0, #0
 	cmp r2, #0
@@ -2079,7 +2079,7 @@ _08083C20:
 	mvns r0, r0
 	lsls r0, r0, #0x18
 	lsrs r3, r0, #0x18
-	ldr r0, _08083C44  @ gUnknown_03005270
+	ldr r0, _08083C44  @ gTemporaryFlagData
 	adds r1, r1, r0
 	ldrb r0, [r1]
 	ands r0, r3
@@ -2089,14 +2089,14 @@ _08083C3A:
 	bx r0
 	.align 2, 0
 _08083C40: .4byte gUnknown_089E857C
-_08083C44: .4byte gUnknown_03005270
+_08083C44: .4byte gTemporaryFlagData
 
-	THUMB_FUNC_END UnsetLocalEventId
+	THUMB_FUNC_END ClearTemporaryFlag
 
-	THUMB_FUNC_START ClearLocalEvents
-ClearLocalEvents: @ 0x08083C48
+	THUMB_FUNC_START ClearTemporaryFlags
+ClearTemporaryFlags: @ 0x08083C48
 	push {lr}
-	ldr r1, _08083C5C  @ gUnknown_03005270
+	ldr r1, _08083C5C  @ gTemporaryFlagData
 	movs r2, #0
 	adds r0, r1, #4
 _08083C50:
@@ -2107,18 +2107,18 @@ _08083C50:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08083C5C: .4byte gUnknown_03005270
+_08083C5C: .4byte gTemporaryFlagData
 
-	THUMB_FUNC_END ClearLocalEvents
+	THUMB_FUNC_END ClearTemporaryFlags
 
-	THUMB_FUNC_START CheckLocalEventId
-CheckLocalEventId: @ 0x08083C60
+	THUMB_FUNC_START CheckTemporaryFlag
+CheckTemporaryFlag: @ 0x08083C60
 	push {lr}
 	adds r3, r0, #0
 	cmp r3, #0
 	beq _08083C8A
 	subs r3, #1
-	ldr r1, _08083C90  @ gUnknown_03005270
+	ldr r1, _08083C90  @ gTemporaryFlagData
 	adds r0, r3, #0
 	cmp r3, #0
 	bge _08083C74
@@ -2139,7 +2139,7 @@ _08083C8A:
 	movs r0, #0
 	b _08083C9A
 	.align 2, 0
-_08083C90: .4byte gUnknown_03005270
+_08083C90: .4byte gTemporaryFlagData
 _08083C94: .4byte gUnknown_089E857C
 _08083C98:
 	movs r0, #1
@@ -2147,10 +2147,10 @@ _08083C9A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckLocalEventId
+	THUMB_FUNC_END CheckTemporaryFlag
 
-	THUMB_FUNC_START SetGlobalEventId
-SetGlobalEventId: @ 0x08083CA0
+	THUMB_FUNC_START SetPermanentFlag
+SetPermanentFlag: @ 0x08083CA0
 	push {lr}
 	adds r3, r0, #0
 	cmp r3, #0x63
@@ -2158,7 +2158,7 @@ SetGlobalEventId: @ 0x08083CA0
 	cmp r3, #0x64
 	beq _08083CCC
 	subs r3, #0x65
-	ldr r1, _08083CD0  @ gUnknown_03005250
+	ldr r1, _08083CD0  @ gPermanentFlagData
 	adds r0, r3, #0
 	cmp r3, #0
 	bge _08083CB8
@@ -2178,13 +2178,13 @@ _08083CCC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08083CD0: .4byte gUnknown_03005250
+_08083CD0: .4byte gPermanentFlagData
 _08083CD4: .4byte gUnknown_089E857C
 
-	THUMB_FUNC_END SetGlobalEventId
+	THUMB_FUNC_END SetPermanentFlag
 
-	THUMB_FUNC_START UnsetGlobalEventId
-UnsetGlobalEventId: @ 0x08083CD8
+	THUMB_FUNC_START ClearPermanentFlag
+ClearPermanentFlag: @ 0x08083CD8
 	push {lr}
 	adds r2, r0, #0
 	cmp r2, #0x63
@@ -2206,7 +2206,7 @@ _08083CF0:
 	mvns r0, r0
 	lsls r0, r0, #0x18
 	lsrs r3, r0, #0x18
-	ldr r0, _08083D14  @ gUnknown_03005250
+	ldr r0, _08083D14  @ gPermanentFlagData
 	adds r1, r1, r0
 	ldrb r0, [r1]
 	ands r0, r3
@@ -2216,14 +2216,14 @@ _08083D0A:
 	bx r0
 	.align 2, 0
 _08083D10: .4byte gUnknown_089E857C
-_08083D14: .4byte gUnknown_03005250
+_08083D14: .4byte gPermanentFlagData
 
-	THUMB_FUNC_END UnsetGlobalEventId
+	THUMB_FUNC_END ClearPermanentFlag
 
-	THUMB_FUNC_START sub_8083D18
-sub_8083D18: @ 0x08083D18
+	THUMB_FUNC_START ClearGlobalTriggerState
+ClearGlobalTriggerState: @ 0x08083D18
 	push {lr}
-	ldr r1, _08083D30  @ gUnknown_03005250
+	ldr r1, _08083D30  @ gPermanentFlagData
 	movs r2, #0
 	adds r0, r1, #0
 	adds r0, #0x18
@@ -2235,12 +2235,12 @@ _08083D22:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08083D30: .4byte gUnknown_03005250
+_08083D30: .4byte gPermanentFlagData
 
-	THUMB_FUNC_END sub_8083D18
+	THUMB_FUNC_END ClearGlobalTriggerState
 
-	THUMB_FUNC_START sub_8083D34
-sub_8083D34: @ 0x08083D34
+	THUMB_FUNC_START CheckGlobalEventIdFrom
+CheckGlobalEventIdFrom: @ 0x08083D34
 	push {lr}
 	adds r3, r0, #0
 	cmp r3, #0x64
@@ -2273,100 +2273,100 @@ _08083D66:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083D34
+	THUMB_FUNC_END CheckGlobalEventIdFrom
 
-	THUMB_FUNC_START CheckGlobalEventId
-CheckGlobalEventId: @ 0x08083D6C
+	THUMB_FUNC_START CheckPermanentFlag
+CheckPermanentFlag: @ 0x08083D6C
 	push {lr}
-	ldr r1, _08083D7C  @ gUnknown_03005250
-	bl sub_8083D34
+	ldr r1, _08083D7C  @ gPermanentFlagData
+	bl CheckGlobalEventIdFrom
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08083D7C: .4byte gUnknown_03005250
+_08083D7C: .4byte gPermanentFlagData
 
-	THUMB_FUNC_END CheckGlobalEventId
+	THUMB_FUNC_END CheckPermanentFlag
 
-	THUMB_FUNC_START SetEventId
-SetEventId: @ 0x08083D80
+	THUMB_FUNC_START SetFlag
+SetFlag: @ 0x08083D80
 	push {lr}
 	cmp r0, #0x63
 	bgt _08083D8C
-	bl SetLocalEventId
+	bl SetTemporaryFlag
 	b _08083D90
 _08083D8C:
-	bl SetGlobalEventId
+	bl SetPermanentFlag
 _08083D90:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END SetEventId
+	THUMB_FUNC_END SetFlag
 
-	THUMB_FUNC_START UnsetEventId
-UnsetEventId: @ 0x08083D94
+	THUMB_FUNC_START ClearFlag
+ClearFlag: @ 0x08083D94
 	push {lr}
 	cmp r0, #0x63
 	bgt _08083DA0
-	bl UnsetLocalEventId
+	bl ClearTemporaryFlag
 	b _08083DA4
 _08083DA0:
-	bl UnsetGlobalEventId
+	bl ClearPermanentFlag
 _08083DA4:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END UnsetEventId
+	THUMB_FUNC_END ClearFlag
 
-	THUMB_FUNC_START CheckEventId
-CheckEventId: @ 0x08083DA8
+	THUMB_FUNC_START CheckFlag
+CheckFlag: @ 0x08083DA8
 	push {lr}
 	cmp r0, #0x63
 	ble _08083DB4
-	bl CheckGlobalEventId
+	bl CheckPermanentFlag
 	b _08083DB8
 _08083DB4:
-	bl CheckLocalEventId
+	bl CheckTemporaryFlag
 _08083DB8:
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckEventId
+	THUMB_FUNC_END CheckFlag
 
-	THUMB_FUNC_START GetGlobalEventIdStorage
-GetGlobalEventIdStorage: @ 0x08083DC0
-	ldr r0, _08083DC4  @ gUnknown_03005250
+	THUMB_FUNC_START GetPermanentFlagData
+GetPermanentFlagData: @ 0x08083DC0
+	ldr r0, _08083DC4  @ gPermanentFlagData
 	bx lr
 	.align 2, 0
-_08083DC4: .4byte gUnknown_03005250
+_08083DC4: .4byte gPermanentFlagData
 
-	THUMB_FUNC_END GetGlobalEventIdStorage
+	THUMB_FUNC_END GetPermanentFlagData
 
-	THUMB_FUNC_START GetGlobalEventIdStorageSize
-GetGlobalEventIdStorageSize: @ 0x08083DC8
+	THUMB_FUNC_START GetPermanentFlagDataSize
+GetPermanentFlagDataSize: @ 0x08083DC8
 	movs r0, #0x19
 	bx lr
 
-	THUMB_FUNC_END GetGlobalEventIdStorageSize
+	THUMB_FUNC_END GetPermanentFlagDataSize
 
-	THUMB_FUNC_START GetLocalEventIdStorage
-GetLocalEventIdStorage: @ 0x08083DCC
-	ldr r0, _08083DD0  @ gUnknown_03005270
+	THUMB_FUNC_START GetTemporaryFlagData
+GetTemporaryFlagData: @ 0x08083DCC
+	ldr r0, _08083DD0  @ gTemporaryFlagData
 	bx lr
 	.align 2, 0
-_08083DD0: .4byte gUnknown_03005270
+_08083DD0: .4byte gTemporaryFlagData
 
-	THUMB_FUNC_END GetLocalEventIdStorage
+	THUMB_FUNC_END GetTemporaryFlagData
 
-	THUMB_FUNC_START GetLocalEventIdStorageSize
-GetLocalEventIdStorageSize: @ 0x08083DD4
+	THUMB_FUNC_START GetTemporaryFlagDataSize
+GetTemporaryFlagDataSize: @ 0x08083DD4
 	movs r0, #5
 	bx lr
 
-	THUMB_FUNC_END GetLocalEventIdStorageSize
+	THUMB_FUNC_END GetTemporaryFlagDataSize
 
 	THUMB_FUNC_START sub_8083DD8
 sub_8083DD8: @ 0x08083DD8
@@ -2375,10 +2375,10 @@ sub_8083DD8: @ 0x08083DD8
 	lsls r1, r1, #0x18
 	lsrs r6, r1, #0x18
 	movs r4, #0
-	ldr r5, _08083E18  @ gRAMChapterData
+	ldr r5, _08083E18  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r1, [r0, #0x1c]
 	ldr r0, [r1]
 	cmp r0, #0
@@ -2403,7 +2403,7 @@ _08083DFE:
 	strb r0, [r2]
 	b _08083E2C
 	.align 2, 0
-_08083E18: .4byte gRAMChapterData
+_08083E18: .4byte gPlaySt
 _08083E1C:
 	adds r0, r4, #1
 	lsls r0, r0, #0x10
@@ -2420,12 +2420,12 @@ _08083E2C:
 
 	THUMB_FUNC_END sub_8083DD8
 
-	THUMB_FUNC_START sub_8083E34
-sub_8083E34: @ 0x08083E34
+	THUMB_FUNC_START CheckTutorialEvent
+CheckTutorialEvent: @ 0x08083E34
 	push {lr}
 	lsls r0, r0, #0x18
 	lsrs r2, r0, #0x18
-	ldr r1, _08083E58  @ gRAMChapterData
+	ldr r1, _08083E58  @ gPlaySt
 	adds r0, r1, #0
 	adds r0, #0x4b
 	ldrb r0, [r0]
@@ -2440,21 +2440,21 @@ sub_8083E34: @ 0x08083E34
 	movs r0, #1
 	b _08083E5E
 	.align 2, 0
-_08083E58: .4byte gRAMChapterData
+_08083E58: .4byte gPlaySt
 _08083E5C:
 	movs r0, #0
 _08083E5E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083E34
+	THUMB_FUNC_END CheckTutorialEvent
 
-	THUMB_FUNC_START TryCallSelectEvents_u1C
-TryCallSelectEvents_u1C: @ 0x08083E64
+	THUMB_FUNC_START RunTutorialEvent
+RunTutorialEvent: @ 0x08083E64
 	push {r4, r5, r6, lr}
 	lsls r0, r0, #0x18
 	lsrs r2, r0, #0x18
-	ldr r1, _08083EAC  @ gRAMChapterData
+	ldr r1, _08083EAC  @ gPlaySt
 	adds r6, r1, #0
 	adds r6, #0x4b
 	ldrb r0, [r6]
@@ -2469,7 +2469,7 @@ TryCallSelectEvents_u1C: @ 0x08083E64
 	ldrb r4, [r6]
 	movs r0, #0xe
 	ldrsb r0, [r1, r0]
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #0x1c]
 	lsls r4, r4, #2
 	adds r4, r4, r0
@@ -2486,7 +2486,7 @@ TryCallSelectEvents_u1C: @ 0x08083E64
 	movs r0, #1
 	b _08083EB2
 	.align 2, 0
-_08083EAC: .4byte gRAMChapterData
+_08083EAC: .4byte gPlaySt
 _08083EB0:
 	movs r0, #0
 _08083EB2:
@@ -2494,19 +2494,19 @@ _08083EB2:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END TryCallSelectEvents_u1C
+	THUMB_FUNC_END RunTutorialEvent
 
-	THUMB_FUNC_START sub_8083EB8
-sub_8083EB8: @ 0x08083EB8
+	THUMB_FUNC_START RunPhaseSwitchEvents
+RunPhaseSwitchEvents: @ 0x08083EB8
 	push {r4, lr}
 	sub sp, #0x1c
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _08083EC8
 	movs r0, #0
 	b _08083F60
 _08083EC8:
-	ldr r0, _08083EEC  @ gRAMChapterData
+	ldr r0, _08083EEC  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -2514,16 +2514,16 @@ _08083EC8:
 	lsrs r4, r0, #0x10
 	cmp r4, #0
 	beq _08083F18
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08083EF0
 	adds r0, r4, #0
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x8c
 	ldrb r0, [r0]
 	b _08083EF2
 	.align 2, 0
-_08083EEC: .4byte gRAMChapterData
+_08083EEC: .4byte gPlaySt
 _08083EF0:
 	movs r0, #1
 _08083EF2:
@@ -2532,47 +2532,47 @@ _08083EF2:
 	cmp r0, #3
 	bne _08083F18
 _08083EFA:
-	bl AreAnyEnemyUnitDead
+	bl IsAnyEnemyUnitAlive
 	cmp r0, #0
 	bne _08083F18
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #0
 	bne _08083F10
 	movs r0, #3
-	bl SetEventId
+	bl SetFlag
 _08083F10:
-	bl sub_8083280
+	bl CallEndEvent
 	movs r0, #1
 	b _08083F60
 _08083F18:
 	movs r0, #0
-	bl TryCallSelectEvents_u1C
+	bl RunTutorialEvent
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
-	ldr r0, _08083F58  @ gRAMChapterData
+	ldr r0, _08083F58  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0]
 	str r0, [sp]
 	mov r0, sp
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	beq _08083F5C
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 _08083F40:
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 	mov r0, sp
-	bl CheckForNextEvents
+	bl CheckNextEventDefinition
 	cmp r0, #0
 	bne _08083F40
 	movs r0, #1
 	b _08083F60
 	.align 2, 0
-_08083F58: .4byte gRAMChapterData
+_08083F58: .4byte gPlaySt
 _08083F5C:
 	lsls r0, r4, #0x18
 	asrs r0, r0, #0x18
@@ -2582,37 +2582,37 @@ _08083F60:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083EB8
+	THUMB_FUNC_END RunPhaseSwitchEvents
 
-	THUMB_FUNC_START sub_8083F68
-sub_8083F68: @ 0x08083F68
+	THUMB_FUNC_START CheckForCharacterEvents
+CheckForCharacterEvents: @ 0x08083F68
 	push {r4, r5, lr}
 	sub sp, #0x1c
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
 	lsls r1, r1, #0x18
 	lsrs r5, r1, #0x18
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08083F9A
-	ldr r0, _08083FA0  @ gRAMChapterData
+	ldr r0, _08083FA0  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #4]
 	str r0, [sp]
 	mov r0, sp
 	strb r4, [r0, #0x1a]
 	strb r5, [r0, #0x1b]
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	bne _08083FA4
 _08083F9A:
 	movs r0, #0
 	b _08083FA6
 	.align 2, 0
-_08083FA0: .4byte gRAMChapterData
+_08083FA0: .4byte gPlaySt
 _08083FA4:
 	movs r0, #1
 _08083FA6:
@@ -2621,45 +2621,45 @@ _08083FA6:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8083F68
+	THUMB_FUNC_END CheckForCharacterEvents
 
-	THUMB_FUNC_START sub_8083FB0
-sub_8083FB0: @ 0x08083FB0
+	THUMB_FUNC_START RunCharacterEvents
+RunCharacterEvents: @ 0x08083FB0
 	push {r4, r5, lr}
 	sub sp, #0x1c
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
 	lsls r1, r1, #0x18
 	lsrs r5, r1, #0x18
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08083FEE
-	ldr r0, _08083FF8  @ gRAMChapterData
+	ldr r0, _08083FF8  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #4]
 	str r0, [sp]
 	mov r0, sp
 	strb r4, [r0, #0x1a]
 	strb r5, [r0, #0x1b]
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	beq _08083FEE
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 _08083FEE:
 	add sp, #0x1c
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08083FF8: .4byte gRAMChapterData
+_08083FF8: .4byte gPlaySt
 
-	THUMB_FUNC_END sub_8083FB0
+	THUMB_FUNC_END RunCharacterEvents
 
 	THUMB_FUNC_START sub_8083FFC
 sub_8083FFC: @ 0x08083FFC
@@ -2732,8 +2732,8 @@ _0808406E:
 
 	THUMB_FUNC_END sub_8083FFC
 
-	THUMB_FUNC_START GetAvailableLocaCommandAt
-GetAvailableLocaCommandAt: @ 0x08084078
+	THUMB_FUNC_START GetLocationEventCommandAt
+GetLocationEventCommandAt: @ 0x08084078
 	push {r4, r5, lr}
 	sub sp, #0x1c
 	adds r4, r0, #0
@@ -2742,26 +2742,26 @@ GetAvailableLocaCommandAt: @ 0x08084078
 	lsrs r4, r4, #0x18
 	lsls r5, r5, #0x18
 	lsrs r5, r5, #0x18
-	ldr r0, _080840B4  @ gRAMChapterData
+	ldr r0, _080840B4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #8]
 	str r0, [sp]
 	mov r0, sp
 	strb r4, [r0, #0x18]
 	strb r5, [r0, #0x19]
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	beq _080840B8
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _080840B8
 	ldr r0, [sp, #0xc]
 	b _080840BA
 	.align 2, 0
-_080840B4: .4byte gRAMChapterData
+_080840B4: .4byte gPlaySt
 _080840B8:
 	movs r0, #0
 _080840BA:
@@ -2770,27 +2770,27 @@ _080840BA:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetAvailableLocaCommandAt
+	THUMB_FUNC_END GetLocationEventCommandAt
 
-	THUMB_FUNC_START sub_80840C4
-sub_80840C4: @ 0x080840C4
+	THUMB_FUNC_START RunLocationEvents
+RunLocationEvents: @ 0x080840C4
 	push {r4, r5, lr}
 	sub sp, #0x1c
 	lsls r0, r0, #0x18
 	lsrs r5, r0, #0x18
 	lsls r1, r1, #0x18
 	lsrs r4, r1, #0x18
-	ldr r0, _08084104  @ gRAMChapterData
+	ldr r0, _08084104  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #8]
 	str r0, [sp]
 	mov r0, sp
 	strb r5, [r0, #0x18]
 	strb r4, [r0, #0x19]
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	bne _080840F0
 	b _08084326
@@ -2806,7 +2806,7 @@ _080840F8:
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_08084104: .4byte gRAMChapterData
+_08084104: .4byte gPlaySt
 _08084108: .4byte _0808410C
 _0808410C: @ jump table
 	.4byte _08084324 @ case 0
@@ -2844,7 +2844,7 @@ _0808410C: @ jump table
 	.4byte _080841D4 @ case 32
 _08084190:
 	lsls r1, r4, #0x18
-	ldr r0, _080841CC  @ gBmMapUnit
+	ldr r0, _080841CC  @ gMapUnit
 	ldr r0, [r0]
 	asrs r1, r1, #0x16
 	adds r1, r1, r0
@@ -2858,15 +2858,15 @@ _08084190:
 	ldrb r0, [r0, #4]
 	strb r0, [r1]
 _080841AC:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _080841B6
 	b _08084326
 _080841B6:
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 	ldr r0, [sp, #0x10]
 	cmp r0, #3
 	beq _080841CA
@@ -2874,10 +2874,10 @@ _080841B6:
 _080841CA:
 	b _080841DE
 	.align 2, 0
-_080841CC: .4byte gBmMapUnit
+_080841CC: .4byte gMapUnit
 _080841D0: .4byte gActiveUnit
 _080841D4:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _080841DE
 	b _08084326
@@ -2890,13 +2890,13 @@ _080841DE:
 	ldrb r1, [r1, #0x19]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetMapChangeIdAt
+	bl GetMapChangesIdAt
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	bl CallTileChangeEvent
 	b _08084326
 _080841FC:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _08084206
 	b _08084326
@@ -2912,19 +2912,19 @@ _08084206:
 	ldrb r1, [r1, #0x19]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetMapChangeIdAt
+	bl GetMapChangesIdAt
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	bl CallTileChangeEvent
 	b _080842D0
 _0808422A:
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 	b _08084326
 _08084238:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08084326
 	ldr r0, [sp, #0x14]
@@ -2975,7 +2975,7 @@ _0808427C:
 	ldrb r1, [r1, #0x19]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetMapChangeIdAt
+	bl GetMapChangesIdAt
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	ldr r1, [sp, #0x14]
@@ -2992,7 +2992,7 @@ _080842AE:
 	ldrb r1, [r1, #0x19]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetMapChangeIdAt
+	bl GetMapChangesIdAt
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	ldr r1, [sp, #0x10]
@@ -3001,10 +3001,10 @@ _080842AE:
 	bl CallChestOpeningEvent
 _080842D0:
 	ldr r0, [sp, #8]
-	bl SetEventId
+	bl SetFlag
 	b _08084326
 _080842D8:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08084326
 	ldr r0, _080842EC  @ gActiveUnit
@@ -3015,7 +3015,7 @@ _080842D8:
 	.align 2, 0
 _080842EC: .4byte gActiveUnit
 _080842F0:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08084326
 	ldr r0, _08084304  @ gActiveUnit
@@ -3026,7 +3026,7 @@ _080842F0:
 	.align 2, 0
 _08084304: .4byte gActiveUnit
 _08084308:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08084326
 	ldr r0, _0808431C  @ gActiveUnit
@@ -3047,27 +3047,27 @@ _08084326:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_80840C4
+	THUMB_FUNC_END RunLocationEvents
 
-	THUMB_FUNC_START CheckForWaitEvents
-CheckForWaitEvents: @ 0x08084330
+	THUMB_FUNC_START CheckForPostActionEvents
+CheckForPostActionEvents: @ 0x08084330
 	push {r4, lr}
 	sub sp, #0x1c
-	bl AreAnyEnemyUnitDead
+	bl IsAnyEnemyUnitAlive
 	cmp r0, #0
 	bne _0808434C
 	movs r0, #6
-	bl SetEventId
-	bl GetChapterThing
+	bl SetFlag
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _08084352
 	b _080843B4
 _0808434C:
 	movs r0, #6
-	bl UnsetEventId
+	bl ClearFlag
 _08084352:
 	movs r0, #0x65
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _080843B4
@@ -3075,21 +3075,21 @@ _08084352:
 	lsls r0, r0, #0x10
 	cmp r0, #0
 	beq _080843B4
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _08084374
 	movs r0, #0
 	b _080843B6
 _08084374:
 	movs r0, #1
-	bl sub_8083E34
+	bl CheckTutorialEvent
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
-	ldr r0, _080843AC  @ gRAMChapterData
+	ldr r0, _080843AC  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #0xc]
 	str r0, [sp]
 	mov r1, sp
@@ -3100,14 +3100,14 @@ _08084374:
 	ldrb r0, [r2, #0x11]
 	strb r0, [r1, #0x19]
 	mov r0, sp
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	bne _080843B4
 	lsls r0, r4, #0x18
 	asrs r0, r0, #0x18
 	b _080843B6
 	.align 2, 0
-_080843AC: .4byte gRAMChapterData
+_080843AC: .4byte gPlaySt
 _080843B0: .4byte gActiveUnit
 _080843B4:
 	movs r0, #1
@@ -3117,28 +3117,28 @@ _080843B6:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END CheckForWaitEvents
+	THUMB_FUNC_END CheckForPostActionEvents
 
-	THUMB_FUNC_START RunWaitEvents
-RunWaitEvents: @ 0x080843C0
+	THUMB_FUNC_START RunPostActionEvents
+RunPostActionEvents: @ 0x080843C0
 	push {lr}
 	sub sp, #0x1c
-	bl AreAnyEnemyUnitDead
+	bl IsAnyEnemyUnitAlive
 	cmp r0, #0
 	bne _080843E0
 	movs r0, #6
-	bl SetEventId
-	bl GetChapterThing
+	bl SetFlag
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _080843E6
-	bl sub_8083280
+	bl CallEndEvent
 	b _0808444E
 _080843E0:
 	movs r0, #6
-	bl UnsetEventId
+	bl ClearFlag
 _080843E6:
 	movs r0, #0x65
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _080843FC
@@ -3150,16 +3150,16 @@ _080843FC:
 	bl sub_80837B0
 	b _0808444E
 _08084402:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _0808444E
 	movs r0, #1
-	bl TryCallSelectEvents_u1C
-	ldr r0, _08084454  @ gRAMChapterData
+	bl RunTutorialEvent
+	ldr r0, _08084454  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #0xc]
 	str r0, [sp]
 	mov r1, sp
@@ -3170,16 +3170,16 @@ _08084402:
 	ldrb r0, [r2, #0x11]
 	strb r0, [r1, #0x19]
 	mov r0, sp
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	beq _0808444E
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 _0808443C:
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 	mov r0, sp
-	bl CheckForNextEvents
+	bl CheckNextEventDefinition
 	cmp r0, #0
 	bne _0808443C
 _0808444E:
@@ -3187,44 +3187,44 @@ _0808444E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08084454: .4byte gRAMChapterData
+_08084454: .4byte gPlaySt
 _08084458: .4byte gActiveUnit
 
-	THUMB_FUNC_END RunWaitEvents
+	THUMB_FUNC_END RunPostActionEvents
 
-	THUMB_FUNC_START TryCallSelectEvents
-TryCallSelectEvents: @ 0x0808445C
+	THUMB_FUNC_START RunSelectEvents
+RunSelectEvents: @ 0x0808445C
 	push {r4, lr}
 	sub sp, #0x1c
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _0808446C
 	movs r0, #0
 	b _080844A8
 _0808446C:
 	movs r0, #2
-	bl TryCallSelectEvents_u1C
+	bl RunTutorialEvent
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
-	ldr r0, _0808448C  @ gRAMChapterData
+	ldr r0, _0808448C  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #0x10]
 	str r0, [sp]
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 	b _0808449A
 	.align 2, 0
-_0808448C: .4byte gRAMChapterData
+_0808448C: .4byte gPlaySt
 _08084490:
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 	movs r4, #1
 _0808449A:
 	mov r0, sp
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	bne _08084490
 	lsls r0, r4, #0x18
@@ -3235,43 +3235,43 @@ _080844A8:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END TryCallSelectEvents
+	THUMB_FUNC_END RunSelectEvents
 
-	THUMB_FUNC_START sub_80844B0
-sub_80844B0: @ 0x080844B0
+	THUMB_FUNC_START RunMoveEventsMaybe
+RunMoveEventsMaybe: @ 0x080844B0
 	push {r4, lr}
 	sub sp, #0x1c
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _080844C0
 	movs r0, #0
 	b _080844FE
 _080844C0:
 	movs r0, #3
-	bl TryCallSelectEvents_u1C
+	bl RunTutorialEvent
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
-	ldr r0, _080844EC  @ gRAMChapterData
+	ldr r0, _080844EC  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #0x14]
 	str r0, [sp]
 	mov r0, sp
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	bne _080844F0
 	lsls r0, r4, #0x18
 	asrs r0, r0, #0x18
 	b _080844FE
 	.align 2, 0
-_080844EC: .4byte gRAMChapterData
+_080844EC: .4byte gPlaySt
 _080844F0:
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 	movs r0, #1
 _080844FE:
 	add sp, #0x1c
@@ -3279,43 +3279,43 @@ _080844FE:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_80844B0
+	THUMB_FUNC_END RunMoveEventsMaybe
 
-	THUMB_FUNC_START sub_8084508
-sub_8084508: @ 0x08084508
+	THUMB_FUNC_START RunPostMoveEvents
+RunPostMoveEvents: @ 0x08084508
 	push {r4, lr}
 	sub sp, #0x1c
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	bne _08084518
 	movs r0, #0
 	b _08084556
 _08084518:
 	movs r0, #4
-	bl TryCallSelectEvents_u1C
+	bl RunTutorialEvent
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
-	ldr r0, _08084544  @ gRAMChapterData
+	ldr r0, _08084544  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetChapterEventDataPointer
+	bl GetChapterEventInfo
 	ldr r0, [r0, #0x18]
 	str r0, [sp]
 	mov r0, sp
-	bl CheckForEvents
+	bl CheckEventDefinition
 	cmp r0, #0
 	bne _08084548
 	lsls r0, r4, #0x18
 	asrs r0, r0, #0x18
 	b _08084556
 	.align 2, 0
-_08084544: .4byte gRAMChapterData
+_08084544: .4byte gPlaySt
 _08084548:
-	bl sub_80845A4
+	bl ClearActiveEventRegistry
 	mov r0, sp
 	movs r1, #1
-	bl CallEventsFromBuffer
+	bl CallEventDefinition
 	movs r0, #1
 _08084556:
 	add sp, #0x1c
@@ -3323,16 +3323,16 @@ _08084556:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8084508
+	THUMB_FUNC_END RunPostMoveEvents
 
-	THUMB_FUNC_START sub_8084560
-sub_8084560: @ 0x08084560
+	THUMB_FUNC_START CheckBattleForecastTutorialEvent
+CheckBattleForecastTutorialEvent: @ 0x08084560
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08084576
 	movs r0, #5
-	bl sub_8083E34
+	bl CheckTutorialEvent
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	b _08084578
@@ -3342,54 +3342,54 @@ _08084578:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8084560
+	THUMB_FUNC_END CheckBattleForecastTutorialEvent
 
-	THUMB_FUNC_START sub_808457C
-sub_808457C: @ 0x0808457C
+	THUMB_FUNC_START RunBattleForecastTutorialEvent
+RunBattleForecastTutorialEvent: @ 0x0808457C
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _0808458C
 	movs r0, #5
-	bl TryCallSelectEvents_u1C
+	bl RunTutorialEvent
 _0808458C:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_808457C
+	THUMB_FUNC_END RunBattleForecastTutorialEvent
 
-	THUMB_FUNC_START sub_8084590
-sub_8084590: @ 0x08084590
+	THUMB_FUNC_START RunPlayerPhaseStartTutorialEvent
+RunPlayerPhaseStartTutorialEvent: @ 0x08084590
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _080845A0
 	movs r0, #6
-	bl TryCallSelectEvents_u1C
+	bl RunTutorialEvent
 _080845A0:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8084590
+	THUMB_FUNC_END RunPlayerPhaseStartTutorialEvent
 
-	THUMB_FUNC_START sub_80845A4
-sub_80845A4: @ 0x080845A4
+	THUMB_FUNC_START ClearActiveEventRegistry
+ClearActiveEventRegistry: @ 0x080845A4
 	push {lr}
-	ldr r0, _080845B4  @ gUnknown_03001C80
+	ldr r0, _080845B4  @ gActiveEventRegistry
 	movs r1, #0
 	movs r2, #0x40
 	bl memset
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080845B4: .4byte gUnknown_03001C80
+_080845B4: .4byte gActiveEventRegistry
 
-	THUMB_FUNC_END sub_80845A4
+	THUMB_FUNC_END ClearActiveEventRegistry
 
-	THUMB_FUNC_START sub_80845B8
-sub_80845B8: @ 0x080845B8
+	THUMB_FUNC_START RegisterEventActivation
+RegisterEventActivation: @ 0x080845B8
 	push {r4, lr}
-	ldr r3, _080845E0  @ gUnknown_03001C80
+	ldr r3, _080845E0  @ gActiveEventRegistry
 	movs r4, #0x3c
 	ldrsh r2, [r3, r4]
 	lsls r2, r2, #2
@@ -3409,16 +3409,16 @@ sub_80845B8: @ 0x080845B8
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080845E0: .4byte gUnknown_03001C80
+_080845E0: .4byte gActiveEventRegistry
 
-	THUMB_FUNC_END sub_80845B8
+	THUMB_FUNC_END RegisterEventActivation
 
-	THUMB_FUNC_START sub_80845E4
-sub_80845E4: @ 0x080845E4
+	THUMB_FUNC_START GetEventTriggerId
+GetEventTriggerId: @ 0x080845E4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	movs r1, #0
-	ldr r2, _08084610  @ gUnknown_03001C80
+	ldr r2, _08084610  @ gActiveEventRegistry
 	movs r3, #0x3c
 	ldrsh r0, [r2, r3]
 	cmp r1, r0
@@ -3439,7 +3439,7 @@ _080845FA:
 	ldrh r0, [r0]
 	b _08084622
 	.align 2, 0
-_08084610: .4byte gUnknown_03001C80
+_08084610: .4byte gActiveEventRegistry
 _08084614:
 	adds r0, r1, #1
 	lsls r0, r0, #0x10
@@ -3454,23 +3454,23 @@ _08084622:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_80845E4
+	THUMB_FUNC_END GetEventTriggerId
 
-	THUMB_FUNC_START sub_8084628
-sub_8084628: @ 0x08084628
+	THUMB_FUNC_START SetFlag82
+SetFlag82: @ 0x08084628
 	push {lr}
 	movs r0, #0x82
-	bl SetEventId
+	bl SetFlag
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8084628
+	THUMB_FUNC_END SetFlag82
 
-	THUMB_FUNC_START sub_8084634
-sub_8084634: @ 0x08084634
+	THUMB_FUNC_START CheckFlag82
+CheckFlag82: @ 0x08084634
 	push {lr}
 	movs r0, #0x82
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08084646
@@ -3482,7 +3482,7 @@ _08084648:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8084634
+	THUMB_FUNC_END CheckFlag82
 
 	THUMB_FUNC_START GetBattleQuoteEntry
 GetBattleQuoteEntry: @ 0x0808464C
@@ -3502,7 +3502,7 @@ _08084662:
 	cmp r0, #0xff
 	beq _08084686
 	adds r1, r0, #0
-	ldr r0, _080846B4  @ gRAMChapterData
+	ldr r0, _080846B4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -3538,7 +3538,7 @@ _080846A8:
 	.align 2, 0
 _080846AC: .4byte gUnknown_089EC6BC
 _080846B0: .4byte 0x0000FFFF
-_080846B4: .4byte gRAMChapterData
+_080846B4: .4byte gPlaySt
 _080846B8:
 	ldrh r0, [r4, #2]
 	cmp r0, #0
@@ -3570,8 +3570,8 @@ _080846DE:
 
 	THUMB_FUNC_END GetBattleQuoteEntry
 
-	THUMB_FUNC_START sub_80846E4
-sub_80846E4: @ 0x080846E4
+	THUMB_FUNC_START GetCharDeathQuoteEntry
+GetCharDeathQuoteEntry: @ 0x080846E4
 	push {r4, r5, r6, r7, lr}
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
@@ -3580,7 +3580,7 @@ sub_80846E4: @ 0x080846E4
 	ldr r1, _08084730  @ 0x0000FFFF
 	cmp r0, r1
 	beq _08084740
-	ldr r5, _08084734  @ gRAMChapterData
+	ldr r5, _08084734  @ gPlaySt
 	adds r7, r1, #0
 _080846F8:
 	ldrb r0, [r4, #2]
@@ -3612,7 +3612,7 @@ _08084714:
 	.align 2, 0
 _0808472C: .4byte gUnknown_089ECD4C
 _08084730: .4byte 0x0000FFFF
-_08084734: .4byte gRAMChapterData
+_08084734: .4byte gPlaySt
 _08084738:
 	adds r4, #0xc
 	ldrh r0, [r4]
@@ -3625,10 +3625,10 @@ _08084742:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_80846E4
+	THUMB_FUNC_END GetCharDeathQuoteEntry
 
-	THUMB_FUNC_START sub_8084748
-sub_8084748: @ 0x08084748
+	THUMB_FUNC_START GetSupportTalkInfoForCharacters
+GetSupportTalkInfoForCharacters: @ 0x08084748
 	push {r4, lr}
 	lsls r0, r0, #0x10
 	lsrs r4, r0, #0x10
@@ -3667,10 +3667,10 @@ _0808477C:
 _08084784: .4byte gUnknown_089ED10C
 _08084788: .4byte 0x0000FFFF
 
-	THUMB_FUNC_END sub_8084748
+	THUMB_FUNC_END GetSupportTalkInfoForCharacters
 
-	THUMB_FUNC_START sub_808478C
-sub_808478C: @ 0x0808478C
+	THUMB_FUNC_START GetSupportTalkSong
+GetSupportTalkSong: @ 0x0808478C
 	push {r4, r5, lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
@@ -3679,7 +3679,7 @@ sub_808478C: @ 0x0808478C
 	lsls r2, r2, #0x18
 	lsrs r4, r2, #0x18
 	adds r5, r4, #0
-	bl sub_8084748
+	bl GetSupportTalkInfoForCharacters
 	cmp r0, #0
 	beq _080847EE
 	cmp r4, #2
@@ -3735,16 +3735,16 @@ _080847F0:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_808478C
+	THUMB_FUNC_END GetSupportTalkSong
 
-	THUMB_FUNC_START sub_80847F8
-sub_80847F8: @ 0x080847F8
+	THUMB_FUNC_START GetSupportTalkInfoList
+GetSupportTalkInfoList: @ 0x080847F8
 	ldr r0, _080847FC  @ gUnknown_089ED10C
 	bx lr
 	.align 2, 0
 _080847FC: .4byte gUnknown_089ED10C
 
-	THUMB_FUNC_END sub_80847F8
+	THUMB_FUNC_END GetSupportTalkInfoList
 
 	THUMB_FUNC_START IsCharacterForceDeployed_
 IsCharacterForceDeployed_: @ 0x08084800
@@ -3756,7 +3756,7 @@ IsCharacterForceDeployed_: @ 0x08084800
 	ldr r1, _08084840  @ 0x0000FFFF
 	cmp r0, r1
 	beq _08084850
-	ldr r3, _08084844  @ gRAMChapterData
+	ldr r3, _08084844  @ gPlaySt
 	adds r5, r1, #0
 _08084814:
 	ldrb r0, [r2, #2]
@@ -3783,7 +3783,7 @@ _08084830:
 	.align 2, 0
 _0808483C: .4byte gUnknown_089ED64C
 _08084840: .4byte 0x0000FFFF
-_08084844: .4byte gRAMChapterData
+_08084844: .4byte gPlaySt
 _08084848:
 	adds r2, #4
 	ldrh r0, [r2]

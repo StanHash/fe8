@@ -101,8 +101,8 @@ _080067DA:
 
 	THUMB_FUNC_END sub_8006738
 
-	THUMB_FUNC_START sub_80067E8
-sub_80067E8: @ 0x080067E8
+	THUMB_FUNC_START ClearTalkFaceRefs
+ClearTalkFaceRefs: @ 0x080067E8
 	push {r4, lr}
 	movs r2, #0
 	ldr r4, _08006808  @ gUnknown_0859133C
@@ -122,16 +122,16 @@ _080067F0:
 	.align 2, 0
 _08006808: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_80067E8
+	THUMB_FUNC_END ClearTalkFaceRefs
 
-	THUMB_FUNC_START sub_800680C
-sub_800680C: @ 0x0800680C
+	THUMB_FUNC_START InitTalk
+InitTalk: @ 0x0800680C
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	adds r6, r1, #0
 	lsls r2, r2, #0x18
 	lsrs r7, r2, #0x18
-	ldr r4, _08006890  @ gUnknown_030000F0
+	ldr r4, _08006890  @ gTalkFont
 	movs r0, #0
 	bl GetBgChrOffset
 	adds r1, r0, #0
@@ -146,13 +146,13 @@ sub_800680C: @ 0x0800680C
 	adds r2, r5, #0
 	movs r3, #2
 	bl InitTextFont
-	bl sub_8006978
+	bl SetInitTalkTextFont
 	ldr r0, _08006898  @ gUnknown_0859133C
 	ldr r0, [r0]
 	strb r6, [r0, #0xa]
 	cmp r6, #0
 	ble _08006862
-	ldr r4, _0800689C  @ gUnknown_030000D0
+	ldr r4, _0800689C  @ gTalkText
 	adds r5, r6, #0
 _0800684A:
 	adds r0, r4, #0
@@ -181,27 +181,27 @@ _08006862:
 	movs r2, #0x20
 	bl ApplyPaletteExt
 _08006884:
-	bl sub_80067E8
+	bl ClearTalkFaceRefs
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08006890: .4byte gUnknown_030000F0
+_08006890: .4byte gTalkFont
 _08006894: .4byte 0x000003FF
 _08006898: .4byte gUnknown_0859133C
-_0800689C: .4byte gUnknown_030000D0
+_0800689C: .4byte gTalkText
 _080068A0: .4byte gUnknown_089E8238
 _080068A4: .4byte 0x06000200
 _080068A8: .4byte gUnknown_089E84D4
 
-	THUMB_FUNC_END sub_800680C
+	THUMB_FUNC_END InitTalk
 
-	THUMB_FUNC_START sub_80068AC
-sub_80068AC: @ 0x080068AC
+	THUMB_FUNC_START InitSpriteTalk
+InitSpriteTalk: @ 0x080068AC
 	push {r4, r5, r6, lr}
 	adds r6, r1, #0
 	adds r4, r2, #0
-	ldr r5, _0800693C  @ gUnknown_030000F0
+	ldr r5, _0800693C  @ gTalkFont
 	ldr r1, _08006940  @ 0x000003FF
 	ands r1, r0
 	lsls r1, r1, #5
@@ -244,7 +244,7 @@ sub_80068AC: @ 0x080068AC
 	bge _08006934
 _0800690C:
 	lsls r4, r5, #3
-	ldr r0, _08006960  @ gUnknown_030000D0
+	ldr r0, _08006960  @ gTalkText
 	adds r4, r4, r0
 	adds r0, r4, #0
 	bl InitSpriteText
@@ -264,7 +264,7 @@ _08006934:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0800693C: .4byte gUnknown_030000F0
+_0800693C: .4byte gTalkFont
 _08006940: .4byte 0x000003FF
 _08006944: .4byte 0x06010000
 _08006948: .4byte Pal_TalkText
@@ -273,9 +273,9 @@ _08006950: .4byte 0x00007247
 _08006954: .4byte 0x000031AE
 _08006958: .4byte 0x00007FFF
 _0800695C: .4byte gUnknown_0859133C
-_08006960: .4byte gUnknown_030000D0
+_08006960: .4byte gTalkText
 
-	THUMB_FUNC_END sub_80068AC
+	THUMB_FUNC_END InitSpriteTalk
 
 	THUMB_FUNC_START sub_8006964
 sub_8006964: @ 0x08006964
@@ -291,21 +291,21 @@ _08006974: .4byte Pal_SystemText
 
 	THUMB_FUNC_END sub_8006964
 
-	THUMB_FUNC_START sub_8006978
-sub_8006978: @ 0x08006978
+	THUMB_FUNC_START SetInitTalkTextFont
+SetInitTalkTextFont: @ 0x08006978
 	push {lr}
-	ldr r0, _08006988  @ gUnknown_030000F0
+	ldr r0, _08006988  @ gTalkFont
 	bl SetTextFont
 	bl InitTalkTextFont
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08006988: .4byte gUnknown_030000F0
+_08006988: .4byte gTalkFont
 
-	THUMB_FUNC_END sub_8006978
+	THUMB_FUNC_END SetInitTalkTextFont
 
-	THUMB_FUNC_START sub_800698C
-sub_800698C: @ 0x0800698C
+	THUMB_FUNC_START StartTalkExt
+StartTalkExt: @ 0x0800698C
 	push {r4, r5, r6, r7, lr}
 	adds r7, r3, #0
 	ldr r4, _08006A14  @ gUnknown_0859133C
@@ -326,13 +326,13 @@ sub_800698C: @ 0x0800698C
 	strb r5, [r0]
 	ldr r0, [r4]
 	strb r5, [r0, #0xb]
-	bl GetTextDisplaySpeed
+	bl GetTextSpeed
 	ldr r1, [r4]
 	strb r0, [r1, #0x13]
 	ldr r0, [r4]
 	strb r5, [r0, #0x14]
 	movs r0, #0xff
-	bl sub_8007838
+	bl SetActiveTalkFace
 	ldr r1, [r4]
 	movs r0, #0xff
 	strb r0, [r1, #0xf]
@@ -355,7 +355,7 @@ sub_800698C: @ 0x0800698C
 	ldr r0, [r4]
 	ldr r0, [r0]
 	movs r1, #0
-	bl sub_8008B44
+	bl GetStrTalkLen
 	adds r0, #7
 	movs r1, #8
 	bl Div
@@ -382,10 +382,10 @@ _08006A24:
 	.align 2, 0
 _08006A2C: .4byte gUnknown_08591358
 
-	THUMB_FUNC_END sub_800698C
+	THUMB_FUNC_END StartTalkExt
 
-	THUMB_FUNC_START sub_8006A30
-sub_8006A30: @ 0x08006A30
+	THUMB_FUNC_START StartTalkMsg
+StartTalkMsg: @ 0x08006A30
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -395,15 +395,15 @@ sub_8006A30: @ 0x08006A30
 	adds r0, r4, #0
 	adds r1, r5, #0
 	movs r3, #0
-	bl sub_800698C
+	bl StartTalkExt
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8006A30
+	THUMB_FUNC_END StartTalkMsg
 
-	THUMB_FUNC_START sub_8006A50
-sub_8006A50: @ 0x08006A50
+	THUMB_FUNC_START StartTalkMsgExt
+StartTalkMsgExt: @ 0x08006A50
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -414,25 +414,25 @@ sub_8006A50: @ 0x08006A50
 	adds r0, r4, #0
 	adds r1, r5, #0
 	adds r3, r6, #0
-	bl sub_800698C
+	bl StartTalkExt
 	pop {r4, r5, r6}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8006A50
+	THUMB_FUNC_END StartTalkMsgExt
 
-	THUMB_FUNC_START sub_8006A70
-sub_8006A70: @ 0x08006A70
+	THUMB_FUNC_START StartTalk
+StartTalk: @ 0x08006A70
 	push {lr}
 	movs r3, #0
-	bl sub_800698C
+	bl StartTalkExt
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8006A70
+	THUMB_FUNC_END StartTalk
 
-	THUMB_FUNC_START sub_8006A7C
-sub_8006A7C: @ 0x08006A7C
+	THUMB_FUNC_START EndTalk
+EndTalk: @ 0x08006A7C
 	push {lr}
 	ldr r0, _08006A88  @ gUnknown_08591358
 	bl EndEachProc
@@ -441,10 +441,10 @@ sub_8006A7C: @ 0x08006A7C
 	.align 2, 0
 _08006A88: .4byte gUnknown_08591358
 
-	THUMB_FUNC_END sub_8006A7C
+	THUMB_FUNC_END EndTalk
 
-	THUMB_FUNC_START sub_8006A8C
-sub_8006A8C: @ 0x08006A8C
+	THUMB_FUNC_START SetTalkLines
+SetTalkLines: @ 0x08006A8C
 	ldr r1, _08006A94  @ gUnknown_0859133C
 	ldr r1, [r1]
 	strb r0, [r1, #0xa]
@@ -452,10 +452,10 @@ sub_8006A8C: @ 0x08006A8C
 	.align 2, 0
 _08006A94: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8006A8C
+	THUMB_FUNC_END SetTalkLines
 
-	THUMB_FUNC_START sub_8006A98
-sub_8006A98: @ 0x08006A98
+	THUMB_FUNC_START ClearTalkFlags
+ClearTalkFlags: @ 0x08006A98
 	ldr r0, _08006AA4  @ gUnknown_0859133C
 	ldr r0, [r0]
 	adds r0, #0x80
@@ -465,10 +465,10 @@ sub_8006A98: @ 0x08006A98
 	.align 2, 0
 _08006AA4: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8006A98
+	THUMB_FUNC_END ClearTalkFlags
 
-	THUMB_FUNC_START sub_8006AA8
-sub_8006AA8: @ 0x08006AA8
+	THUMB_FUNC_START SetTalkFlag
+SetTalkFlag: @ 0x08006AA8
 	ldr r1, _08006AB8  @ gUnknown_0859133C
 	ldr r1, [r1]
 	adds r1, #0x80
@@ -479,7 +479,7 @@ sub_8006AA8: @ 0x08006AA8
 	.align 2, 0
 _08006AB8: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8006AA8
+	THUMB_FUNC_END SetTalkFlag
 
 	THUMB_FUNC_START sub_8006ABC
 sub_8006ABC: @ 0x08006ABC
@@ -492,8 +492,8 @@ _08006AC4: .4byte gUnknown_0859133C
 
 	THUMB_FUNC_END sub_8006ABC
 
-	THUMB_FUNC_START sub_8006AC8
-sub_8006AC8: @ 0x08006AC8
+	THUMB_FUNC_START UnsetDialogueFlag
+UnsetDialogueFlag: @ 0x08006AC8
 	ldr r1, _08006AD8  @ gUnknown_0859133C
 	ldr r2, [r1]
 	adds r2, #0x80
@@ -504,10 +504,10 @@ sub_8006AC8: @ 0x08006AC8
 	.align 2, 0
 _08006AD8: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8006AC8
+	THUMB_FUNC_END UnsetDialogueFlag
 
-	THUMB_FUNC_START sub_8006ADC
-sub_8006ADC: @ 0x08006ADC
+	THUMB_FUNC_START CheckDialogueFlag
+CheckDialogueFlag: @ 0x08006ADC
 	adds r1, r0, #0
 	ldr r0, _08006AEC  @ gUnknown_0859133C
 	ldr r0, [r0]
@@ -518,10 +518,10 @@ sub_8006ADC: @ 0x08006ADC
 	.align 2, 0
 _08006AEC: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8006ADC
+	THUMB_FUNC_END CheckDialogueFlag
 
-	THUMB_FUNC_START sub_8006AF0
-sub_8006AF0: @ 0x08006AF0
+	THUMB_FUNC_START Dialogue_SetCharacterDisplayDelay
+Dialogue_SetCharacterDisplayDelay: @ 0x08006AF0
 	push {lr}
 	ldr r2, _08006B0C  @ gUnknown_0859133C
 	ldr r1, [r2]
@@ -539,10 +539,10 @@ _08006B06:
 	.align 2, 0
 _08006B0C: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8006AF0
+	THUMB_FUNC_END Dialogue_SetCharacterDisplayDelay
 
-	THUMB_FUNC_START sub_8006B10
-sub_8006B10: @ 0x08006B10
+	THUMB_FUNC_START Dialogue_SetDefaultTextColor
+Dialogue_SetDefaultTextColor: @ 0x08006B10
 	push {r4, r5, r6, lr}
 	ldr r2, _08006B44  @ gUnknown_0859133C
 	ldr r1, [r2]
@@ -553,7 +553,7 @@ sub_8006B10: @ 0x08006B10
 	cmp r4, r0
 	bge _08006B3C
 	adds r6, r2, #0
-	ldr r5, _08006B48  @ gUnknown_030000D0
+	ldr r5, _08006B48  @ gTalkText
 _08006B26:
 	ldr r0, [r6]
 	ldrb r1, [r0, #8]
@@ -571,12 +571,12 @@ _08006B3C:
 	bx r0
 	.align 2, 0
 _08006B44: .4byte gUnknown_0859133C
-_08006B48: .4byte gUnknown_030000D0
+_08006B48: .4byte gTalkText
 
-	THUMB_FUNC_END sub_8006B10
+	THUMB_FUNC_END Dialogue_SetDefaultTextColor
 
-	THUMB_FUNC_START sub_8006B4C
-sub_8006B4C: @ 0x08006B4C
+	THUMB_FUNC_START DialogueSkipInputListener_OnLoop
+DialogueSkipInputListener_OnLoop: @ 0x08006B4C
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08006BAC  @ gUnknown_08591470
@@ -588,7 +588,7 @@ sub_8006B4C: @ 0x08006B4C
 	cmp r0, #0
 	bne _08006BEE
 	movs r0, #4
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08006BC4
 	ldr r0, _08006BB4  @ gKeySt
@@ -605,7 +605,7 @@ sub_8006B4C: @ 0x08006B4C
 	bl sub_80089C4
 	adds r0, r4, #0
 	bl Proc_End
-	bl sub_8006A7C
+	bl EndTalk
 	ldr r0, _08006BBC  @ gBg0Tm
 	movs r1, #0
 	bl TmFill
@@ -628,7 +628,7 @@ _08006BC4:
 	cmp r0, #0
 	bne _08006BEE
 	movs r0, #8
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08006BEE
 	ldr r0, _08006BF8  @ gKeySt
@@ -651,16 +651,16 @@ _08006BF4: .4byte gUnknown_085913F0
 _08006BF8: .4byte gKeySt
 _08006BFC: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8006B4C
+	THUMB_FUNC_END DialogueSkipInputListener_OnLoop
 
-	THUMB_FUNC_START sub_8006C00
-sub_8006C00: @ 0x08006C00
+	THUMB_FUNC_START DialogueMain_OnInit
+DialogueMain_OnInit: @ 0x08006C00
 	push {lr}
 	movs r0, #0x20
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08006C24
-	bl LoadObjUIGfx
+	bl LoadObjUiGfx
 	movs r0, #0
 	movs r1, #0
 	movs r2, #0
@@ -678,10 +678,10 @@ _08006C24:
 	.align 2, 0
 _08006C30: .4byte gUnknown_08591340
 
-	THUMB_FUNC_END sub_8006C00
+	THUMB_FUNC_END DialogueMain_OnInit
 
-	THUMB_FUNC_START sub_8006C34
-sub_8006C34: @ 0x08006C34
+	THUMB_FUNC_START DialogueMain_OnLoop
+DialogueMain_OnLoop: @ 0x08006C34
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -723,7 +723,7 @@ _08006C78:
 	ldrb r0, [r0, #0x11]
 	bl sub_80089C4
 	adds r0, r6, #0
-	bl sub_8006FD0
+	bl DialogueInterpret
 	cmp r0, #1
 	beq _08006CD0
 	cmp r0, #1
@@ -765,11 +765,11 @@ _08006CC2:
 	b _08006D94
 _08006CD0:
 	movs r0, #0x20
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08006CE2
 	adds r0, r6, #0
-	bl sub_8006DA0
+	bl DialogueMain_UpdateDisplay
 	b _08006CE8
 _08006CE2:
 	adds r0, r6, #0
@@ -787,18 +787,18 @@ _08006CE8:
 	ldrb r1, [r4, #0xa]
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r1, _08006D3C  @ gUnknown_030000D0
+	ldr r1, _08006D3C  @ gTalkText
 	adds r0, r0, r1
 	ldr r1, [r4]
 	bl Text_DrawCharacter
 	ldr r1, [r5]
 	str r0, [r1]
 	movs r0, #0x40
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08006D7E
 	movs r0, #0x80
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	beq _08006D40
 	mov r1, r8
@@ -811,9 +811,9 @@ _08006CE8:
 	b _08006D7E
 	.align 2, 0
 _08006D38: .4byte gUnknown_0859133C
-_08006D3C: .4byte gUnknown_030000D0
+_08006D3C: .4byte gTalkText
 _08006D40:
-	bl GetTextDisplaySpeed
+	bl GetTextSpeed
 	adds r4, r0, #0
 	cmp r4, #1
 	bne _08006D54
@@ -863,10 +863,10 @@ _08006D94:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8006C34
+	THUMB_FUNC_END DialogueMain_OnLoop
 
-	THUMB_FUNC_START sub_8006DA0
-sub_8006DA0: @ 0x08006DA0
+	THUMB_FUNC_START DialogueMain_UpdateDisplay
+DialogueMain_UpdateDisplay: @ 0x08006DA0
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	bl sub_800890C
@@ -879,7 +879,7 @@ sub_8006DA0: @ 0x08006DA0
 	cmp r0, #0xff
 	beq _08006E0C
 	movs r0, #2
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08006E0C
 	ldr r1, [r4]
@@ -889,14 +889,14 @@ sub_8006DA0: @ 0x08006DA0
 	ldr r0, [r1]
 _08006DCC:
 	movs r1, #0
-	bl sub_8008B44
+	bl GetStrTalkLen
 	adds r0, #7
 	movs r1, #8
 	bl Div
 	ldr r1, [r4]
 	adds r0, #2
 	strb r0, [r1, #0xe]
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	ldr r4, _08006E08  @ gUnknown_0859133C
 	ldr r0, [r4]
 	ldrb r0, [r0, #0x11]
@@ -905,7 +905,7 @@ _08006DCC:
 	ldr r0, [r4]
 	ldrb r4, [r0, #0x11]
 	movs r0, #0x10
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl sub_800798C
@@ -940,7 +940,7 @@ _08006E30:
 	ldrb r1, [r5, #0xa]
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r1, _08006E84  @ gUnknown_030000D0
+	ldr r1, _08006E84  @ gTalkText
 	adds r0, r0, r1
 	lsls r4, r4, #1
 	ldrb r1, [r5, #0xd]
@@ -954,7 +954,7 @@ _08006E30:
 	adds r1, r4, #0
 	bl PutText
 	movs r0, #1
-	bl sub_8008F20
+	bl DialogueEnableBgSyncByMask
 	ldr r1, [r6]
 	movs r0, #1
 	strb r0, [r1, #0x15]
@@ -972,10 +972,10 @@ _08006E7C:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08006E84: .4byte gUnknown_030000D0
+_08006E84: .4byte gTalkText
 _08006E88: .4byte gBg0Tm
 
-	THUMB_FUNC_END sub_8006DA0
+	THUMB_FUNC_END DialogueMain_UpdateDisplay
 
 	THUMB_FUNC_START sub_8006E8C
 sub_8006E8C: @ 0x08006E8C
@@ -1010,8 +1010,8 @@ _08006EC0:
 
 	THUMB_FUNC_END sub_8006E8C
 
-	THUMB_FUNC_START sub_8006EC4
-sub_8006EC4: @ 0x08006EC4
+	THUMB_FUNC_START LockDialogue
+LockDialogue: @ 0x08006EC4
 	push {lr}
 	adds r1, r0, #0
 	ldr r0, _08006ED4  @ gUnknown_08591388
@@ -1021,10 +1021,10 @@ sub_8006EC4: @ 0x08006EC4
 	.align 2, 0
 _08006ED4: .4byte gUnknown_08591388
 
-	THUMB_FUNC_END sub_8006EC4
+	THUMB_FUNC_END LockDialogue
 
-	THUMB_FUNC_START sub_8006ED8
-sub_8006ED8: @ 0x08006ED8
+	THUMB_FUNC_START IsDialogueLocked
+IsDialogueLocked: @ 0x08006ED8
 	push {lr}
 	ldr r0, _08006EEC  @ gUnknown_08591388
 	bl FindProc
@@ -1037,10 +1037,10 @@ _08006EE6:
 	.align 2, 0
 _08006EEC: .4byte gUnknown_08591388
 
-	THUMB_FUNC_END sub_8006ED8
+	THUMB_FUNC_END IsDialogueLocked
 
-	THUMB_FUNC_START sub_8006EF0
-sub_8006EF0: @ 0x08006EF0
+	THUMB_FUNC_START UnlockDialogue
+UnlockDialogue: @ 0x08006EF0
 	push {lr}
 	ldr r0, _08006EFC  @ gUnknown_08591388
 	bl EndEachProc
@@ -1049,7 +1049,7 @@ sub_8006EF0: @ 0x08006EF0
 	.align 2, 0
 _08006EFC: .4byte gUnknown_08591388
 
-	THUMB_FUNC_END sub_8006EF0
+	THUMB_FUNC_END UnlockDialogue
 
 	THUMB_FUNC_START sub_8006F00
 sub_8006F00: @ 0x08006F00
@@ -1071,7 +1071,7 @@ _08006F16:
 	ldrb r1, [r1, #0xa]
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r1, _08006F44  @ gUnknown_030000D0
+	ldr r1, _08006F44  @ gTalkText
 	adds r0, r0, r1
 	movs r1, #4
 	bl Text_SetColor
@@ -1087,7 +1087,7 @@ _08006F38:
 	b _08006F7A
 	.align 2, 0
 _08006F40: .4byte gUnknown_0859133C
-_08006F44: .4byte gUnknown_030000D0
+_08006F44: .4byte gTalkText
 _08006F48:
 	movs r4, #0
 	ldrb r2, [r2, #0xa]
@@ -1101,7 +1101,7 @@ _08006F52:
 	ldrb r1, [r1, #0xa]
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r1, _08006F84  @ gUnknown_030000D0
+	ldr r1, _08006F84  @ gTalkText
 	adds r0, r0, r1
 	movs r1, #1
 	bl Text_SetColor
@@ -1120,7 +1120,7 @@ _08006F7A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08006F84: .4byte gUnknown_030000D0
+_08006F84: .4byte gTalkText
 _08006F88: .4byte gUnknown_0859133C
 
 	THUMB_FUNC_END sub_8006F00
@@ -1160,8 +1160,8 @@ _08006FCC: .4byte Pal_SystemText
 
 	THUMB_FUNC_END sub_8006F8C
 
-	THUMB_FUNC_START sub_8006FD0
-sub_8006FD0: @ 0x08006FD0
+	THUMB_FUNC_START DialogueInterpret
+DialogueInterpret: @ 0x08006FD0
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -1185,7 +1185,7 @@ _08006FDE:
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
 	adds r0, r4, #0
-	bl sub_8008B44
+	bl GetStrTalkLen
 	adds r0, #7
 	movs r1, #8
 	bl Div
@@ -1357,7 +1357,7 @@ _08007244:
 	ldrb r1, [r2, #0xa]
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r1, _08007290  @ gUnknown_030000D0
+	ldr r1, _08007290  @ gTalkText
 	adds r0, r0, r1
 	movs r1, #6
 	bl Text_Skip
@@ -1377,7 +1377,7 @@ _0800726C:
 	bl SpawnProcLocking
 	adds r4, r0, #0
 	movs r0, #4
-	bl sub_8008198
+	bl GetTextPauseDurationFromControlCode
 	adds r1, r4, #0
 	adds r1, #0x64
 	strh r0, [r1]
@@ -1385,7 +1385,7 @@ _0800728A:
 	movs r0, #3
 	b _0800782A
 	.align 2, 0
-_08007290: .4byte gUnknown_030000D0
+_08007290: .4byte gTalkText
 _08007294: .4byte gUnknown_085913D0
 _08007298:
 	ldr r1, [r7]
@@ -1421,7 +1421,7 @@ _080072C2:
 	b _0800735A
 _080072CC:
 	movs r0, #0x80
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	beq _080072EC
 	bl sub_800815C
@@ -1435,7 +1435,7 @@ _080072CC:
 _080072E8: .4byte gUnknown_0859133C
 _080072EC:
 	movs r0, #1
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08007304
 	ldr r0, _08007300  @ gUnknown_08591470
@@ -1445,7 +1445,7 @@ _080072EC:
 	.align 2, 0
 _08007300: .4byte gUnknown_08591470
 _08007304:
-	bl sub_8008250
+	bl Dialogue_ClearLines
 _08007308:
 	ldr r0, _08007310  @ gUnknown_0859133C
 	ldr r1, [r0]
@@ -1460,7 +1460,7 @@ _08007314:
 	ldrb r1, [r1, #0xa]
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r1, _0800734C  @ gUnknown_030000D0
+	ldr r1, _0800734C  @ gTalkText
 	adds r0, r0, r1
 	bl Text_GetCursor
 	ldr r3, [r7]
@@ -1475,10 +1475,10 @@ _08007314:
 	adds r2, r2, r0
 	adds r2, #8
 	mov r0, r8
-	bl sub_8007CD8
+	bl NewTextBluArrowAndButtonChecker
 	b _0800773A
 	.align 2, 0
-_0800734C: .4byte gUnknown_030000D0
+_0800734C: .4byte gTalkText
 _08007350:
 	ldr r1, [r7]
 	movs r0, #0x12
@@ -1500,7 +1500,7 @@ _08007364:
 	ldr r0, [r7]
 	ldr r0, [r0]
 	ldrb r0, [r0]
-	bl sub_8008198
+	bl GetTextPauseDurationFromControlCode
 	adds r1, r4, #0
 	adds r1, #0x64
 	strh r0, [r1]
@@ -1508,7 +1508,7 @@ _08007364:
 	.align 2, 0
 _08007380: .4byte gUnknown_085913D0
 _08007384:
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	ldr r0, _08007390  @ gUnknown_0859133C
 	ldr r1, [r0]
 	b _0800773C
@@ -1547,7 +1547,7 @@ _080073BA:
 _080073C4: .4byte gUnknown_0859133C
 _080073C8:
 	subs r0, #8
-	bl sub_8007838
+	bl SetActiveTalkFace
 	ldr r1, [r4]
 	ldr r0, [r1]
 	adds r0, #1
@@ -1568,7 +1568,7 @@ _080073EC:
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080073FA
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 _080073FA:
 	ldr r4, _0800742C  @ gUnknown_0859133C
 	ldr r0, [r4]
@@ -1577,7 +1577,7 @@ _080073FA:
 	adds r0, #0x18
 	adds r0, r0, r1
 	ldr r0, [r0]
-	bl sub_8005F38
+	bl StartFaceFadeOut
 	ldr r2, [r4]
 	ldrb r0, [r2, #0x11]
 	lsls r0, r0, #2
@@ -1591,13 +1591,13 @@ _080073FA:
 	str r0, [r2]
 	mov r0, r8
 	movs r1, #0x10
-	bl NewBlockingTimer
+	bl StartBlockingTimer
 	b _0800728A
 	.align 2, 0
 _0800742C: .4byte gUnknown_0859133C
 _08007430:
 	movs r0, #0x10
-	bl sub_8006AA8
+	bl SetTalkFlag
 	ldr r0, _0800743C  @ gUnknown_0859133C
 	ldr r1, [r0]
 	b _0800773C
@@ -1605,7 +1605,7 @@ _08007430:
 _0800743C: .4byte gUnknown_0859133C
 _08007440:
 	movs r0, #0x10
-	bl sub_8006AC8
+	bl UnsetDialogueFlag
 	ldr r0, _0800744C  @ gUnknown_0859133C
 	ldr r1, [r0]
 	b _0800773C
@@ -1630,7 +1630,7 @@ _08007462:
 	bl __modsi3
 	adds r1, r0, #0
 	lsls r1, r1, #3
-	ldr r0, _080074A4  @ gUnknown_030000D0
+	ldr r0, _080074A4  @ gTalkText
 	adds r1, r1, r0
 	lsls r4, r4, #1
 	ldrb r0, [r5, #0xd]
@@ -1648,11 +1648,11 @@ _08007462:
 	adds r0, r6, #0
 	adds r2, r4, #0
 	movs r3, #1
-	bl sub_8007DE8
+	bl StartDialogueTextChoice
 	b _0800773A
 	.align 2, 0
 _080074A0: .4byte gUnknown_08591490
-_080074A4: .4byte gUnknown_030000D0
+_080074A4: .4byte gTalkText
 _080074A8: .4byte gBg0Tm
 _080074AC:
 	ldr r6, _080074EC  @ gUnknown_08591490
@@ -1664,7 +1664,7 @@ _080074AC:
 	bl __modsi3
 	adds r1, r0, #0
 	lsls r1, r1, #3
-	ldr r0, _080074F0  @ gUnknown_030000D0
+	ldr r0, _080074F0  @ gTalkText
 	adds r1, r1, r0
 	lsls r4, r4, #1
 	ldrb r0, [r5, #0xd]
@@ -1682,11 +1682,11 @@ _080074AC:
 	adds r0, r6, #0
 	adds r2, r4, #0
 	movs r3, #2
-	bl sub_8007DE8
+	bl StartDialogueTextChoice
 	b _0800773A
 	.align 2, 0
 _080074EC: .4byte gUnknown_08591490
-_080074F0: .4byte gUnknown_030000D0
+_080074F0: .4byte gTalkText
 _080074F4: .4byte gBg0Tm
 _080074F8:
 	ldr r6, _08007538  @ gUnknown_085914A0
@@ -1698,7 +1698,7 @@ _080074F8:
 	bl __modsi3
 	adds r1, r0, #0
 	lsls r1, r1, #3
-	ldr r0, _0800753C  @ gUnknown_030000D0
+	ldr r0, _0800753C  @ gTalkText
 	adds r1, r1, r0
 	lsls r4, r4, #1
 	ldrb r0, [r5, #0xd]
@@ -1716,11 +1716,11 @@ _080074F8:
 	adds r0, r6, #0
 	adds r2, r4, #0
 	movs r3, #1
-	bl sub_8007DE8
+	bl StartDialogueTextChoice
 	b _0800773A
 	.align 2, 0
 _08007538: .4byte gUnknown_085914A0
-_0800753C: .4byte gUnknown_030000D0
+_0800753C: .4byte gTalkText
 _08007540: .4byte gBg0Tm
 _08007544:
 	ldr r6, _08007584  @ gUnknown_085914A0
@@ -1732,7 +1732,7 @@ _08007544:
 	bl __modsi3
 	adds r1, r0, #0
 	lsls r1, r1, #3
-	ldr r0, _08007588  @ gUnknown_030000D0
+	ldr r0, _08007588  @ gTalkText
 	adds r1, r1, r0
 	lsls r4, r4, #1
 	ldrb r0, [r5, #0xd]
@@ -1750,11 +1750,11 @@ _08007544:
 	adds r0, r6, #0
 	adds r2, r4, #0
 	movs r3, #2
-	bl sub_8007DE8
+	bl StartDialogueTextChoice
 	b _0800773A
 	.align 2, 0
 _08007584: .4byte gUnknown_085914A0
-_08007588: .4byte gUnknown_030000D0
+_08007588: .4byte gTalkText
 _0800758C: .4byte gBg0Tm
 _08007590:
 	ldr r0, [r7]
@@ -1844,7 +1844,7 @@ _0800766C:
 	cmp r4, r0
 	bge _0800769E
 	adds r6, r3, #0
-	ldr r5, _080076A8  @ gUnknown_030000D0
+	ldr r5, _080076A8  @ gTalkText
 _08007688:
 	ldr r0, [r6]
 	ldrb r1, [r0, #8]
@@ -1862,7 +1862,7 @@ _0800769E:
 	b _0800773C
 	.align 2, 0
 _080076A4: .4byte gUnknown_0859133C
-_080076A8: .4byte gUnknown_030000D0
+_080076A8: .4byte gTalkText
 _080076AC:
 	ldr r2, [r7]
 	adds r2, #0x83
@@ -1875,7 +1875,7 @@ _080076AC:
 	b _0800773A
 _080076BE:
 	mov r0, r8
-	bl sub_8006EC4
+	bl LockDialogue
 	ldr r0, _080076CC  @ gUnknown_0859133C
 	ldr r1, [r0]
 	b _0800773C
@@ -1903,7 +1903,7 @@ _080076F0:
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1, #4]
-	bl GetTacticianName
+	bl GetTacticianNameString
 	ldr r1, [r4]
 	str r0, [r1]
 	b _08006FDA
@@ -1933,7 +1933,7 @@ _08007720:
 	ldrb r0, [r0]
 	subs r0, #0xa
 _08007736:
-	bl sub_8007838
+	bl SetActiveTalkFace
 _0800773A:
 	ldr r1, [r7]
 _0800773C:
@@ -2013,7 +2013,7 @@ _080077B2:
 	ldr r0, [r1]
 	movs r1, #5
 _080077C6:
-	bl sub_8006438
+	bl SetFaceBlinkControl
 	b _0800728A
 _080077CC:
 	ldr r1, [r7]
@@ -2075,10 +2075,10 @@ _0800782A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8006FD0
+	THUMB_FUNC_END DialogueInterpret
 
-	THUMB_FUNC_START sub_8007838
-sub_8007838: @ 0x08007838
+	THUMB_FUNC_START SetActiveTalkFace
+SetActiveTalkFace: @ 0x08007838
 	ldr r1, _08007840  @ gUnknown_0859133C
 	ldr r1, [r1]
 	strb r0, [r1, #0x11]
@@ -2086,7 +2086,7 @@ sub_8007838: @ 0x08007838
 	.align 2, 0
 _08007840: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8007838
+	THUMB_FUNC_END SetActiveTalkFace
 
 	THUMB_FUNC_START sub_8007844
 sub_8007844: @ 0x08007844
@@ -2111,7 +2111,7 @@ sub_8007854: @ 0x08007854
 	cmp r0, #0xff
 	bne _0800786A
 	movs r0, #1
-	bl sub_8007838
+	bl SetActiveTalkFace
 _0800786A:
 	bl IsBattleDeamonActive
 	lsls r0, r0, #0x18
@@ -2144,7 +2144,7 @@ _08007894:
 	bne _080078C0
 	ldr r0, _080078BC  @ gActiveUnit
 	ldr r0, [r0]
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r4, r0, #0
 	b _080078C4
 	.align 2, 0
@@ -2190,17 +2190,17 @@ _080078E8:
 	lsls r0, r0, #2
 	adds r2, r2, r0
 	ldr r0, [r2]
-	bl sub_8005EF0
+	bl StartFaceFadeIn
 	ldr r0, [r5]
 	ldrb r4, [r0, #0x11]
 	movs r0, #0x10
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	adds r1, r0, #0
 	adds r0, r4, #0
 	bl sub_800798C
 	adds r0, r7, #0
 	movs r1, #8
-	bl NewBlockingTimer
+	bl StartBlockingTimer
 _08007930:
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -2208,8 +2208,8 @@ _08007930:
 
 	THUMB_FUNC_END sub_8007854
 
-	THUMB_FUNC_START sub_8007938
-sub_8007938: @ 0x08007938
+	THUMB_FUNC_START StartDialogueFace
+StartDialogueFace: @ 0x08007938
 	push {r4, lr}
 	ldr r4, [sp, #8]
 	bl StartFaceAuto
@@ -2225,7 +2225,7 @@ sub_8007938: @ 0x08007938
 	.align 2, 0
 _08007954: .4byte gUnknown_0859133C
 
-	THUMB_FUNC_END sub_8007938
+	THUMB_FUNC_END StartDialogueFace
 
 	THUMB_FUNC_START sub_8007958
 sub_8007958: @ 0x08007958
@@ -2615,8 +2615,8 @@ _08007C08: .4byte gFaces
 
 	THUMB_FUNC_END sub_8007B0C
 
-	THUMB_FUNC_START sub_8007C0C
-sub_8007C0C: @ 0x08007C0C
+	THUMB_FUNC_START DialogueMain_OnEnd
+DialogueMain_OnEnd: @ 0x08007C0C
 	push {lr}
 	ldr r0, _08007C20  @ gUnknown_08591340
 	bl EndEachProc
@@ -2628,10 +2628,10 @@ sub_8007C0C: @ 0x08007C0C
 _08007C20: .4byte gUnknown_08591340
 _08007C24: .4byte gUnknown_08591470
 
-	THUMB_FUNC_END sub_8007C0C
+	THUMB_FUNC_END DialogueMain_OnEnd
 
-	THUMB_FUNC_START _Loop6CBlockingTimer
-_Loop6CBlockingTimer: @ 0x08007C28
+	THUMB_FUNC_START DialoguePauseTimer_OnLoop
+DialoguePauseTimer_OnLoop: @ 0x08007C28
 	push {r4, lr}
 	adds r2, r0, #0
 	adds r1, r2, #0
@@ -2652,7 +2652,7 @@ _08007C46:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END _Loop6CBlockingTimer
+	THUMB_FUNC_END DialoguePauseTimer_OnLoop
 
 	THUMB_FUNC_START sub_8007C4C
 sub_8007C4C: @ 0x08007C4C
@@ -2664,7 +2664,7 @@ sub_8007C4C: @ 0x08007C4C
 	movs r0, #0xf
 	ands r4, r0
 	movs r0, #0x80
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08007C8C
 	adds r0, r5, #0
@@ -2729,8 +2729,8 @@ sub_8007CD4: @ 0x08007CD4
 
 	THUMB_FUNC_END sub_8007CD4
 
-	THUMB_FUNC_START sub_8007CD8
-sub_8007CD8: @ 0x08007CD8
+	THUMB_FUNC_START NewTextBluArrowAndButtonChecker
+NewTextBluArrowAndButtonChecker: @ 0x08007CD8
 	push {r4, r5, lr}
 	adds r3, r0, #0
 	adds r4, r1, #0
@@ -2752,7 +2752,7 @@ sub_8007CD8: @ 0x08007CD8
 	.align 2, 0
 _08007D00: .4byte gUnknown_085913F0
 
-	THUMB_FUNC_END sub_8007CD8
+	THUMB_FUNC_END NewTextBluArrowAndButtonChecker
 
 	THUMB_FUNC_START sub_8007D04
 sub_8007D04: @ 0x08007D04
@@ -2805,7 +2805,7 @@ sub_8007D38: @ 0x08007D38
 	movs r3, #0
 	bl TmFillRect_t
 	movs r0, #1
-	bl sub_8008F20
+	bl DialogueEnableBgSyncByMask
 	adds r1, r5, #0
 	adds r1, #0x64
 	movs r0, #0
@@ -2868,7 +2868,7 @@ sub_8007DA4: @ 0x08007DA4
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80081EC
+	bl Dialogue_ClearText
 	adds r0, r5, #0
 	bl Proc_Break
 _08007DE0:
@@ -2878,8 +2878,8 @@ _08007DE0:
 
 	THUMB_FUNC_END sub_8007DA4
 
-	THUMB_FUNC_START sub_8007DE8
-sub_8007DE8: @ 0x08007DE8
+	THUMB_FUNC_START StartDialogueTextChoice
+StartDialogueTextChoice: @ 0x08007DE8
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -2913,7 +2913,7 @@ sub_8007DE8: @ 0x08007DE8
 	adds r1, r5, #0
 	bl PutText
 	movs r0, #1
-	bl sub_8008F20
+	bl DialogueEnableBgSyncByMask
 	ldr r0, _08007E90  @ gUnknown_085914B0
 	ldr r1, [sp, #0x20]
 	bl SpawnProcLocking
@@ -2961,10 +2961,10 @@ _08007E90: .4byte gUnknown_085914B0
 _08007E94: .4byte gBg0Tm
 _08007E98: .4byte gDispIo
 
-	THUMB_FUNC_END sub_8007DE8
+	THUMB_FUNC_END StartDialogueTextChoice
 
-	THUMB_FUNC_START sub_8007E9C
-sub_8007E9C: @ 0x08007E9C
+	THUMB_FUNC_START DialogueTextChoice_OnLoop
+DialogueTextChoice_OnLoop: @ 0x08007E9C
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, _08007EC8  @ gKeySt
@@ -2974,7 +2974,7 @@ sub_8007E9C: @ 0x08007E9C
 	ands r0, r1
 	cmp r0, #0
 	beq _08007ED4
-	ldr r0, _08007ECC  @ gRAMChapterData
+	ldr r0, _08007ECC  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -2983,20 +2983,20 @@ sub_8007E9C: @ 0x08007E9C
 	movs r0, #0x6b
 	bl m4aSongNumStart
 _08007EC0:
-	ldr r1, _08007ED0  @ gUnknown_030000E8
+	ldr r1, _08007ED0  @ gTalkResult
 	movs r0, #0
 	b _08007EF6
 	.align 2, 0
 _08007EC8: .4byte gKeySt
-_08007ECC: .4byte gRAMChapterData
-_08007ED0: .4byte gUnknown_030000E8
+_08007ECC: .4byte gPlaySt
+_08007ED0: .4byte gTalkResult
 _08007ED4:
 	movs r5, #1
 	adds r0, r5, #0
 	ands r0, r1
 	cmp r0, #0
 	beq _08007F08
-	ldr r0, _08007F00  @ gRAMChapterData
+	ldr r0, _08007F00  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -3005,7 +3005,7 @@ _08007ED4:
 	movs r0, #0x6a
 	bl m4aSongNumStart
 _08007EF0:
-	ldr r1, _08007F04  @ gUnknown_030000E8
+	ldr r1, _08007F04  @ gTalkResult
 	movs r2, #0x2a
 	ldrsh r0, [r4, r2]
 _08007EF6:
@@ -3014,8 +3014,8 @@ _08007EF6:
 	bl Proc_Break
 	b _08007F8C
 	.align 2, 0
-_08007F00: .4byte gRAMChapterData
-_08007F04: .4byte gUnknown_030000E8
+_08007F00: .4byte gPlaySt
+_08007F04: .4byte gTalkResult
 _08007F08:
 	movs r0, #0x20
 	ands r0, r1
@@ -3025,7 +3025,7 @@ _08007F08:
 	ldrsh r0, [r4, r1]
 	cmp r0, #2
 	bne _08007F38
-	ldr r0, _08007F94  @ gRAMChapterData
+	ldr r0, _08007F94  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -3052,7 +3052,7 @@ _08007F38:
 	ldrsh r0, [r4, r2]
 	cmp r0, #1
 	bne _08007F70
-	ldr r0, _08007F94  @ gRAMChapterData
+	ldr r0, _08007F94  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -3087,10 +3087,10 @@ _08007F8C:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08007F94: .4byte gRAMChapterData
+_08007F94: .4byte gPlaySt
 _08007F98: .4byte gKeySt
 
-	THUMB_FUNC_END sub_8007E9C
+	THUMB_FUNC_END DialogueTextChoice_OnLoop
 
 	THUMB_FUNC_START sub_8007F9C
 sub_8007F9C: @ 0x08007F9C
@@ -3113,7 +3113,7 @@ sub_8007F9C: @ 0x08007F9C
 	movs r3, #0
 	bl TmFillRect_t
 	movs r0, #1
-	bl sub_8008F20
+	bl DialogueEnableBgSyncByMask
 	adds r4, #0x64
 	movs r0, #0
 	strh r0, [r4]
@@ -3170,7 +3170,7 @@ _08008026:
 	ldrb r1, [r4, #0xa]
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r1, _080080C8  @ gUnknown_030000D0
+	ldr r1, _080080C8  @ gTalkText
 	adds r0, r0, r1
 	lsls r1, r5, #1
 	ldrb r2, [r4, #0xd]
@@ -3214,7 +3214,7 @@ _0800805A:
 	adds r0, r1, r0
 	bl __modsi3
 	lsls r0, r0, #3
-	ldr r5, _080080C8  @ gUnknown_030000D0
+	ldr r5, _080080C8  @ gTalkText
 	adds r0, r0, r5
 	bl ClearText
 	ldr r4, [r4]
@@ -3228,7 +3228,7 @@ _0800805A:
 	ldrb r1, [r4, #8]
 	bl Text_SetColor
 	movs r0, #1
-	bl sub_8008F20
+	bl DialogueEnableBgSyncByMask
 	adds r0, r7, #0
 	bl Proc_Break
 _080080BC:
@@ -3237,7 +3237,7 @@ _080080BC:
 	bx r0
 	.align 2, 0
 _080080C4: .4byte gUnknown_0859133C
-_080080C8: .4byte gUnknown_030000D0
+_080080C8: .4byte gTalkText
 _080080CC: .4byte gBg0Tm
 
 	THUMB_FUNC_END sub_8007FDC
@@ -3247,7 +3247,7 @@ sub_80080D0: @ 0x080080D0
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #0x80
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	beq _080080EE
 	movs r0, #0x80
@@ -3282,7 +3282,7 @@ sub_8008108: @ 0x08008108
 	subs r0, #1
 	strb r0, [r1, #9]
 	movs r0, #0x80
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	beq _08008138
 	ldr r4, _08008134  @ gUnknown_030000D8
@@ -3324,7 +3324,7 @@ sub_800815C: @ 0x0800815C
 	movs r5, #0
 _08008168:
 	lsls r4, r5, #3
-	ldr r0, _08008194  @ gUnknown_030000D0
+	ldr r0, _08008194  @ gTalkText
 	adds r4, r4, r0
 	adds r0, r4, #0
 	bl DrawSpriteTextBackgroundColor0
@@ -3342,12 +3342,12 @@ _08008168:
 	bx r0
 	.align 2, 0
 _08008190: .4byte gUnknown_0859133C
-_08008194: .4byte gUnknown_030000D0
+_08008194: .4byte gTalkText
 
 	THUMB_FUNC_END sub_800815C
 
-	THUMB_FUNC_START sub_8008198
-sub_8008198: @ 0x08008198
+	THUMB_FUNC_START GetTextPauseDurationFromControlCode
+GetTextPauseDurationFromControlCode: @ 0x08008198
 	ldr r1, _080081A4  @ gUnknown_08591520
 	subs r0, #4
 	lsls r0, r0, #2
@@ -3357,10 +3357,10 @@ sub_8008198: @ 0x08008198
 	.align 2, 0
 _080081A4: .4byte gUnknown_08591520
 
-	THUMB_FUNC_END sub_8008198
+	THUMB_FUNC_END GetTextPauseDurationFromControlCode
 
-	THUMB_FUNC_START sub_80081A8
-sub_80081A8: @ 0x080081A8
+	THUMB_FUNC_START Dialogue_ClearTextBoxes
+Dialogue_ClearTextBoxes: @ 0x080081A8
 	push {lr}
 	ldr r0, _080081E0  @ gUnknown_0859133C
 	ldr r1, [r0]
@@ -3370,8 +3370,8 @@ sub_80081A8: @ 0x080081A8
 	movs r1, #0
 	bl TmFill
 	movs r0, #2
-	bl sub_8008F20
-	bl sub_80081EC
+	bl DialogueEnableBgSyncByMask
+	bl Dialogue_ClearText
 	ldr r2, _080081E8  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
@@ -3390,16 +3390,16 @@ _080081E0: .4byte gUnknown_0859133C
 _080081E4: .4byte gBg1Tm
 _080081E8: .4byte gDispIo
 
-	THUMB_FUNC_END sub_80081A8
+	THUMB_FUNC_END Dialogue_ClearTextBoxes
 
-	THUMB_FUNC_START sub_80081EC
-sub_80081EC: @ 0x080081EC
+	THUMB_FUNC_START Dialogue_ClearText
+Dialogue_ClearText: @ 0x080081EC
 	push {r4, r5, r6, lr}
 	ldr r0, _08008244  @ gBg0Tm
 	movs r1, #0
 	bl TmFill
 	movs r0, #1
-	bl sub_8008F20
+	bl DialogueEnableBgSyncByMask
 	ldr r2, _08008248  @ gUnknown_0859133C
 	ldr r0, [r2]
 	movs r1, #0
@@ -3419,7 +3419,7 @@ sub_80081EC: @ 0x080081EC
 	adds r6, r2, #0
 _0800821E:
 	lsls r4, r5, #3
-	ldr r0, _0800824C  @ gUnknown_030000D0
+	ldr r0, _0800824C  @ gTalkText
 	adds r4, r4, r0
 	adds r0, r4, #0
 	bl ClearText
@@ -3439,12 +3439,12 @@ _0800823E:
 	.align 2, 0
 _08008244: .4byte gBg0Tm
 _08008248: .4byte gUnknown_0859133C
-_0800824C: .4byte gUnknown_030000D0
+_0800824C: .4byte gTalkText
 
-	THUMB_FUNC_END sub_80081EC
+	THUMB_FUNC_END Dialogue_ClearText
 
-	THUMB_FUNC_START sub_8008250
-sub_8008250: @ 0x08008250
+	THUMB_FUNC_START Dialogue_ClearLines
+Dialogue_ClearLines: @ 0x08008250
 	push {r4, r5, r6, lr}
 	ldr r2, _0800829C  @ gUnknown_0859133C
 	ldr r0, [r2]
@@ -3465,7 +3465,7 @@ sub_8008250: @ 0x08008250
 	adds r6, r2, #0
 _08008274:
 	lsls r4, r5, #3
-	ldr r0, _080082A0  @ gUnknown_030000D0
+	ldr r0, _080082A0  @ gTalkText
 	adds r4, r4, r0
 	adds r0, r4, #0
 	bl ClearText
@@ -3484,9 +3484,9 @@ _08008294:
 	bx r0
 	.align 2, 0
 _0800829C: .4byte gUnknown_0859133C
-_080082A0: .4byte gUnknown_030000D0
+_080082A0: .4byte gTalkText
 
-	THUMB_FUNC_END sub_8008250
+	THUMB_FUNC_END Dialogue_ClearLines
 
 	THUMB_FUNC_START sub_80082A4
 sub_80082A4: @ 0x080082A4
@@ -3637,9 +3637,9 @@ _080083B6:
 	adds r2, r4, #0
 	ldr r3, [sp, #4]
 	bl sub_8008464
-	bl sub_80083E0
+	bl StartDialogueBoxAppearingAnimator
 	movs r0, #2
-	bl sub_8008F20
+	bl DialogueEnableBgSyncByMask
 	add sp, #8
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -3653,8 +3653,8 @@ _080083DC: .4byte gUnknown_0859133C
 
 	THUMB_FUNC_END sub_80082A4
 
-	THUMB_FUNC_START sub_80083E0
-sub_80083E0: @ 0x080083E0
+	THUMB_FUNC_START StartDialogueBoxAppearingAnimator
+StartDialogueBoxAppearingAnimator: @ 0x080083E0
 	push {lr}
 	ldr r0, _080083F4  @ gUnknown_08591530
 	movs r1, #3
@@ -3667,7 +3667,7 @@ sub_80083E0: @ 0x080083E0
 	.align 2, 0
 _080083F4: .4byte gUnknown_08591530
 
-	THUMB_FUNC_END sub_80083E0
+	THUMB_FUNC_END StartDialogueBoxAppearingAnimator
 
 	THUMB_FUNC_START sub_80083F8
 sub_80083F8: @ 0x080083F8
@@ -4141,11 +4141,11 @@ _080087A0: .4byte 0x00003C10
 
 	THUMB_FUNC_END sub_8008668
 
-	THUMB_FUNC_START sub_80087A4
-sub_80087A4: @ 0x080087A4
+	THUMB_FUNC_START nullsub_74
+nullsub_74: @ 0x080087A4
 	bx lr
 
-	THUMB_FUNC_END sub_80087A4
+	THUMB_FUNC_END nullsub_74
 
 	THUMB_FUNC_START sub_80087A8
 sub_80087A8: @ 0x080087A8
@@ -4155,7 +4155,7 @@ sub_80087A8: @ 0x080087A8
 	str r1, [r0, #0x58]
 	movs r0, #0x80
 	lsls r0, r0, #1
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08008802
 	str r0, [sp]
@@ -4251,7 +4251,7 @@ sub_8008840: @ 0x08008840
 	bl SetBgOffset
 	movs r0, #0x80
 	lsls r0, r0, #1
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08008892
 	adds r1, r4, #0
@@ -4454,8 +4454,8 @@ sub_80089C4: @ 0x080089C4
 
 	THUMB_FUNC_END sub_80089C4
 
-	THUMB_FUNC_START sub_80089D0
-sub_80089D0: @ 0x080089D0
+	THUMB_FUNC_START DialogueExists
+DialogueExists: @ 0x080089D0
 	push {lr}
 	ldr r0, _080089E4  @ gUnknown_08591358
 	bl FindProc
@@ -4468,10 +4468,10 @@ _080089DE:
 	.align 2, 0
 _080089E4: .4byte gUnknown_08591358
 
-	THUMB_FUNC_END sub_80089D0
+	THUMB_FUNC_END DialogueExists
 
-	THUMB_FUNC_START Face6CExists
-Face6CExists: @ 0x080089E8
+	THUMB_FUNC_START FaceExists
+FaceExists: @ 0x080089E8
 	push {lr}
 	ldr r0, _080089FC  @ ProcScr_Face
 	bl FindProc
@@ -4484,28 +4484,28 @@ _080089F6:
 	.align 2, 0
 _080089FC: .4byte ProcScr_Face
 
-	THUMB_FUNC_END Face6CExists
+	THUMB_FUNC_END FaceExists
 
-	THUMB_FUNC_START sub_8008A00
-sub_8008A00: @ 0x08008A00
-	ldr r0, _08008A08  @ gUnknown_030000E8
+	THUMB_FUNC_START GetDialoguePromptResult
+GetDialoguePromptResult: @ 0x08008A00
+	ldr r0, _08008A08  @ gTalkResult
 	ldr r0, [r0]
 	bx lr
 	.align 2, 0
-_08008A08: .4byte gUnknown_030000E8
+_08008A08: .4byte gTalkResult
 
-	THUMB_FUNC_END sub_8008A00
+	THUMB_FUNC_END GetDialoguePromptResult
 
-	THUMB_FUNC_START sub_8008A0C
-sub_8008A0C: @ 0x08008A0C
+	THUMB_FUNC_START SetDialoguePromptResult
+SetDialoguePromptResult: @ 0x08008A0C
 	adds r2, r0, #0
-	ldr r1, _08008A14  @ gUnknown_030000E8
+	ldr r1, _08008A14  @ gTalkResult
 	str r2, [r1]
 	bx lr
 	.align 2, 0
-_08008A14: .4byte gUnknown_030000E8
+_08008A14: .4byte gTalkResult
 
-	THUMB_FUNC_END sub_8008A0C
+	THUMB_FUNC_END SetDialoguePromptResult
 
 	THUMB_FUNC_START sub_8008A18
 sub_8008A18: @ 0x08008A18
@@ -4633,7 +4633,7 @@ sub_8008AA8: @ 0x08008AA8
 	mov r4, r9
 	ldrh r0, [r4]
 	ands r6, r0
-	ldr r0, _08008B20  @ gUnknown_030000F0
+	ldr r0, _08008B20  @ gTalkFont
 	ldrh r0, [r0, #0x14]
 	ands r5, r0
 	lsls r5, r5, #0xc
@@ -4652,7 +4652,7 @@ sub_8008AA8: @ 0x08008AA8
 _08008B14: .4byte gUnknown_085915AA
 _08008B18: .4byte 0x000003FF
 _08008B1C: .4byte gUnknown_08591590
-_08008B20: .4byte gUnknown_030000F0
+_08008B20: .4byte gTalkFont
 
 	THUMB_FUNC_END sub_8008AA8
 
@@ -4679,8 +4679,8 @@ _08008B40: .4byte sub_8008B24
 
 	THUMB_FUNC_END sub_8008B30
 
-	THUMB_FUNC_START sub_8008B44
-sub_8008B44: @ 0x08008B44
+	THUMB_FUNC_START GetStrTalkLen
+GetStrTalkLen: @ 0x08008B44
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -4965,7 +4965,7 @@ _08008E8C:
 	.align 2, 0
 _08008EA4: .4byte gUnknown_0859133C
 _08008EA8:
-	bl GetTacticianName
+	bl GetTacticianNameString
 	bl GetStringTextLen
 	b _08008EC2
 _08008EB2:
@@ -4976,7 +4976,7 @@ _08008EB2:
 	lsls r1, r2, #0x18
 	asrs r1, r1, #0x18
 _08008EBE:
-	bl sub_8008B44
+	bl GetStrTalkLen
 _08008EC2:
 	adds r6, r6, r0
 	b _08008D9A
@@ -5025,7 +5025,7 @@ _08008F06:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8008B44
+	THUMB_FUNC_END GetStrTalkLen
 
 	THUMB_FUNC_START GetZero
 GetZero: @ 0x08008F18
@@ -5040,12 +5040,12 @@ sub_8008F1C: @ 0x08008F1C
 
 	THUMB_FUNC_END sub_8008F1C
 
-	THUMB_FUNC_START sub_8008F20
-sub_8008F20: @ 0x08008F20
+	THUMB_FUNC_START DialogueEnableBgSyncByMask
+DialogueEnableBgSyncByMask: @ 0x08008F20
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #0x20
-	bl sub_8006ADC
+	bl CheckDialogueFlag
 	cmp r0, #0
 	bne _08008F34
 	adds r0, r4, #0
@@ -5055,7 +5055,7 @@ _08008F34:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8008F20
+	THUMB_FUNC_END DialogueEnableBgSyncByMask
 
 	THUMB_FUNC_START sub_8008F3C
 sub_8008F3C: @ 0x08008F3C
@@ -5416,7 +5416,7 @@ sub_8009198: @ 0x08009198
 	push {r6}
 	sub sp, #0x18
 	mov r8, r0
-	ldr r1, _080091F8  @ gUnknown_0202BCB0
+	ldr r1, _080091F8  @ gBmSt
 	movs r2, #0xc
 	ldrsh r0, [r1, r2]
 	mov r5, r8
@@ -5459,7 +5459,7 @@ sub_8009198: @ 0x08009198
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080091F8: .4byte gUnknown_0202BCB0
+_080091F8: .4byte gBmSt
 _080091FC: .4byte 0x000001FF
 
 	THUMB_FUNC_END sub_8009198
@@ -5472,7 +5472,7 @@ sub_8009200: @ 0x08009200
 	ldr r5, [r6]
 	cmp r5, #0
 	beq _08009240
-	ldr r2, _08009238  @ gUnknown_0202BCB0
+	ldr r2, _08009238  @ gBmSt
 	movs r1, #0xc
 	ldrsh r0, [r2, r1]
 	ldr r1, [r4, #0x2c]
@@ -5493,7 +5493,7 @@ sub_8009200: @ 0x08009200
 	bl SetAnimProcParams
 	b _08009248
 	.align 2, 0
-_08009238: .4byte gUnknown_0202BCB0
+_08009238: .4byte gBmSt
 _0800923C: .4byte 0x000001FF
 _08009240:
 	adds r0, r4, #0

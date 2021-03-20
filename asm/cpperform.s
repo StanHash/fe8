@@ -4,8 +4,8 @@
 
 	@ Computer/AI Phase (and berserk) action performing & display proc(s) (I think)
 
-	THUMB_FUNC_START sub_8039E88
-sub_8039E88: @ 0x08039E88
+	THUMB_FUNC_START AiTargetCursor_Main
+AiTargetCursor_Main: @ 0x08039E88
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x2c]
@@ -41,10 +41,10 @@ _08039EBC:
 	.align 2, 0
 _08039EC8: .4byte gKeySt
 
-	THUMB_FUNC_END sub_8039E88
+	THUMB_FUNC_END AiTargetCursor_Main
 
-	THUMB_FUNC_START sub_8039ECC
-sub_8039ECC: @ 0x08039ECC
+	THUMB_FUNC_START StartAiTargetCursor
+StartAiTargetCursor: @ 0x08039ECC
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -64,26 +64,26 @@ sub_8039ECC: @ 0x08039ECC
 	.align 2, 0
 _08039EF0: .4byte gUnknown_085A8004
 
-	THUMB_FUNC_END sub_8039ECC
+	THUMB_FUNC_END StartAiTargetCursor
 
-	THUMB_FUNC_START sub_8039EF4
-sub_8039EF4: @ 0x08039EF4
+	THUMB_FUNC_START CpPerform_UpdateMapMusic
+CpPerform_UpdateMapMusic: @ 0x08039EF4
 	push {lr}
 	ldr r0, _08039F08  @ ProcScr_DelaySong
 	bl FindProc
 	cmp r0, #0
 	bne _08039F04
-	bl sub_80160D0
+	bl UpdatePlayMapMusic
 _08039F04:
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08039F08: .4byte ProcScr_DelaySong
 
-	THUMB_FUNC_END sub_8039EF4
+	THUMB_FUNC_END CpPerform_UpdateMapMusic
 
-	THUMB_FUNC_START sub_8039F0C
-sub_8039F0C: @ 0x08039F0C
+	THUMB_FUNC_START CpPerform_MoveCameraOntoUnit
+CpPerform_MoveCameraOntoUnit: @ 0x08039F0C
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	movs r0, #0x31
@@ -92,7 +92,7 @@ sub_8039F0C: @ 0x08039F0C
 	movs r0, #1
 	mov r1, ip
 	strb r0, [r1]
-	ldr r1, _08039F68  @ gRAMChapterData
+	ldr r1, _08039F68  @ gPlaySt
 	ldrb r0, [r1, #0xd]
 	cmp r0, #0
 	beq _08039F8E
@@ -103,7 +103,7 @@ sub_8039F0C: @ 0x08039F0C
 	ldr r1, [r0]
 	movs r6, #0x11
 	ldrsb r6, [r1, r6]
-	ldr r0, _08039F70  @ gBmMapFog
+	ldr r0, _08039F70  @ gMapFog
 	ldr r2, [r0]
 	lsls r0, r6, #2
 	adds r0, r0, r2
@@ -131,9 +131,9 @@ _08039F5C:
 	bl EnsureCameraOntoPosition
 	b _08039FA0
 	.align 2, 0
-_08039F68: .4byte gRAMChapterData
+_08039F68: .4byte gPlaySt
 _08039F6C: .4byte gActiveUnit
-_08039F70: .4byte gBmMapFog
+_08039F70: .4byte gMapFog
 _08039F74: .4byte gAiDecision
 _08039F78:
 	mov r1, ip
@@ -162,35 +162,35 @@ _08039FA0:
 	.align 2, 0
 _08039FA8: .4byte gActiveUnit
 
-	THUMB_FUNC_END sub_8039F0C
+	THUMB_FUNC_END CpPerform_MoveCameraOntoUnit
 
-	THUMB_FUNC_START sub_8039FAC
-sub_8039FAC: @ 0x08039FAC
+	THUMB_FUNC_START CpPerform_BeginUnitMovement
+CpPerform_BeginUnitMovement: @ 0x08039FAC
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	ldr r6, _0803A010  @ gActiveUnit
 	ldr r0, [r6]
 	bl UnitBeginAction
 	ldr r0, [r6]
-	bl HideUnitSMS
+	bl HideUnitSprite
 	ldr r0, [r6]
-	bl GenerateUnitMovementMap
-	ldr r0, _0803A014  @ gBmMapMovement
+	bl FillMovementMapForUnit
+	ldr r0, _0803A014  @ gMapMovement
 	ldr r0, [r0]
-	bl SetWorkingBmMap
+	bl SetSubjectMap
 	ldr r4, _0803A018  @ gAiDecision
 	ldrb r0, [r4, #2]
 	ldrb r1, [r4, #3]
-	ldr r7, _0803A01C  @ gWorkingMovementScript
+	ldr r7, _0803A01C  @ gUnitMoveBuffer
 	adds r2, r7, #0
-	bl GenerateBestMovementScript
+	bl GenerateMovementInstructionsToPoint
 	ldr r0, [r6]
 	movs r1, #0x10
 	ldrsb r1, [r0, r1]
 	movs r2, #0x11
 	ldrsb r2, [r0, r2]
-	bl UnitApplyWorkingMovementScript
-	ldr r1, _0803A020  @ gActionData
+	bl ProcessUnitMovement
+	ldr r1, _0803A020  @ gAction
 	ldrb r0, [r1, #0xe]
 	strb r0, [r4, #2]
 	ldrb r0, [r1, #0xf]
@@ -210,17 +210,17 @@ _0803A00A:
 	bx r0
 	.align 2, 0
 _0803A010: .4byte gActiveUnit
-_0803A014: .4byte gBmMapMovement
+_0803A014: .4byte gMapMovement
 _0803A018: .4byte gAiDecision
-_0803A01C: .4byte gWorkingMovementScript
-_0803A020: .4byte gActionData
+_0803A01C: .4byte gUnitMoveBuffer
+_0803A020: .4byte gAction
 
-	THUMB_FUNC_END sub_8039FAC
+	THUMB_FUNC_END CpPerform_BeginUnitMovement
 
-	THUMB_FUNC_START sub_803A024
-sub_803A024: @ 0x0803A024
+	THUMB_FUNC_START AiRefreshMap
+AiRefreshMap: @ 0x0803A024
 	push {r4, r5, lr}
-	ldr r0, _0803A070  @ gActionData
+	ldr r0, _0803A070  @ gAction
 	ldrb r0, [r0, #0xc]
 	bl GetUnit
 	ldr r5, _0803A074  @ gActiveUnit
@@ -236,27 +236,27 @@ sub_803A024: @ 0x0803A024
 	bl RefreshEntityBmMaps
 	bl RenderBmMap
 	movs r0, #1
-	bl NewBMXFADE
+	bl StartBMXFADE
 	bl MU_EndAll
 	bl RefreshEntityBmMaps
 	ldr r0, [r5]
-	bl ShowUnitSMS
-	bl SMS_UpdateFromGameData
+	bl ShowUnitSprite
+	bl RefreshUnitSprites
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803A070: .4byte gActionData
+_0803A070: .4byte gAction
 _0803A074: .4byte gActiveUnit
 _0803A078: .4byte gAiDecision
 
-	THUMB_FUNC_END sub_803A024
+	THUMB_FUNC_END AiRefreshMap
 
-	THUMB_FUNC_START ApplyAICombat2
-ApplyAICombat2: @ 0x0803A07C
+	THUMB_FUNC_START CpPerform_PerformCombat
+CpPerform_PerformCombat: @ 0x0803A07C
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
-	ldr r5, _0803A0D4  @ gActionData
+	ldr r5, _0803A0D4  @ gAction
 	ldr r0, _0803A0D8  @ gActiveUnitId
 	ldrb r0, [r0]
 	strb r0, [r5, #0xc]
@@ -297,7 +297,7 @@ _0803A0BA:
 	movs r0, #0
 	b _0803A0E6
 	.align 2, 0
-_0803A0D4: .4byte gActionData
+_0803A0D4: .4byte gAction
 _0803A0D8: .4byte gActiveUnitId
 _0803A0DC: .4byte gAiDecision
 _0803A0E0: .4byte gActiveUnit
@@ -311,10 +311,10 @@ _0803A0E6:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END ApplyAICombat2
+	THUMB_FUNC_END CpPerform_PerformCombat
 
-	THUMB_FUNC_START sub_803A0F4
-sub_803A0F4: @ 0x0803A0F4
+	THUMB_FUNC_START CpPerform_PerformEscape
+CpPerform_PerformEscape: @ 0x0803A0F4
 	push {r4, lr}
 	sub sp, #0xc
 	adds r4, r0, #0
@@ -346,10 +346,10 @@ _0803A124:
 _0803A12C: .4byte gUnknown_080D80E8
 _0803A130: .4byte gAiDecision
 
-	THUMB_FUNC_END sub_803A0F4
+	THUMB_FUNC_END CpPerform_PerformEscape
 
-	THUMB_FUNC_START sub_803A134
-sub_803A134: @ 0x0803A134
+	THUMB_FUNC_START CpPerform_PerformSteal
+CpPerform_PerformSteal: @ 0x0803A134
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
@@ -372,7 +372,7 @@ sub_803A134: @ 0x0803A134
 	bl UnitRemoveItem
 	adds r0, r5, #0
 	mov r1, r8
-	bl sub_8011694
+	bl CreateItemStealingPopup
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6}
@@ -382,16 +382,16 @@ sub_803A134: @ 0x0803A134
 _0803A174: .4byte gAiDecision
 _0803A178: .4byte gActiveUnit
 
-	THUMB_FUNC_END sub_803A134
+	THUMB_FUNC_END CpPerform_PerformSteal
 
-	THUMB_FUNC_START sub_803A17C
-sub_803A17C: @ 0x0803A17C
+	THUMB_FUNC_START CpPerform_LootWait
+CpPerform_LootWait: @ 0x0803A17C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r3, _0803A1B8  @ gAiDecision
 	ldrb r2, [r3, #2]
 	ldrb r4, [r3, #3]
-	ldr r0, _0803A1BC  @ gBmMapTerrain
+	ldr r0, _0803A1BC  @ gMapTerrain
 	ldr r1, [r0]
 	lsls r0, r4, #2
 	adds r0, r0, r1
@@ -406,7 +406,7 @@ sub_803A17C: @ 0x0803A17C
 	ldr r1, [r1]
 	ldrb r0, [r3, #3]
 	strb r0, [r1, #0x11]
-	ldr r1, _0803A1C4  @ gActionData
+	ldr r1, _0803A1C4  @ gAction
 	movs r0, #0x1a
 	strb r0, [r1, #0x11]
 	ldrb r0, [r3, #7]
@@ -416,17 +416,17 @@ sub_803A17C: @ 0x0803A17C
 	b _0803A1F4
 	.align 2, 0
 _0803A1B8: .4byte gAiDecision
-_0803A1BC: .4byte gBmMapTerrain
+_0803A1BC: .4byte gMapTerrain
 _0803A1C0: .4byte gActiveUnit
-_0803A1C4: .4byte gActionData
+_0803A1C4: .4byte gAction
 _0803A1C8:
 	subs r1, r4, #1
 	lsls r0, r2, #0x18
 	asrs r0, r0, #0x18
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_80840C4
-	ldr r0, _0803A1FC  @ gRAMChapterData
+	bl RunLocationEvents
+	ldr r0, _0803A1FC  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -439,20 +439,20 @@ _0803A1E8:
 	movs r1, #0x60
 	movs r2, #0
 	adds r3, r5, #0
-	bl NewPopupSimple
+	bl Popup_Create
 _0803A1F4:
 	movs r0, #1
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0803A1FC: .4byte gRAMChapterData
+_0803A1FC: .4byte gPlaySt
 _0803A200: .4byte gUnknown_085A80A4
 
-	THUMB_FUNC_END sub_803A17C
+	THUMB_FUNC_END CpPerform_LootWait
 
-	THUMB_FUNC_START sub_803A204
-sub_803A204: @ 0x0803A204
+	THUMB_FUNC_START CpPerform_StaffWait
+CpPerform_StaffWait: @ 0x0803A204
 	push {r4, lr}
 	ldr r4, _0803A230  @ gActiveUnit
 	ldr r2, [r4]
@@ -462,7 +462,7 @@ sub_803A204: @ 0x0803A204
 	ldr r2, [r4]
 	ldrb r1, [r3, #3]
 	strb r1, [r2, #0x11]
-	ldr r2, _0803A238  @ gActionData
+	ldr r2, _0803A238  @ gAction
 	movs r1, #3
 	strb r1, [r2, #0x11]
 	ldrb r1, [r3, #6]
@@ -477,12 +477,12 @@ sub_803A204: @ 0x0803A204
 	.align 2, 0
 _0803A230: .4byte gActiveUnit
 _0803A234: .4byte gAiDecision
-_0803A238: .4byte gActionData
+_0803A238: .4byte gAction
 
-	THUMB_FUNC_END sub_803A204
+	THUMB_FUNC_END CpPerform_StaffWait
 
-	THUMB_FUNC_START sub_803A23C
-sub_803A23C: @ 0x0803A23C
+	THUMB_FUNC_START CpPerform_ChestWait
+CpPerform_ChestWait: @ 0x0803A23C
 	push {r4, lr}
 	ldr r4, _0803A264  @ gActiveUnit
 	ldr r2, [r4]
@@ -492,7 +492,7 @@ sub_803A23C: @ 0x0803A23C
 	ldr r2, [r4]
 	ldrb r1, [r3, #3]
 	strb r1, [r2, #0x11]
-	ldr r2, _0803A26C  @ gActionData
+	ldr r2, _0803A26C  @ gAction
 	movs r1, #0x1a
 	strb r1, [r2, #0x11]
 	ldrb r1, [r3, #7]
@@ -505,19 +505,19 @@ sub_803A23C: @ 0x0803A23C
 	.align 2, 0
 _0803A264: .4byte gActiveUnit
 _0803A268: .4byte gAiDecision
-_0803A26C: .4byte gActionData
+_0803A26C: .4byte gAction
 
-	THUMB_FUNC_END sub_803A23C
+	THUMB_FUNC_END CpPerform_ChestWait
 
-	THUMB_FUNC_START sub_803A270
-sub_803A270: @ 0x0803A270
+	THUMB_FUNC_START CpPerform_DanceWait
+CpPerform_DanceWait: @ 0x0803A270
 	movs r0, #1
 	bx lr
 
-	THUMB_FUNC_END sub_803A270
+	THUMB_FUNC_END CpPerform_DanceWait
 
-	THUMB_FUNC_START sub_803A274
-sub_803A274: @ 0x0803A274
+	THUMB_FUNC_START CpPerform_TalkWait
+CpPerform_TalkWait: @ 0x0803A274
 	push {r4, r5, lr}
 	ldr r2, _0803A2B0  @ gActiveUnit
 	ldr r1, [r2]
@@ -539,7 +539,7 @@ sub_803A274: @ 0x0803A274
 	ldr r0, [r0]
 	ldrb r1, [r0, #4]
 	adds r0, r4, #0
-	bl sub_8083FB0
+	bl RunCharacterEvents
 _0803A2A6:
 	movs r0, #1
 	pop {r4, r5}
@@ -549,10 +549,10 @@ _0803A2A6:
 _0803A2B0: .4byte gActiveUnit
 _0803A2B4: .4byte gAiDecision
 
-	THUMB_FUNC_END sub_803A274
+	THUMB_FUNC_END CpPerform_TalkWait
 
-	THUMB_FUNC_START sub_803A2B8
-sub_803A2B8: @ 0x0803A2B8
+	THUMB_FUNC_START CpPerform_RideBallistaWait
+CpPerform_RideBallistaWait: @ 0x0803A2B8
 	push {lr}
 	ldr r1, _0803A2D8  @ gActiveUnit
 	ldr r2, [r1]
@@ -571,10 +571,10 @@ sub_803A2B8: @ 0x0803A2B8
 _0803A2D8: .4byte gActiveUnit
 _0803A2DC: .4byte gAiDecision
 
-	THUMB_FUNC_END sub_803A2B8
+	THUMB_FUNC_END CpPerform_RideBallistaWait
 
-	THUMB_FUNC_START sub_803A2E0
-sub_803A2E0: @ 0x0803A2E0
+	THUMB_FUNC_START CpPerform_ExitBallistaWait
+CpPerform_ExitBallistaWait: @ 0x0803A2E0
 	push {lr}
 	ldr r1, _0803A300  @ gActiveUnit
 	ldr r2, [r1]
@@ -593,13 +593,13 @@ sub_803A2E0: @ 0x0803A2E0
 _0803A300: .4byte gActiveUnit
 _0803A304: .4byte gAiDecision
 
-	THUMB_FUNC_END sub_803A2E0
+	THUMB_FUNC_END CpPerform_ExitBallistaWait
 
-	THUMB_FUNC_START ApplyAICombat
-ApplyAICombat: @ 0x0803A308
+	THUMB_FUNC_START CpPerform_PerformSomeOtherCombat
+CpPerform_PerformSomeOtherCombat: @ 0x0803A308
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
-	ldr r4, _0803A348  @ gActionData
+	ldr r4, _0803A348  @ gAction
 	ldr r0, _0803A34C  @ gActiveUnitId
 	ldrb r0, [r0]
 	movs r5, #0
@@ -627,17 +627,17 @@ ApplyAICombat: @ 0x0803A308
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0803A348: .4byte gActionData
+_0803A348: .4byte gAction
 _0803A34C: .4byte gActiveUnitId
 _0803A350: .4byte gAiDecision
 _0803A354: .4byte gActiveUnit
 
-	THUMB_FUNC_END ApplyAICombat
+	THUMB_FUNC_END CpPerform_PerformSomeOtherCombat
 
-	THUMB_FUNC_START ApplyAIDKSummonAction
-ApplyAIDKSummonAction: @ 0x0803A358
+	THUMB_FUNC_START CpPerform_PerformDkSummon
+CpPerform_PerformDkSummon: @ 0x0803A358
 	push {r4, lr}
-	ldr r2, _0803A380  @ gActionData
+	ldr r2, _0803A380  @ gAction
 	ldr r1, _0803A384  @ gActiveUnitId
 	ldrb r1, [r1]
 	strb r1, [r2, #0xc]
@@ -656,15 +656,15 @@ ApplyAIDKSummonAction: @ 0x0803A358
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803A380: .4byte gActionData
+_0803A380: .4byte gAction
 _0803A384: .4byte gActiveUnitId
 _0803A388: .4byte gActiveUnit
 _0803A38C: .4byte gAiDecision
 
-	THUMB_FUNC_END ApplyAIDKSummonAction
+	THUMB_FUNC_END CpPerform_PerformDkSummon
 
-	THUMB_FUNC_START ApplyAIPickAction
-ApplyAIPickAction: @ 0x0803A390
+	THUMB_FUNC_START CpPerform_PickWait
+CpPerform_PickWait: @ 0x0803A390
 	push {r4, lr}
 	ldr r4, _0803A3BC  @ gActiveUnit
 	ldr r2, [r4]
@@ -674,7 +674,7 @@ ApplyAIPickAction: @ 0x0803A390
 	ldr r2, [r4]
 	ldrb r1, [r3, #3]
 	strb r1, [r2, #0x11]
-	ldr r2, _0803A3C4  @ gActionData
+	ldr r2, _0803A3C4  @ gAction
 	ldrb r1, [r3, #8]
 	strb r1, [r2, #0x13]
 	ldrb r1, [r3, #9]
@@ -689,19 +689,19 @@ ApplyAIPickAction: @ 0x0803A390
 	.align 2, 0
 _0803A3BC: .4byte gActiveUnit
 _0803A3C0: .4byte gAiDecision
-_0803A3C4: .4byte gActionData
+_0803A3C4: .4byte gAction
 
-	THUMB_FUNC_END ApplyAIPickAction
+	THUMB_FUNC_END CpPerform_PickWait
 
-	THUMB_FUNC_START sub_803A3C8
-sub_803A3C8: @ 0x0803A3C8
+	THUMB_FUNC_START CpPerform_MoveCameraOntoTarget
+CpPerform_MoveCameraOntoTarget: @ 0x0803A3C8
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
 	mov r8, r0
 	movs r6, #0
 	movs r5, #0
-	ldr r0, _0803A3F4  @ gActionData
+	ldr r0, _0803A3F4  @ gAction
 	ldrb r0, [r0, #0x11]
 	cmp r0, #0x1e
 	bne _0803A3DE
@@ -718,7 +718,7 @@ _0803A3DE:
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_0803A3F4: .4byte gActionData
+_0803A3F4: .4byte gAction
 _0803A3F8: .4byte gAiDecision
 _0803A3FC: .4byte _0803A400
 _0803A400: @ jump table
@@ -813,7 +813,7 @@ _0803A4C2:
 	lsls r1, r5, #4
 	movs r2, #2
 	mov r3, r8
-	bl sub_8039ECC
+	bl StartAiTargetCursor
 _0803A4D8:
 	pop {r3}
 	mov r8, r3
@@ -821,25 +821,25 @@ _0803A4D8:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_803A3C8
+	THUMB_FUNC_END CpPerform_MoveCameraOntoTarget
 
-	THUMB_FUNC_START PrepareAIAction
-PrepareAIAction: @ 0x0803A4E4
+	THUMB_FUNC_START CpPerform_PerformAction
+CpPerform_PerformAction: @ 0x0803A4E4
 	push {r4, lr}
 	adds r4, r0, #0
 	adds r1, r4, #0
 	adds r1, #0x30
 	movs r0, #0
 	strb r0, [r1]
-	ldr r0, _0803A4FC  @ gActionData
+	ldr r0, _0803A4FC  @ gAction
 	ldrb r0, [r0, #0x11]
 	cmp r0, #0x1e
 	bne _0803A504
-	ldr r0, _0803A500  @ sub_803A674
+	ldr r0, _0803A500  @ CpPerform_DummyWait
 	b _0803A5EA
 	.align 2, 0
-_0803A4FC: .4byte gActionData
-_0803A500: .4byte sub_803A674
+_0803A4FC: .4byte gAction
+_0803A500: .4byte CpPerform_DummyWait
 _0803A504:
 	ldr r0, _0803A518  @ gAiDecision
 	ldrb r0, [r0]
@@ -871,85 +871,85 @@ _0803A520: @ jump table
 	.4byte _0803A5D8 @ case 12
 	.4byte _0803A5E8 @ case 13
 _0803A558:
-	ldr r0, _0803A55C  @ sub_803A674
+	ldr r0, _0803A55C  @ CpPerform_DummyWait
 	b _0803A5EA
 	.align 2, 0
-_0803A55C: .4byte sub_803A674
+_0803A55C: .4byte CpPerform_DummyWait
 _0803A560:
-	ldr r0, _0803A56C  @ sub_803A674
+	ldr r0, _0803A56C  @ CpPerform_DummyWait
 	str r0, [r4, #0x2c]
 	adds r0, r4, #0
-	bl ApplyAICombat2
+	bl CpPerform_PerformCombat
 	b _0803A5EC
 	.align 2, 0
-_0803A56C: .4byte sub_803A674
+_0803A56C: .4byte CpPerform_DummyWait
 _0803A570:
 	adds r0, r4, #0
-	bl sub_803A0F4
-	ldr r0, _0803A57C  @ sub_803A678
+	bl CpPerform_PerformEscape
+	ldr r0, _0803A57C  @ CpPerform_EscapeWait
 	b _0803A5EA
 	.align 2, 0
-_0803A57C: .4byte sub_803A678
+_0803A57C: .4byte CpPerform_EscapeWait
 _0803A580:
 	adds r0, r4, #0
-	bl sub_803A134
-	ldr r0, _0803A58C  @ sub_803A69C
+	bl CpPerform_PerformSteal
+	ldr r0, _0803A58C  @ CpPerform_StealWait
 	b _0803A5EA
 	.align 2, 0
-_0803A58C: .4byte sub_803A69C
+_0803A58C: .4byte CpPerform_StealWait
 _0803A590:
-	ldr r0, _0803A594  @ sub_803A17C
+	ldr r0, _0803A594  @ CpPerform_LootWait
 	b _0803A5EA
 	.align 2, 0
-_0803A594: .4byte sub_803A17C
+_0803A594: .4byte CpPerform_LootWait
 _0803A598:
-	ldr r0, _0803A59C  @ sub_803A204
+	ldr r0, _0803A59C  @ CpPerform_StaffWait
 	b _0803A5EA
 	.align 2, 0
-_0803A59C: .4byte sub_803A204
+_0803A59C: .4byte CpPerform_StaffWait
 _0803A5A0:
-	ldr r0, _0803A5A4  @ sub_803A23C
+	ldr r0, _0803A5A4  @ CpPerform_ChestWait
 	b _0803A5EA
 	.align 2, 0
-_0803A5A4: .4byte sub_803A23C
+_0803A5A4: .4byte CpPerform_ChestWait
 _0803A5A8:
-	ldr r0, _0803A5AC  @ sub_803A270
+	ldr r0, _0803A5AC  @ CpPerform_DanceWait
 	b _0803A5EA
 	.align 2, 0
-_0803A5AC: .4byte sub_803A270
+_0803A5AC: .4byte CpPerform_DanceWait
 _0803A5B0:
-	ldr r0, _0803A5B4  @ sub_803A274
+	ldr r0, _0803A5B4  @ CpPerform_TalkWait
 	b _0803A5EA
 	.align 2, 0
-_0803A5B4: .4byte sub_803A274
+_0803A5B4: .4byte CpPerform_TalkWait
 _0803A5B8:
-	ldr r0, _0803A5BC  @ sub_803A2B8
+	ldr r0, _0803A5BC  @ CpPerform_RideBallistaWait
 	b _0803A5EA
 	.align 2, 0
-_0803A5BC: .4byte sub_803A2B8
+_0803A5BC: .4byte CpPerform_RideBallistaWait
 _0803A5C0:
-	ldr r0, _0803A5C4  @ sub_803A2E0
+	ldr r0, _0803A5C4  @ CpPerform_ExitBallistaWait
 	b _0803A5EA
 	.align 2, 0
-_0803A5C4: .4byte sub_803A2E0
+_0803A5C4: .4byte CpPerform_ExitBallistaWait
 _0803A5C8:
-	ldr r0, _0803A5D4  @ sub_803A674
+	ldr r0, _0803A5D4  @ CpPerform_DummyWait
 	str r0, [r4, #0x2c]
 	adds r0, r4, #0
-	bl ApplyAICombat
+	bl CpPerform_PerformSomeOtherCombat
 	b _0803A5EC
 	.align 2, 0
-_0803A5D4: .4byte sub_803A674
+_0803A5D4: .4byte CpPerform_DummyWait
 _0803A5D8:
-	ldr r0, _0803A5E4  @ sub_803A674
+	ldr r0, _0803A5E4  @ CpPerform_DummyWait
 	str r0, [r4, #0x2c]
 	adds r0, r4, #0
-	bl ApplyAIDKSummonAction
+	bl CpPerform_PerformDkSummon
 	b _0803A5EC
 	.align 2, 0
-_0803A5E4: .4byte sub_803A674
+_0803A5E4: .4byte CpPerform_DummyWait
 _0803A5E8:
-	ldr r0, _0803A5F4  @ ApplyAIPickAction
+	ldr r0, _0803A5F4  @ CpPerform_PickWait
 _0803A5EA:
 	str r0, [r4, #0x2c]
 _0803A5EC:
@@ -957,12 +957,12 @@ _0803A5EC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803A5F4: .4byte ApplyAIPickAction
+_0803A5F4: .4byte CpPerform_PickWait
 
-	THUMB_FUNC_END PrepareAIAction
+	THUMB_FUNC_END CpPerform_PerformAction
 
-	THUMB_FUNC_START sub_803A5F8
-sub_803A5F8: @ 0x0803A5F8
+	THUMB_FUNC_START CpPerform_WaitAction
+CpPerform_WaitAction: @ 0x0803A5F8
 	push {r4, lr}
 	adds r4, r0, #0
 	adds r1, r4, #0
@@ -995,14 +995,14 @@ _0803A61C:
 _0803A634: .4byte gActiveUnit
 _0803A638: .4byte gAiDecision
 
-	THUMB_FUNC_END sub_803A5F8
+	THUMB_FUNC_END CpPerform_WaitAction
 
 	THUMB_FUNC_START sub_803A63C
 sub_803A63C: @ 0x0803A63C
 	push {r4, lr}
 	adds r4, r0, #0
-	bl UpdateAllPhaseHealingAIStatus
-	bl sub_803A024
+	bl AiUpdateAllUnitHealAi
+	bl AiRefreshMap
 	ldr r0, _0803A66C  @ gActiveUnit
 	ldr r1, [r0]
 	ldr r0, [r1]
@@ -1027,15 +1027,15 @@ _0803A670: .4byte 0x00010005
 
 	THUMB_FUNC_END sub_803A63C
 
-	THUMB_FUNC_START sub_803A674
-sub_803A674: @ 0x0803A674
+	THUMB_FUNC_START CpPerform_DummyWait
+CpPerform_DummyWait: @ 0x0803A674
 	movs r0, #1
 	bx lr
 
-	THUMB_FUNC_END sub_803A674
+	THUMB_FUNC_END CpPerform_DummyWait
 
-	THUMB_FUNC_START sub_803A678
-sub_803A678: @ 0x0803A678
+	THUMB_FUNC_START CpPerform_EscapeWait
+CpPerform_EscapeWait: @ 0x0803A678
 	push {lr}
 	bl MU_IsAnyActive
 	lsls r0, r0, #0x18
@@ -1055,10 +1055,10 @@ _0803A692:
 	.align 2, 0
 _0803A698: .4byte gActiveUnit
 
-	THUMB_FUNC_END sub_803A678
+	THUMB_FUNC_END CpPerform_EscapeWait
 
-	THUMB_FUNC_START sub_803A69C
-sub_803A69C: @ 0x0803A69C
+	THUMB_FUNC_START CpPerform_StealWait
+CpPerform_StealWait: @ 0x0803A69C
 	push {lr}
 	adds r0, #0x30
 	ldrb r0, [r0]
@@ -1083,7 +1083,7 @@ _0803A6C2:
 _0803A6C8: .4byte gBg0Tm
 _0803A6CC: .4byte gBg1Tm
 
-	THUMB_FUNC_END sub_803A69C
+	THUMB_FUNC_END CpPerform_StealWait
 
 	THUMB_FUNC_START sub_803A6D0
 sub_803A6D0: @ 0x0803A6D0

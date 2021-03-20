@@ -150,8 +150,8 @@ enum {
 
 extern struct BattleStats gBattleStats;
 
-extern struct BattleUnit gBattleActor;
-extern struct BattleUnit gBattleTarget;
+extern struct BattleUnit gBattleUnitA;
+extern struct BattleUnit gBattleUnitB;
 
 extern struct BattleHit gBattleHitArray[BATTLE_HIT_MAX];
 extern struct BattleHit* gBattleHitIterator;
@@ -181,8 +181,8 @@ int GetAutoleveledStatIncrease(int growth, int levelCount);
 s8 CanBattleUnitGainLevels(struct BattleUnit* bu);
 void CheckBattleUnitLevelUp(struct BattleUnit* bu);
 void ApplyUnitDefaultPromotion(struct Unit* unit);
-void ApplyUnitPromotion(struct Unit* unit, u8 classId);
-void GenerateBattleUnitStatGainsComparatively(struct BattleUnit* bu, struct Unit* unit);
+void ApplyUnitPromotion(struct Unit* unit, u8 jid);
+void MakeBattleUnitPromoteGains(struct BattleUnit* bu, struct Unit* unit);
 void CheckBattleUnitStatCaps(struct Unit* unit, struct BattleUnit* bu);
 void BattleApplyUnitUpdates(void);
 s8 sub_802C0B0(void); // unused?
@@ -209,7 +209,7 @@ void BattleGenerateArena(struct Unit* unit);
 s8 BattleIsTriangleAttack(void);
 s8 DidBattleUnitBreakWeapon(struct BattleUnit* bu);
 void SetScriptedBattle(struct BattleHit* hits);
-void UnitLevelUp(struct Unit* unit);
+void UnitLevelUp_unused(struct Unit* unit);
 void BattleHitAdvance(void);
 void BattleHitTerminate(void);
 

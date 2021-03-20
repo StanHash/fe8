@@ -40,10 +40,10 @@ void AgbMain(void)
     RefreshKeySt(gKeySt);
 
     InitRamFuncs();
-    sub_80A2C3C();
+    SramInit();
     InitProcs();
     InitAnims();
-    InitMus();
+    MU_Init();
 
     RandInitB(0x42D690E9);
     RandInit(RandNextB());
@@ -56,8 +56,8 @@ void AgbMain(void)
     m4aSoundInit();
     Sound_SetDefaultMaxNumChannels();
 
-    SetOnVBlank(OnVSync);
-    sub_80BC81C();
+    SetOnVBlank(OnVBlank);
+    GmDataInit();
 
     SetLang(LANG_ENGLISH);
     ResetText();

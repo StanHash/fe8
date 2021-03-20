@@ -42,8 +42,8 @@ enum
 
 struct Trap
 {
-    /* 00 */ u8 xPos;
-    /* 01 */ u8 yPos;
+    /* 00 */ u8 x;
+    /* 01 */ u8 y;
 
     /* 02 */ u8 type;
 
@@ -53,42 +53,42 @@ struct Trap
 
 #define TRAP_INDEX(aTrap) ((aTrap) - GetTrap(0))
 
-void ClearTraps(void);
+void ResetTraps(void);
 struct Trap* GetTrapAt(int x, int y);
-struct Trap* GetTypedTrapAt(int x, int y, int trapType);
+struct Trap* GetSpecificTrapAt(int x, int y, int trapType);
 struct Trap* AddTrap(int x, int y, int trapType, int meta);
-struct Trap* AddDamagingTrap(int x, int y, int trapType, int meta, int turnCountdown, int turnInterval, int damage);
+struct Trap* AddTrapExt(int x, int y, int trapType, int meta, int turnCountdown, int turnInterval, int damage);
 struct Trap* RemoveTrap(struct Trap* trap);
-void AddFireTile(int x, int y, int turnCountdown, int turnInterval);
+void AddFireTrap(int x, int y, int turnCountdown, int turnInterval);
 void AddGasTrap(int x, int y, int facing, int turnCountdown, int turnInterval);
 void AddArrowTrap(int x, int turnCountdown, int turnInterval);
 void sub_802E36C(int x, int y, int turnCountdown, int turnInterval);
 void AddTrap8(int x, int y);
 void AddTrap9(int x, int y, int meta);
-void InitMapObstacles(void);
-void ApplyEnabledMapChanges(void);
-void RefreshAllLightRunes(void);
-int GetObstacleHpAt(int x, int y);
-const struct MapChange* GetMapChange(int id);
-int GetMapChangeIdAt(int x, int y);
+void AddSnagsAndWalls(void);
+void ApplyTrapMapChanges(void);
+void UpdateAllLightRunes(void);
+int GetTrapExt1At(int x, int y);
+const struct MapChange* GetMapChangesPointerById(int id);
+int GetMapChangesIdAt(int x, int y);
 void ApplyMapChangesById(int mapChangeId);
-void EnableMapChange(int mapChangeId);
-void DisableMapChange(int id);
-s8 IsMapChangeEnabled(int id);
-void UnitHideIfUnderRoof(struct Unit* unit);
-void UpdateRoofedUnits(void);
-void GenerateTrapDamageTargets(void);
+void AddMapChange(int mapChangeId);
+void RemoveMapChange(int id);
+s8 AreMapChangeTriggered(int id);
+void HideIfUnderRoof(struct Unit* unit);
+void UpdateUnitsUnderRoof(void);
+void MakeTargetListForTurnTrapDamage(void);
 void GenerateDisplayedTrapDamageTargets(void);
 void CountDownTraps(void);
-void ResetCountedDownTraps(void);
+void ResetCounterForCountedDownTraps(void);
 void sub_802EA00(void);
 void sub_802EA1C(void);
 void sub_802EA28(void);
 struct Trap* AddLightRune(int x, int y);
 struct Trap* RemoveLightRune(struct Trap* trap);
-void DecayTraps(void);
-void DisableAllLightRunes(void);
-void EnableAllLightRunes(void);
+void HandleTrapDecay(void);
+void BattleSomethingTrapChangeTerrain(void);
+void NullAllLightRunesTerrain(void);
 struct Trap* GetTrap(int id);
 
 #endif // GUARD_BMTRICK_H

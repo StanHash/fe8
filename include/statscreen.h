@@ -172,21 +172,21 @@ void HbRedirect_SSSupports(struct HelpBoxProc* proc);
 // static
 void UpdateHelpBoxDisplay(struct HelpBoxProc* proc, int arg1);
 
+void ShowTextHelpBox(int x, int y, int mid);
+void ShowSilentTextHelpBox(int x, int y, int mid);
+void ShowItemHelpBox(int x, int y, int item);
+void StartHelpBoxFromInfo(const struct HelpBoxInfo* info, int unk);
 void StartHelpBox(int x, int y, int mid);
-void StartHelpBox_Unk(int x, int y, int mid);
-void StartItemHelpBox(int x, int y, int item);
-void StartHelpBoxExt(const struct HelpBoxInfo* info, int unk);
-void StartHelpBoxExt_Unk(int x, int y, int mid);
-void CloseHelpBox(void);
-void CloseHelpBox(void);
+void MoveableHelpBox_OnEnd(void);
+void MoveableHelpBox_OnEnd(void);
 void EndHelpBox(void);
-void StartMovingHelpBox(const struct HelpBoxInfo* info, struct Proc* parent);
-void StartMovingHelpBoxExt(const struct HelpBoxInfo* info, struct Proc* parent, int x, int y);
+void StartMoveableHelpBox(const struct HelpBoxInfo* info, struct Proc* parent);
+void StartMoveableHelpBoxExt(const struct HelpBoxInfo* info, struct Proc* parent, int x, int y);
 
 // static
 void SetHelpBoxInitPosition(struct HelpBoxProc* proc, int x, int y);
 void ResetHelpBoxInitSize(struct HelpBoxProc* proc);
-int GetHelpBoxItemInfoKind(int item);
+int GetItemHelpBoxKind(int item);
 
 int TryRelocateHbUp(struct HelpBoxProc* proc);
 int TryRelocateHbDown(struct HelpBoxProc* proc);
@@ -196,9 +196,9 @@ int TryRelocateHbRight(struct HelpBoxProc* proc);
 int StartLockingHelpBox_Unused(int mid, struct Proc* parent);
 
 struct Proc* StartHelpPromptSprite_Unused(int x, int y, struct Proc* parent);
-struct Proc* StartHelpPromptSprite(int x, int y, int palid, struct Proc* parent);
+struct Proc* ShowRIsInfo(int x, int y, int palid, struct Proc* parent);
 struct Proc* StartHelpPromptSprite_Unused2(int x, int y, struct Proc* parent);
-void EndHelpPromptSprite(void);
+void HideRIsInfo(void);
 void MoveHelpPromptSprite(int x, int y);
 
 const struct HelpBoxInfo* GetLastHelpBoxInfo(void);

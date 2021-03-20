@@ -3,44 +3,44 @@
 #include "hardware.h"
 #include "agb_sram.h"
 
-const struct ROMChapterData* GetROMChapterStruct(unsigned chIndex) {
-    if (chIndex == 0x7F)
-        return (const struct ROMChapterData*) gUnknown_08A1FB34[0];
+const struct ChapterInfo* GetChapterInfo(unsigned chapter) {
+    if (chapter == 0x7F)
+        return (const struct ChapterInfo*) gUnknown_08A1FB34[0];
 
-    return gChapterDataTable + chIndex;
+    return gChapterDataTable + chapter;
 }
 
-const void* GetChapterMapPointer(unsigned chIndex) {
-    if (chIndex != 0x7F)
-        return gChapterDataAssetTable[GetROMChapterStruct(chIndex)->mapMainLayerId];
+const void* GetChapterMapData(unsigned chapter) {
+    if (chapter != 0x7F)
+        return gChapterDataAssetTable[GetChapterInfo(chapter)->mapMainLayerId];
 
-    ReadSramFast(sub_80A6B70(), gBuf, sub_80A6B90());
+    ReadSramFast(GetTrialMapSavedMapAddress(), gBuf, GetTrialMapSavedMapSize());
     return gBuf;
 }
 
-const void* GetChapterMapChangesPointer(unsigned chIndex) {
-    if (chIndex != 0x7F)
-        return gChapterDataAssetTable[GetROMChapterStruct(chIndex)->mapChangeLayerId];
+const void* GetChapterMapChanges(unsigned chapter) {
+    if (chapter != 0x7F)
+        return gChapterDataAssetTable[GetChapterInfo(chapter)->mapChangeLayerId];
 
     return gUnknown_08A1FB34[1];
 }
 
-const void* GetChapterEventDataPointer(unsigned chIndex) {
-    if (chIndex != 0x7F)
-        return gChapterDataAssetTable[GetROMChapterStruct(chIndex)->mapEventDataId];
+const void* GetChapterEventInfo(unsigned chapter) {
+    if (chapter != 0x7F)
+        return gChapterDataAssetTable[GetChapterInfo(chapter)->mapEventDataId];
 
     return gUnknown_08A1FB34[2];
 }
 
-const char* sub_80346E0(unsigned chIndex) {
-    if (chIndex != 0x7F)
+const char* sub_80346E0(unsigned chapter) {
+    if (chapter != 0x7F)
         // ???????????????????
-        return GetMsg((int)(&GetROMChapterStruct(chIndex)->unk70));
+        return GetMsg((int)(&GetChapterInfo(chapter)->unk70));
 
     return gUnknown_08A1FB34[3];
 }
 
-int IsDifficultMode(void) {
-    u8 difficultState = gRAMChapterData.chapterStateBits & CHAPTER_FLAG_DIFFICULT;
-    return difficultState ? TRUE : FALSE;
+int GetRankingRefId(void) {
+    u8 difficultState = gPlaySt.chapterStateBits & CHAPTER_FLAG_DIFFICULT;
+    return difficultState ? 1 : 0;
 }

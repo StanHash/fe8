@@ -58,7 +58,7 @@ enum
     AI_ACTION_NONE = 0, // move only
 };
 
-extern struct AiState gAiState;
+extern struct AiState gAiSt;
 extern struct AiDecision gAiDecision;
 
 extern void(*AiDecideMainFunc)(void);
@@ -70,9 +70,9 @@ extern struct ProcScr CONST_DATA gProcScr_BerserkCpOrder[];
 extern struct ProcScr CONST_DATA gProcScr_CpDecide[];
 extern struct ProcScr CONST_DATA gProcScr_CpPerform[];
 
-void AiClearDecision(void);
+void ClearAiDecision(void);
 void AiSetDecision(u8 xMove, u8 yMove, u8 actionId, u8 targetId, u8 itemSlot, u8 xTarget, u8 yTarget);
 void AiUpdateDecision(u8 actionId, u8 targetId, u8 itemSlot, u8 xTarget, u8 yTarget);
-void AiDecideMain(void);
+void AiMasterDecisionMaker(void);
 
 #endif // GUARD_CP_COMMON_H

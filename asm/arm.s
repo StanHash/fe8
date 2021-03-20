@@ -442,11 +442,11 @@ _08000768:
 	pop {r4, r5, r6, r7}
 	bx lr
 	.align 2, 0
-_08000770: .4byte gWorkingTerrainMoveCosts @ pool
+_08000770: .4byte gWorkingMovTable @ pool
 _08000774: .4byte gMovMapFillState @ pool
-_08000778: .4byte gWorkingBmMap @ pool
-_0800077C: .4byte gBmMapTerrain @ pool
-_08000780: .4byte gBmMapUnit @ pool
+_08000778: .4byte gWorkingMap @ pool
+_0800077C: .4byte gMapTerrain @ pool
+_08000780: .4byte gMapUnit @ pool
 
 	ARM_FUNC_END DecodeString
 

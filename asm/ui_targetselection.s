@@ -6,16 +6,16 @@
 
 	THUMB_FUNC_START InitTargets
 InitTargets: @ 0x0804F8A4
-	ldr r2, _0804F8B4  @ gUnknown_0203DDE8
+	ldr r2, _0804F8B4  @ gTargetPosition
 	movs r3, #0
 	strh r0, [r2]
 	strh r1, [r2, #2]
-	ldr r0, _0804F8B8  @ gUnknown_0203E0EC
+	ldr r0, _0804F8B8  @ gTargetArraySize
 	str r3, [r0]
 	bx lr
 	.align 2, 0
-_0804F8B4: .4byte gUnknown_0203DDE8
-_0804F8B8: .4byte gUnknown_0203E0EC
+_0804F8B4: .4byte gTargetPosition
+_0804F8B8: .4byte gTargetArraySize
 
 	THUMB_FUNC_END InitTargets
 
@@ -24,9 +24,9 @@ AddTarget: @ 0x0804F8BC
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
-	ldr r4, _0804F908  @ gUnknown_0203DDEC
+	ldr r4, _0804F908  @ gTargetArray
 	mov r8, r4
-	ldr r6, _0804F90C  @ gUnknown_0203E0EC
+	ldr r6, _0804F90C  @ gTargetArraySize
 	ldr r5, [r6]
 	lsls r4, r5, #1
 	adds r4, r4, r5
@@ -60,8 +60,8 @@ AddTarget: @ 0x0804F8BC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804F908: .4byte gUnknown_0203DDEC
-_0804F90C: .4byte gUnknown_0203E0EC
+_0804F908: .4byte gTargetArray
+_0804F90C: .4byte gTargetArraySize
 
 	THUMB_FUNC_END AddTarget
 
@@ -69,10 +69,10 @@ _0804F90C: .4byte gUnknown_0203E0EC
 LinkTargets: @ 0x0804F910
 	push {r4, r5, r6, lr}
 	movs r2, #0
-	ldr r0, _0804F950  @ gUnknown_0203E0EC
+	ldr r0, _0804F950  @ gTargetArraySize
 	ldr r1, [r0]
 	adds r6, r0, #0
-	ldr r4, _0804F954  @ gUnknown_0203DDEC
+	ldr r4, _0804F954  @ gTargetArray
 	cmp r2, r1
 	bge _0804F93A
 	adds r5, r6, #0
@@ -102,8 +102,8 @@ _0804F93A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804F950: .4byte gUnknown_0203E0EC
-_0804F954: .4byte gUnknown_0203DDEC
+_0804F950: .4byte gTargetArraySize
+_0804F954: .4byte gTargetArray
 
 	THUMB_FUNC_END LinkTargets
 
@@ -159,7 +159,7 @@ _0804F9B0:
 	ands r0, r5
 	cmp r0, #0
 	beq _0804F9CA
-	ldr r0, _0804FA38  @ gRAMChapterData
+	ldr r0, _0804FA38  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -172,7 +172,7 @@ _0804F9CA:
 	ands r0, r5
 	cmp r0, #0
 	beq _0804F9E4
-	ldr r0, _0804FA38  @ gRAMChapterData
+	ldr r0, _0804FA38  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -222,15 +222,15 @@ _0804FA30:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804FA38: .4byte gRAMChapterData
+_0804FA38: .4byte gPlaySt
 
 	THUMB_FUNC_END TargetSelection_Loop
 
-	THUMB_FUNC_START NewTargetSelection
-NewTargetSelection: @ 0x0804FA3C
+	THUMB_FUNC_START StartTargetSelection
+StartTargetSelection: @ 0x0804FA3C
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
-	bl AddSkipThread2
+	bl LockGameLogic
 	ldr r0, _0804FA9C  @ gUnknown_085B655C
 	movs r1, #3
 	bl SpawnProc
@@ -277,20 +277,20 @@ _0804FA8E:
 _0804FA9C: .4byte gUnknown_085B655C
 _0804FAA0: .4byte gKeySt
 
-	THUMB_FUNC_END NewTargetSelection
+	THUMB_FUNC_END StartTargetSelection
 
-	THUMB_FUNC_START NewTargetSelection_Specialized
-NewTargetSelection_Specialized: @ 0x0804FAA4
+	THUMB_FUNC_START StartTargetSelectionExt
+StartTargetSelectionExt: @ 0x0804FAA4
 	push {r4, lr}
 	adds r4, r1, #0
-	bl NewTargetSelection
+	bl StartTargetSelection
 	adds r1, r0, #0
 	str r4, [r1, #0x38]
 	pop {r4}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END NewTargetSelection_Specialized
+	THUMB_FUNC_END StartTargetSelectionExt
 
 	THUMB_FUNC_START EndTargetSelection
 EndTargetSelection: @ 0x0804FAB8
@@ -310,7 +310,7 @@ _0804FACA:
 	ands r0, r1
 	cmp r0, #0
 	beq _0804FADC
-	bl SubSkipThread2
+	bl UnlockGameLogic
 _0804FADC:
 	adds r0, r4, #0
 	bl Proc_End
@@ -369,7 +369,7 @@ _0804FB34:
 	adds r0, r4, #0
 	bl _call_via_r2
 _0804FB44:
-	ldr r0, _0804FB60  @ gRAMChapterData
+	ldr r0, _0804FB60  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -383,7 +383,7 @@ _0804FB56:
 	bx r0
 	.align 2, 0
 _0804FB5C: .4byte gKeySt
-_0804FB60: .4byte gRAMChapterData
+_0804FB60: .4byte gPlaySt
 
 	THUMB_FUNC_END TargetSelection_HandleMoveInput
 
@@ -486,12 +486,12 @@ _0804FBF8: .4byte gUnknown_085B655C
 GetFarthestTargetIndex: @ 0x0804FBFC
 	push {r4, r5, r6, r7, lr}
 	movs r7, #0
-	ldr r5, _0804FC34  @ gUnknown_0203DDEC
-	ldr r0, _0804FC38  @ gUnknown_0203E0EC
+	ldr r5, _0804FC34  @ gTargetArray
+	ldr r0, _0804FC38  @ gTargetArraySize
 	ldr r0, [r0]
 	cmp r7, r0
 	bge _0804FC52
-	ldr r1, _0804FC3C  @ gUnknown_0203DDE8
+	ldr r1, _0804FC3C  @ gTargetPosition
 	mov ip, r1
 	movs r2, #0
 	ldrsh r6, [r1, r2]
@@ -515,9 +515,9 @@ _0804FC20:
 	adds r0, r2, r1
 	b _0804FC44
 	.align 2, 0
-_0804FC34: .4byte gUnknown_0203DDEC
-_0804FC38: .4byte gUnknown_0203E0EC
-_0804FC3C: .4byte gUnknown_0203DDE8
+_0804FC34: .4byte gTargetArray
+_0804FC38: .4byte gTargetArraySize
+_0804FC3C: .4byte gTargetPosition
 _0804FC40:
 	subs r0, r0, r3
 	adds r0, r2, r0
@@ -549,9 +549,9 @@ LinkTargetsOrdered: @ 0x0804FC5C
 	movs r7, #0
 	movs r5, #0
 	movs r4, #0
-	ldr r0, _0804FCF0  @ gUnknown_0203E0EC
+	ldr r0, _0804FCF0  @ gTargetArraySize
 	mov r9, r0
-	ldr r1, _0804FCF4  @ gUnknown_0203DDE8
+	ldr r1, _0804FCF4  @ gTargetPosition
 	mov r8, r1
 	ldr r3, _0804FCF8  @ gUnknown_085B658C
 	mov sl, r3
@@ -571,7 +571,7 @@ _0804FC7A:
 	ldrsb r0, [r1, r0]
 	adds r2, r2, r0
 	movs r1, #0
-	ldr r3, _0804FCFC  @ gUnknown_0203DDEC
+	ldr r3, _0804FCFC  @ gTargetArray
 	mov r6, r9
 	ldr r0, [r6]
 	adds r4, #1
@@ -620,10 +620,10 @@ _0804FCD4:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0804FCF0: .4byte gUnknown_0203E0EC
-_0804FCF4: .4byte gUnknown_0203DDE8
+_0804FCF0: .4byte gTargetArraySize
+_0804FCF4: .4byte gTargetPosition
 _0804FCF8: .4byte gUnknown_085B658C
-_0804FCFC: .4byte gUnknown_0203DDEC
+_0804FCFC: .4byte gTargetArray
 
 	THUMB_FUNC_END LinkTargetsOrdered
 
@@ -631,11 +631,11 @@ _0804FCFC: .4byte gUnknown_0203DDEC
 GetLinkedTargetList: @ 0x0804FD00
 	push {lr}
 	bl LinkTargets
-	ldr r0, _0804FD0C  @ gUnknown_0203DDEC
+	ldr r0, _0804FD0C  @ gTargetArray
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0804FD0C: .4byte gUnknown_0203DDEC
+_0804FD0C: .4byte gTargetArray
 
 	THUMB_FUNC_END GetLinkedTargetList
 
@@ -655,15 +655,15 @@ _0804FD24:
 
 	THUMB_FUNC_END GetFirstTargetPointer
 
-	THUMB_FUNC_START sub_804FD28
-sub_804FD28: @ 0x0804FD28
-	ldr r0, _0804FD30  @ gUnknown_0203E0EC
+	THUMB_FUNC_START GetTargetListSize
+GetTargetListSize: @ 0x0804FD28
+	ldr r0, _0804FD30  @ gTargetArraySize
 	ldr r0, [r0]
 	bx lr
 	.align 2, 0
-_0804FD30: .4byte gUnknown_0203E0EC
+_0804FD30: .4byte gTargetArraySize
 
-	THUMB_FUNC_END sub_804FD28
+	THUMB_FUNC_END GetTargetListSize
 
 	THUMB_FUNC_START GetTarget
 GetTarget: @ 0x0804FD34
@@ -671,11 +671,11 @@ GetTarget: @ 0x0804FD34
 	lsls r0, r1, #1
 	adds r0, r0, r1
 	lsls r0, r0, #2
-	ldr r1, _0804FD44  @ gUnknown_0203DDEC
+	ldr r1, _0804FD44  @ gTargetArray
 	adds r0, r0, r1
 	bx lr
 	.align 2, 0
-_0804FD44: .4byte gUnknown_0203DDEC
+_0804FD44: .4byte gTargetArray
 
 	THUMB_FUNC_END GetTarget
 

@@ -38,7 +38,7 @@ sub_8037494: @ 0x08037494
 	adds r4, r0, #0
 	ldr r0, _080374BC  @ gUnknown_0859E520
 	bl FindProc
-	ldr r1, _080374C0  @ gBattleActor
+	ldr r1, _080374C0  @ gBattleUnitA
 	adds r1, #0x53
 	movs r2, #0
 	ldrsb r2, [r1, r2]
@@ -54,7 +54,7 @@ sub_8037494: @ 0x08037494
 	bx r0
 	.align 2, 0
 _080374BC: .4byte gUnknown_0859E520
-_080374C0: .4byte gBattleActor
+_080374C0: .4byte gBattleUnitA
 
 	THUMB_FUNC_END sub_8037494
 
@@ -64,7 +64,7 @@ sub_80374C4: @ 0x080374C4
 	adds r4, r0, #0
 	ldr r0, _080374EC  @ gUnknown_0859E520
 	bl FindProc
-	ldr r1, _080374F0  @ gBattleTarget
+	ldr r1, _080374F0  @ gBattleUnitB
 	adds r1, #0x53
 	movs r2, #0
 	ldrsb r2, [r1, r2]
@@ -80,12 +80,12 @@ sub_80374C4: @ 0x080374C4
 	bx r0
 	.align 2, 0
 _080374EC: .4byte gUnknown_0859E520
-_080374F0: .4byte gBattleTarget
+_080374F0: .4byte gBattleUnitB
 
 	THUMB_FUNC_END sub_80374C4
 
-	THUMB_FUNC_START sub_80374F4
-sub_80374F4: @ 0x080374F4
+	THUMB_FUNC_START MineFireTrap_DoSomeBWLStuffWhenKill
+MineFireTrap_DoSomeBWLStuffWhenKill: @ 0x080374F4
 	push {r4, lr}
 	ldr r4, [r0, #0x54]
 	adds r0, r4, #0
@@ -94,16 +94,16 @@ sub_80374F4: @ 0x080374F4
 	bgt _0803750A
 	ldr r0, [r4]
 	ldrb r0, [r0, #4]
-	bl sub_80A4594
+	bl BWL_AddLoss
 _0803750A:
 	pop {r4}
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_80374F4
+	THUMB_FUNC_END MineFireTrap_DoSomeBWLStuffWhenKill
 
-	THUMB_FUNC_START sub_8037510
-sub_8037510: @ 0x08037510
+	THUMB_FUNC_START FireTrap_StartGfx
+FireTrap_StartGfx: @ 0x08037510
 	push {lr}
 	ldr r2, [r0, #0x54]
 	movs r1, #0x10
@@ -111,14 +111,14 @@ sub_8037510: @ 0x08037510
 	ldrb r2, [r2, #0x11]
 	lsls r2, r2, #0x18
 	asrs r2, r2, #0x18
-	bl sub_801F68C
+	bl NewFireTrapEffectGfx
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8037510
+	THUMB_FUNC_END FireTrap_StartGfx
 
-	THUMB_FUNC_START sub_8037528
-sub_8037528: @ 0x08037528
+	THUMB_FUNC_START MineTrap_StartGfx
+MineTrap_StartGfx: @ 0x08037528
 	push {lr}
 	ldr r2, [r0, #0x54]
 	movs r1, #0x10
@@ -126,14 +126,14 @@ sub_8037528: @ 0x08037528
 	ldrb r2, [r2, #0x11]
 	lsls r2, r2, #0x18
 	asrs r2, r2, #0x18
-	bl sub_801F6BC
+	bl NewMineTrapEffectGfx
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8037528
+	THUMB_FUNC_END MineTrap_StartGfx
 
-	THUMB_FUNC_START sub_8037540
-sub_8037540: @ 0x08037540
+	THUMB_FUNC_START MineFireTrap_8037540
+MineFireTrap_8037540: @ 0x08037540
 	push {r4, lr}
 	ldr r4, [r0, #0x54]
 	adds r0, #0x50
@@ -167,22 +167,22 @@ _0803757C:
 	bl MU_GetByUnit
 	bl MU_End
 _08037586:
-	ldr r1, _0803759C  @ gActionData
+	ldr r1, _0803759C  @ gAction
 	movs r0, #0xa
 	strb r0, [r1, #0x15]
 	adds r0, r4, #0
 	movs r1, #0xa
-	bl sub_803592C
+	bl ExecSelfDamage
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803759C: .4byte gActionData
+_0803759C: .4byte gAction
 
-	THUMB_FUNC_END sub_8037540
+	THUMB_FUNC_END MineFireTrap_8037540
 
-	THUMB_FUNC_START sub_80375A0
-sub_80375A0: @ 0x080375A0
+	THUMB_FUNC_START MineFireTrap_80375A0
+MineFireTrap_80375A0: @ 0x080375A0
 	push {r4, r5, r6, lr}
 	ldr r4, [r0, #0x54]
 	movs r2, #0xa
@@ -202,12 +202,12 @@ sub_80375A0: @ 0x080375A0
 	ldrb r0, [r0, #4]
 	movs r1, #0
 	movs r2, #3
-	bl BWL_AddWinOrLossIdk
-	bl CheckForWaitEvents
+	bl BWL_SetDeathStats
+	bl CheckForPostActionEvents
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _080375DC
-	bl RunWaitEvents
+	bl RunPostActionEvents
 _080375DC:
 	str r6, [r5]
 _080375DE:
@@ -217,10 +217,10 @@ _080375DE:
 	.align 2, 0
 _080375E4: .4byte gActiveUnit
 
-	THUMB_FUNC_END sub_80375A0
+	THUMB_FUNC_END MineFireTrap_80375A0
 
-	THUMB_FUNC_START GetPickTrapType
-GetPickTrapType: @ 0x080375E8
+	THUMB_FUNC_START GetTriggeredTrapType
+GetTriggeredTrapType: @ 0x080375E8
 	push {r4, lr}
 	adds r4, r0, #0
 	movs r0, #0x10
@@ -286,7 +286,7 @@ _08037658:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetPickTrapType
+	THUMB_FUNC_END GetTriggeredTrapType
 
 	THUMB_FUNC_START ExecTrap
 ExecTrap: @ 0x08037660
@@ -295,7 +295,7 @@ ExecTrap: @ 0x08037660
 	adds r5, r1, #0
 	adds r4, r2, #0
 	adds r0, r5, #0
-	bl GetPickTrapType
+	bl GetTriggeredTrapType
 	cmp r0, #0xb
 	beq _08037690
 	cmp r0, #0xb
@@ -320,7 +320,7 @@ _08037690:
 	movs r1, #0x11
 	ldrsb r1, [r5, r1]
 	movs r2, #0xb
-	bl GetTypedTrapAt
+	bl GetSpecificTrapAt
 	bl RemoveTrap
 	ldr r0, _080376B4  @ gUnknown_0859E5FC
 _080376A4:
@@ -340,7 +340,7 @@ _080376B8:
 	ldrsb r1, [r5, r1]
 	bl GetTrapAt
 	bl RemoveTrap
-	ldr r0, _080376F0  @ gRAMChapterData
+	ldr r0, _080376F0  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -359,7 +359,7 @@ _080376DA:
 	bl sub_801F9FC
 	b _08037738
 	.align 2, 0
-_080376F0: .4byte gRAMChapterData
+_080376F0: .4byte gPlaySt
 _080376F4:
 	movs r0, #0x10
 	ldrsb r0, [r5, r0]
@@ -367,7 +367,7 @@ _080376F4:
 	ldrsb r1, [r5, r1]
 	bl GetTrapAt
 	bl RemoveTrap
-	ldr r0, _08037740  @ gRAMChapterData
+	ldr r0, _08037740  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -395,7 +395,7 @@ _08037738:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08037740: .4byte gRAMChapterData
+_08037740: .4byte gPlaySt
 
 	THUMB_FUNC_END ExecTrap
 
@@ -423,7 +423,7 @@ HandlePostActionTraps: @ 0x08037744
 	ands r0, r1
 	cmp r0, #0
 	bne _0803777E
-	ldr r0, _08037794  @ gActionData
+	ldr r0, _08037794  @ gAction
 	ldrb r0, [r0, #0x11]
 	cmp r0, #3
 	bgt _0803778A
@@ -432,7 +432,7 @@ HandlePostActionTraps: @ 0x08037744
 _0803777E:
 	ldr r4, _08037790  @ gActiveUnit
 	ldr r0, [r4]
-	bl GetPickTrapType
+	bl GetTriggeredTrapType
 	cmp r0, #0
 	bne _08037798
 _0803778A:
@@ -440,9 +440,9 @@ _0803778A:
 	b _080377C0
 	.align 2, 0
 _08037790: .4byte gActiveUnit
-_08037794: .4byte gActionData
+_08037794: .4byte gAction
 _08037798:
-	ldr r1, _080377C8  @ gActionData
+	ldr r1, _080377C8  @ gAction
 	movs r0, #1
 	strb r0, [r1, #0x16]
 	strb r0, [r1, #0x11]
@@ -451,7 +451,7 @@ _08037798:
 	bl GetBattleAnimType
 	cmp r0, #1
 	bne _080377B2
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _080377B2:
 	ldr r1, [r4]
 	adds r0, r5, #0
@@ -464,15 +464,15 @@ _080377C0:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080377C8: .4byte gActionData
+_080377C8: .4byte gAction
 
 	THUMB_FUNC_END HandlePostActionTraps
 
-	THUMB_FUNC_START sub_80377CC
-sub_80377CC: @ 0x080377CC
+	THUMB_FUNC_START ExecTrapForActionTarget
+ExecTrapForActionTarget: @ 0x080377CC
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _080377EC  @ gActionData
+	ldr r0, _080377EC  @ gAction
 	ldrb r0, [r0, #0xd]
 	bl GetUnit
 	adds r1, r0, #0
@@ -485,9 +485,9 @@ sub_80377CC: @ 0x080377CC
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080377EC: .4byte gActionData
+_080377EC: .4byte gAction
 
-	THUMB_FUNC_END sub_80377CC
+	THUMB_FUNC_END ExecTrapForActionTarget
 
 	THUMB_FUNC_START sub_80377F0
 sub_80377F0: @ 0x080377F0
@@ -495,7 +495,7 @@ sub_80377F0: @ 0x080377F0
 	adds r5, r0, #0
 	adds r4, r1, #0
 	adds r0, r4, #0
-	bl GetPickTrapType
+	bl GetTriggeredTrapType
 	cmp r0, #0
 	beq _08037810
 	adds r0, r5, #0
@@ -511,7 +511,7 @@ _08037810:
 	bl MU_End
 	bl RenderBmMap
 	bl RefreshEntityBmMaps
-	bl SMS_FlushIndirect
+	bl ForceSyncUnitSpriteSheet
 	movs r0, #1
 _08037828:
 	pop {r4, r5}
@@ -520,8 +520,8 @@ _08037828:
 
 	THUMB_FUNC_END sub_80377F0
 
-	THUMB_FUNC_START sub_8037830
-sub_8037830: @ 0x08037830
+	THUMB_FUNC_START ExecTrap_QuietMaybe
+ExecTrap_QuietMaybe: @ 0x08037830
 	push {lr}
 	movs r2, #3
 	bl ExecTrap
@@ -530,7 +530,7 @@ sub_8037830: @ 0x08037830
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8037830
+	THUMB_FUNC_END ExecTrap_QuietMaybe
 
 	THUMB_FUNC_START LoadTrapData
 LoadTrapData: @ 0x08037840
@@ -577,7 +577,7 @@ _080378A0:
 	ldrb r1, [r5, #2]
 	ldrb r2, [r5, #4]
 	ldrb r3, [r5, #5]
-	bl AddFireTile
+	bl AddFireTrap
 	b _08037900
 _080378AE:
 	ldrb r0, [r5, #1]
@@ -668,7 +668,7 @@ AddGorgonEggTrap: @ 0x08037928
 	str r4, [sp, #8]
 	movs r2, #0xc
 	adds r3, r5, #0
-	bl AddDamagingTrap
+	bl AddTrapExt
 	add sp, #0xc
 	pop {r4, r5}
 	pop {r0}

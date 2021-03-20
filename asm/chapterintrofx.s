@@ -4,8 +4,8 @@
 
 	@ The screen with the chapter name and all
 
-	THUMB_FUNC_START sub_801FD90
-sub_801FD90: @ 0x0801FD90
+	THUMB_FUNC_START BgMoverProc_Update
+BgMoverProc_Update: @ 0x0801FD90
 	push {lr}
 	bl GetGameTime
 	adds r2, r0, #0
@@ -18,7 +18,7 @@ sub_801FD90: @ 0x0801FD90
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_801FD90
+	THUMB_FUNC_END BgMoverProc_Update
 
 	THUMB_FUNC_START sub_801FDAC
 sub_801FDAC: @ 0x0801FDAC
@@ -696,7 +696,7 @@ sub_80202BC: @ 0x080202BC
 	adds r1, #0x68
 	movs r0, #3
 	strh r0, [r1]
-	ldr r0, _080202F0  @ gRAMChapterData
+	ldr r0, _080202F0  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -708,7 +708,7 @@ _080202EC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080202F0: .4byte gRAMChapterData
+_080202F0: .4byte gPlaySt
 _080202F4: .4byte 0x00000316
 
 	THUMB_FUNC_END sub_80202BC
@@ -1280,7 +1280,7 @@ sub_8020778: @ 0x08020778
 	movs r0, #8
 	movs r1, #5
 	bl sub_80895B4
-	ldr r0, _080207C0  @ gRAMChapterData
+	ldr r0, _080207C0  @ gPlaySt
 	bl sub_808979C
 	adds r5, r0, #0
 	movs r0, #0xa0
@@ -1300,7 +1300,7 @@ sub_8020778: @ 0x08020778
 	bx r0
 	.align 2, 0
 _080207BC: .4byte gBg0Tm
-_080207C0: .4byte gRAMChapterData
+_080207C0: .4byte gPlaySt
 _080207C4: .4byte 0x00000246
 
 	THUMB_FUNC_END sub_8020778
@@ -1723,28 +1723,28 @@ sub_8020AF8: @ 0x08020AF8
 	movs r0, #0
 	bl SetupBackgrounds
 	bl sub_80156D4
-	ldr r0, _08020B1C  @ gRAMChapterData
+	ldr r0, _08020B1C  @ gPlaySt
 	ldrb r0, [r0, #0x15]
 	bl AllocWeatherParticles
-	bl SMS_UpdateFromGameData
-	bl SMS_FlushIndirect
+	bl RefreshUnitSprites
+	bl ForceSyncUnitSpriteSheet
 	bl InitSystemTextFont
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08020B1C: .4byte gRAMChapterData
+_08020B1C: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8020AF8
 
 	THUMB_FUNC_START sub_8020B20
 sub_8020B20: @ 0x08020B20
-	ldr r1, _08020B2C  @ gUnknown_0202BCB0
+	ldr r1, _08020B2C  @ gBmSt
 	movs r0, #0xa0
 	lsls r0, r0, #2
 	strh r0, [r1, #0xe]
 	bx lr
 	.align 2, 0
-_08020B2C: .4byte gUnknown_0202BCB0
+_08020B2C: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8020B20
 
@@ -1804,15 +1804,15 @@ sub_8020B30: @ 0x08020B30
 	movs r0, #7
 	bl EnableBgSync
 	bl DisableMapPaletteAnimations
-	ldr r4, _08020C24  @ gRAMChapterData
+	ldr r4, _08020C24  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
 	bl UnpackChapterMapGraphics
-	bl SetupMapSpritesPalettes
-	bl LoadObjUIGfx
+	bl ApplyUnitSpritePalettes
+	bl LoadObjUiGfx
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x10]
 	lsls r0, r0, #4
 	bl sub_8015A40
@@ -1822,11 +1822,11 @@ sub_8020B30: @ 0x08020B30
 	movs r1, #0xf8
 	lsls r1, r1, #1
 	ands r0, r1
-	ldr r5, _08020C28  @ gUnknown_0202BCB0
+	ldr r5, _08020C28  @ gBmSt
 	strh r0, [r5, #0xc]
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x11]
 	lsls r0, r0, #4
 	bl sub_8015A6C
@@ -1849,8 +1849,8 @@ _08020C14: .4byte 0x01000008
 _08020C18: .4byte gBg0Tm
 _08020C1C: .4byte gBg1Tm
 _08020C20: .4byte gBg2Tm
-_08020C24: .4byte gRAMChapterData
-_08020C28: .4byte gUnknown_0202BCB0
+_08020C24: .4byte gPlaySt
+_08020C28: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8020B30
 
@@ -1891,11 +1891,11 @@ sub_8020C2C: @ 0x08020C2C
 	adds r4, #0x4c
 	movs r0, #0x1e
 	strh r0, [r4]
-	ldr r0, _08020CA0  @ gRAMChapterData
+	ldr r0, _08020CA0  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x12]
 	cmp r0, #5
 	bne _08020C96
@@ -1906,7 +1906,7 @@ _08020C96:
 	bx r0
 	.align 2, 0
 _08020C9C: .4byte gPal+0xC0
-_08020CA0: .4byte gRAMChapterData
+_08020CA0: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8020C2C
 
@@ -1923,21 +1923,21 @@ sub_8020CA4: @ 0x08020CA4
 	b _08020DAE
 _08020CB8:
 	bl sub_8000234_t
-	ldr r5, _08020D30  @ gRAMChapterData
+	ldr r5, _08020D30  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x12]
 	cmp r0, #5
 	bne _08020CD0
 	bl WfxFlamesInitGradientPublic
 _08020CD0:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08020CE8
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x87
 	ldrb r0, [r0]
 	cmp r0, #0
@@ -1945,14 +1945,14 @@ _08020CD0:
 _08020CE8:
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrh r1, [r0, #0x28]
 	ldr r0, _08020D34  @ 0x0000FFFF
 	cmp r1, r0
 	beq _08020D08
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrh r0, [r0, #0x28]
 	movs r1, #0
 	bl StartBgm
@@ -1977,7 +1977,7 @@ _08020D08:
 	adds r4, r3, #0
 	b _08020D6C
 	.align 2, 0
-_08020D30: .4byte gRAMChapterData
+_08020D30: .4byte gPlaySt
 _08020D34: .4byte 0x0000FFFF
 _08020D38: .4byte gDispIo
 _08020D3C:
@@ -2012,17 +2012,17 @@ _08020D6C:
 	asrs r0, r0, #0x10
 	cmp r0, #0x18
 	bne _08020D9C
-	ldr r5, _08020DB4  @ gRAMChapterData
+	ldr r5, _08020DB4  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrh r1, [r0, #0x28]
 	ldr r0, _08020DB8  @ 0x0000FFFF
 	cmp r1, r0
 	beq _08020D9C
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrh r0, [r0, #0x28]
 	movs r1, #0
 	bl StartBgm
@@ -2039,7 +2039,7 @@ _08020DAE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08020DB4: .4byte gRAMChapterData
+_08020DB4: .4byte gPlaySt
 _08020DB8: .4byte 0x0000FFFF
 
 	THUMB_FUNC_END sub_8020CA4
@@ -2281,17 +2281,17 @@ sub_8020F00: @ 0x08020F00
 	adds r4, #0x4c
 	movs r0, #0xe
 	strh r0, [r4]
-	ldr r4, _08020FF0  @ gRAMChapterData
+	ldr r4, _08020FF0  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrh r1, [r0, #0x28]
 	ldr r0, _08020FF4  @ 0x0000FFFF
 	cmp r1, r0
 	beq _08020FC4
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrh r0, [r0, #0x28]
 	movs r1, #0
 	bl StartBgm
@@ -2310,7 +2310,7 @@ _08020FE0: .4byte gUnknown_0859B0E0
 _08020FE4: .4byte gUnknown_0859B108
 _08020FE8: .4byte gUnknown_0859B160
 _08020FEC: .4byte gPal+0xC0
-_08020FF0: .4byte gRAMChapterData
+_08020FF0: .4byte gPlaySt
 _08020FF4: .4byte 0x0000FFFF
 
 	THUMB_FUNC_END sub_8020F00
@@ -2320,21 +2320,21 @@ sub_8020FF8: @ 0x08020FF8
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	bl sub_8000234_t
-	ldr r5, _08021054  @ gRAMChapterData
+	ldr r5, _08021054  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x12]
 	cmp r0, #5
 	bne _08021014
 	bl WfxFlamesInitGradientPublic
 _08021014:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _0802102C
 	movs r0, #0xe
 	ldrsb r0, [r5, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x87
 	ldrb r0, [r0]
 	cmp r0, #0
@@ -2360,7 +2360,7 @@ _0802102C:
 	strb r0, [r2, #1]
 	b _08021064
 	.align 2, 0
-_08021054: .4byte gRAMChapterData
+_08021054: .4byte gPlaySt
 _08021058: .4byte gDispIo
 _0802105C:
 	bl EnablePalSync
@@ -2502,21 +2502,21 @@ sub_80210C8: @ 0x080210C8
 	ldrb r0, [r4, #0x18]
 	orrs r0, r6
 	strb r0, [r4, #0x18]
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #2
 	beq _08021168
-	ldr r0, _08021184  @ gRAMChapterData
+	ldr r0, _08021184  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x87
 	ldrb r0, [r0]
 	cmp r0, #0
 	beq _08021170
 _08021168:
-	bl RefreshBMapGraphics
-	bl sub_80141B0
+	bl ReloadGameCoreGraphics
+	bl BlackenScreen
 _08021170:
 	pop {r3, r4}
 	mov r8, r3
@@ -2527,7 +2527,7 @@ _08021170:
 	.align 2, 0
 _0802117C: .4byte gDispIo
 _08021180: .4byte gBg0Tm
-_08021184: .4byte gRAMChapterData
+_08021184: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80210C8
 
@@ -2541,11 +2541,11 @@ sub_8021188: @ 0x08021188
 	cmp r1, #0
 	bne _080211BC
 	bl sub_8000234_t
-	ldr r0, _080211C4  @ gRAMChapterData
+	ldr r0, _080211C4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r0, [r0, #0x12]
 	cmp r0, #5
 	bne _080211B2
@@ -2559,7 +2559,7 @@ _080211BC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080211C4: .4byte gRAMChapterData
+_080211C4: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8021188
 

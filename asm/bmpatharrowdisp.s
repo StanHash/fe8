@@ -4,8 +4,8 @@
 
 	@ Logic for displaying the movement path/arrow thing
 
-	THUMB_FUNC_START sub_80329D8
-sub_80329D8: @ 0x080329D8
+	THUMB_FUNC_START MoveCursor_SetLastCursorPosition
+MoveCursor_SetLastCursorPosition: @ 0x080329D8
 	ldr r3, _080329E8  @ gUnknown_0859DBA0
 	ldr r2, [r3]
 	adds r2, #0x29
@@ -17,10 +17,10 @@ sub_80329D8: @ 0x080329D8
 	.align 2, 0
 _080329E8: .4byte gUnknown_0859DBA0
 
-	THUMB_FUNC_END sub_80329D8
+	THUMB_FUNC_END MoveCursor_SetLastCursorPosition
 
-	THUMB_FUNC_START sub_80329EC
-sub_80329EC: @ 0x080329EC
+	THUMB_FUNC_START MoveCursor_CutPath
+MoveCursor_CutPath: @ 0x080329EC
 	push {r4, r5, r6, r7, lr}
 	ldr r3, _08032A8C  @ gUnknown_0859DBA0
 	ldr r1, [r3]
@@ -55,7 +55,7 @@ sub_80329EC: @ 0x080329EC
 	bgt _08032A84
 	adds r7, r3, #0
 _08032A2E:
-	bl GetWorkingMoveCosts
+	bl GetCurrentMovCostTable
 	ldr r3, [r7]
 	lsls r4, r5, #0x18
 	asrs r4, r4, #0x18
@@ -69,7 +69,7 @@ _08032A2E:
 	adds r1, r1, r4
 	movs r2, #0
 	ldrsb r2, [r1, r2]
-	ldr r1, _08032A90  @ gBmMapTerrain
+	ldr r1, _08032A90  @ gMapTerrain
 	ldr r1, [r1]
 	lsls r2, r2, #2
 	adds r2, r2, r1
@@ -103,12 +103,12 @@ _08032A84:
 	bx r0
 	.align 2, 0
 _08032A8C: .4byte gUnknown_0859DBA0
-_08032A90: .4byte gBmMapTerrain
+_08032A90: .4byte gMapTerrain
 
-	THUMB_FUNC_END sub_80329EC
+	THUMB_FUNC_END MoveCursor_CutPath
 
-	THUMB_FUNC_START sub_8032A94
-sub_8032A94: @ 0x08032A94
+	THUMB_FUNC_START MoveCursor_AddMovePoint
+MoveCursor_AddMovePoint: @ 0x08032A94
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
@@ -140,7 +140,7 @@ sub_8032A94: @ 0x08032A94
 	adds r0, #0x41
 	adds r0, r0, r1
 	strb r4, [r0]
-	bl GetWorkingMoveCosts
+	bl GetCurrentMovCostTable
 	ldr r2, [r6]
 	adds r1, r2, #0
 	adds r1, #0x2c
@@ -152,7 +152,7 @@ sub_8032A94: @ 0x08032A94
 	subs r1, #1
 	adds r2, r2, r1
 	lsls r4, r4, #0x18
-	ldr r1, _08032B14  @ gBmMapTerrain
+	ldr r1, _08032B14  @ gMapTerrain
 	ldr r1, [r1]
 	asrs r4, r4, #0x16
 	adds r4, r4, r1
@@ -171,12 +171,12 @@ sub_8032A94: @ 0x08032A94
 	bx r0
 	.align 2, 0
 _08032B10: .4byte gUnknown_0859DBA0
-_08032B14: .4byte gBmMapTerrain
+_08032B14: .4byte gMapTerrain
 
-	THUMB_FUNC_END sub_8032A94
+	THUMB_FUNC_END MoveCursor_AddMovePoint
 
-	THUMB_FUNC_START sub_8032B18
-sub_8032B18: @ 0x08032B18
+	THUMB_FUNC_START MoveCursor_GetPointIndexForPosition
+MoveCursor_GetPointIndexForPosition: @ 0x08032B18
 	push {r4, r5, r6, r7, lr}
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
@@ -237,14 +237,14 @@ _08032B82:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8032B18
+	THUMB_FUNC_END MoveCursor_GetPointIndexForPosition
 
-	THUMB_FUNC_START sub_8032B88
-sub_8032B88: @ 0x08032B88
+	THUMB_FUNC_START MoveCursor_AppendFromMoveBuffer
+MoveCursor_AppendFromMoveBuffer: @ 0x08032B88
 	push {r4, lr}
 	movs r4, #0
 _08032B8C:
-	ldr r2, _08032BB4  @ gWorkingMovementScript
+	ldr r2, _08032BB4  @ gUnitMoveBuffer
 	adds r1, r4, #0
 	lsls r0, r1, #0x18
 	movs r3, #0x80
@@ -264,7 +264,7 @@ _08032B8C:
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_08032BB4: .4byte gWorkingMovementScript
+_08032BB4: .4byte gUnitMoveBuffer
 _08032BB8: .4byte _08032BBC
 _08032BBC: @ jump table
 	.4byte _08032C80 @ case 0
@@ -311,7 +311,7 @@ _08032C18:
 	ldrb r1, [r1]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_8032A94
+	bl MoveCursor_AddMovePoint
 	b _08032B8C
 	.align 2, 0
 _08032C2C: .4byte gUnknown_0859DBA0
@@ -353,7 +353,7 @@ _08032C54:
 _08032C72:
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_8032A94
+	bl MoveCursor_AddMovePoint
 	b _08032B8C
 	.align 2, 0
 _08032C7C: .4byte gUnknown_0859DBA0
@@ -362,7 +362,7 @@ _08032C80:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8032B88
+	THUMB_FUNC_END MoveCursor_AppendFromMoveBuffer
 
 	THUMB_FUNC_START sub_8032C88
 sub_8032C88: @ 0x08032C88
@@ -375,7 +375,7 @@ sub_8032C88: @ 0x08032C88
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	adds r7, r2, #0
-	ldr r1, _08032CD0  @ gWorkingMovementScript
+	ldr r1, _08032CD0  @ gUnitMoveBuffer
 	mov ip, r1
 	cmp r6, r0
 	bgt _08032D1E
@@ -402,7 +402,7 @@ _08032CA4:
 	b _08032D00
 	.align 2, 0
 _08032CCC: .4byte gUnknown_0859DBA0
-_08032CD0: .4byte gWorkingMovementScript
+_08032CD0: .4byte gUnitMoveBuffer
 _08032CD4:
 	cmp r1, r0
 	ble _08032CDE
@@ -457,8 +457,8 @@ _08032D1E:
 
 	THUMB_FUNC_END sub_8032C88
 
-	THUMB_FUNC_START sub_8032D30
-sub_8032D30: @ 0x08032D30
+	THUMB_FUNC_START MoveCursor_FillMovementMapForEndPoint
+MoveCursor_FillMovementMapForEndPoint: @ 0x08032D30
 	push {r4, lr}
 	ldr r0, _08032D6C  @ gActiveUnit
 	ldr r0, [r0]
@@ -484,7 +484,7 @@ sub_8032D30: @ 0x08032D30
 	ldrb r3, [r3]
 	lsls r3, r3, #0x18
 	asrs r3, r3, #0x18
-	bl GenerateMovementMapOnWorkingMap
+	bl MapFillMovementFromUnitAt
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -492,32 +492,32 @@ sub_8032D30: @ 0x08032D30
 _08032D6C: .4byte gActiveUnit
 _08032D70: .4byte gUnknown_0859DBA0
 
-	THUMB_FUNC_END sub_8032D30
+	THUMB_FUNC_END MoveCursor_FillMovementMapForEndPoint
 
-	THUMB_FUNC_START sub_8032D74
-sub_8032D74: @ 0x08032D74
+	THUMB_FUNC_START MoveCursor_RecomputePath
+MoveCursor_RecomputePath: @ 0x08032D74
 	push {lr}
 	movs r0, #1
-	bl sub_80329EC
-	bl sub_8032D30
-	ldr r1, _08032D98  @ gUnknown_0202BCB0
+	bl MoveCursor_CutPath
+	bl MoveCursor_FillMovementMapForEndPoint
+	ldr r1, _08032D98  @ gBmSt
 	movs r2, #0x14
 	ldrsh r0, [r1, r2]
 	movs r2, #0x16
 	ldrsh r1, [r1, r2]
-	ldr r2, _08032D9C  @ gWorkingMovementScript
-	bl GenerateBestMovementScript
-	bl sub_8032B88
+	ldr r2, _08032D9C  @ gUnitMoveBuffer
+	bl GenerateMovementInstructionsToPoint
+	bl MoveCursor_AppendFromMoveBuffer
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08032D98: .4byte gUnknown_0202BCB0
-_08032D9C: .4byte gWorkingMovementScript
+_08032D98: .4byte gBmSt
+_08032D9C: .4byte gUnitMoveBuffer
 
-	THUMB_FUNC_END sub_8032D74
+	THUMB_FUNC_END MoveCursor_RecomputePath
 
-	THUMB_FUNC_START sub_8032DA0
-sub_8032DA0: @ 0x08032DA0
+	THUMB_FUNC_START MoveCursor_8032DA0
+MoveCursor_8032DA0: @ 0x08032DA0
 	push {r4, r5, r6, r7, lr}
 	ldr r0, _08032DAC  @ gUnknown_0859DBA0
 	ldr r0, [r0]
@@ -591,7 +591,7 @@ _08032E20:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8032DA0
+	THUMB_FUNC_END MoveCursor_8032DA0
 
 	THUMB_FUNC_START sub_8032E28
 sub_8032E28: @ 0x08032E28
@@ -617,20 +617,20 @@ sub_8032E28: @ 0x08032E28
 	ldrb r0, [r0, #0x12]
 	ldrb r1, [r1, #0x1d]
 	adds r0, r0, r1
-	ldr r1, _08032EAC  @ gActionData
+	ldr r1, _08032EAC  @ gAction
 	ldrb r1, [r1, #0x10]
 	subs r0, r0, r1
 	adds r2, #0x2b
 	strb r0, [r2]
 	movs r0, #0
-	bl sub_80329EC
+	bl MoveCursor_CutPath
 	ldr r1, [r4]
 	movs r0, #0x10
 	ldrsb r0, [r1, r0]
 	ldrb r1, [r1, #0x11]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_8032A94
+	bl MoveCursor_AddMovePoint
 	ldr r0, [r5]
 	adds r1, r0, #0
 	adds r1, #0x2b
@@ -639,7 +639,7 @@ sub_8032E28: @ 0x08032E28
 	strb r1, [r0]
 	ldr r1, _08032EB0  @ 0x0000FFFF
 	adds r0, r1, #0
-	bl sub_80329D8
+	bl MoveCursor_SetLastCursorPosition
 	bl sub_8032EB4
 _08032E90:
 	pop {r4, r5}
@@ -651,7 +651,7 @@ _08032E9C: .4byte 0x06015E00
 _08032EA0: .4byte gUnknown_08A0328C
 _08032EA4: .4byte gUnknown_0859DBA0
 _08032EA8: .4byte gActiveUnit
-_08032EAC: .4byte gActionData
+_08032EAC: .4byte gAction
 _08032EB0: .4byte 0x0000FFFF
 
 	THUMB_FUNC_END sub_8032E28
@@ -663,7 +663,7 @@ sub_8032EB4: @ 0x08032EB4
 	ldr r2, [r7]
 	adds r0, r2, #0
 	adds r0, #0x29
-	ldr r5, _08032F3C  @ gUnknown_0202BCB0
+	ldr r5, _08032F3C  @ gBmSt
 	movs r1, #0
 	ldrsb r1, [r0, r1]
 	movs r3, #0x14
@@ -682,13 +682,13 @@ sub_8032EB4: @ 0x08032EB4
 _08032EDE:
 	ldrh r0, [r5, #0x14]
 	ldrh r1, [r5, #0x16]
-	bl sub_80329D8
-	ldr r0, _08032F40  @ gBmMapMovement
+	bl MoveCursor_SetLastCursorPosition
+	ldr r0, _08032F40  @ gMapMovement
 	ldr r0, [r0]
-	bl SetWorkingBmMap
+	bl SetSubjectMap
 	movs r3, #0x16
 	ldrsh r0, [r5, r3]
-	ldr r1, _08032F44  @ gWorkingBmMap
+	ldr r1, _08032F44  @ gWorkingMap
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -709,7 +709,7 @@ _08032F12:
 	ldrsb r0, [r5, r0]
 	movs r1, #0x16
 	ldrsb r1, [r5, r1]
-	bl sub_8032B18
+	bl MoveCursor_GetPointIndexForPosition
 	lsls r0, r0, #0x18
 	lsrs r1, r0, #0x18
 	asrs r0, r0, #0x18
@@ -720,13 +720,13 @@ _08032F12:
 	lsls r3, r3, #0x11
 	adds r0, r0, r3
 	asrs r0, r0, #0x18
-	bl sub_80329EC
+	bl MoveCursor_CutPath
 	b _08033060
 	.align 2, 0
 _08032F38: .4byte gUnknown_0859DBA0
-_08032F3C: .4byte gUnknown_0202BCB0
-_08032F40: .4byte gBmMapMovement
-_08032F44: .4byte gWorkingBmMap
+_08032F3C: .4byte gBmSt
+_08032F40: .4byte gMapMovement
+_08032F44: .4byte gWorkingMap
 _08032F48:
 	ldr r4, [r7]
 	adds r0, r4, #0
@@ -736,10 +736,10 @@ _08032F48:
 	asrs r0, r0, #0x18
 	adds r4, #0x55
 	adds r4, r4, r0
-	bl GetWorkingMoveCosts
+	bl GetCurrentMovCostTable
 	movs r1, #0x16
 	ldrsh r6, [r5, r1]
-	ldr r1, _08032FB8  @ gBmMapTerrain
+	ldr r1, _08032FB8  @ gMapTerrain
 	ldr r2, [r1]
 	lsls r1, r6, #2
 	adds r1, r1, r2
@@ -784,23 +784,23 @@ _08032F9E:
 	beq _08032FC4
 	b _08032FDC
 	.align 2, 0
-_08032FB8: .4byte gBmMapTerrain
+_08032FB8: .4byte gMapTerrain
 _08032FBC:
 	subs r0, r6, r1
 	adds r0, r2, r0
 	cmp r0, #1
 	bne _08032FDC
 _08032FC4:
-	ldr r1, _08032FD8  @ gUnknown_0202BCB0
+	ldr r1, _08032FD8  @ gBmSt
 	movs r0, #0x14
 	ldrsb r0, [r1, r0]
 	ldrb r1, [r1, #0x16]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_8032A94
+	bl MoveCursor_AddMovePoint
 	b _08033060
 	.align 2, 0
-_08032FD8: .4byte gUnknown_0202BCB0
+_08032FD8: .4byte gBmSt
 _08032FDC:
 	ldr r0, _08033034  @ gUnknown_0859DBA0
 	ldr r0, [r0]
@@ -817,16 +817,16 @@ _08032FDC:
 	cmp r0, #0
 	bne _08032FFE
 	movs r0, #1
-	bl sub_80329EC
+	bl MoveCursor_CutPath
 _08032FFE:
-	ldr r0, _08033038  @ gBmMapUnk
+	ldr r0, _08033038  @ gMapMovement2
 	ldr r0, [r0]
-	bl SetWorkingBmMap
-	bl sub_8032D30
-	ldr r2, _0803303C  @ gUnknown_0202BCB0
+	bl SetSubjectMap
+	bl MoveCursor_FillMovementMapForEndPoint
+	ldr r2, _0803303C  @ gBmSt
 	movs r3, #0x16
 	ldrsh r4, [r2, r3]
-	ldr r0, _08033040  @ gWorkingBmMap
+	ldr r0, _08033040  @ gWorkingMap
 	ldr r1, [r0]
 	lsls r0, r4, #2
 	adds r0, r0, r1
@@ -840,30 +840,30 @@ _08032FFE:
 	negs r0, r0
 	cmp r1, r0
 	bne _08033044
-	bl sub_8032D74
+	bl MoveCursor_RecomputePath
 	b _08033060
 	.align 2, 0
 _08033034: .4byte gUnknown_0859DBA0
-_08033038: .4byte gBmMapUnk
-_0803303C: .4byte gUnknown_0202BCB0
-_08033040: .4byte gWorkingBmMap
+_08033038: .4byte gMapMovement2
+_0803303C: .4byte gBmSt
+_08033040: .4byte gWorkingMap
 _08033044:
-	ldr r2, _08033068  @ gWorkingMovementScript
+	ldr r2, _08033068  @ gUnitMoveBuffer
 	adds r0, r3, #0
 	adds r1, r4, #0
-	bl GenerateBestMovementScript
-	bl sub_8032B88
-	bl sub_8032DA0
+	bl GenerateMovementInstructionsToPoint
+	bl MoveCursor_AppendFromMoveBuffer
+	bl MoveCursor_8032DA0
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08033060
-	bl sub_8032D74
+	bl MoveCursor_RecomputePath
 _08033060:
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08033068: .4byte gWorkingMovementScript
+_08033068: .4byte gUnitMoveBuffer
 
 	THUMB_FUNC_END sub_8032EB4
 
@@ -1005,7 +1005,7 @@ sub_8033148: @ 0x08033148
 	lsrs r3, r3, #0x18
 	lsls r1, r1, #0x10
 	asrs r1, r1, #0x10
-	ldr r2, _08033180  @ gUnknown_0202BCB0
+	ldr r2, _08033180  @ gBmSt
 	movs r6, #0xe
 	ldrsh r0, [r2, r6]
 	subs r1, r1, r0
@@ -1025,7 +1025,7 @@ sub_8033148: @ 0x08033148
 	movs r0, #1
 	b _08033186
 	.align 2, 0
-_08033180: .4byte gUnknown_0202BCB0
+_08033180: .4byte gBmSt
 _08033184:
 	movs r0, #0
 _08033186:
@@ -1096,7 +1096,7 @@ _080331B2:
 	adds r4, r4, r1
 	add r4, r9
 	ldrh r3, [r4]
-	ldr r0, _08033240  @ gUnknown_0202BCB0
+	ldr r0, _08033240  @ gBmSt
 	movs r2, #0xc
 	ldrsh r1, [r0, r2]
 	subs r1, r7, r1
@@ -1124,7 +1124,7 @@ _08033228:
 	.align 2, 0
 _08033238: .4byte gUnknown_0859DBA0
 _0803323C: .4byte gUnknown_0859DB6C
-_08033240: .4byte gUnknown_0202BCB0
+_08033240: .4byte gBmSt
 _08033244: .4byte Sprite_16x16
 
 	THUMB_FUNC_END sub_803318C

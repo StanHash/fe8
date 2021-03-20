@@ -55,7 +55,7 @@ SECTIONS
         asm/hino.o(.text);
         asm/bm.o(.text);
         src/bmitem.o(.text);
-        src/bmunit.o(.text);
+        src/unit.o(.text);
         src/bmmap.o(.text);
         src/bmidoten.o(.text);
         src/bmdebug.o(.text);
@@ -83,9 +83,9 @@ SECTIONS
         asm/chapterintrofx_title.o(.text);
         asm/bmmenu.o(.text);
         asm/bmphase.o(.text);
-        src/bmgold.o(.text);
+        src/gold.o(.text);
         asm/bmtarget.o(.text);
-        asm/bmudisp.o(.text);
+        asm/unitsprite.o(.text);
         src/bmreliance.o(.text);
         src/bmitemuse.o(.text);
         src/bmbattle.o(.text);
@@ -197,7 +197,7 @@ SECTIONS
         . = ALIGN(4); src/messdecode.o(.rodata);
         . = ALIGN(4); data/const_data_D792C.o(.rodata);
         . = ALIGN(4); src/bmitem.o(.rodata);
-        . = ALIGN(4); src/bmunit.o(.rodata);
+        . = ALIGN(4); src/unit.o(.rodata);
         . = ALIGN(4); data/const_data_D7A6C.o(.rodata);
         . = ALIGN(4); src/bmreliance.o(.rodata);
         . = ALIGN(4); src/bmbattle.o(.rodata);
@@ -248,7 +248,7 @@ SECTIONS
         . = ALIGN(4); data/data_591AB4.o(.data);
         . = ALIGN(4); data/data_item_icon.o(.data);
         . = ALIGN(4); data/data_599714.o(.data);
-        . = ALIGN(4); src/bmunit.o(.data);
+        . = ALIGN(4); src/unit.o(.data);
         . = ALIGN(4); src/bmmap.o(.data);
         . = ALIGN(4); data/data_59A9D8.o(.data);
         . = ALIGN(4); src/bmdebug.o(.data);

@@ -14,13 +14,13 @@
 #include "text.h"
 #include "bmio.h"
 #include "bmitem.h"
-#include "bmunit.h"
+#include "unit.h"
 #include "bmbattle.h"
 #include "bmreliance.h"
 #include "uiutils.h"
 #include "mu.h"
 
-#include "constants/classes.h"
+#include "constants/jids.h"
 
 #include "statscreen.h"
 
@@ -395,7 +395,7 @@ struct ProcScr CONST_DATA gProcScr_SSBgOffsetCtrl[] =
 struct ProcScr CONST_DATA gProcScr_StatScreen[] =
 {
     PROC_CALL(StatScreen_BlackenScreen),
-    PROC_CALL(BMapDispSuspend),
+    PROC_CALL(LockGameGraphicsLogic),
 
     PROC_SLEEP(2),
 
@@ -428,7 +428,7 @@ PROC_LABEL(10),
 
     PROC_CALL(StatScreen_OnClose),
 
-    PROC_CALL(BMapDispResume),
+    PROC_CALL(UnlockGameGraphicsLogic),
     PROC_CALL(MU_EndAll),
     PROC_CALL(EndGreenText),
 
@@ -456,7 +456,7 @@ struct ProcScr CONST_DATA gProcScr_HelpBoxMoveCtrl[] =
 PROC_LABEL(0),
     PROC_CALL(HbMoveCtrl_OnInitBox),
     PROC_REPEAT(HbMoveCtrl_OnIdle),
-    PROC_CALL(CloseHelpBox),
+    PROC_CALL(MoveableHelpBox_OnEnd),
 
     PROC_END,
 };
@@ -551,7 +551,7 @@ void DisplayLeftPanel(void)
         &gStatScreen.text[STATSCREEN_TEXT_CLASSNAME],
         gBg0Tm + TM_OFFSET(1, 13),
         TEXT_COLOR_SYSTEM_WHITE, 0, 0,
-        GetMsg(gStatScreen.unit->pClassData->nameTextId));
+        GetMsg(gStatScreen.unit->jinfo->msgName));
 
     // Display Lv/E labels
     PutTwoSpecialChar(gBg0Tm + TM_OFFSET(1, 15), TEXT_COLOR_SYSTEM_GOLD, 0x24, 0x25);
@@ -603,18 +603,18 @@ void DisplayLeftPanel(void)
 static
 void DisplayBwl(void)
 {
-    struct UnitUsageStats* stats = BWL_GetEntry(gStatScreen.unit->pCharacterData->number);
+    struct UnitUsageStats* stats = BWL_GetEntry(gStatScreen.unit->pinfo->id);
 
     if (!stats)
         return;
 
-    if (gUnknown_0202BCB0.gameStateBits & 0x40)
+    if (gBmSt.gameStateBits & 0x40)
         return;
 
-    if (gRAMChapterData.chapterStateBits & CHAPTER_FLAG_3)
+    if (gPlaySt.chapterStateBits & CHAPTER_FLAG_3)
         return;
 
-    if (gRAMChapterData.chapterStateBits & CHAPTER_FLAG_7)
+    if (gPlaySt.chapterStateBits & CHAPTER_FLAG_7)
         return;
 
     if (IsFirstPlaythrough() == TRUE)
@@ -681,7 +681,7 @@ void DisplayPage0(void)
     DisplayTexts(sPage0TextInfo);
 
     // Displaying str/mag label
-    if (UnitHasMagicRank(gStatScreen.unit))
+    if (UnitKnowsMagic(gStatScreen.unit))
     {
         // mag
         PutDrawText(
@@ -708,21 +708,21 @@ void DisplayPage0(void)
 
     // displaying skl stat value
     DrawStatWithBar(1, 5, 3,
-        gStatScreen.unit->state & US_RESCUING
+        gStatScreen.unit->flags & UNIT_FLAG_RESCUING
             ? gStatScreen.unit->skl/2
             : gStatScreen.unit->skl,
         GetUnitSkill(gStatScreen.unit),
-        gStatScreen.unit->state & US_RESCUING
+        gStatScreen.unit->flags & UNIT_FLAG_RESCUING
             ? UNIT_SKL_MAX(gStatScreen.unit)/2
             : UNIT_SKL_MAX(gStatScreen.unit));
 
     // displaying spd stat value
     DrawStatWithBar(2, 5, 5,
-        gStatScreen.unit->state & US_RESCUING
+        gStatScreen.unit->flags & UNIT_FLAG_RESCUING
             ? gStatScreen.unit->spd/2
             : gStatScreen.unit->spd,
         GetUnitSpeed(gStatScreen.unit),
-        gStatScreen.unit->state & US_RESCUING
+        gStatScreen.unit->flags & UNIT_FLAG_RESCUING
             ? UNIT_SPD_MAX(gStatScreen.unit)/2
             : UNIT_SPD_MAX(gStatScreen.unit));
 
@@ -762,7 +762,7 @@ void DisplayPage0(void)
 
     // displaying unit aid icon
     PutIcon(gBmFrameTmap0 + TM_OFFSET(14, 5),
-        GetUnitAidIconId(UNIT_CATTRIBUTES(gStatScreen.unit)),
+        GetUnitAidIconId(UNIT_ATTRIBUTES(gStatScreen.unit)),
         TILE(0, STATSCREEN_BGPAL_EXTICONS));
 
     // displaying unit rescue name
@@ -773,11 +773,11 @@ void DisplayPage0(void)
 
     // displaying unit status name and turns
 
-    if (gStatScreen.unit->statusIndex != UNIT_STATUS_RECOVER)
+    if (gStatScreen.unit->statusId != UNIT_STATUS_RECOVER)
     {
         // display name
 
-        if (gStatScreen.unit->statusIndex == UNIT_STATUS_NONE)
+        if (gStatScreen.unit->statusId == UNIT_STATUS_NONE)
         {
             Text_InsertDrawString(
                 &gStatScreen.text[STATSCREEN_TEXT_STATUS],
@@ -794,7 +794,7 @@ void DisplayPage0(void)
 
         // display turns
 
-        if (gStatScreen.unit->statusIndex != UNIT_STATUS_NONE)
+        if (gStatScreen.unit->statusId != UNIT_STATUS_NONE)
         {
             PutNumberSmall(
                 gBmFrameTmap0 + TM_OFFSET(16, 11),
@@ -807,9 +807,9 @@ void DisplayPage0(void)
 
         struct Unit tmp = *gStatScreen.unit;
 
-        tmp.statusIndex = 0;
+        tmp.statusId = 0;
 
-        if (gStatScreen.unit->statusIndex == UNIT_STATUS_NONE)
+        if (gStatScreen.unit->statusId == UNIT_STATUS_NONE)
         {
             Text_InsertDrawString(
                 &gStatScreen.text[STATSCREEN_TEXT_STATUS],
@@ -857,7 +857,7 @@ void DisplayPage1(void)
         {
             int color;
 
-            if ((gStatScreen.unit->state & US_DROP_ITEM) && (i == GetUnitItemCount(gStatScreen.unit) - 1))
+            if ((gStatScreen.unit->flags & UNIT_FLAG_DROPS_ITEM) && (i == GetUnitItemCount(gStatScreen.unit) - 1))
                 color = TEXT_COLOR_SYSTEM_GREEN;
             else
                 color = IsItemDisplayUsable(gStatScreen.unit, item)
@@ -874,9 +874,9 @@ void DisplayPage1(void)
     i = GetUnitEquippedWeaponSlot(gStatScreen.unit);
     item = 0;
 
-    if (gStatScreen.unit->pClassData->number != CLASS_GORGONEGG)
+    if (gStatScreen.unit->jinfo->id != JID_GORGONEGG)
     {
-        if ((gStatScreen.unit->pClassData->number != CLASS_GORGONEGG2) && (i >= 0))
+        if ((gStatScreen.unit->jinfo->id != JID_GORGONEGG2) && (i >= 0))
         {
             PutSpecialChar(
                 gBmFrameTmap0 + TM_OFFSET(16, 1 + i*2),
@@ -894,19 +894,19 @@ void DisplayPage1(void)
     {
         PutNumberOrBlank(
             gBmFrameTmap0 + TM_OFFSET(8,  13),
-            TEXT_COLOR_SYSTEM_BLUE, gBattleActor.battleAttack);
+            TEXT_COLOR_SYSTEM_BLUE, gBattleUnitA.battleAttack);
 
         PutNumberOrBlank(
             gBmFrameTmap0 + TM_OFFSET(8,  15),
-            TEXT_COLOR_SYSTEM_BLUE, gBattleActor.battleHitRate);
+            TEXT_COLOR_SYSTEM_BLUE, gBattleUnitA.battleHitRate);
 
         PutNumberOrBlank(
             gBmFrameTmap0 + TM_OFFSET(15, 13),
-            TEXT_COLOR_SYSTEM_BLUE, gBattleActor.battleCritRate);
+            TEXT_COLOR_SYSTEM_BLUE, gBattleUnitA.battleCritRate);
 
         PutNumberOrBlank(
             gBmFrameTmap0 + TM_OFFSET(15, 15),
-            TEXT_COLOR_SYSTEM_BLUE, gBattleActor.battleAvoidRate);
+            TEXT_COLOR_SYSTEM_BLUE, gBattleUnitA.battleAvoidRate);
     }
     else
     {
@@ -924,7 +924,7 @@ void DisplayPage1(void)
 
         PutNumberOrBlank(
             gBmFrameTmap0 + TM_OFFSET(15, 15),
-            TEXT_COLOR_SYSTEM_BLUE, gBattleActor.battleAvoidRate);
+            TEXT_COLOR_SYSTEM_BLUE, gBattleUnitA.battleAvoidRate);
 
         item = 0;
     }
@@ -974,7 +974,7 @@ void DisplaySupportList(void)
             PutDrawText(&gStatScreen.text[STATSCREEN_TEXT_SUPPORT0 + lineNum],
                 gBmFrameTmap0 + TM_OFFSET(7, yTile),
                 textColor, 0, 0,
-                GetMsg(GetCharacterData(pid)->nameTextId));
+                GetMsg(GetPInfo(pid)->msgName));
 
             rankColor = TEXT_COLOR_SYSTEM_BLUE;
 
@@ -1000,7 +1000,7 @@ void DisplayWeaponExp(int num, int x, int y, int wtype)
 {
     int progress, progressMax, color;
 
-    int wexp = gStatScreen.unit->ranks[wtype];
+    int wexp = gStatScreen.unit->wexp[wtype];
 
     // Display weapon type icon
     PutIcon(gBmFrameTmap0 + TM_OFFSET(x, y),
@@ -1014,7 +1014,7 @@ void DisplayWeaponExp(int num, int x, int y, int wtype)
     // Display rank letter
     PutSpecialChar(gBmFrameTmap0 + TM_OFFSET(x + 4, y),
         color,
-        GetDisplayRankStringFromExp(wexp));
+        GetDisplayRankSpecialCharFromExp(wexp));
 
     GetWeaponExpProgressState(wexp, &progress, &progressMax);
 
@@ -1026,7 +1026,7 @@ void DisplayWeaponExp(int num, int x, int y, int wtype)
 static
 void DisplayPage2(void)
 {
-    if (UnitHasMagicRank(gStatScreen.unit))
+    if (UnitKnowsMagic(gStatScreen.unit))
     {
         // NOTE: this was likely present in the J version
         // DisplayTexts(sPage2TextInfo_Magical);
@@ -1073,7 +1073,7 @@ static
 struct Unit* FindNextUnit(struct Unit* u, int direction)
 {
     int faction = UNIT_FACTION(u);
-    int i       = u->index;
+    int i       = u->id;
 
     struct Unit* unit;
 
@@ -1085,22 +1085,22 @@ struct Unit* FindNextUnit(struct Unit* u, int direction)
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONDEAD) && (unit->state & US_DEAD))
+        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONDEAD) && (unit->flags & UNIT_FLAG_DEAD))
             continue;
 
-        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONBENCHED) && (unit->state & US_NOT_DEPLOYED))
+        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONBENCHED) && (unit->flags & UNIT_FLAG_UNDEPLOYED))
             continue;
 
-        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONUNK9) && (unit->state & US_BIT9))
+        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONUNK9) && (unit->flags & UNIT_FLAG_UNSEEN))
             continue;
 
-        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONROOFED) && (unit->state & US_UNDER_A_ROOF))
+        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONROOFED) && (unit->flags & UNIT_FLAG_UNDER_ROOF))
             continue;
 
-        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONUNK16) && (unit->state & US_BIT16))
+        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONUNK16) && (unit->flags & UNIT_FLAG_AWAY))
             continue;
 
-        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONSUPPLY) && (UNIT_CATTRIBUTES(unit) & CA_SUPPLY))
+        if ((sStatScreenInfo.config & STATSCREEN_CONFIG_NONSUPPLY) && (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_SUPPLY))
             continue;
 
         if (UNIT_IS_GORGON_EGG(unit))
@@ -1362,7 +1362,7 @@ void StartUnitSlide(struct Unit* unit, int direction, struct Proc* parent)
 {
     struct StatScreenEffectProc* proc = (void*) SpawnProcLocking(gProcScr_SSUnitSlide, parent);
 
-    proc->newItem = unit->index;
+    proc->newItem = unit->id;
     proc->direction = direction;
 
     PlaySe(0xC8); // TODO: song ids
@@ -1605,7 +1605,7 @@ void PageNumCtrl_DisplayBlinkIcons(struct StatScreenPageNameProc* proc)
 
     if (!gStatScreen.inTransition)
     {
-        if ((gStatScreen.page == STATSCREEN_PAGE_0) && (gStatScreen.unit->state & US_RESCUING))
+        if ((gStatScreen.page == STATSCREEN_PAGE_0) && (gStatScreen.unit->flags & UNIT_FLAG_RESCUING))
         {
             sub_8015BD4(120, 40, 1);
             sub_8015BD4(120, 56, 1);
@@ -1614,17 +1614,17 @@ void PageNumCtrl_DisplayBlinkIcons(struct StatScreenPageNameProc* proc)
             {
                 PutSprite(4,
                     184, 78, Sprite_8x8,
-                    TILE(3, 0xF & palidLut[gStatScreen.unit->rescueOtherUnit >> 6]) + OAM2_PRIORITY(2));
+                    TILE(3, 0xF & palidLut[gStatScreen.unit->rescue >> 6]) + OAM2_PRIORITY(2));
             }
         }
 
-        if (gStatScreen.unit->state & US_RESCUED)
+        if (gStatScreen.unit->flags & UNIT_FLAG_RESCUED)
         {
             if (displayIcon)
             {
                 PutSprite(4,
                     10, 86, Sprite_8x8,
-                    TILE(3, 0xF & palidLut[gStatScreen.unit->rescueOtherUnit>>6]) + OAM2_PRIORITY(2));
+                    TILE(3, 0xF & palidLut[gStatScreen.unit->rescue>>6]) + OAM2_PRIORITY(2));
             }
         }
     }
@@ -1664,7 +1664,7 @@ void StatScreen_InitDisplay(struct Proc* proc)
     EnableBgSync(BG2_SYNC_BIT);
 
     sub_80156D4();
-    SetupMapSpritesPalettes();
+    ApplyUnitSpritePalettes();
 
     // TODO: port the macros from mapanim wip
 
@@ -1733,9 +1733,9 @@ void StatScreen_Display(struct Proc* proc)
 {
     // Get portrait id
 
-    int fid = GetUnitPortraitId(gStatScreen.unit);
+    int fid = GetUnitFid(gStatScreen.unit);
 
-    if (gStatScreen.unit->state & US_BIT23)
+    if (gStatScreen.unit->flags & UNIT_FLAG_ALTERNATE_FACE)
         fid++;
 
     // Set page amount (in FE6, this was dependant on whether this is ally or enemy)
@@ -1750,7 +1750,7 @@ void StatScreen_Display(struct Proc* proc)
 
     // Display portrait
 
-    sub_8005E98(proc, gBg2Tm + TM_OFFSET(1, 1), fid,
+    PutFace80x72(proc, gBg2Tm + TM_OFFSET(1, 1), fid,
         0x4E0, STATSCREEN_BGPAL_FACE);
 
     if (GetFaceInfo(fid)->img)
@@ -1823,10 +1823,10 @@ void StatScreen_OnIdle(struct Proc* proc)
         StartUnitSlide(unit, +1, proc);
     }
 
-    else if ((gKeySt->repeated & A_BUTTON) && (gStatScreen.unit->rescueOtherUnit))
+    else if ((gKeySt->repeated & A_BUTTON) && (gStatScreen.unit->rescue))
     {
-        unit = GetUnit(gStatScreen.unit->rescueOtherUnit);
-        StartUnitSlide(unit, (gStatScreen.unit->state & US_RESCUING) ? +1 : -1, proc);
+        unit = GetUnit(gStatScreen.unit->rescue);
+        StartUnitSlide(unit, (gStatScreen.unit->flags & UNIT_FLAG_RESCUING) ? +1 : -1, proc);
     }
 
     else if (gKeySt->pressed & R_BUTTON)
@@ -1839,8 +1839,8 @@ void StatScreen_OnIdle(struct Proc* proc)
 static
 void StatScreen_OnClose(void)
 {
-    gRAMChapterData.chapterStateBits = (gRAMChapterData.chapterStateBits &~ 3) | (gStatScreen.page & 3);
-    sStatScreenInfo.unitId = gStatScreen.unit->index;
+    gPlaySt.chapterStateBits = (gPlaySt.chapterStateBits &~ 3) | (gStatScreen.page & 3);
+    sStatScreenInfo.unitId = gStatScreen.unit->id;
 
     SetOnVMatch(NULL);
 
@@ -1866,13 +1866,13 @@ void StartStatScreen(struct Unit* unit, struct Proc* parent)
 {
     gStatScreen.xDispOff = 0;
     gStatScreen.yDispOff = 0;
-    gStatScreen.page = gRAMChapterData.chapterStateBits & 3;
+    gStatScreen.page = gPlaySt.chapterStateBits & 3;
     gStatScreen.unit = unit;
     gStatScreen.help = NULL;
     gStatScreen.pageSlideKey = 0;
     gStatScreen.inTransition = FALSE;
 
-    BWL_IncrementStatScreenViews(unit->pCharacterData->number);
+    BWL_IncrementStatScreenViews(unit->pinfo->id);
 
     PlaySe(0x6A); // TODO: song ids
 
@@ -1881,7 +1881,7 @@ void StartStatScreen(struct Unit* unit, struct Proc* parent)
 
 void StartStatScreenHelp(int pageid, struct Proc* proc)
 {
-    LoadDialogueBoxGfx(NULL, -1); // default
+    LoadHelpBoxGfx(NULL, -1); // default
 
     if (!gStatScreen.help)
     {
@@ -1903,7 +1903,7 @@ void StartStatScreenHelp(int pageid, struct Proc* proc)
         } // switch (pageid)
     }
 
-    StartMovingHelpBox(gStatScreen.help, proc);
+    StartMoveableHelpBox(gStatScreen.help, proc);
 }
 
 void HbPopulate_SSItem(struct HelpBoxProc* proc)
@@ -1916,7 +1916,7 @@ void HbPopulate_SSItem(struct HelpBoxProc* proc)
 
 void HbPopulate_SSStatus(struct HelpBoxProc* proc)
 {
-    switch (gStatScreen.unit->statusIndex)
+    switch (gStatScreen.unit->statusId)
     {
 
     case UNIT_STATUS_NONE:
@@ -1956,16 +1956,16 @@ void HbPopulate_SSStatus(struct HelpBoxProc* proc)
         break;
 
     case UNIT_STATUS_PETRIFY:
-    case UNIT_STATUS_13:
+    case UNIT_STATUS_PETRIFY_2:
         proc->mid = 0x557; // TODO: mid constants
         break;
 
-    } // switch (gStatScreen.unit->statusIndex)
+    } // switch (gStatScreen.unit->statusId)
 }
 
 void HbPopulate_SSPower(struct HelpBoxProc* proc)
 {
-    if (UnitHasMagicRank(gStatScreen.unit))
+    if (UnitKnowsMagic(gStatScreen.unit))
         proc->mid = 0x547; // TODO: mid constants
     else
         proc->mid = 0x546; // TODO: mid constants
@@ -1994,7 +1994,7 @@ void HbPopulate_SSWExp(struct HelpBoxProc* proc)
 
     int itemKind = proc->info->mid;
 
-    if (UnitHasMagicRank(gStatScreen.unit))
+    if (UnitKnowsMagic(gStatScreen.unit))
         itemKind += 4;
 
     proc->mid = rankMsgLut[itemKind];
@@ -2002,7 +2002,7 @@ void HbPopulate_SSWExp(struct HelpBoxProc* proc)
 
 void HbPopulate_SSCharacter(struct HelpBoxProc* proc)
 {
-    int midDesc = gStatScreen.unit->pCharacterData->descTextId;
+    int midDesc = gStatScreen.unit->pinfo->msgDesc;
 
     if (midDesc)
         proc->mid = midDesc;
@@ -2012,7 +2012,7 @@ void HbPopulate_SSCharacter(struct HelpBoxProc* proc)
 
 void HbPopulate_SSClass(struct HelpBoxProc* proc)
 {
-    proc->mid = gStatScreen.unit->pClassData->descTextId;
+    proc->mid = gStatScreen.unit->jinfo->msgDesc;
 }
 
 void HbRedirect_SSSupports(struct HelpBoxProc* proc)
@@ -2033,7 +2033,7 @@ void UpdateHelpBoxDisplay(struct HelpBoxProc* proc, int arg1)
     proc->wBox = Interpolate(arg1, proc->wBoxInit, proc->wBoxFinal, proc->timer, proc->timerMax);
     proc->hBox = Interpolate(arg1, proc->hBoxInit, proc->hBoxFinal, proc->timer, proc->timerMax);
 
-    sub_8089980(proc->xBox, proc->yBox, proc->wBox, proc->hBox, proc->unk52);
+    DisplayHelpBoxObj(proc->xBox, proc->yBox, proc->wBox, proc->hBox, proc->unk52);
 }
 
 static
@@ -2085,7 +2085,7 @@ void HelpBox_WaitClose(struct HelpBoxProc* proc)
         Proc_Break(proc);
 }
 
-void StartHelpBox(int x, int y, int mid)
+void ShowTextHelpBox(int x, int y, int mid)
 {
     sMutableHbi.adjUp    = NULL;
     sMutableHbi.adjDown  = NULL;
@@ -2102,10 +2102,10 @@ void StartHelpBox(int x, int y, int mid)
     sHbOrigin.x = 0;
     sHbOrigin.y = 0;
 
-    StartHelpBoxExt(&sMutableHbi, FALSE);
+    StartHelpBoxFromInfo(&sMutableHbi, FALSE);
 }
 
-void StartHelpBox_Unk(int x, int y, int mid)
+void ShowSilentTextHelpBox(int x, int y, int mid)
 {
     if (x < 0 && y < 0)
     {
@@ -2128,10 +2128,10 @@ void StartHelpBox_Unk(int x, int y, int mid)
     sHbOrigin.x = 0;
     sHbOrigin.y = 0;
 
-    StartHelpBoxExt(&sMutableHbi, TRUE);
+    StartHelpBoxFromInfo(&sMutableHbi, TRUE);
 }
 
-void StartItemHelpBox(int x, int y, int item)
+void ShowItemHelpBox(int x, int y, int item)
 {
     sMutableHbi.adjUp    = NULL;
     sMutableHbi.adjDown  = NULL;
@@ -2148,10 +2148,10 @@ void StartItemHelpBox(int x, int y, int item)
     sHbOrigin.x = 0;
     sHbOrigin.y = 0;
 
-    StartHelpBoxExt(&sMutableHbi, FALSE);
+    StartHelpBoxFromInfo(&sMutableHbi, FALSE);
 }
 
-void StartHelpBoxExt(const struct HelpBoxInfo* info, int unk)
+void StartHelpBoxFromInfo(const struct HelpBoxInfo* info, int unk)
 {
     struct HelpBoxProc* proc;
     int wContent, hContent;
@@ -2194,13 +2194,13 @@ void StartHelpBoxExt(const struct HelpBoxInfo* info, int unk)
     ApplyHelpBoxContentSize(proc, wContent, hContent);
     ApplyHelpBoxPosition(proc, info->xDisplay, info->yDisplay);
 
-    sub_808A118();
-    sub_808A0FC(proc->item, proc->mid);
+    ClearHelpBoxText();
+    StartHelpBoxTextInit(proc->item, proc->mid);
 
     sLastHbi = info;
 }
 
-void StartHelpBoxExt_Unk(int x, int y, int mid)
+void StartHelpBox(int x, int y, int mid)
 {
     struct HelpBoxProc* proc;
     int wContent, hContent;
@@ -2234,17 +2234,17 @@ void StartHelpBoxExt_Unk(int x, int y, int mid)
     proc->xBoxFinal = x + 8;
     proc->yBoxFinal = y + 8;
 
-    sub_808A118();
-    sub_808A0FC(proc->item, proc->mid);
+    ClearHelpBoxText();
+    StartHelpBoxTextInit(proc->item, proc->mid);
 }
 
-void CloseHelpBox(void)
+void MoveableHelpBox_OnEnd(void)
 {
     struct HelpBoxProc* proc = (void*) FindProc(gProcScr_HelpBox);
 
     if (proc)
     {
-        sub_808A118();
+        ClearHelpBoxText();
         Proc_Goto(proc, 0x63);
     }
 }
@@ -2255,7 +2255,7 @@ void EndHelpBox(void)
 
     if (proc)
     {
-        sub_808A118();
+        ClearHelpBoxText();
         Proc_End(proc);
     }
 }
@@ -2268,7 +2268,7 @@ void HbMoveCtrl_OnInitBox(struct HelpBoxProc* proc)
     if (proc->info->redirect)
         proc->info->redirect(proc);
 
-    StartHelpBoxExt(proc->info, FALSE);
+    StartHelpBoxFromInfo(proc->info, FALSE);
 }
 
 static
@@ -2308,11 +2308,11 @@ void HbMoveCtrl_OnIdle(struct HelpBoxProc* proc)
 static
 void HbMoveCtrl_OnEnd(struct HelpBoxProc* proc)
 {
-    CloseHelpBox();
+    MoveableHelpBox_OnEnd();
     Proc_End((void*) proc);
 }
 
-void StartMovingHelpBox(const struct HelpBoxInfo* info, struct Proc* parent)
+void StartMoveableHelpBox(const struct HelpBoxInfo* info, struct Proc* parent)
 {
     struct HelpBoxProc* proc = (void*) SpawnProcLocking(gProcScr_HelpBoxMoveCtrl, parent);
 
@@ -2322,7 +2322,7 @@ void StartMovingHelpBox(const struct HelpBoxInfo* info, struct Proc* parent)
     proc->info = info;
 }
 
-void StartMovingHelpBoxExt(const struct HelpBoxInfo* info, struct Proc* parent, int x, int y)
+void StartMoveableHelpBoxExt(const struct HelpBoxInfo* info, struct Proc* parent, int x, int y)
 {
     struct HelpBoxProc* proc = (void*) SpawnProcLocking(gProcScr_HelpBoxMoveCtrl, parent);
 
@@ -2337,7 +2337,7 @@ void ApplyHelpBoxContentSize(struct HelpBoxProc* proc, int width, int height)
 {
     width = 0xF0 & (width + 15); // align to 16 pixel multiple
 
-    switch (GetHelpBoxItemInfoKind(proc->item))
+    switch (GetItemHelpBoxKind(proc->item))
     {
 
     case 1: // weapon
@@ -2365,7 +2365,7 @@ void ApplyHelpBoxContentSize(struct HelpBoxProc* proc, int width, int height)
 
         break;
 
-    } // switch (GetHelpBoxItemInfoKind(proc->item))
+    } // switch (GetItemHelpBoxKind(proc->item))
 
     proc->wBoxFinal = width;
     proc->hBoxFinal = height;
@@ -2412,7 +2412,7 @@ void ResetHelpBoxInitSize(struct HelpBoxProc* proc)
     proc->hBoxInit = 16;
 }
 
-int GetHelpBoxItemInfoKind(int item)
+int GetItemHelpBoxKind(int item)
 {
     if (item == 0xFFFE)
         return HB_EXTINFO_SAVEINFO;
@@ -2435,7 +2435,7 @@ void HbPopulate_AutoItem(struct HelpBoxProc* proc)
 
     proc->item = item;
 
-    if (GetHelpBoxItemInfoKind(proc->item) == HB_EXTINFO_SAVEINFO)
+    if (GetItemHelpBoxKind(proc->item) == HB_EXTINFO_SAVEINFO)
         proc->mid = 0;
     else
         proc->mid = GetItemDescId(item);
@@ -2507,9 +2507,9 @@ void HbLock_OnIdle(struct Proc* proc)
 
 int StartLockingHelpBox_Unused(int mid, struct Proc* parent)
 {
-    LoadDialogueBoxGfx(NULL, -1);
+    LoadHelpBoxGfx(NULL, -1);
 
-    StartHelpBox(GetUiHandPrevDisplayX(), GetUiHandPrevDisplayY(), mid);
+    ShowTextHelpBox(GetUiHandPrevDisplayX(), GetUiHandPrevDisplayY(), mid);
     SpawnProcLocking(gProcScr_HelpBoxLock, parent);
 
     return TRUE;
@@ -2536,7 +2536,7 @@ struct Proc* StartHelpPromptSprite_Unused(int x, int y, struct Proc* parent)
     return (void*) proc;
 }
 
-struct Proc* StartHelpPromptSprite(int x, int y, int palid, struct Proc* parent)
+struct Proc* ShowRIsInfo(int x, int y, int palid, struct Proc* parent)
 {
     struct HelpPromptSprProc* proc = (void*) FindProc(gProcScr_HelpPromptSpr);
 
@@ -2566,7 +2566,7 @@ struct Proc* StartHelpPromptSprite_Unused2(int x, int y, struct Proc* parent)
     return (void*) proc;
 }
 
-void EndHelpPromptSprite(void)
+void HideRIsInfo(void)
 {
     struct Proc* proc = FindProc(gProcScr_HelpPromptSpr);
 
@@ -2828,7 +2828,7 @@ static DECL_INFO sHelpInfo_08A00E9C =
     174, 136, 0x560,
 };
 
-// Stat Screen Page 2 (Weapon ranks & supports) (Ss2)
+// Stat Screen Page 2 (Weapon wexp & supports) (Ss2)
 
 static DECL_INFO sHelpInfo_08A00EB8;
 static DECL_INFO sHelpInfo_08A00ED4;

@@ -1,7 +1,8 @@
 #ifndef GUARD_CONSTANTS_TERRAINS_H
 #define GUARD_CONSTANTS_TERRAINS_H
 
-enum {
+enum
+{
     // Terrain identifiers
 
     // I'm going by the in-game names + some old FE7 nmm for this

@@ -136,16 +136,16 @@ enum
 
 // function decls
 
-struct MenuProc* StartOrphanMenuAdjusted(const struct MenuDef* def, int xSubject, int xTileLeft, int xTileRight);
-struct MenuProc* StartMenu(const struct MenuDef* def, struct Proc* parent);
+struct MenuProc* StartMenuAdjusted(const struct MenuDef* def, int xSubject, int xTileLeft, int xTileRight);
+struct MenuProc* StartMenuChild(const struct MenuDef* def, struct Proc* parent);
 struct MenuProc* StartOrphanMenuAt(const struct MenuDef* def, struct MenuRect rect);
-struct MenuProc* StartOrphanMenu(const struct MenuDef* def);
+struct MenuProc* StartMenu(const struct MenuDef* def);
 struct MenuProc* StartOrphanMenuAdjustedExt(const struct MenuDef* def, int xSubject, int xTileLeft, int xTileRight, int backBg, int tile, int frontBg, int unk);
-struct MenuProc* StartMenuExt(const struct MenuDef* def, int backBg, int tile, int frontBg, int unk, struct Proc* parent);
+struct MenuProc* StartMenuExt2(const struct MenuDef* def, int backBg, int tile, int frontBg, int unk, struct Proc* parent);
 struct MenuProc* StartOrphanMenuAtExt(const struct MenuDef* def, struct MenuRect rect, int backBg, int tile, int frontBg, int unk);
 struct MenuProc* StartOrphanMenuExt(const struct MenuDef* def, int backBg, int tile, int frontBg, int unk);
 struct MenuProc* StartMenuAt(const struct MenuDef* def, struct MenuRect rect, struct Proc* parent);
-struct MenuProc* StartMenuCore(const struct MenuDef* def, struct MenuRect rect, int backBg, int tile, int frontBg, int unk, struct Proc* parent);
+struct MenuProc* StartMenuExt(const struct MenuDef* def, struct MenuRect rect, int backBg, int tile, int frontBg, int unk, struct Proc* parent);
 
 struct Proc* EndMenu(struct MenuProc* proc);
 void EndAllMenus(void);
@@ -154,35 +154,35 @@ void SyncMenuBgs(struct MenuProc* proc);
 void ClearMenuBgs(struct MenuProc* proc);
 s8 HasMenuChangedItem(struct MenuProc* proc);
 
-void Menu_OnInit(struct MenuProc* proc);
-void RedrawMenu(struct MenuProc* proc);
-void DrawMenuItemHover(struct MenuProc* proc, int item, s8 boolHover);
-void Menu_OnIdle(struct MenuProc* proc);
-void ProcessMenuDpadInput(struct MenuProc* proc);
-int  ProcessMenuSelectInput(struct MenuProc* proc);
-void GetMenuCursorPosition(struct MenuProc* proc, int* xResult, int* yResult);
+void Menu_CallDefinedConstructors(struct MenuProc* proc);
+void Menu_Draw(struct MenuProc* proc);
+void Menu_DrawHoverThing(struct MenuProc* proc, int item, s8 boolHover);
+void Menu_Idle(struct MenuProc* proc);
+void Menu_HandleDirectionInputs(struct MenuProc* proc);
+int  Menu_HandleSelectInputs(struct MenuProc* proc);
+void Menu_GetCursorGfxCurrentPosition(struct MenuProc* proc, int* xResult, int* yResult);
 
-u8 MenuAlwaysEnabled(const struct MenuItemDef* def, int number);
-u8 MenuAlwaysDisabled(const struct MenuItemDef* def, int number);
-u8 MenuAlwaysNotShown(const struct MenuItemDef* def, int number);
+u8 MenuCommandAlwaysUsable(const struct MenuItemDef* def, int number);
+u8 MenuCommandAlwaysGrayed(const struct MenuItemDef* def, int number);
+u8 MenuCommandNeverUsable(const struct MenuItemDef* def, int number);
 
 u8 MenuCancelSelect(struct MenuProc* menu, struct MenuItemProc* item);
 u8 MenuStdHelpBox(struct MenuProc* menu, struct MenuItemProc* item);
-u8 MenuAutoHelpBoxSelect(struct MenuProc* menu);
-u8 MenuFrozenHelpBox(struct MenuProc* proc, int msgid);
+u8 MenuCallHelp(struct MenuProc* menu);
+u8 MenuCallHelpBox(struct MenuProc* proc, int msgid);
 u8 MenuFrozen(struct MenuProc* proc);
 
-void FreezeMenu(void);
-void ResumeMenu(void);
+void MarkSomethingInMenu(void);
+void UnMarkSomethingInMenu(void);
 
-struct MenuProc* StartSemiCenteredOrphanMenu(const struct MenuDef* def, int xSubject, int xTileLeft, int xTileRight);
-void ApplyMenuCursorVScroll(struct MenuProc* proc, int* xRef, int* yRef);
+struct MenuProc* StartMenu_AndDoSomethingCommands(const struct MenuDef* def, int xSubject, int xTileLeft, int xTileRight);
+void Menu_UpdateMovingCursorGfxPosition(struct MenuProc* proc, int* xRef, int* yRef);
 
-void ResetMenuOverrides(void);
-void GetForceDisabledMenuItems(u8 list[MENU_OVERRIDE_MAX]);
-void SetForceDisabledMenuItems(u8 list[MENU_OVERRIDE_MAX]);
-void AddMenuOverride(int cmdid, int kind, void* func);
-u8 OverriddenMenuAvailability(const struct MenuItemDef* def, int number);
-u8 OverriddenMenuSelected(struct MenuProc* proc, struct MenuItemProc* item);
+void ClearMenuCommandOverride(void);
+void GetOverriddenUnusableMenuCommands(u8 list[MENU_OVERRIDE_MAX]);
+void SetOverriddenUnusableMenuCommands(u8 list[MENU_OVERRIDE_MAX]);
+void SetMenuCommandOverride(int cmdid, int kind, void* func);
+u8 GetOverriddenMenuCommandUsability(const struct MenuItemDef* def, int number);
+u8 GetOverriddenMenuCommandEffect(struct MenuProc* proc, struct MenuItemProc* item);
 
 #endif // GUARD_UI_MENU_H

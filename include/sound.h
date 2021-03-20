@@ -42,5 +42,5 @@ void CancelDelaySong(void);
 // ??? sub_8002AC8(???);
 
 #define PlaySe(id) \
-    if (!gRAMChapterData.configSeDisable) \
+    if (!gPlaySt.configSeDisable) \
         m4aSongNumStart((id))

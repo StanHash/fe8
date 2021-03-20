@@ -41,19 +41,19 @@ static void AiPhaseInit(struct Proc* proc)
 {
     int i;
 
-    gAiState.flags = AI_FLAG_0;
-    gAiState.unk7E = -1;
+    gAiSt.flags = AI_FLAG_0;
+    gAiSt.unk7E = -1;
 
-    gAiState.orderState = 0;
+    gAiSt.orderState = 0;
 
     for (i = 0; i < 8; ++i)
-        gAiState.unk86[i] = 0;
+        gAiSt.unk86[i] = 0;
 
-    gAiState.specialItemFlags = gUnknown_080D8538[gRAMChapterData.chapterIndex];
-    gAiState.unk84 = 0;
+    gAiSt.specialItemFlags = gUnknown_080D8538[gPlaySt.chapter];
+    gAiSt.unk84 = 0;
 
-    UpdateAllPhaseHealingAIStatus();
-    SetupUnitInventoryAIFlags();
+    AiUpdateAllUnitHealAi();
+    GenBlueUnitAiStats();
 
     SpawnProcLocking(gProcScr_CpOrder, proc);
 }
@@ -62,21 +62,21 @@ static void AiPhaseBerserkInit(struct Proc* proc)
 {
     int i;
 
-    gAiState.flags = AI_FLAG_BERSERKED;
-    gAiState.unk7E = -1;
+    gAiSt.flags = AI_FLAG_BERSERKED;
+    gAiSt.unk7E = -1;
 
     for (i = 0; i < 8; ++i)
-        gAiState.unk86[i] = 0;
+        gAiSt.unk86[i] = 0;
 
-    gAiState.specialItemFlags = gUnknown_080D8538[gRAMChapterData.chapterIndex];
+    gAiSt.specialItemFlags = gUnknown_080D8538[gPlaySt.chapter];
 
-    UpdateAllPhaseHealingAIStatus();
-    SetupUnitInventoryAIFlags();
+    AiUpdateAllUnitHealAi();
+    GenBlueUnitAiStats();
 
     SpawnProcLocking(gProcScr_BerserkCpOrder, proc);
 }
 
 static void AiPhaseCleanup(struct Proc* proc)
 {
-    gAiState.flags = AI_FLAGS_NONE;
+    gAiSt.flags = AI_FLAGS_NONE;
 }

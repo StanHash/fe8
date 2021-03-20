@@ -4,7 +4,7 @@
 #include "proc.h"
 #include "bmio.h"
 #include "bmitem.h"
-#include "bmunit.h"
+#include "unit.h"
 
 const char *gUnknown_08591AA4[][2] =
 {
@@ -12,7 +12,7 @@ const char *gUnknown_08591AA4[][2] =
     {"an ", "An "},
 };
 
-const char *sub_800A048(s8 *a, s8 b)
+const char *StrGetGenericArticle(s8 *a, s8 b)
 {
     switch (a[0])
     {
@@ -39,7 +39,7 @@ void PrependArticleToString(char *a, const char *b, s8 c)
     s16 i;
 
     if (b == NULL)
-        r6 = sub_800A048(a, c);
+        r6 = StrGetGenericArticle(a, c);
     else
         r6 = b;
     r5 = strlen(r6);
@@ -49,7 +49,7 @@ void PrependArticleToString(char *a, const char *b, s8 c)
         a[i] = r6[i];
 }
 
-void SomethingRelatedToText(s8 *a)
+void StrStripSomeEndCharacters(s8 *a)
 {
     s16 r3 = 0;
     u8 r1;
@@ -79,27 +79,27 @@ void SomethingRelatedToText(s8 *a)
 
 char *GetMsg(int index)
 {
-    if (index == gUnknown_0202B6AC)
-        return gUnknown_0202A6AC.buffer0202A6AC;
-    DecodeString(gUnknown_0815D48C[index], gUnknown_0202A6AC.buffer0202A6AC);
-    SomethingRelatedToText(gUnknown_0202A6AC.buffer0202A6AC);
-    gUnknown_0202B6AC = index;
-    return gUnknown_0202A6AC.buffer0202A6AC;
+    if (index == gCurrentTextIndex)
+        return gCurrentTextString.buffer0202A6AC;
+    DecodeString(gUnknown_0815D48C[index], gCurrentTextString.buffer0202A6AC);
+    StrStripSomeEndCharacters(gCurrentTextString.buffer0202A6AC);
+    gCurrentTextIndex = index;
+    return gCurrentTextString.buffer0202A6AC;
 }
 
 char *GetMsgTo(int index, char *buffer)
 {
     DecodeString(gUnknown_0815D48C[index], buffer);
-    SomethingRelatedToText(buffer);
+    StrStripSomeEndCharacters(buffer);
     return buffer;
 }
 
-char *sub_800A2A4(void)
+char *StrExpandNames(void)
 {
-    u8 *r5 = gUnknown_0202A6AC.buffer0202AC01;
-    u8 *r4 = gUnknown_0202A6AC.buffer0202B156;
+    u8 *r5 = gCurrentTextString.buffer0202AC01;
+    u8 *r4 = gCurrentTextString.buffer0202B156;
 
-    CopyString(r5, gUnknown_0202A6AC.buffer0202A6AC);
+    StringCopy(r5, gCurrentTextString.buffer0202A6AC);
     while (*r5 != 0)
     {
         if (*r5 < 32)
@@ -130,17 +130,17 @@ char *sub_800A2A4(void)
                 r1 = 3;
                 break;
             case 0x20:
-                CopyString(r4, GetTacticianName());
+                StringCopy(r4, GetTacticianNameString());
                 goto label;
             case 0x22:
-                CopyString(r4, GetItemName(gActionData.unk6));
+                StringCopy(r4, GetItemName(gAction.unk6));
                 goto label;
             default:
                 *r4++ = 0x80;
                 *r4++ = *r5++;
                 continue;
             }
-            CopyString(r4, GetMsg(GetCharacterData(gRAMChapterData.unk1C[r1])->nameTextId));
+            StringCopy(r4, GetMsg(GetPInfo(gPlaySt.unk1C[r1])->msgName));
         label:
             while (*r4 != 0)
                 r4++;
@@ -148,16 +148,16 @@ char *sub_800A2A4(void)
         }
     }
     *r4 = 0;
-    return gUnknown_0202A6AC.buffer0202B156;
+    return gCurrentTextString.buffer0202B156;
 }
 
 #if NONMATCHING
-void *FilterSomeTextFromStandardBuffer(void)
+void *StrExpandTact(void)
 {
-    u8 *r5 = gUnknown_0202A6AC.buffer0202B4AC;
-    u8 *r4 = gUnknown_0202A6AC.buffer0202B5AC;
+    u8 *r5 = gCurrentTextString.buffer0202B4AC;
+    u8 *r4 = gCurrentTextString.buffer0202B5AC;
 
-    CopyString(r5, gUnknown_0202A6AC.buffer0202A6AC);
+    StringCopy(r5, gCurrentTextString.buffer0202A6AC);
     while (*r5 != 0)
     {
         u8 r1 = *r5;
@@ -181,7 +181,7 @@ void *FilterSomeTextFromStandardBuffer(void)
             else
             {
                 //_0800A3F8
-                CopyString(r4, GetTacticianName());
+                StringCopy(r4, GetTacticianNameString());
                 while (*r4 != 0)
                     r4++;
                 r5++;
@@ -189,11 +189,11 @@ void *FilterSomeTextFromStandardBuffer(void)
         }
     }
     *r4 = 0;
-    return gUnknown_0202A6AC.buffer0202B5AC;
+    return gCurrentTextString.buffer0202B5AC;
 }
 #else
 __attribute__((naked))
-char *FilterSomeTextFromStandardBuffer(void)
+char *StrExpandTact(void)
 {
     asm(".syntax unified\n\
     push {r4, r5, lr}\n\
@@ -204,7 +204,7 @@ char *FilterSomeTextFromStandardBuffer(void)
     ldr r0, _0800A3D4  @ 0xFFFFF200\n\
     adds r1, r5, r0\n\
     adds r0, r5, #0\n\
-    bl CopyString\n\
+    bl StringCopy\n\
     b _0800A416\n\
     .align 2, 0\n\
 _0800A3D0: .4byte gUnknown_0202B4AC\n\
@@ -228,10 +228,10 @@ _0800A3F0:\n\
     adds r4, #1\n\
     b _0800A416\n\
 _0800A3F8:\n\
-    bl GetTacticianName\n\
+    bl GetTacticianNameString\n\
     adds r1, r0, #0\n\
     adds r0, r4, #0\n\
-    bl CopyString\n\
+    bl StringCopy\n\
     ldrb r0, [r4]\n\
     adds r1, r5, #1\n\
     cmp r0, #0\n\

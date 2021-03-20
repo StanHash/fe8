@@ -9,12 +9,12 @@ GetPlayerStartCursorPosition: @ 0x0801DE30
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	adds r6, r1, #0
-	ldr r4, _0801DE74  @ gRAMChapterData
+	ldr r4, _0801DE74  @ gPlaySt
 	ldrh r0, [r4, #0x10]
 	cmp r0, #1
 	bne _0801DE50
-	bl GetPlayerLeaderUnitId
-	bl GetUnitFromCharId
+	bl GetPlayerLeaderPid
+	bl GetUnitByPid
 	adds r1, r0, #0
 	ldrb r0, [r1, #0x10]
 	strb r0, [r4, #0x12]
@@ -27,8 +27,8 @@ _0801DE50:
 	lsls r0, r0, #0x1b
 	cmp r0, #0
 	blt _0801DE78
-	bl GetPlayerLeaderUnitId
-	bl GetUnitFromCharId
+	bl GetPlayerLeaderPid
+	bl GetUnitByPid
 	adds r1, r0, #0
 	movs r0, #0x10
 	ldrsb r0, [r1, r0]
@@ -37,7 +37,7 @@ _0801DE50:
 	ldrsb r0, [r1, r0]
 	b _0801DE7E
 	.align 2, 0
-_0801DE74: .4byte gRAMChapterData
+_0801DE74: .4byte gPlaySt
 _0801DE78:
 	ldrb r0, [r4, #0x12]
 	str r0, [r5]
@@ -55,12 +55,12 @@ GetEnemyStartCursorPosition: @ 0x0801DE88
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	adds r5, r1, #0
-	ldr r0, _0801DE98  @ gRAMChapterData
+	ldr r0, _0801DE98  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	adds r4, r0, #1
 	b _0801DEDC
 	.align 2, 0
-_0801DE98: .4byte gRAMChapterData
+_0801DE98: .4byte gPlaySt
 _0801DE9C:
 	adds r0, r4, #0
 	bl GetUnit
@@ -92,7 +92,7 @@ _0801DE9C:
 	bne _0801DEE2
 _0801DED6:
 	adds r4, #1
-	ldr r0, _0801DEEC  @ gRAMChapterData
+	ldr r0, _0801DEEC  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 _0801DEDC:
 	adds r0, #0x40
@@ -104,7 +104,7 @@ _0801DEE2:
 	bx r0
 	.align 2, 0
 _0801DEE8: .4byte 0x00000201
-_0801DEEC: .4byte gRAMChapterData
+_0801DEEC: .4byte gPlaySt
 
 	THUMB_FUNC_END GetEnemyStartCursorPosition
 
@@ -117,7 +117,7 @@ sub_801DEF0: @ 0x0801DEF0
 	negs r0, r0
 	str r0, [sp]
 	str r0, [sp, #4]
-	ldr r4, _0801DF14  @ gRAMChapterData
+	ldr r4, _0801DF14  @ gPlaySt
 	ldrb r0, [r4, #0xf]
 	bl GetPhaseAbleUnitCount
 	cmp r0, #0
@@ -126,7 +126,7 @@ sub_801DEF0: @ 0x0801DEF0
 	bl Proc_End
 	b _0801DF5A
 	.align 2, 0
-_0801DF14: .4byte gRAMChapterData
+_0801DF14: .4byte gPlaySt
 _0801DF18:
 	ldrb r0, [r4, #0xf]
 	cmp r0, #0x40

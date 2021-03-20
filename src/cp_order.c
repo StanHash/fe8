@@ -4,7 +4,7 @@
 #include "hardware.h"
 #include "proc.h"
 #include "bmitem.h"
-#include "bmunit.h"
+#include "unit.h"
 
 #include "cp_common.h"
 
@@ -48,14 +48,14 @@ ProcFunc CONST_DATA sCpOrderFuncList[] =
 
 void CpOrderMain(ProcPtr proc)
 {
-    sCpOrderFuncList[gAiState.orderState++](proc);
+    sCpOrderFuncList[gAiSt.orderState++](proc);
 }
 
 void CpOrderBerserkInit(ProcPtr proc)
 {
     int i, aiNum = 0;
 
-    u32 faction = gRAMChapterData.chapterPhaseIndex;
+    u32 faction = gPlaySt.chapterPhaseIndex;
 
     int factionUnitCountLut[3] = { 62, 20, 50 }; // TODO: named constant for those
 
@@ -63,24 +63,24 @@ void CpOrderBerserkInit(ProcPtr proc)
     {
         struct Unit* unit = GetUnit(faction + i + 1);
 
-        if (!unit->pCharacterData)
+        if (!unit->pinfo)
             continue;
 
-        if (unit->statusIndex != UNIT_STATUS_BERSERK)
+        if (unit->statusId != UNIT_STATUS_BERSERK)
             continue;
 
-        if (unit->state & (US_HIDDEN | US_UNSELECTABLE | US_DEAD | US_RESCUED | US_HAS_MOVED_AI))
+        if (unit->flags & (UNIT_FLAG_HIDDEN | UNIT_FLAG_TURN_ENDED | UNIT_FLAG_DEAD | UNIT_FLAG_RESCUED | UNIT_FLAG_AI_PROCESSED))
             continue;
 
-        gAiState.units[aiNum++] = faction + i + 1;
+        gAiSt.units[aiNum++] = faction + i + 1;
     }
 
     if (aiNum != 0)
     {
-        gAiState.units[aiNum] = 0;
-        gAiState.unitIt = gAiState.units;
+        gAiSt.units[aiNum] = 0;
+        gAiSt.unitIt = gAiSt.units;
 
-        AiDecideMainFunc = AiDecideMain;
+        AiDecideMainFunc = AiMasterDecisionMaker;
 
         SpawnProcLocking(gProcScr_CpDecide, proc);
     }
@@ -94,10 +94,10 @@ void CpOrderFunc_BeginDecide(ProcPtr proc)
     {
         SortAiUnitList(unitAmt);
 
-        gAiState.units[unitAmt] = 0;
-        gAiState.unitIt = gAiState.units;
+        gAiSt.units[unitAmt] = 0;
+        gAiSt.unitIt = gAiSt.units;
 
-        AiDecideMainFunc = AiDecideMain;
+        AiDecideMainFunc = AiMasterDecisionMaker;
 
         SpawnProcLocking(gProcScr_CpDecide, proc);
     }
@@ -144,19 +144,19 @@ int GetUnitAiPriority(struct Unit* unit)
 {
     int priority = UNIT_MOV(unit);
 
-    u16 lead = GetUnitLeaderCharId(unit);
+    u16 lead = GetUnitLeaderPid(unit);
 
-    if (UNIT_CATTRIBUTES(unit) & (CA_DANCE | CA_PLAY))
+    if (UNIT_ATTRIBUTES(unit) & (UNIT_ATTR_DANCE | UNIT_ATTR_PLAY))
         return priority - 149;
 
     if (!(unit->aiFlags & AI_UNIT_FLAG_0))
     {
         priority += lead << 8;
 
-        if (UNIT_CATTRIBUTES(unit) & CA_STEAL)
+        if (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_2)
             return priority + 60;
 
-        if ((unit->pCharacterData->number == lead) || (UNIT_CATTRIBUTES(unit) & CA_LORD))
+        if ((unit->pinfo->id == lead) || (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_LORD))
             return priority + 87;
 
         priority = priority + GetUnitBattleAiPriority(unit);
@@ -169,7 +169,7 @@ int BuildAiUnitList(void)
 {
     int i, aiNum = 0;
 
-    u32 faction = gRAMChapterData.chapterPhaseIndex;
+    u32 faction = gPlaySt.chapterPhaseIndex;
     u32* prioIt = sUnitPriorityArray;
 
     int factionUnitCountLut[3] = { 62, 20, 50 }; // TODO: named constant for those
@@ -178,19 +178,19 @@ int BuildAiUnitList(void)
     {
         struct Unit* unit = GetUnit(faction + i + 1);
 
-        if (!unit->pCharacterData)
+        if (!unit->pinfo)
             continue;
 
-        if (unit->statusIndex == UNIT_STATUS_SLEEP)
+        if (unit->statusId == UNIT_STATUS_SLEEP)
             continue;
 
-        if (unit->statusIndex == UNIT_STATUS_BERSERK)
+        if (unit->statusId == UNIT_STATUS_BERSERK)
             continue;
 
-        if (unit->state & (US_HIDDEN | US_UNSELECTABLE | US_DEAD | US_RESCUED | US_HAS_MOVED_AI))
+        if (unit->flags & (UNIT_FLAG_HIDDEN | UNIT_FLAG_TURN_ENDED | UNIT_FLAG_DEAD | UNIT_FLAG_RESCUED | UNIT_FLAG_AI_PROCESSED))
             continue;
 
-        gAiState.units[aiNum] = faction + i + 1;
+        gAiSt.units[aiNum] = faction + i + 1;
         *prioIt++ = GetUnitAiPriority(unit);
 
         aiNum++;
@@ -223,9 +223,9 @@ void SortAiUnitList(int count)
                 sUnitPriorityArray[j] = sUnitPriorityArray[j+1];
                 sUnitPriorityArray[j+1] = tmp;
 
-                tmp = gAiState.units[j];
-                gAiState.units[j] = gAiState.units[j+1];
-                gAiState.units[j+1] = tmp;
+                tmp = gAiSt.units[j];
+                gAiSt.units[j] = gAiSt.units[j+1];
+                gAiSt.units[j+1] = tmp;
             }
         }
     }

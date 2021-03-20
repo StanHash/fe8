@@ -12,7 +12,7 @@ sub_801EC64: @ 0x0801EC64
 	adds r0, r2, #0
 	strh r0, [r1]
 	ldr r2, _0801EC9C  @ 0x04000052
-	ldr r1, _0801ECA0  @ gUnknown_0202BCB0
+	ldr r1, _0801ECA0  @ gBmSt
 	adds r0, r1, #0
 	adds r0, #0x3a
 	ldrb r0, [r0]
@@ -31,7 +31,7 @@ sub_801EC64: @ 0x0801EC64
 _0801EC94: .4byte 0x04000050
 _0801EC98: .4byte 0x00003C42
 _0801EC9C: .4byte 0x04000052
-_0801ECA0: .4byte gUnknown_0202BCB0
+_0801ECA0: .4byte gBmSt
 _0801ECA4: .4byte sub_801ECA8
 
 	THUMB_FUNC_END sub_801EC64
@@ -44,7 +44,7 @@ sub_801ECA8: @ 0x0801ECA8
 	adds r0, r2, #0
 	strh r0, [r1]
 	ldr r2, _0801ECE0  @ 0x04000052
-	ldr r1, _0801ECE4  @ gUnknown_0202BCB0
+	ldr r1, _0801ECE4  @ gBmSt
 	adds r0, r1, #0
 	adds r0, #0x38
 	ldrb r0, [r0]
@@ -63,7 +63,7 @@ sub_801ECA8: @ 0x0801ECA8
 _0801ECD8: .4byte 0x04000050
 _0801ECDC: .4byte 0x00003E41
 _0801ECE0: .4byte 0x04000052
-_0801ECE4: .4byte gUnknown_0202BCB0
+_0801ECE4: .4byte gBmSt
 _0801ECE8: .4byte sub_801ECEC
 
 	THUMB_FUNC_END sub_801ECA8
@@ -76,7 +76,7 @@ sub_801ECEC: @ 0x0801ECEC
 	adds r0, r2, #0
 	strh r0, [r1]
 	ldr r2, _0801ED24  @ 0x04000052
-	ldr r1, _0801ED28  @ gUnknown_0202BCB0
+	ldr r1, _0801ED28  @ gBmSt
 	adds r0, r1, #0
 	adds r0, #0x3a
 	ldrb r0, [r0]
@@ -95,7 +95,7 @@ sub_801ECEC: @ 0x0801ECEC
 _0801ED1C: .4byte 0x04000050
 _0801ED20: .4byte 0x00003C42
 _0801ED24: .4byte 0x04000052
-_0801ED28: .4byte gUnknown_0202BCB0
+_0801ED28: .4byte gBmSt
 _0801ED2C: .4byte sub_801EC64
 
 	THUMB_FUNC_END sub_801ECEC
@@ -136,7 +136,7 @@ sub_801ED58: @ 0x0801ED58
 	movs r0, #4
 	bl FadeBgmOut
 _0801ED70:
-	ldr r0, _0801ED90  @ gRAMChapterData
+	ldr r0, _0801ED90  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -153,7 +153,7 @@ _0801ED82:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801ED90: .4byte gRAMChapterData
+_0801ED90: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_801ED58
 
@@ -162,7 +162,7 @@ sub_801ED94: @ 0x0801ED94
 	push {r4, r5, lr}
 	sub sp, #4
 	adds r5, r0, #0
-	bl CheckSomethingSomewhere
+	bl CheckGameLinkArenaBit
 	cmp r0, #0
 	beq _0801EDAA
 	movs r2, #0
@@ -189,7 +189,7 @@ _0801EDB2:
 	movs r0, #0
 	movs r2, #0
 	bl SetBgOffset
-	ldr r1, _0801EE04  @ gUnknown_0202BCB0
+	ldr r1, _0801EE04  @ gBmSt
 	adds r2, r1, #0
 	adds r2, #0x38
 	ldrb r0, [r2]
@@ -215,7 +215,7 @@ _0801EDFC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801EE04: .4byte gUnknown_0202BCB0
+_0801EE04: .4byte gBmSt
 
 	THUMB_FUNC_END sub_801ED94
 
@@ -224,7 +224,7 @@ sub_801EE08: @ 0x0801EE08
 	push {r4, r5, lr}
 	sub sp, #4
 	adds r5, r0, #0
-	bl CheckSomethingSomewhere
+	bl CheckGameLinkArenaBit
 	cmp r0, #0
 	beq _0801EE20
 	movs r2, #0x14
@@ -252,7 +252,7 @@ _0801EE28:
 	movs r0, #0
 	movs r2, #0
 	bl SetBgOffset
-	ldr r1, _0801EE7C  @ gUnknown_0202BCB0
+	ldr r1, _0801EE7C  @ gBmSt
 	adds r2, r1, #0
 	adds r2, #0x38
 	ldrb r0, [r2]
@@ -278,7 +278,7 @@ _0801EE72:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801EE7C: .4byte gUnknown_0202BCB0
+_0801EE7C: .4byte gBmSt
 
 	THUMB_FUNC_END sub_801EE08
 
@@ -756,7 +756,7 @@ sub_801F1A0: @ 0x0801F1A0
 	movs r1, #0
 	movs r2, #7
 	bl Interpolate
-	ldr r2, _0801F224  @ gUnknown_0202BCB0
+	ldr r2, _0801F224  @ gBmSt
 	adds r1, r2, #0
 	adds r1, #0x3a
 	strb r0, [r1]
@@ -780,7 +780,7 @@ _0801F216:
 	bx r0
 	.align 2, 0
 _0801F220: .4byte gDispIo
-_0801F224: .4byte gUnknown_0202BCB0
+_0801F224: .4byte gBmSt
 
 	THUMB_FUNC_END sub_801F1A0
 
@@ -825,7 +825,7 @@ sub_801F228: @ 0x0801F228
 	movs r1, #0
 	movs r2, #7
 	bl Interpolate
-	ldr r2, _0801F2A8  @ gUnknown_0202BCB0
+	ldr r2, _0801F2A8  @ gBmSt
 	adds r1, r2, #0
 	adds r1, #0x3a
 	strb r0, [r1]
@@ -848,7 +848,7 @@ _0801F29C:
 	bx r0
 	.align 2, 0
 _0801F2A4: .4byte gDispIo
-_0801F2A8: .4byte gUnknown_0202BCB0
+_0801F2A8: .4byte gBmSt
 
 	THUMB_FUNC_END sub_801F228
 
@@ -856,7 +856,7 @@ _0801F2A8: .4byte gUnknown_0202BCB0
 sub_801F2AC: @ 0x0801F2AC
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _0801F2C8  @ gRAMChapterData
+	ldr r0, _0801F2C8  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	bl GetPhaseAbleUnitCount
 	cmp r0, #0
@@ -868,12 +868,12 @@ _0801F2C2:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801F2C8: .4byte gRAMChapterData
+_0801F2C8: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_801F2AC
 
-	THUMB_FUNC_START sub_801F2CC
-sub_801F2CC: @ 0x0801F2CC
+	THUMB_FUNC_START LoadPhaseIntroGraphics
+LoadPhaseIntroGraphics: @ 0x0801F2CC
 	push {r4, lr}
 	ldr r0, _0801F310  @ gUnknown_0859F020
 	ldr r1, _0801F314  @ 0x06014000
@@ -893,7 +893,7 @@ sub_801F2CC: @ 0x0801F2CC
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	ldr r0, _0801F320  @ gRAMChapterData
+	ldr r0, _0801F320  @ gPlaySt
 	ldrb r0, [r0, #0xf]
 	cmp r0, #0x40
 	beq _0801F374
@@ -907,7 +907,7 @@ _0801F310: .4byte gUnknown_0859F020
 _0801F314: .4byte 0x06014000
 _0801F318: .4byte gUnknown_085A06D8
 _0801F31C: .4byte 0x06002000
-_0801F320: .4byte gRAMChapterData
+_0801F320: .4byte gPlaySt
 _0801F324:
 	cmp r0, #0x80
 	beq _0801F344
@@ -965,7 +965,7 @@ _0801F39C: .4byte gUnknown_085A0088
 _0801F3A0: .4byte 0x06002800
 _0801F3A4: .4byte gUnknown_085A0698
 
-	THUMB_FUNC_END sub_801F2CC
+	THUMB_FUNC_END LoadPhaseIntroGraphics
 
 	THUMB_FUNC_START sub_801F3A8
 sub_801F3A8: @ 0x0801F3A8
@@ -1030,7 +1030,7 @@ sub_801F3A8: @ 0x0801F3A8
 	strb r1, [r2]
 	orrs r0, r4
 	strb r0, [r6]
-	ldr r2, _0801F488  @ gUnknown_0202BCB0
+	ldr r2, _0801F488  @ gBmSt
 	adds r0, r2, #0
 	adds r0, #0x3a
 	mov r4, r8
@@ -1076,7 +1076,7 @@ sub_801F3A8: @ 0x0801F3A8
 	bx r0
 	.align 2, 0
 _0801F484: .4byte gDispIo
-_0801F488: .4byte gUnknown_0202BCB0
+_0801F488: .4byte gBmSt
 _0801F48C: .4byte sub_801EC64
 
 	THUMB_FUNC_END sub_801F3A8
@@ -1085,7 +1085,7 @@ _0801F48C: .4byte sub_801EC64
 sub_801F490: @ 0x0801F490
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _0801F4FC  @ gUnknown_0202BCB0
+	ldr r0, _0801F4FC  @ gBmSt
 	adds r1, r0, #0
 	adds r1, #0x3a
 	ldrb r1, [r1]
@@ -1128,7 +1128,7 @@ _0801F4F4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801F4FC: .4byte gUnknown_0202BCB0
+_0801F4FC: .4byte gBmSt
 _0801F500: .4byte gUnknown_0859AEF8
 _0801F504: .4byte gUnknown_0859AF40
 _0801F508: .4byte gUnknown_0859AF60

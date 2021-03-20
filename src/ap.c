@@ -337,7 +337,7 @@ struct APHandle* FindAnim(const u16* definition) {
     return NULL;
 }
 
-struct APProc* StartAnimProc(const void* apDefinition, int xPos, int yPos, int tileBase, int anim, u16 aObjNode) {
+struct APProc* StartAnimProc(const void* apDefinition, int x, int y, int tileBase, int anim, u16 aObjNode) {
     struct APHandle* handle;
     struct APProc* proc;
 
@@ -351,8 +351,8 @@ struct APProc* StartAnimProc(const void* apDefinition, int xPos, int yPos, int t
 
     // Setting up proc
     proc->pHandle = handle;
-    proc->xPosition = xPos;
-    proc->yPosition = yPos;
+    proc->xPosition = x;
+    proc->yPosition = y;
 
     return proc;
 }

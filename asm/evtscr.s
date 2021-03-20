@@ -2,12 +2,12 @@
 
 	.SYNTAX UNIFIED
 
-	THUMB_FUNC_START Event00_NULL
-Event00_NULL: @ 0x0800D5A0
+	THUMB_FUNC_START Event00_Nop
+Event00_Nop: @ 0x0800D5A0
 	movs r0, #0
 	bx lr
 
-	THUMB_FUNC_END Event00_NULL
+	THUMB_FUNC_END Event00_Nop
 
 	THUMB_FUNC_START Event01_End
 Event01_End: @ 0x0800D5A4
@@ -22,7 +22,7 @@ Event01_End: @ 0x0800D5A4
 	ldrb r1, [r0]
 	movs r0, #0xf
 	ands r0, r1
-	ldr r7, _0800D62C  @ gUnknown_03000570
+	ldr r7, _0800D62C  @ gEventCallStack
 	cmp r0, #1
 	bne _0800D5E2
 	movs r2, #0
@@ -82,7 +82,7 @@ _0800D5F4:
 	movs r0, #0
 	b _0800D66A
 	.align 2, 0
-_0800D62C: .4byte gUnknown_03000570
+_0800D62C: .4byte gEventCallStack
 _0800D630:
 	adds r2, r3, #0
 	adds r2, #0x41
@@ -173,12 +173,12 @@ _0800D6C4:
 	bne _0800D6D2
 	lsls r0, r2, #0x10
 	asrs r0, r0, #0x10
-	bl UnsetEventId
+	bl ClearFlag
 	b _0800D6DA
 _0800D6D2:
 	lsls r0, r2, #0x10
 	asrs r0, r0, #0x10
-	bl SetEventId
+	bl SetFlag
 _0800D6DA:
 	movs r0, #0
 	pop {r4, r5, r6}
@@ -227,7 +227,7 @@ _0800D724: .4byte gEventSlots
 _0800D728:
 	lsls r0, r2, #0x10
 	asrs r0, r0, #0x10
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	asrs r1, r0, #0x18
 	cmp r1, #0
@@ -487,8 +487,8 @@ _0800D912:
 
 	THUMB_FUNC_END Event06_SlotOperation
 
-	THUMB_FUNC_START Event07_SlotQueueOperations
-Event07_SlotQueueOperations: @ 0x0800D918
+	THUMB_FUNC_START Event07_QueueOperation
+Event07_QueueOperation: @ 0x0800D918
 	push {r4, lr}
 	ldr r1, [r0, #0x38]
 	ldrb r0, [r1]
@@ -540,7 +540,7 @@ _0800D970:
 	.align 2, 0
 _0800D978: .4byte gEventSlots
 
-	THUMB_FUNC_END Event07_SlotQueueOperations
+	THUMB_FUNC_END Event07_QueueOperation
 
 	THUMB_FUNC_START Event08_Label
 Event08_Label: @ 0x0800D97C
@@ -601,7 +601,7 @@ Event0A_Call: @ 0x0800D9B8
 	ldr r5, [r0, #8]
 _0800D9D4:
 	movs r0, #7
-	ldr r1, _0800DA28  @ gUnknown_03000570
+	ldr r1, _0800DA28  @ gEventCallStack
 	mov r8, r1
 	mov ip, r8
 	movs r7, #4
@@ -642,12 +642,12 @@ _0800D9E2:
 	bx r1
 	.align 2, 0
 _0800DA24: .4byte gEventSlots
-_0800DA28: .4byte gUnknown_03000570
+_0800DA28: .4byte gEventCallStack
 
 	THUMB_FUNC_END Event0A_Call
 
-	THUMB_FUNC_START Event0B_
-Event0B_: @ 0x0800DA2C
+	THUMB_FUNC_START Event0B_EnqueueCall
+Event0B_EnqueueCall: @ 0x0800DA2C
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x38]
@@ -688,7 +688,7 @@ _0800DA70:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event0B_
+	THUMB_FUNC_END Event0B_EnqueueCall
 
 	THUMB_FUNC_START Event0C_Branch
 Event0C_Branch: @ 0x0800DA78
@@ -850,7 +850,7 @@ _0800DB88:
 	ands r4, r0
 	cmp r4, #0
 	beq _0800DBB6
-	ldr r0, _0800DBCC  @ gRAMChapterData
+	ldr r0, _0800DBCC  @ gPlaySt
 	adds r0, #0x40
 	ldrb r0, [r0]
 	lsrs r0, r0, #7
@@ -878,7 +878,7 @@ _0800DBC4:
 	strh r0, [r2, #0x3e]
 	b _0800DBD8
 	.align 2, 0
-_0800DBCC: .4byte gRAMChapterData
+_0800DBCC: .4byte gPlaySt
 _0800DBD0: .4byte gKeySt
 _0800DBD4:
 	strh r3, [r2, #0x3e]
@@ -891,8 +891,8 @@ _0800DBD8:
 
 	THUMB_FUNC_END Event0E_STAL
 
-	THUMB_FUNC_START Event0F_
-Event0F_: @ 0x0800DBE0
+	THUMB_FUNC_START Event0F_CounterOperation
+Event0F_CounterOperation: @ 0x0800DBE0
 	push {r4, r5, r6, r7, lr}
 	ldr r0, [r0, #0x38]
 	ldrb r1, [r0]
@@ -989,7 +989,7 @@ _0800DC8A:
 	.align 2, 0
 _0800DC94: .4byte gEventSlotCounter
 
-	THUMB_FUNC_END Event0F_
+	THUMB_FUNC_END Event0F_CounterOperation
 
 	THUMB_FUNC_START Event10_ModifyEvBit
 Event10_ModifyEvBit: @ 0x0800DC98
@@ -1114,8 +1114,8 @@ _0800DD6E:
 
 	THUMB_FUNC_END Event11_SetIgnoredKeys
 
-	THUMB_FUNC_START Event12_
-Event12_: @ 0x0800DD74
+	THUMB_FUNC_START Event12_SetBGM
+Event12_SetBGM: @ 0x0800DD74
 	push {lr}
 	adds r2, r0, #0
 	ldrh r0, [r2, #0x3c]
@@ -1148,10 +1148,10 @@ _0800DDA6:
 	.align 2, 0
 _0800DDAC: .4byte gEventSlots
 
-	THUMB_FUNC_END Event12_
+	THUMB_FUNC_END Event12_SetBGM
 
-	THUMB_FUNC_START Event13_
-Event13_: @ 0x0800DDB0
+	THUMB_FUNC_START Event13_SetBGM2
+Event13_SetBGM2: @ 0x0800DDB0
 	push {r4, lr}
 	adds r2, r0, #0
 	ldr r0, [r2, #0x38]
@@ -1206,10 +1206,10 @@ _0800DE0E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event13_
+	THUMB_FUNC_END Event13_SetBGM2
 
-	THUMB_FUNC_START Event14_
-Event14_: @ 0x0800DE14
+	THUMB_FUNC_START Event14_OverwriteBGM
+Event14_OverwriteBGM: @ 0x0800DE14
 	push {r4, lr}
 	adds r3, r0, #0
 	ldr r1, [r3, #0x38]
@@ -1261,10 +1261,10 @@ _0800DE6C:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event14_
+	THUMB_FUNC_END Event14_OverwriteBGM
 
-	THUMB_FUNC_START Event15_
-Event15_: @ 0x0800DE74
+	THUMB_FUNC_START Event15_QuietBGM
+Event15_QuietBGM: @ 0x0800DE74
 	push {lr}
 	adds r3, r0, #0
 	ldr r0, [r3, #0x38]
@@ -1316,10 +1316,10 @@ _0800DECE:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event15_
+	THUMB_FUNC_END Event15_QuietBGM
 
-	THUMB_FUNC_START Event16_
-Event16_: @ 0x0800DED4
+	THUMB_FUNC_START Event16_PlaySound
+Event16_PlaySound: @ 0x0800DED4
 	push {lr}
 	adds r3, r0, #0
 	ldrh r0, [r3, #0x3c]
@@ -1342,7 +1342,7 @@ Event16_: @ 0x0800DED4
 	ldr r0, _0800DF18  @ gEventSlots
 	ldrh r1, [r0, #8]
 _0800DEFE:
-	ldr r0, _0800DF1C  @ gRAMChapterData
+	ldr r0, _0800DF1C  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -1356,12 +1356,12 @@ _0800DF10:
 	bx r1
 	.align 2, 0
 _0800DF18: .4byte gEventSlots
-_0800DF1C: .4byte gRAMChapterData
+_0800DF1C: .4byte gPlaySt
 
-	THUMB_FUNC_END Event16_
+	THUMB_FUNC_END Event16_PlaySound
 
-	THUMB_FUNC_START Event17_
-Event17_: @ 0x0800DF20
+	THUMB_FUNC_START Event17_Fade
+Event17_Fade: @ 0x0800DF20
 	push {r4, lr}
 	adds r4, r0, #0
 	ldrh r0, [r4, #0x3c]
@@ -1393,15 +1393,15 @@ _0800DF4C:
 	b _0800DFB2
 _0800DF56:
 	adds r1, r4, #0
-	bl sub_8013D20
+	bl StartBlockingFadeOutBlack
 	b _0800DF6C
 _0800DF5E:
 	adds r1, r4, #0
-	bl sub_8013D08
+	bl StartBlockingFadeInBlack
 	b _0800DFA2
 _0800DF66:
 	adds r1, r4, #0
-	bl sub_8013D50
+	bl StartBlockingFadeOutWhite
 _0800DF6C:
 	ldrh r1, [r4, #0x3c]
 	ldr r0, _0800DF94  @ 0x0000FEFF
@@ -1427,7 +1427,7 @@ _0800DF94: .4byte 0x0000FEFF
 _0800DF98: .4byte gDispIo
 _0800DF9C:
 	adds r1, r4, #0
-	bl sub_8013D38
+	bl StartBlockingFadeInWhite
 _0800DFA2:
 	ldrh r1, [r4, #0x3c]
 	movs r2, #0x80
@@ -1444,10 +1444,10 @@ _0800DFB4:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event17_
+	THUMB_FUNC_END Event17_Fade
 
-	THUMB_FUNC_START Event18_
-Event18_: @ 0x0800DFBC
+	THUMB_FUNC_START Event18_ColorEffects
+Event18_ColorEffects: @ 0x0800DFBC
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -1545,7 +1545,7 @@ _0800E060:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event18_
+	THUMB_FUNC_END Event18_ColorEffects
 
 	THUMB_FUNC_START Event19_
 Event19_: @ 0x0800E070
@@ -1580,12 +1580,12 @@ _0800E090: @ jump table
 	.4byte _0800E158 @ case 10
 _0800E0BC:
 	ldr r0, _0800E0C4  @ gEventSlots
-	ldr r1, _0800E0C8  @ gRAMChapterData
+	ldr r1, _0800E0C8  @ gPlaySt
 	ldrb r1, [r1, #0x1b]
 	b _0800E17A
 	.align 2, 0
 _0800E0C4: .4byte gEventSlots
-_0800E0C8: .4byte gRAMChapterData
+_0800E0C8: .4byte gPlaySt
 _0800E0CC:
 	ldr r0, _0800E0D8  @ gEventSlots
 	adds r1, r2, #0
@@ -1595,20 +1595,20 @@ _0800E0CC:
 	.align 2, 0
 _0800E0D8: .4byte gEventSlots
 _0800E0DC:
-	ldr r0, _0800E0E4  @ gRAMChapterData
+	ldr r0, _0800E0E4  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #0x40
 	b _0800E15E
 	.align 2, 0
-_0800E0E4: .4byte gRAMChapterData
+_0800E0E4: .4byte gPlaySt
 _0800E0E8:
 	ldr r0, _0800E0F0  @ gEventSlots
-	ldr r1, _0800E0F4  @ gRAMChapterData
+	ldr r1, _0800E0F4  @ gPlaySt
 	ldrh r1, [r1, #0x10]
 	b _0800E17A
 	.align 2, 0
 _0800E0F0: .4byte gEventSlots
-_0800E0F4: .4byte gRAMChapterData
+_0800E0F4: .4byte gPlaySt
 _0800E0F8:
 	bl CountRedUnits
 	b _0800E14A
@@ -1616,10 +1616,10 @@ _0800E0FE:
 	bl CountGreenUnits
 	b _0800E14A
 _0800E104:
-	bl GetChapterThing
+	bl GetBattleMapKind
 	b _0800E138
 _0800E10A:
-	ldr r1, _0800E12C  @ gRAMChapterData
+	ldr r1, _0800E12C  @ gPlaySt
 	adds r0, r1, #0
 	adds r0, #0x42
 	ldrb r0, [r0]
@@ -1637,10 +1637,10 @@ _0800E122:
 	str r0, [r1, #0x30]
 	b _0800E17C
 	.align 2, 0
-_0800E12C: .4byte gRAMChapterData
+_0800E12C: .4byte gPlaySt
 _0800E130: .4byte gEventSlots
 _0800E134:
-	bl GetPartyGoldAmount
+	bl GetGold
 _0800E138:
 	ldr r1, _0800E140  @ gEventSlots
 	str r0, [r1, #0x30]
@@ -1649,7 +1649,7 @@ _0800E138:
 _0800E140: .4byte gEventSlots
 _0800E144:
 	ldr r0, [r2, #0x30]
-	bl sub_80845E4
+	bl GetEventTriggerId
 _0800E14A:
 	ldr r1, _0800E154  @ gEventSlots
 	lsls r0, r0, #0x10
@@ -1659,7 +1659,7 @@ _0800E14A:
 	.align 2, 0
 _0800E154: .4byte gEventSlots
 _0800E158:
-	ldr r0, _0800E170  @ gRAMChapterData
+	ldr r0, _0800E170  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #0x20
 _0800E15E:
@@ -1674,7 +1674,7 @@ _0800E168:
 	str r0, [r1, #0x30]
 	b _0800E17C
 	.align 2, 0
-_0800E170: .4byte gRAMChapterData
+_0800E170: .4byte gPlaySt
 _0800E174: .4byte gEventSlots
 _0800E178:
 	ldr r0, _0800E184  @ gEventSlots
@@ -1704,7 +1704,7 @@ Event1A_TEXTSTART: @ 0x0800E188
 	beq _0800E1C8
 	cmp r5, #5
 	beq _0800E1C8
-	bl sub_8006A7C
+	bl EndTalk
 	bl sub_808F270
 	bl sub_808BB74
 	adds r0, r4, #0
@@ -1744,7 +1744,7 @@ _0800E1F8:
 	b _0800E20A
 _0800E1FC:
 	adds r0, r4, #0
-	bl Event23_
+	bl Event23_BlockGameGraphics
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	b _0800E20A
@@ -1770,14 +1770,14 @@ sub_800E210: @ 0x0800E210
 	movs r0, #0x80
 	movs r1, #2
 	movs r2, #1
-	bl sub_800680C
+	bl InitTalk
 _0800E22A:
 	ldrh r1, [r4, #0x3c]
 	movs r0, #0x40
 	ands r0, r1
 	cmp r0, #1
 	bne _0800E258
-	ldr r2, _0800E254  @ gRAMChapterData
+	ldr r2, _0800E254  @ gPlaySt
 	adds r2, #0x40
 	ldrb r3, [r2]
 	lsls r0, r3, #0x19
@@ -1793,7 +1793,7 @@ _0800E22A:
 	strb r0, [r2]
 	b _0800E260
 	.align 2, 0
-_0800E254: .4byte gRAMChapterData
+_0800E254: .4byte gPlaySt
 _0800E258:
 	adds r1, r4, #0
 	adds r1, #0x40
@@ -1803,14 +1803,14 @@ _0800E260:
 	movs r0, #1
 	movs r1, #1
 	adds r2, r5, #0
-	bl sub_8006A30
+	bl StartTalkMsg
 	ldrh r1, [r4, #0x3c]
 	movs r0, #0x20
 	ands r0, r1
 	cmp r0, #0
 	beq _0800E27A
 	movs r0, #4
-	bl sub_8006AA8
+	bl SetTalkFlag
 _0800E27A:
 	ldrh r1, [r4, #0x3c]
 	movs r0, #0x40
@@ -1818,7 +1818,7 @@ _0800E27A:
 	cmp r0, #0
 	beq _0800E28A
 	movs r0, #8
-	bl sub_8006AA8
+	bl SetTalkFlag
 _0800E28A:
 	pop {r4, r5}
 	pop {r0}
@@ -1862,11 +1862,11 @@ _0800E2BA:
 	movs r1, #0x7f
 	ands r0, r1
 	strb r0, [r2, #1]
-	bl LoadObjUIGfx
+	bl LoadObjUiGfx
 	movs r0, #0x80
 	movs r1, #0
 	movs r2, #1
-	bl sub_800680C
+	bl InitTalk
 	movs r0, #1
 	bl EnableBgSync
 	str r5, [sp]
@@ -1923,7 +1923,7 @@ _0800E348: .4byte gUnknown_030004E4
 _0800E34C:
 	adds r0, r7, #0
 	bl GetMsg
-	bl sub_800A2A4
+	bl StrExpandNames
 	add r2, sp, #4
 	mov r1, sp
 	bl sub_808AADC
@@ -1974,7 +1974,7 @@ _0800E3A6:
 	bl sub_808AA04
 	lsls r0, r4, #0x10
 	lsrs r0, r0, #0x10
-	bl sub_808A518
+	bl SetDialogueBoxConfig
 	add sp, #8
 	pop {r3}
 	mov r8, r3
@@ -2126,7 +2126,7 @@ _0800E4DE:
 	ldr r1, _0800E510  @ 0x0000FFF7
 	ands r1, r0
 	strh r1, [r4, #0x3c]
-	bl sub_8006A7C
+	bl EndTalk
 	bl sub_808F270
 	bl sub_808BB74
 	adds r0, r4, #0
@@ -2164,7 +2164,7 @@ Event1C_TEXTCONT: @ 0x0800E51C
 	ands r0, r1
 	cmp r0, #0
 	beq _0800E554
-	bl sub_8006A7C
+	bl EndTalk
 	bl sub_808F270
 	bl sub_808BB74
 	adds r0, r4, #0
@@ -2181,7 +2181,7 @@ _0800E54C:
 	bl sub_800E640
 	b _0800E558
 _0800E554:
-	bl sub_8006EF0
+	bl UnlockDialogue
 _0800E558:
 	movs r0, #2
 	pop {r4}
@@ -2200,7 +2200,7 @@ Event1D_TEXTEND: @ 0x0800E560
 	ands r0, r1
 	cmp r0, #0
 	beq _0800E5A0
-	bl sub_8006A7C
+	bl EndTalk
 	bl sub_808F270
 	bl sub_808BB74
 	adds r0, r4, #0
@@ -2222,11 +2222,11 @@ _0800E590:
 _0800E59C: .4byte gEventSlots
 _0800E5A0:
 	movs r5, #0
-	bl sub_80089D0
+	bl DialogueExists
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800E5B6
-	bl sub_8006ED8
+	bl IsDialogueLocked
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800E5CA
@@ -2269,7 +2269,7 @@ _0800E5F8:
 	.align 2, 0
 _0800E5FC: .4byte gUnknown_08A016E0
 _0800E600:
-	bl sub_8008A00
+	bl GetDialoguePromptResult
 	ldr r1, _0800E638  @ gEventSlots
 _0800E606:
 	str r0, [r1, #0x30]
@@ -2281,7 +2281,7 @@ _0800E606:
 	negs r0, r0
 	cmp r1, r0
 	beq _0800E62E
-	ldr r2, _0800E63C  @ gRAMChapterData
+	ldr r2, _0800E63C  @ gPlaySt
 	adds r2, #0x40
 	movs r0, #3
 	ands r1, r0
@@ -2300,7 +2300,7 @@ _0800E630:
 	bx r1
 	.align 2, 0
 _0800E638: .4byte gEventSlots
-_0800E63C: .4byte gRAMChapterData
+_0800E63C: .4byte gPlaySt
 
 	THUMB_FUNC_END Event1D_TEXTEND
 
@@ -2314,22 +2314,22 @@ sub_800E640: @ 0x0800E640
 	ands r0, r1
 	cmp r0, #0
 	beq _0800E668
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	ldr r0, _0800E664  @ ProcScr_Face
 	bl EndEachProc
 	bl InitFaces
-	bl sub_80067E8
+	bl ClearTalkFaceRefs
 	b _0800E686
 	.align 2, 0
 _0800E664: .4byte ProcScr_Face
 _0800E668:
-	bl Face6CExists
+	bl FaceExists
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800E686
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	ldr r0, _0800E68C  @ ProcScr_Face
-	ldr r1, _0800E690  @ sub_8005F38
+	ldr r1, _0800E690  @ StartFaceFadeOut
 	bl ForEachProc
 	ldr r0, _0800E694  @ gUnknown_08591DE8
 	adds r1, r4, #0
@@ -2340,16 +2340,16 @@ _0800E686:
 	bx r0
 	.align 2, 0
 _0800E68C: .4byte ProcScr_Face
-_0800E690: .4byte sub_8005F38
+_0800E690: .4byte StartFaceFadeOut
 _0800E694: .4byte gUnknown_08591DE8
 
 	THUMB_FUNC_END sub_800E640
 
-	THUMB_FUNC_START _WhileFace6CExists
-_WhileFace6CExists: @ 0x0800E698
+	THUMB_FUNC_START FaceWitnessProc_Main
+FaceWitnessProc_Main: @ 0x0800E698
 	push {r4, lr}
 	adds r4, r0, #0
-	bl Face6CExists
+	bl FaceExists
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0800E6AC
@@ -2360,7 +2360,7 @@ _0800E6AC:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END _WhileFace6CExists
+	THUMB_FUNC_END FaceWitnessProc_Main
 
 	THUMB_FUNC_START Event1E_
 Event1E_: @ 0x0800E6B4
@@ -2396,7 +2396,7 @@ _0800E6D4:
 	ands r2, r3
 	cmp r2, #0
 	bne _0800E770
-	ldr r0, _0800E718  @ gUnknown_03000428
+	ldr r0, _0800E718  @ gEvent1EData
 	adds r1, r6, #0
 	adds r1, #8
 	strb r1, [r0]
@@ -2409,13 +2409,13 @@ _0800E6D4:
 	movs r0, #0x80
 	movs r1, #2
 	movs r2, #1
-	bl sub_800680C
+	bl InitTalk
 	b _0800E766
 	.align 2, 0
 _0800E714: .4byte gEventSlots
-_0800E718: .4byte gUnknown_03000428
+_0800E718: .4byte gEvent1EData
 _0800E71C:
-	ldr r1, _0800E738  @ gUnknown_03000428
+	ldr r1, _0800E738  @ gEvent1EData
 	adds r0, r2, #0
 	adds r0, #8
 	movs r2, #0
@@ -2425,12 +2425,12 @@ _0800E71C:
 	movs r0, #1
 	strb r0, [r1, #2]
 	strb r2, [r1, #3]
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	b _0800E766
 	.align 2, 0
-_0800E738: .4byte gUnknown_03000428
+_0800E738: .4byte gEvent1EData
 _0800E73C:
-	bl sub_8006A7C
+	bl EndTalk
 	bl sub_808F270
 	bl sub_808BB74
 	adds r0, r4, #0
@@ -2448,10 +2448,10 @@ _0800E75C:
 	movs r0, #2
 	b _0800E772
 _0800E766:
-	ldr r2, _0800E778  @ gUnknown_03000428
+	ldr r2, _0800E778  @ gEvent1EData
 	movs r0, #0
 	movs r1, #0
-	bl sub_8006A70
+	bl StartTalk
 _0800E770:
 	movs r0, #0
 _0800E772:
@@ -2459,7 +2459,7 @@ _0800E772:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800E778: .4byte gUnknown_03000428
+_0800E778: .4byte gEvent1EData
 
 	THUMB_FUNC_END Event1E_
 
@@ -2492,7 +2492,7 @@ Event1F_: @ 0x0800E77C
 	strb r3, [r2, #3]
 	movs r0, #0
 	movs r1, #0
-	bl sub_8006A70
+	bl StartTalk
 _0800E7B6:
 	movs r0, #0
 	pop {r4}
@@ -2506,7 +2506,7 @@ _0800E7C0: .4byte gUnknown_03000430
 	THUMB_FUNC_START Event20_
 Event20_: @ 0x0800E7C4
 	push {lr}
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	movs r0, #0
 	pop {r1}
 	bx r1
@@ -2627,8 +2627,8 @@ _0800E8C8: .4byte gBg3Tm
 
 	THUMB_FUNC_END sub_800E7D0
 
-	THUMB_FUNC_START Event21_
-Event21_: @ 0x0800E8CC
+	THUMB_FUNC_START Event21_TextBGStuff
+Event21_TextBGStuff: @ 0x0800E8CC
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -2748,7 +2748,7 @@ _0800E9BC:
 	cmp r0, #0
 	beq _0800E9D4
 	adds r0, r5, #0
-	bl Event22_
+	bl Event22_CLEAN
 _0800E9CE:
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
@@ -2848,7 +2848,7 @@ _0800EA78:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event21_
+	THUMB_FUNC_END Event21_TextBGStuff
 
 	THUMB_FUNC_START sub_800EA84
 sub_800EA84: @ 0x0800EA84
@@ -3341,24 +3341,24 @@ _0800EE70: @ jump table
 	.4byte _0800EE88 @ case 4
 	.4byte _0800EE88 @ case 5
 _0800EE88:
-	ldr r4, _0800EEB8  @ gRAMChapterData
+	ldr r4, _0800EEB8  @ gPlaySt
 	movs r0, #0xe
 	ldrsb r0, [r4, r0]
 	bl UnpackChapterMapGraphics
 	ldrb r0, [r4, #0x15]
 	bl AllocWeatherParticles
 	bl RenderBmMap
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	ldr r0, [r5, #0x34]
 	adds r0, #0x44
 	ldrh r0, [r0]
 	bl sub_800BCDC
-	bl SMS_FlushIndirect
+	bl ForceSyncUnitSpriteSheet
 	ldr r0, [r5, #0x34]
-	bl Event24_
+	bl Event24_UnblockGameGraphics
 	b _0800EEBE
 	.align 2, 0
-_0800EEB8: .4byte gRAMChapterData
+_0800EEB8: .4byte gPlaySt
 _0800EEBC:
 	b _0800EEBC
 _0800EEBE:
@@ -3495,7 +3495,7 @@ _0800EF90:
 	ands r0, r1
 	strb r0, [r2, #1]
 	ldr r0, [r3, #0x34]
-	bl Event23_
+	bl Event23_BlockGameGraphics
 	b _0800EFE2
 	.align 2, 0
 _0800EFB8: .4byte gDispIo
@@ -3618,11 +3618,11 @@ _0800F0C4: .4byte 0x01000008
 
 	THUMB_FUNC_END sub_800EF48
 
-	THUMB_FUNC_START Event22_
-Event22_: @ 0x0800F0C8
+	THUMB_FUNC_START Event22_CLEAN
+Event22_CLEAN: @ 0x0800F0C8
 	push {r4, lr}
 	adds r4, r0, #0
-	bl RefreshBMapGraphics
+	bl ReloadGameCoreGraphics
 	adds r0, r4, #0
 	adds r0, #0x44
 	ldrh r0, [r0]
@@ -3637,13 +3637,13 @@ Event22_: @ 0x0800F0C8
 	bl EnableBgSync
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80081A8
+	bl Dialogue_ClearTextBoxes
 	ldr r0, _0800F120  @ ProcScr_Face
 	bl EndEachProc
 	bl InitFaces
-	bl sub_80067E8
+	bl ClearTalkFaceRefs
 	adds r0, r4, #0
-	bl Event24_
+	bl Event24_UnblockGameGraphics
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	pop {r4}
@@ -3654,10 +3654,10 @@ _0800F118: .4byte gBg0Tm
 _0800F11C: .4byte gBg1Tm
 _0800F120: .4byte ProcScr_Face
 
-	THUMB_FUNC_END Event22_
+	THUMB_FUNC_END Event22_CLEAN
 
-	THUMB_FUNC_START Event23_
-Event23_: @ 0x0800F124
+	THUMB_FUNC_START Event23_BlockGameGraphics
+Event23_BlockGameGraphics: @ 0x0800F124
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldrh r1, [r4, #0x3c]
@@ -3667,7 +3667,7 @@ Event23_: @ 0x0800F124
 	ands r0, r1
 	cmp r0, #0
 	bne _0800F13E
-	bl BMapDispSuspend
+	bl LockGameGraphicsLogic
 	bl MU_AllDisable
 _0800F13E:
 	ldrh r1, [r4, #0x3c]
@@ -3679,10 +3679,10 @@ _0800F13E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event23_
+	THUMB_FUNC_END Event23_BlockGameGraphics
 
-	THUMB_FUNC_START Event24_
-Event24_: @ 0x0800F150
+	THUMB_FUNC_START Event24_UnblockGameGraphics
+Event24_UnblockGameGraphics: @ 0x0800F150
 	push {r4, lr}
 	adds r4, r0, #0
 	ldrh r1, [r4, #0x3c]
@@ -3691,7 +3691,7 @@ Event24_: @ 0x0800F150
 	ands r0, r1
 	cmp r0, #0
 	beq _0800F168
-	bl BMapDispResume
+	bl UnlockGameGraphicsLogic
 	bl MU_AllEnable
 _0800F168:
 	ldrh r1, [r4, #0x3c]
@@ -3705,10 +3705,10 @@ _0800F168:
 	.align 2, 0
 _0800F178: .4byte 0x0000EFFF
 
-	THUMB_FUNC_END Event24_
+	THUMB_FUNC_END Event24_UnblockGameGraphics
 
-	THUMB_FUNC_START Event25_
-Event25_: @ 0x0800F17C
+	THUMB_FUNC_START Event25_LOMA
+Event25_LOMA: @ 0x0800F17C
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x38]
@@ -3725,21 +3725,21 @@ Event25_: @ 0x0800F17C
 	ldrh r4, [r0, #8]
 _0800F198:
 	adds r0, r5, #0
-	bl Event24_
-	ldr r0, _0800F1FC  @ gRAMChapterData
+	bl Event24_UnblockGameGraphics
+	ldr r0, _0800F1FC  @ gPlaySt
 	strb r4, [r0, #0xe]
 	bl RestartBattleMap
 	lsls r0, r6, #4
 	bl sub_8015A40
-	ldr r4, _0800F200  @ gUnknown_0202BCB0
+	ldr r4, _0800F200  @ gBmSt
 	strh r0, [r4, #0xc]
 	lsls r0, r7, #4
 	bl sub_8015A6C
 	strh r0, [r4, #0xe]
 	bl RefreshEntityBmMaps
 	bl RenderBmMap
-	bl SMS_UpdateFromGameData
-	bl RefreshBMapGraphics
+	bl RefreshUnitSprites
+	bl ReloadGameCoreGraphics
 	adds r0, r5, #0
 	adds r0, #0x44
 	ldrh r0, [r0]
@@ -3760,12 +3760,12 @@ _0800F198:
 	bx r1
 	.align 2, 0
 _0800F1F8: .4byte gUnknown_030004E4
-_0800F1FC: .4byte gRAMChapterData
-_0800F200: .4byte gUnknown_0202BCB0
+_0800F1FC: .4byte gPlaySt
+_0800F200: .4byte gBmSt
 _0800F204: .4byte gBg0Tm
 _0800F208: .4byte gBg1Tm
 
-	THUMB_FUNC_END Event25_
+	THUMB_FUNC_END Event25_LOMA
 
 	THUMB_FUNC_START Event26_CameraControlMaybe
 Event26_CameraControlMaybe: @ 0x0800F20C
@@ -3859,7 +3859,7 @@ _0800F2B2:
 	lsls r4, r6, #0x18
 	asrs r2, r4, #0x18
 	adds r0, r7, #0
-	bl sub_8015D84
+	bl CenterCameraOntoPosition
 _0800F2C0:
 	asrs r0, r5, #0x18
 	asrs r1, r4, #0x18
@@ -3915,7 +3915,7 @@ _0800F314:
 	ldrb r0, [r1, #0x10]
 	ldrb r1, [r1, #0x11]
 _0800F31C:
-	bl GetMapChangeIdAt
+	bl GetMapChangesIdAt
 	lsls r0, r0, #0x10
 	lsrs r2, r0, #0x10
 	cmp r0, #0
@@ -3967,7 +3967,7 @@ _0800F37C:
 	adds r0, r2, #0
 	movs r1, #0
 	adds r2, r5, #0
-	bl sub_800BB48
+	bl UntriggerMapChange
 _0800F386:
 	mov r3, r8
 	adds r3, #4
@@ -4001,7 +4001,7 @@ _0800F3B2:
 _0800F3BC:
 	adds r0, r2, #0
 	adds r2, r5, #0
-	bl sub_800BB48
+	bl UntriggerMapChange
 _0800F3C4:
 	mov r1, r8
 	adds r1, #4
@@ -4032,7 +4032,7 @@ Event28_ChangeWeather: @ 0x0800F3EC
 	push {lr}
 	ldr r0, [r0, #0x38]
 	ldrh r0, [r0, #2]
-	bl SetWeather
+	bl SetupWeather
 	movs r0, #2
 	pop {r1}
 	bx r1
@@ -4106,7 +4106,7 @@ _0800F474:
 	lsls r0, r2, #0x10
 	asrs r0, r0, #0x10
 	bl SetNextChapterId
-	ldr r2, _0800F494  @ gRAMChapterData
+	ldr r2, _0800F494  @ gPlaySt
 	adds r2, #0x4a
 	ldrb r1, [r2]
 	movs r0, #0xf
@@ -4118,12 +4118,12 @@ _0800F474:
 	movs r0, #1
 	b _0800F4D8
 	.align 2, 0
-_0800F494: .4byte gRAMChapterData
+_0800F494: .4byte gPlaySt
 _0800F498:
 	lsls r0, r2, #0x10
 	asrs r0, r0, #0x10
 	bl SetNextChapterId
-	ldr r2, _0800F4B8  @ gRAMChapterData
+	ldr r2, _0800F4B8  @ gPlaySt
 	adds r2, #0x4a
 	ldrb r1, [r2]
 	movs r0, #0xf
@@ -4135,13 +4135,13 @@ _0800F498:
 	movs r0, #2
 	b _0800F4D8
 	.align 2, 0
-_0800F4B8: .4byte gRAMChapterData
+_0800F4B8: .4byte gPlaySt
 _0800F4BC:
 	adds r0, r2, #0
 	bl GotoChapterWithoutSave
 	b _0800F4E8
 _0800F4C4:
-	ldr r2, _0800F508  @ gRAMChapterData
+	ldr r2, _0800F508  @ gPlaySt
 	adds r2, #0x4a
 	ldrb r1, [r2]
 	movs r0, #0xf
@@ -4174,12 +4174,12 @@ _0800F4E8:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800F508: .4byte gRAMChapterData
+_0800F508: .4byte gPlaySt
 
 	THUMB_FUNC_END Event2A_MoveToChapter
 
-	THUMB_FUNC_START sub_800F50C
-sub_800F50C: @ 0x0800F50C
+	THUMB_FUNC_START UNIT_GetListSize
+UNIT_GetListSize: @ 0x0800F50C
 	push {lr}
 	adds r1, r0, #0
 	movs r2, #0
@@ -4197,10 +4197,10 @@ _0800F51C:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_800F50C
+	THUMB_FUNC_END UNIT_GetListSize
 
-	THUMB_FUNC_START ShouldUNITBeLoaded
-ShouldUNITBeLoaded: @ 0x0800F528
+	THUMB_FUNC_START UNIT_ShouldBeLoaded
+UNIT_ShouldBeLoaded: @ 0x0800F528
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	lsls r1, r1, #0x18
@@ -4213,7 +4213,7 @@ ShouldUNITBeLoaded: @ 0x0800F528
 	cmp r5, #1
 	beq _0800F564
 	ldrb r0, [r4]
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	cmp r0, #0
 	beq _0800F564
 	ldr r0, [r0, #0xc]
@@ -4243,7 +4243,7 @@ _0800F564:
 	ldrh r0, [r4, #4]
 	lsls r0, r0, #0x14
 	lsrs r0, r0, #0x1a
-	ldr r1, _0800F5AC  @ gBmMapUnit
+	ldr r1, _0800F5AC  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -4266,7 +4266,7 @@ _0800F5A2:
 	b _0800F5B2
 	.align 2, 0
 _0800F5A8: .4byte 0xFF004000
-_0800F5AC: .4byte gBmMapUnit
+_0800F5AC: .4byte gMapUnit
 _0800F5B0:
 	movs r0, #1
 _0800F5B2:
@@ -4274,10 +4274,10 @@ _0800F5B2:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END ShouldUNITBeLoaded
+	THUMB_FUNC_END UNIT_ShouldBeLoaded
 
-	THUMB_FUNC_START sub_800F5B8
-sub_800F5B8: @ 0x0800F5B8
+	THUMB_FUNC_START LoadUnitsIdle
+LoadUnitsIdle: @ 0x0800F5B8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -4316,7 +4316,7 @@ _0800F5F0:
 	asrs r1, r1, #0x10
 	adds r0, r4, #0
 	mov r2, r9
-	bl sub_800F698
+	bl UNITs_LoadInstant_800F698
 	mov r8, r5
 	b _0800F674
 _0800F60C:
@@ -4338,7 +4338,7 @@ _0800F614:
 _0800F628:
 	adds r0, r4, #0
 	mov r1, r9
-	bl ShouldUNITBeLoaded
+	bl UNIT_ShouldBeLoaded
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -4350,7 +4350,7 @@ _0800F628:
 	lsls r2, r2, #0x14
 	lsrs r2, r2, #0x1a
 	adds r0, r6, #0
-	bl TryPrepareEventUnitMovement
+	bl CanStartEventUnitMovement
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _0800F60C
@@ -4359,7 +4359,7 @@ _0800F628:
 	movs r2, #0
 	mov r7, sl
 	asrs r3, r7, #0x18
-	bl LoadUnit_800F704
+	bl UNIT_Load_800F704
 	ldr r1, _0800F694  @ 0xFFFF0000
 	adds r0, r5, r1
 	lsrs r7, r0, #0x10
@@ -4393,10 +4393,10 @@ _0800F684:
 	.align 2, 0
 _0800F694: .4byte 0xFFFF0000
 
-	THUMB_FUNC_END sub_800F5B8
+	THUMB_FUNC_END LoadUnitsIdle
 
-	THUMB_FUNC_START sub_800F698
-sub_800F698: @ 0x0800F698
+	THUMB_FUNC_START UNITs_LoadInstant_800F698
+UNITs_LoadInstant_800F698: @ 0x0800F698
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -4422,7 +4422,7 @@ _0800F6B0:
 _0800F6C2:
 	adds r0, r5, #0
 	adds r1, r7, #0
-	bl ShouldUNITBeLoaded
+	bl UNIT_ShouldBeLoaded
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -4432,7 +4432,7 @@ _0800F6C2:
 	movs r2, #1
 	mov r6, r8
 	asrs r3, r6, #0x18
-	bl LoadUnit_800F704
+	bl UNIT_Load_800F704
 	ldr r1, _0800F700  @ 0xFFFF0000
 	adds r0, r4, r1
 	lsrs r6, r0, #0x10
@@ -4454,10 +4454,10 @@ _0800F6F6:
 	.align 2, 0
 _0800F700: .4byte 0xFFFF0000
 
-	THUMB_FUNC_END sub_800F698
+	THUMB_FUNC_END UNITs_LoadInstant_800F698
 
-	THUMB_FUNC_START LoadUnit_800F704
-LoadUnit_800F704: @ 0x0800F704
+	THUMB_FUNC_START UNIT_Load_800F704
+UNIT_Load_800F704: @ 0x0800F704
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -4483,14 +4483,14 @@ LoadUnit_800F704: @ 0x0800F704
 	bne _0800F744
 	ldrb r0, [r6]
 	movs r1, #0
-	bl GetUnitFromCharIdAndFaction
+	bl GetUnitByPidAndFaction
 	b _0800F768
 	.align 2, 0
 _0800F740: .4byte gUnknown_080D793C
 _0800F744:
 	ldrb r0, [r6]
 	movs r1, #0
-	bl GetUnitFromCharIdAndFaction
+	bl GetUnitByPidAndFaction
 	adds r5, r0, #0
 	cmp r5, #0
 	beq _0800F76E
@@ -4502,14 +4502,14 @@ _0800F744:
 	adds r0, r5, #0
 	bl UnitChangeFaction
 	ldrb r0, [r6]
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 _0800F768:
 	adds r5, r0, #0
 	cmp r5, #0
 	bne _0800F790
 _0800F76E:
 	adds r0, r6, #0
-	bl LoadUnit
+	bl CreateUnit
 	adds r5, r0, #0
 	cmp r4, #1
 	bne _0800F7FA
@@ -4563,7 +4563,7 @@ _0800F7C8:
 	adds r1, r4, #0
 	adds r2, r7, #0
 	movs r3, #0
-	bl GetPreferredPositionForUNIT
+	bl GenUnitDefinitionFinalPosition
 	movs r1, #0x10
 	ldrsb r1, [r5, r1]
 	movs r0, #0
@@ -4598,7 +4598,7 @@ _0800F7FA:
 	ldrb r0, [r0, #4]
 	cmp r0, #0x3b
 	bls _0800F888
-	ldr r2, _0800F850  @ gRAMChapterData
+	ldr r2, _0800F850  @ gPlaySt
 	adds r0, r2, #0
 	adds r0, #0x42
 	ldrb r0, [r0]
@@ -4613,7 +4613,7 @@ _0800F7FA:
 	bne _0800F85E
 	movs r0, #0xe
 	ldrsb r0, [r2, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x14]
 	lsls r1, r1, #0x1c
 	lsrs r1, r1, #0x1c
@@ -4622,7 +4622,7 @@ _0800F7FA:
 	.align 2, 0
 _0800F848: .4byte 0xFFBFFFFF
 _0800F84C: .4byte 0x0000FFFE
-_0800F850: .4byte gRAMChapterData
+_0800F850: .4byte gPlaySt
 _0800F854:
 	ldrb r1, [r2, #0x14]
 	movs r0, #0x40
@@ -4632,7 +4632,7 @@ _0800F854:
 _0800F85E:
 	movs r0, #0xe
 	ldrsb r0, [r3, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x14]
 	lsrs r1, r1, #4
 _0800F86A:
@@ -4642,7 +4642,7 @@ _0800F86A:
 _0800F872:
 	movs r0, #0xe
 	ldrsb r0, [r2, r0]
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x15]
 	lsls r1, r1, #0x1c
 	lsrs r1, r1, #0x1c
@@ -4665,7 +4665,7 @@ _0800F888:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END LoadUnit_800F704
+	THUMB_FUNC_END UNIT_Load_800F704
 
 	THUMB_FUNC_START sub_800F8A8
 sub_800F8A8: @ 0x0800F8A8
@@ -4719,7 +4719,7 @@ _0800F900:
 	ldrb r2, [r4, #7]
 	adds r0, r5, #0
 	adds r3, r6, #0
-	bl sub_8079D74
+	bl MuCtr_StartDefinedMove
 _0800F90C:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -4727,8 +4727,8 @@ _0800F90C:
 
 	THUMB_FUNC_END sub_800F8A8
 
-	THUMB_FUNC_START sub_800F914
-sub_800F914: @ 0x0800F914
+	THUMB_FUNC_START UNIT_Filter
+UNIT_Filter: @ 0x0800F914
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -5008,7 +5008,7 @@ _0800FB06:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_800F914
+	THUMB_FUNC_END UNIT_Filter
 
 	THUMB_FUNC_START Event2B_
 Event2B_: @ 0x0800FB18
@@ -5120,13 +5120,13 @@ _0800FBC2:
 	.align 2, 0
 _0800FBCC: .4byte gEventSlots
 _0800FBD0:
-	bl sub_80833B0
+	bl GetChapterEnemyUnitDefinitions
 	adds r5, r0, #0
 _0800FBD6:
 	cmp r7, #0
 	bne _0800FBE4
 	adds r0, r5, #0
-	bl sub_800F50C
+	bl UNIT_GetListSize
 	lsls r0, r0, #0x10
 	lsrs r7, r0, #0x10
 _0800FBE4:
@@ -5149,9 +5149,9 @@ _0800FBFA:
 	str r0, [sp]
 	adds r0, r5, #0
 	mov r1, r9
-	bl sub_800F914
+	bl UNIT_Filter
 	adds r5, r0, #0
-	ldr r0, _0800FC48  @ gBmMapUnk
+	ldr r0, _0800FC48  @ gMapMovement2
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -5170,7 +5170,7 @@ _0800FC2E:
 	adds r0, r5, #0
 	mov r1, r9
 	mov r2, r8
-	bl sub_800F698
+	bl UNITs_LoadInstant_800F698
 	adds r0, r6, #0
 	adds r0, #0x4c
 	movs r2, #0
@@ -5180,7 +5180,7 @@ _0800FC2E:
 	strb r2, [r0]
 	b _0800FC72
 	.align 2, 0
-_0800FC48: .4byte gBmMapUnk
+_0800FC48: .4byte gMapMovement2
 _0800FC4C:
 	str r5, [r6, #0x48]
 	adds r0, r6, #0
@@ -5196,7 +5196,7 @@ _0800FC4C:
 	mov r1, r8
 	orrs r0, r1
 	strb r0, [r4]
-	ldr r1, _0800FC8C  @ sub_800F5B8
+	ldr r1, _0800FC8C  @ LoadUnitsIdle
 	str r1, [r6, #0x2c]
 	adds r0, r6, #0
 	bl _call_via_r1
@@ -5215,12 +5215,12 @@ _0800FC72:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800FC8C: .4byte sub_800F5B8
+_0800FC8C: .4byte LoadUnitsIdle
 
 	THUMB_FUNC_END Event2C_LoadUnits
 
-	THUMB_FUNC_START TryPrepareEventUnitMovement
-TryPrepareEventUnitMovement: @ 0x0800FC90
+	THUMB_FUNC_START CanStartEventUnitMovement
+CanStartEventUnitMovement: @ 0x0800FC90
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -5258,7 +5258,7 @@ _0800FCD2:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END TryPrepareEventUnitMovement
+	THUMB_FUNC_END CanStartEventUnitMovement
 
 	THUMB_FUNC_START GetSomeEventEngineMoveRelatedBitfield
 GetSomeEventEngineMoveRelatedBitfield: @ 0x0800FCD8
@@ -5327,7 +5327,7 @@ Event2E_CheckAt: @ 0x0800FD28
 	beq _0800FD60
 	b _0800FD64
 _0800FD42:
-	ldr r0, _0800FD5C  @ gBmMapUnit
+	ldr r0, _0800FD5C  @ gMapUnit
 	ldr r1, [r0]
 	lsls r0, r3, #2
 	adds r0, r0, r1
@@ -5340,7 +5340,7 @@ _0800FD42:
 	adds r4, r0, #0
 	b _0800FD64
 	.align 2, 0
-_0800FD5C: .4byte gBmMapUnit
+_0800FD5C: .4byte gMapUnit
 _0800FD60:
 	ldr r0, _0800FD70  @ gActiveUnit
 	ldr r4, [r0]
@@ -5511,7 +5511,7 @@ _0800FE7C:
 	bl GetSomeEventEngineMoveRelatedBitfield
 	lsls r0, r0, #0x10
 	lsrs r4, r0, #0x10
-	ldr r0, _0800FEBC  @ gBmMapUnk
+	ldr r0, _0800FEBC  @ gMapMovement2
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -5536,7 +5536,7 @@ _0800FEA6:
 	b _0800FF0C
 	.align 2, 0
 _0800FEB8: .4byte gEventSlotQueue
-_0800FEBC: .4byte gBmMapUnk
+_0800FEBC: .4byte gMapMovement2
 _0800FEC0:
 	mov r0, r9
 	lsls r1, r0, #0x18
@@ -5545,7 +5545,7 @@ _0800FEC0:
 	lsls r2, r0, #0x18
 	asrs r2, r2, #0x18
 	adds r0, r7, #0
-	bl TryPrepareEventUnitMovement
+	bl CanStartEventUnitMovement
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0800FEDC
@@ -5564,7 +5564,7 @@ _0800FEDC:
 	lsrs r3, r3, #0x18
 	str r4, [sp]
 	mov r0, r8
-	bl sub_8079DDC
+	bl MuCtr_StartMoveTowards
 	b _0800FF0C
 _0800FEFA:
 	ldr r0, _0800FF20  @ gEventSlots
@@ -5574,7 +5574,7 @@ _0800FEFA:
 	mov r0, r8
 	ldr r1, [sp, #0xc]
 	adds r3, r4, #0
-	bl sub_8079D74
+	bl MuCtr_StartDefinedMove
 _0800FF0C:
 	movs r0, #0
 _0800FF0E:
@@ -5591,8 +5591,8 @@ _0800FF20: .4byte gEventSlots
 
 	THUMB_FUNC_END Event2F_MoveUnit
 
-	THUMB_FUNC_START Event30_ENUN
-Event30_ENUN: @ 0x0800FF24
+	THUMB_FUNC_START Event30_WaitForUnitMovement
+Event30_WaitForUnitMovement: @ 0x0800FF24
 	push {lr}
 	ldrh r0, [r0, #0x3c]
 	lsrs r0, r0, #2
@@ -5600,31 +5600,31 @@ Event30_ENUN: @ 0x0800FF24
 	ands r0, r1
 	cmp r0, #0
 	beq _0800FF36
-	bl SetAllMOVEUNITField44To1_
+	bl MU_AllForceSetMaxMoveSpeed_
 _0800FF36:
-	bl MuCtrExists
+	bl MuCtr_Exists
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
 	beq _0800FF60
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl RenderBmMap
-	ldr r0, _0800FF5C  @ gBmMapUnk
+	ldr r0, _0800FF5C  @ gMapMovement2
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
 	movs r0, #2
 	b _0800FF62
 	.align 2, 0
-_0800FF5C: .4byte gBmMapUnk
+_0800FF5C: .4byte gMapMovement2
 _0800FF60:
 	movs r0, #3
 _0800FF62:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event30_ENUN
+	THUMB_FUNC_END Event30_WaitForUnitMovement
 
 	THUMB_FUNC_START Event31_DisplayEffectRange
 Event31_DisplayEffectRange: @ 0x0800FF68
@@ -5658,7 +5658,7 @@ _0800FF8E:
 	movs r0, #6
 	b _0800FFE8
 _0800FFA0:
-	ldr r0, _0800FFC8  @ gRAMChapterData
+	ldr r0, _0800FFC8  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -5667,7 +5667,7 @@ _0800FFA0:
 	movs r0, #0x68
 	bl m4aSongNumStart
 _0800FFB2:
-	ldr r2, _0800FFCC  @ gUnknown_03000434
+	ldr r2, _0800FFCC  @ gEventRangeDisplayUnit
 	ldr r1, _0800FFD0  @ gActiveUnit
 	ldr r0, [r1]
 	str r0, [r2]
@@ -5677,12 +5677,12 @@ _0800FFB2:
 	bl DisplayUnitEffectRange
 	b _0800FFE6
 	.align 2, 0
-_0800FFC8: .4byte gRAMChapterData
-_0800FFCC: .4byte gUnknown_03000434
+_0800FFC8: .4byte gPlaySt
+_0800FFCC: .4byte gEventRangeDisplayUnit
 _0800FFD0: .4byte gActiveUnit
 _0800FFD4:
 	bl HideMoveRangeGraphics
-	ldr r2, _0800FFF0  @ gUnknown_03000434
+	ldr r2, _0800FFF0  @ gEventRangeDisplayUnit
 	ldr r1, [r2]
 	cmp r1, #0
 	beq _0800FFE6
@@ -5696,7 +5696,7 @@ _0800FFE8:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0800FFF0: .4byte gUnknown_03000434
+_0800FFF0: .4byte gEventRangeDisplayUnit
 _0800FFF4: .4byte gActiveUnit
 
 	THUMB_FUNC_END Event31_DisplayEffectRange
@@ -5833,7 +5833,7 @@ _080100EC:
 	mov r0, sp
 	movs r1, #0
 	movs r2, #0
-	bl LoadUnit_800F704
+	bl UNIT_Load_800F704
 	movs r0, #0
 	add sp, #0x14
 	pop {r4, r5, r6, r7}
@@ -6269,7 +6269,7 @@ _0801044C:
 	cmp r0, #0
 	bne _080104A6
 	adds r0, r5, #0
-	bl HideUnitSMS
+	bl HideUnitSprite
 	ldr r0, [r5, #0xc]
 	movs r1, #1
 	orrs r0, r1
@@ -6298,7 +6298,7 @@ _08010494:
 	bl ClearUnit
 _0801049A:
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl RenderBmMap
 _080104A6:
 	movs r0, #0
@@ -6356,21 +6356,21 @@ _080104F0:
 	muls r0, r1, r0
 	adds r0, r0, r2
 	ldrb r0, [r0, #5]
-	bl GetClassData
+	bl GetJInfo
 	str r0, [r5, #4]
 	adds r0, r4, #0
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	adds r5, r0, #0
 	cmp r5, #0
 	beq _0801052E
 _08010518:
 	lsls r0, r6, #0x10
 	asrs r0, r0, #0x10
-	bl GetClassData
+	bl GetJInfo
 	str r0, [r5, #4]
 _08010522:
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl RenderBmMap
 _0801052E:
 	movs r0, #0
@@ -6486,7 +6486,7 @@ _080105E8:
 	.align 2, 0
 _080105F4: .4byte gEventSlots
 _080105F8:
-	bl GetPartyGoldAmount
+	bl GetGold
 	ldr r1, _08010614  @ gEventSlots
 	ldr r1, [r1, #0xc]
 	subs r0, r0, r1
@@ -6494,7 +6494,7 @@ _080105F8:
 	bge _08010608
 	movs r0, #0
 _08010608:
-	bl SetPartyGoldAmount
+	bl SetGold
 _0801060C:
 	movs r0, #2
 _0801060E:
@@ -6532,8 +6532,8 @@ _0801063E:
 
 	THUMB_FUNC_END Event38_ChangeActiveUnit
 
-	THUMB_FUNC_START Event39_
-Event39_: @ 0x08010644
+	THUMB_FUNC_START Event39_CHAI
+Event39_CHAI: @ 0x08010644
 	push {r4, r5, r6, r7, lr}
 	ldr r2, [r0, #0x38]
 	ldrb r0, [r2]
@@ -6568,7 +6568,7 @@ _0801067C:
 	adds r1, r7, #0
 	adds r2, r6, #0
 	adds r3, r5, #0
-	bl sub_8011D10
+	bl ChangeAiForCharacter
 	b _080106DC
 _0801068C:
 	ldrh r0, [r2, #2]
@@ -6590,7 +6590,7 @@ _080106A0:
 	lsrs r1, r0, #0x18
 _080106AC:
 	lsls r1, r1, #0x18
-	ldr r0, _080106CC  @ gBmMapUnit
+	ldr r0, _080106CC  @ gMapUnit
 	ldr r0, [r0]
 	asrs r1, r1, #0x16
 	adds r1, r1, r0
@@ -6604,21 +6604,21 @@ _080106AC:
 	bl GetUnit
 	b _080106D2
 	.align 2, 0
-_080106CC: .4byte gBmMapUnit
+_080106CC: .4byte gMapUnit
 _080106D0:
 	movs r0, #0
 _080106D2:
 	adds r1, r7, #0
 	adds r2, r6, #0
 	adds r3, r5, #0
-	bl sub_8011CCC
+	bl ChangeUnitAi
 _080106DC:
 	movs r0, #0
 	pop {r4, r5, r6, r7}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event39_
+	THUMB_FUNC_END Event39_CHAI
 
 	THUMB_FUNC_START Event3A_
 Event3A_: @ 0x080106E4
@@ -6679,8 +6679,8 @@ _08010742:
 
 	THUMB_FUNC_END Event3A_
 
-	THUMB_FUNC_START sub_8010748
-sub_8010748: @ 0x08010748
+	THUMB_FUNC_START EventDisplayCursorProc_Loop
+EventDisplayCursorProc_Loop: @ 0x08010748
 	push {r4, lr}
 	adds r2, r0, #0
 	adds r0, #0x68
@@ -6718,17 +6718,17 @@ _0801077A:
 	adds r4, r2, #0
 	adds r4, #0x6a
 	ldrh r2, [r4]
-	bl sub_8010E6C
+	bl DisplayFlashingCursor
 	strh r0, [r4]
 _08010796:
 	pop {r4}
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8010748
+	THUMB_FUNC_END EventDisplayCursorProc_Loop
 
-	THUMB_FUNC_START Event3B_
-Event3B_: @ 0x0801079C
+	THUMB_FUNC_START Event3B_DisplayCursor
+Event3B_DisplayCursor: @ 0x0801079C
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	ldrh r0, [r6, #0x3c]
@@ -6826,10 +6826,10 @@ _08010846:
 	.align 2, 0
 _0801084C: .4byte gUnknown_08591F08
 
-	THUMB_FUNC_END Event3B_
+	THUMB_FUNC_END Event3B_DisplayCursor
 
-	THUMB_FUNC_START Event3C_
-Event3C_: @ 0x08010850
+	THUMB_FUNC_START Event3C_GetSetCursor
+Event3C_GetSetCursor: @ 0x08010850
 	push {lr}
 	ldr r2, [r0, #0x38]
 	ldrb r0, [r2]
@@ -6842,7 +6842,7 @@ Event3C_: @ 0x08010850
 	b _080108A2
 _08010864:
 	ldr r2, _08010874  @ gUnknown_030004E8
-	ldr r1, _08010878  @ gUnknown_0202BCB0
+	ldr r1, _08010878  @ gBmSt
 	ldrh r0, [r1, #0x14]
 	strh r0, [r2]
 	ldrh r0, [r1, #0x16]
@@ -6850,7 +6850,7 @@ _08010864:
 	b _080108A2
 	.align 2, 0
 _08010874: .4byte gUnknown_030004E8
-_08010878: .4byte gUnknown_0202BCB0
+_08010878: .4byte gBmSt
 _0801087C:
 	ldrh r0, [r2, #2]
 	lsrs r1, r0, #8
@@ -6879,10 +6879,10 @@ _080108A2:
 	.align 2, 0
 _080108A8: .4byte gUnknown_030004E4
 
-	THUMB_FUNC_END Event3C_
+	THUMB_FUNC_END Event3C_GetSetCursor
 
-	THUMB_FUNC_START Event3D_
-Event3D_: @ 0x080108AC
+	THUMB_FUNC_START Event3D_DisableMenuCommands
+Event3D_DisableMenuCommands: @ 0x080108AC
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -6902,7 +6902,7 @@ Event3D_: @ 0x080108AC
 	movs r5, #0xf
 	ands r5, r0
 	ldrh r7, [r1, #2]
-	bl ResetMenuOverrides
+	bl ClearMenuCommandOverride
 	movs r6, #1
 	mov r8, r4
 	cmp r5, #1
@@ -6921,8 +6921,8 @@ _080108EC:
 	adds r0, r1, r5
 	ldrb r0, [r0]
 	movs r1, #1
-	ldr r2, _0801091C  @ MenuAlwaysNotShown
-	bl AddMenuOverride
+	ldr r2, _0801091C  @ MenuCommandNeverUsable
+	bl SetMenuCommandOverride
 _08010902:
 	lsls r0, r6, #0x11
 	lsrs r6, r0, #0x10
@@ -6935,7 +6935,7 @@ _08010902:
 	.align 2, 0
 _08010914: .4byte gUnknown_080D793F
 _08010918: .4byte gUnknown_080D794E
-_0801091C: .4byte MenuAlwaysNotShown
+_0801091C: .4byte MenuCommandNeverUsable
 _08010920:
 	movs r5, #0
 _08010922:
@@ -6947,12 +6947,12 @@ _08010922:
 	adds r4, r0, r5
 	ldrb r0, [r4]
 	movs r1, #1
-	ldr r2, _08010960  @ MenuAlwaysDisabled
-	bl AddMenuOverride
+	ldr r2, _08010960  @ MenuCommandAlwaysGrayed
+	bl SetMenuCommandOverride
 	ldrb r0, [r4]
 	movs r1, #2
 	ldr r2, _08010964  @ Get8
-	bl AddMenuOverride
+	bl SetMenuCommandOverride
 _08010942:
 	lsls r0, r6, #0x11
 	lsrs r6, r0, #0x10
@@ -6970,10 +6970,10 @@ _08010950:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08010960: .4byte MenuAlwaysDisabled
+_08010960: .4byte MenuCommandAlwaysGrayed
 _08010964: .4byte Get8
 
-	THUMB_FUNC_END Event3D_
+	THUMB_FUNC_END Event3D_DisableMenuCommands
 
 	THUMB_FUNC_START Event3E_PrepScreenCall
 Event3E_PrepScreenCall: @ 0x08010968
@@ -6981,7 +6981,7 @@ Event3E_PrepScreenCall: @ 0x08010968
 	adds r4, r0, #0
 	bl HideAllUnits
 	movs r0, #0x84
-	bl UnsetEventId
+	bl ClearFlag
 	ldr r0, _08010988  @ gUnknown_0859DBBC
 	adds r1, r4, #0
 	bl SpawnProcLocking
@@ -6994,8 +6994,8 @@ _08010988: .4byte gUnknown_0859DBBC
 
 	THUMB_FUNC_END Event3E_PrepScreenCall
 
-	THUMB_FUNC_START sub_801098C
-sub_801098C: @ 0x0801098C
+	THUMB_FUNC_START DecodeEventScriptedBattle
+DecodeEventScriptedBattle: @ 0x0801098C
 	push {r4, r5, r6, r7, lr}
 	ldr r4, _08010A18  @ gEventSlotQueue
 	ldr r3, _08010A1C  @ gUnknown_0203A974
@@ -7076,7 +7076,7 @@ _08010A1C: .4byte gUnknown_0203A974
 _08010A20: .4byte gEventSlots
 _08010A24: .4byte 0xFFF80000
 
-	THUMB_FUNC_END sub_801098C
+	THUMB_FUNC_END DecodeEventScriptedBattle
 
 	THUMB_FUNC_START sub_8010A28
 sub_8010A28: @ 0x08010A28
@@ -7085,7 +7085,7 @@ sub_8010A28: @ 0x08010A28
 	adds r0, #0x64
 	movs r1, #0
 	ldrsh r4, [r0, r1]
-	bl GetThread2SkipStack
+	bl GetGameLogicLock
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r4, r0
@@ -7132,7 +7132,7 @@ Event3F_: @ 0x08010A58
 	.align 2, 0
 _08010A88: .4byte gEventSlots
 _08010A8C:
-	bl sub_801098C
+	bl DecodeEventScriptedBattle
 _08010A90:
 	mov r8, r0
 	cmp r7, #0
@@ -7184,7 +7184,7 @@ _08010AE4:
 	bl SpawnProcLocking
 	adds r4, r0, #0
 	str r6, [r4, #0x58]
-	bl GetThread2SkipStack
+	bl GetGameLogicLock
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	adds r4, #0x64
@@ -7236,7 +7236,7 @@ sub_8010B48: @ 0x08010B48
 	adds r0, #0x64
 	movs r1, #0
 	ldrsh r4, [r0, r1]
-	bl GetThread2SkipStack
+	bl GetGameLogicLock
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	cmp r4, r0
@@ -7254,8 +7254,8 @@ _08010B70:
 
 	THUMB_FUNC_END sub_8010B48
 
-	THUMB_FUNC_START Event40_
-Event40_: @ 0x08010B78
+	THUMB_FUNC_START Event40_PROM
+Event40_PROM: @ 0x08010B78
 	push {r4, r5, r6, lr}
 	mov r6, r9
 	mov r5, r8
@@ -7272,7 +7272,7 @@ Event40_: @ 0x08010B78
 	bl SpawnProcLocking
 	adds r4, r0, #0
 	str r6, [r4, #0x58]
-	bl GetThread2SkipStack
+	bl GetGameLogicLock
 	lsls r0, r0, #0x18
 	lsrs r0, r0, #0x18
 	adds r4, #0x64
@@ -7309,10 +7309,10 @@ Event40_: @ 0x08010B78
 	.align 2, 0
 _08010BE8: .4byte gUnknown_08591F28
 
-	THUMB_FUNC_END Event40_
+	THUMB_FUNC_END Event40_PROM
 
-	THUMB_FUNC_START Event41_
-Event41_: @ 0x08010BEC
+	THUMB_FUNC_START Event41_WarpAnim
+Event41_WarpAnim: @ 0x08010BEC
 	push {r4, r5, r6, lr}
 	sub sp, #4
 	adds r5, r0, #0
@@ -7385,7 +7385,7 @@ _08010C68:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Event41_
+	THUMB_FUNC_END Event41_WarpAnim
 
 	THUMB_FUNC_START Event42_
 Event42_: @ 0x08010C70

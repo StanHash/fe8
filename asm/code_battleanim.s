@@ -5,72 +5,72 @@
 	@ Everything related to (non-map) battle animations
 	@ Needs further splitting
 
-	THUMB_FUNC_START sub_804FD48
-sub_804FD48: @ 0x0804FD48
-	ldr r1, _0804FD50  @ gUnknown_0203E0F0
+	THUMB_FUNC_START SetBattleAnimLinkArenaFlag
+SetBattleAnimLinkArenaFlag: @ 0x0804FD48
+	ldr r1, _0804FD50  @ gBoolBattleIsLinkArena_maybe
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_0804FD50: .4byte gUnknown_0203E0F0
+_0804FD50: .4byte gBoolBattleIsLinkArena_maybe
 
-	THUMB_FUNC_END sub_804FD48
+	THUMB_FUNC_END SetBattleAnimLinkArenaFlag
 
-	THUMB_FUNC_START sub_804FD54
-sub_804FD54: @ 0x0804FD54
-	ldr r0, _0804FD5C  @ gUnknown_0203E0F0
+	THUMB_FUNC_START GetBattleAnimLinkArenaFlag
+GetBattleAnimLinkArenaFlag: @ 0x0804FD54
+	ldr r0, _0804FD5C  @ gBoolBattleIsLinkArena_maybe
 	ldr r0, [r0]
 	bx lr
 	.align 2, 0
-_0804FD5C: .4byte gUnknown_0203E0F0
+_0804FD5C: .4byte gBoolBattleIsLinkArena_maybe
 
-	THUMB_FUNC_END sub_804FD54
+	THUMB_FUNC_END GetBattleAnimLinkArenaFlag
 
-	THUMB_FUNC_START NewEkrBattleDeamon
-NewEkrBattleDeamon: @ 0x0804FD60
+	THUMB_FUNC_START StartEkrBattleDeamon
+StartEkrBattleDeamon: @ 0x0804FD60
 	push {r4, lr}
-	ldr r4, _0804FD80  @ gUnknown_0203E0F8
+	ldr r4, _0804FD80  @ gpEkrBattleDeamon
 	ldr r0, _0804FD84  @ gUnknown_085B9358
 	movs r1, #3
 	bl SpawnProc
 	str r0, [r4]
-	ldr r1, _0804FD88  @ gUnknown_0203E0F4
+	ldr r1, _0804FD88  @ gBoolBattleDeamonActive
 	movs r0, #1
 	str r0, [r1]
-	bl AddSkipThread2
+	bl LockGameLogic
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804FD80: .4byte gUnknown_0203E0F8
+_0804FD80: .4byte gpEkrBattleDeamon
 _0804FD84: .4byte gUnknown_085B9358
-_0804FD88: .4byte gUnknown_0203E0F4
+_0804FD88: .4byte gBoolBattleDeamonActive
 
-	THUMB_FUNC_END NewEkrBattleDeamon
+	THUMB_FUNC_END StartEkrBattleDeamon
 
 	THUMB_FUNC_START EndEkrBattleDeamon
 EndEkrBattleDeamon: @ 0x0804FD8C
 	push {lr}
-	ldr r0, _0804FD9C  @ gUnknown_0203E0F8
+	ldr r0, _0804FD9C  @ gpEkrBattleDeamon
 	ldr r0, [r0]
 	bl Proc_End
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804FD9C: .4byte gUnknown_0203E0F8
+_0804FD9C: .4byte gpEkrBattleDeamon
 
 	THUMB_FUNC_END EndEkrBattleDeamon
 
 	THUMB_FUNC_START IsBattleDeamonActive
 IsBattleDeamonActive: @ 0x0804FDA0
 	push {lr}
-	ldr r0, _0804FDB0  @ gUnknown_0203E0F4
+	ldr r0, _0804FDB0  @ gBoolBattleDeamonActive
 	ldr r0, [r0]
 	cmp r0, #1
 	beq _0804FDB4
 	movs r0, #0
 	b _0804FDB6
 	.align 2, 0
-_0804FDB0: .4byte gUnknown_0203E0F4
+_0804FDB0: .4byte gBoolBattleDeamonActive
 _0804FDB4:
 	movs r0, #1
 _0804FDB6:
@@ -79,19 +79,19 @@ _0804FDB6:
 
 	THUMB_FUNC_END IsBattleDeamonActive
 
-	THUMB_FUNC_START ekrBattleDeamon_Destructor
-ekrBattleDeamon_Destructor: @ 0x0804FDBC
+	THUMB_FUNC_START EkrBattleDeamon_OnEnd
+EkrBattleDeamon_OnEnd: @ 0x0804FDBC
 	push {lr}
-	ldr r1, _0804FDCC  @ gUnknown_0203E0F4
+	ldr r1, _0804FDCC  @ gBoolBattleDeamonActive
 	movs r0, #0
 	str r0, [r1]
-	bl SubSkipThread2
+	bl UnlockGameLogic
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804FDCC: .4byte gUnknown_0203E0F4
+_0804FDCC: .4byte gBoolBattleDeamonActive
 
-	THUMB_FUNC_END ekrBattleDeamon_Destructor
+	THUMB_FUNC_END EkrBattleDeamon_OnEnd
 
 	THUMB_FUNC_START nullsub_35
 nullsub_35: @ 0x0804FDD0
@@ -99,8 +99,8 @@ nullsub_35: @ 0x0804FDD0
 
 	THUMB_FUNC_END nullsub_35
 
-	THUMB_FUNC_START NewEkrBattle
-NewEkrBattle: @ 0x0804FDD4
+	THUMB_FUNC_START StartEkrBattle
+StartEkrBattle: @ 0x0804FDD4
 	push {r4, lr}
 	bl BsoInit
 	ldr r4, _0804FE1C  @ gUnknown_02000064
@@ -127,7 +127,7 @@ NewEkrBattle: @ 0x0804FDD4
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	bne _0804FE14
-	bl sub_80726AC
+	bl InitBattleAnimMusic
 _0804FE14:
 	pop {r4}
 	pop {r0}
@@ -143,7 +143,7 @@ _0804FE34: .4byte gUnknown_02000020
 _0804FE38: .4byte gUnknown_02000024
 _0804FE3C: .4byte gUnknown_0203E0FC
 
-	THUMB_FUNC_END NewEkrBattle
+	THUMB_FUNC_END StartEkrBattle
 
 	THUMB_FUNC_START InBattleMainRoutine
 InBattleMainRoutine: @ 0x0804FE40
@@ -155,7 +155,7 @@ InBattleMainRoutine: @ 0x0804FE40
 	ldr r0, [r0]
 	cmp r0, #0
 	bne _0804FE60
-	bl MainUpdate_804FEE4
+	bl GameLoop_Battle
 	b _0804FE6C
 	.align 2, 0
 _0804FE58: .4byte gKeySt
@@ -165,7 +165,7 @@ _0804FE60:
 	ldr r0, [r0]
 	cmp r0, #1
 	bne _0804FE6C
-	bl MainUpdate_804FEE4
+	bl GameLoop_Battle
 _0804FE6C:
 	ldr r0, _0804FE84  @ gUnknown_02017724
 	ldr r0, [r0]
@@ -209,7 +209,7 @@ _0804FEB8:
 	bl Proc_End
 	bl EndEkrGauge
 _0804FEC4:
-	ldr r1, _0804FEDC  @ gUnknown_0202BCB0
+	ldr r1, _0804FEDC  @ gBmSt
 	movs r0, #1
 	strb r0, [r1]
 	ldr r0, _0804FEE0  @ 0x04000006
@@ -220,17 +220,17 @@ _0804FEC4:
 	bx r0
 	.align 2, 0
 _0804FED8: .4byte gUnknown_02000064
-_0804FEDC: .4byte gUnknown_0202BCB0
+_0804FEDC: .4byte gBmSt
 _0804FEE0: .4byte 0x04000006
 
 	THUMB_FUNC_END InBattleMainRoutine
 
-	THUMB_FUNC_START MainUpdate_804FEE4
-MainUpdate_804FEE4: @ 0x0804FEE4
+	THUMB_FUNC_START GameLoop_Battle
+GameLoop_Battle: @ 0x0804FEE4
 	push {r4, lr}
 	bl ClearSprites
-	bl sub_8071A8C
-	bl GetThread2SkipStack
+	bl Unset20200AC
+	bl GetGameLogicLock
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0804FF00
@@ -276,7 +276,7 @@ _0804FF54: .4byte gUnknown_02000020
 _0804FF58: .4byte gUnknown_0201FB04
 _0804FF5C: .4byte gUnknown_02000018
 
-	THUMB_FUNC_END MainUpdate_804FEE4
+	THUMB_FUNC_END GameLoop_Battle
 
 	THUMB_FUNC_START nullsub_36
 nullsub_36: @ 0x0804FF60
@@ -295,7 +295,7 @@ ekrBattle_Init: @ 0x0804FF64
 	ldr r0, [r0]
 	cmp r0, #0
 	bne _0804FF9A
-	ldr r0, _0804FF90  @ gUnknown_0203E120
+	ldr r0, _0804FF90  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #1
@@ -306,7 +306,7 @@ ekrBattle_Init: @ 0x0804FF64
 	.align 2, 0
 _0804FF88: .4byte gUnknown_0201FB0C
 _0804FF8C: .4byte gUnknown_02017744
-_0804FF90: .4byte gUnknown_0203E120
+_0804FF90: .4byte gBattleAnimSceneLayoutEnum
 _0804FF94:
 	movs r0, #0xf0
 	negs r0, r0
@@ -319,7 +319,7 @@ _0804FF9A:
 	ldr r0, _0804FFB8  @ gUnknown_02000024
 	movs r1, #1
 	str r1, [r0]
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #1
 	bne _0804FFBC
 	movs r0, #0
@@ -330,20 +330,20 @@ _0804FFBC:
 	movs r0, #0x1e
 _0804FFBE:
 	strh r0, [r4, #0x2c]
-	ldr r0, _0804FFD4  @ gUnknown_0203E100
+	ldr r0, _0804FFD4  @ gBattleAnimInitialHitSide
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	bne _0804FFDC
-	ldr r1, _0804FFD8  @ gUnknown_0203E190
+	ldr r1, _0804FFD8  @ gBattleCharacterIndices
 	ldrb r0, [r1]
 	ldrb r1, [r1, #1]
 	b _0804FFE2
 	.align 2, 0
-_0804FFD4: .4byte gUnknown_0203E100
-_0804FFD8: .4byte gUnknown_0203E190
+_0804FFD4: .4byte gBattleAnimInitialHitSide
+_0804FFD8: .4byte gBattleCharacterIndices
 _0804FFDC:
-	ldr r1, _0804FFFC  @ gUnknown_0203E190
+	ldr r1, _0804FFFC  @ gBattleCharacterIndices
 	ldrb r0, [r1, #1]
 	ldrb r1, [r1]
 _0804FFE2:
@@ -359,7 +359,7 @@ _0804FFE2:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0804FFFC: .4byte gUnknown_0203E190
+_0804FFFC: .4byte gBattleCharacterIndices
 
 	THUMB_FUNC_END ekrBattle_Init
 
@@ -374,7 +374,7 @@ ekrBattle_8050000: @ 0x08050000
 	asrs r0, r0, #0x10
 	cmp r0, #0x1f
 	bne _08050048
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	beq _08050040
 	ldr r0, [r4, #0x54]
@@ -386,15 +386,15 @@ ekrBattle_8050000: @ 0x08050000
 _08050026:
 	movs r0, #1
 	movs r1, #7
-	bl NewEkrWindowAppear
+	bl StartEkrWindowAppear
 	movs r0, #1
 	movs r1, #7
 	movs r2, #0
-	bl NewEkrNamewinAppear
-	ldr r0, _0805003C  @ ekrBattle_8050054
+	bl StartEkrNamewinAppear
+	ldr r0, _0805003C  @ EkrBattle_BattleQuoteInit
 	b _08050042
 	.align 2, 0
-_0805003C: .4byte ekrBattle_8050054
+_0805003C: .4byte EkrBattle_BattleQuoteInit
 _08050040:
 	ldr r0, _08050050  @ ekrBattle_8050158
 _08050042:
@@ -410,8 +410,8 @@ _08050050: .4byte ekrBattle_8050158
 
 	THUMB_FUNC_END ekrBattle_8050000
 
-	THUMB_FUNC_START ekrBattle_8050054
-ekrBattle_8050054: @ 0x08050054
+	THUMB_FUNC_START EkrBattle_BattleQuoteInit
+EkrBattle_BattleQuoteInit: @ 0x08050054
 	push {r4, lr}
 	sub sp, #4
 	adds r4, r0, #0
@@ -443,12 +443,12 @@ ekrBattle_8050054: @ 0x08050054
 	ldr r0, [r4, #0x54]
 	cmp r0, #1
 	bne _080500DA
-	ldr r0, _080500C4  @ gUnknown_0203E100
+	ldr r0, _080500C4  @ gBattleAnimInitialHitSide
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	bne _080500CC
-	ldr r1, _080500C8  @ gUnknown_0203E190
+	ldr r1, _080500C8  @ gBattleCharacterIndices
 	ldrb r0, [r1]
 	ldrb r1, [r1, #1]
 	bl CallBattleQuoteEventsIfAny
@@ -457,10 +457,10 @@ ekrBattle_8050054: @ 0x08050054
 _080500B8: .4byte gBg0Tm
 _080500BC: .4byte 0x01000200
 _080500C0: .4byte gUnknown_02000038
-_080500C4: .4byte gUnknown_0203E100
-_080500C8: .4byte gUnknown_0203E190
+_080500C4: .4byte gBattleAnimInitialHitSide
+_080500C8: .4byte gBattleCharacterIndices
 _080500CC:
-	ldr r1, _080500E8  @ gUnknown_0203E190
+	ldr r1, _080500E8  @ gBattleCharacterIndices
 	ldrb r0, [r1, #1]
 	ldrb r1, [r1]
 	bl CallBattleQuoteEventsIfAny
@@ -468,7 +468,7 @@ _080500D6:
 	movs r0, #0
 	str r0, [r4, #0x54]
 _080500DA:
-	ldr r0, _080500EC  @ ekrBattle_80500F0
+	ldr r0, _080500EC  @ EkrBattle_BattleQuoteWait
 	str r0, [r4, #0xc]
 _080500DE:
 	add sp, #4
@@ -476,13 +476,13 @@ _080500DE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080500E8: .4byte gUnknown_0203E190
-_080500EC: .4byte ekrBattle_80500F0
+_080500E8: .4byte gBattleCharacterIndices
+_080500EC: .4byte EkrBattle_BattleQuoteWait
 
-	THUMB_FUNC_END ekrBattle_8050054
+	THUMB_FUNC_END EkrBattle_BattleQuoteInit
 
-	THUMB_FUNC_START ekrBattle_80500F0
-ekrBattle_80500F0: @ 0x080500F0
+	THUMB_FUNC_START EkrBattle_BattleQuoteWait
+EkrBattle_BattleQuoteWait: @ 0x080500F0
 	push {r4, lr}
 	adds r4, r0, #0
 	bl BattleEventEngineExists
@@ -493,11 +493,11 @@ ekrBattle_80500F0: @ 0x080500F0
 	bl EnableBgSync
 	movs r0, #0
 	movs r1, #7
-	bl NewEkrWindowAppear
+	bl StartEkrWindowAppear
 	movs r0, #0
 	movs r1, #7
 	movs r2, #0
-	bl NewEkrNamewinAppear
+	bl StartEkrNamewinAppear
 	bl EkrGauge_8051228
 	bl sub_8051BA0
 	bl EkrGauge_8051180
@@ -510,7 +510,7 @@ _08050128:
 	.align 2, 0
 _08050130: .4byte ekrBattle_8050134
 
-	THUMB_FUNC_END ekrBattle_80500F0
+	THUMB_FUNC_END EkrBattle_BattleQuoteWait
 
 	THUMB_FUNC_START ekrBattle_8050134
 ekrBattle_8050134: @ 0x08050134
@@ -536,7 +536,7 @@ _08050154: .4byte ekrBattle_8050158
 
 	THUMB_FUNC_START ekrBattle_8050158
 ekrBattle_8050158: @ 0x08050158
-	ldr r1, _0805016C  @ gUnknown_0203E100
+	ldr r1, _0805016C  @ gBattleAnimInitialHitSide
 	movs r2, #0
 	ldrsh r1, [r1, r2]
 	str r1, [r0, #0x44]
@@ -546,7 +546,7 @@ ekrBattle_8050158: @ 0x08050158
 	str r1, [r0, #0xc]
 	bx lr
 	.align 2, 0
-_0805016C: .4byte gUnknown_0203E100
+_0805016C: .4byte gBattleAnimInitialHitSide
 _08050170: .4byte ekrBattle_8050174
 
 	THUMB_FUNC_END ekrBattle_8050158
@@ -676,7 +676,7 @@ _08050240: .4byte ekrBattle_8050174
 ekrBattle_8050244: @ 0x08050244
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08050270  @ gUnknown_0203E100
+	ldr r0, _08050270  @ gBattleAnimInitialHitSide
 	movs r2, #0
 	ldrsh r1, [r0, r2]
 	ldr r0, _08050274  @ gUnknown_02017744
@@ -689,30 +689,30 @@ ekrBattle_8050244: @ 0x08050244
 	ldr r0, [r0]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	movs r0, #0
 	strh r0, [r4, #0x2c]
-	ldr r0, _0805027C  @ ekrBattle_8050290
+	ldr r0, _0805027C  @ ekrBattle_WaitForFrame8
 	b _08050282
 	.align 2, 0
-_08050270: .4byte gUnknown_0203E100
+_08050270: .4byte gBattleAnimInitialHitSide
 _08050274: .4byte gUnknown_02017744
 _08050278: .4byte gUnknown_02000000
-_0805027C: .4byte ekrBattle_8050290
+_0805027C: .4byte ekrBattle_WaitForFrame8
 _08050280:
-	ldr r0, _0805028C  @ ekrBattle_80502B0
+	ldr r0, _0805028C  @ ekrBattle_StartUIPaletteAnimations
 _08050282:
 	str r0, [r4, #0xc]
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0805028C: .4byte ekrBattle_80502B0
+_0805028C: .4byte ekrBattle_StartUIPaletteAnimations
 
 	THUMB_FUNC_END ekrBattle_8050244
 
-	THUMB_FUNC_START ekrBattle_8050290
-ekrBattle_8050290: @ 0x08050290
+	THUMB_FUNC_START ekrBattle_WaitForFrame8
+ekrBattle_WaitForFrame8: @ 0x08050290
 	push {lr}
 	adds r1, r0, #0
 	ldrh r0, [r1, #0x2c]
@@ -722,31 +722,31 @@ ekrBattle_8050290: @ 0x08050290
 	asrs r0, r0, #0x10
 	cmp r0, #8
 	bne _080502A6
-	ldr r0, _080502AC  @ ekrBattle_80502B0
+	ldr r0, _080502AC  @ ekrBattle_StartUIPaletteAnimations
 	str r0, [r1, #0xc]
 _080502A6:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080502AC: .4byte ekrBattle_80502B0
+_080502AC: .4byte ekrBattle_StartUIPaletteAnimations
 
-	THUMB_FUNC_END ekrBattle_8050290
+	THUMB_FUNC_END ekrBattle_WaitForFrame8
 
-	THUMB_FUNC_START ekrBattle_80502B0
-ekrBattle_80502B0: @ 0x080502B0
+	THUMB_FUNC_START ekrBattle_StartUIPaletteAnimations
+ekrBattle_StartUIPaletteAnimations: @ 0x080502B0
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r4, _080502F4  @ gUnknown_02000000
 	ldr r0, [r4]
-	bl NewEfxStatusUnit
+	bl StartEfxStatusUnit
 	ldr r0, [r4, #8]
-	bl NewEfxStatusUnit
+	bl StartEfxStatusUnit
 	ldr r1, _080502F8  @ gUnknown_0203E1D8
 	movs r2, #0
 	ldrsh r0, [r1, r2]
 	movs r2, #2
 	ldrsh r1, [r1, r2]
-	bl sub_8054E8C
+	bl StartEfxWeaponIcon
 	ldr r0, _080502FC  @ gBattleStats
 	ldrh r1, [r0]
 	movs r0, #0x40
@@ -757,7 +757,7 @@ ekrBattle_80502B0: @ 0x080502B0
 	bl sub_8054B64
 _080502E2:
 	ldr r0, [r4]
-	bl sub_80545C0
+	bl StartEfxHPBarColorChange
 	ldr r0, _08050300  @ ekrBattle_8050304
 	str r0, [r5, #0xc]
 	pop {r4, r5}
@@ -769,42 +769,42 @@ _080502F8: .4byte gUnknown_0203E1D8
 _080502FC: .4byte gBattleStats
 _08050300: .4byte ekrBattle_8050304
 
-	THUMB_FUNC_END ekrBattle_80502B0
+	THUMB_FUNC_END ekrBattle_StartUIPaletteAnimations
 
 	THUMB_FUNC_START ekrBattle_8050304
 ekrBattle_8050304: @ 0x08050304
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _0805031C  @ gUnknown_0203E194
+	ldr r0, _0805031C  @ gpBattleAnimTAUnits
 	ldr r0, [r0]
 	cmp r0, #0
 	beq _08050328
 	ldr r0, _08050320  @ gUnknown_02000000
 	ldr r0, [r0, #8]
-	bl NewEkrTriangle
-	ldr r0, _08050324  @ ekrBattle_8050338
+	bl StartEkrTriangle
+	ldr r0, _08050324  @ ekrBattle_WaitForTriangleAttackAnim
 	b _0805032A
 	.align 2, 0
-_0805031C: .4byte gUnknown_0203E194
+_0805031C: .4byte gpBattleAnimTAUnits
 _08050320: .4byte gUnknown_02000000
-_08050324: .4byte ekrBattle_8050338
+_08050324: .4byte ekrBattle_WaitForTriangleAttackAnim
 _08050328:
-	ldr r0, _08050334  @ ekrBattle_8050360
+	ldr r0, _08050334  @ ekrBattle_InitMainAnimations
 _0805032A:
 	str r0, [r4, #0xc]
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08050334: .4byte ekrBattle_8050360
+_08050334: .4byte ekrBattle_InitMainAnimations
 
 	THUMB_FUNC_END ekrBattle_8050304
 
-	THUMB_FUNC_START ekrBattle_8050338
-ekrBattle_8050338: @ 0x08050338
+	THUMB_FUNC_START ekrBattle_WaitForTriangleAttackAnim
+ekrBattle_WaitForTriangleAttackAnim: @ 0x08050338
 	push {r4, lr}
 	adds r4, r0, #0
-	bl sub_8074F3C
+	bl HasBattleAnimTriangeAttackEnded
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -812,19 +812,19 @@ ekrBattle_8050338: @ 0x08050338
 	bl nullsub_18
 	movs r0, #0x1e
 	strh r0, [r4, #0x2c]
-	ldr r0, _0805035C  @ ekrBattle_8050360
+	ldr r0, _0805035C  @ ekrBattle_InitMainAnimations
 	str r0, [r4, #0xc]
 _08050354:
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0805035C: .4byte ekrBattle_8050360
+_0805035C: .4byte ekrBattle_InitMainAnimations
 
-	THUMB_FUNC_END ekrBattle_8050338
+	THUMB_FUNC_END ekrBattle_WaitForTriangleAttackAnim
 
-	THUMB_FUNC_START ekrBattle_8050360
-ekrBattle_8050360: @ 0x08050360
+	THUMB_FUNC_START ekrBattle_InitMainAnimations
+ekrBattle_InitMainAnimations: @ 0x08050360
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	ldrh r0, [r5, #0x2c]
@@ -836,7 +836,7 @@ ekrBattle_8050360: @ 0x08050360
 	asrs r0, r0, #0x10
 	cmp r0, #0x1e
 	ble _080503D4
-	ldr r6, _080503DC  @ gUnknown_0203E104
+	ldr r6, _080503DC  @ gBattleAnimUnitEnabledLookup
 	movs r7, #0
 	ldrsh r0, [r6, r7]
 	cmp r0, #1
@@ -890,32 +890,32 @@ _080503D4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080503DC: .4byte gUnknown_0203E104
+_080503DC: .4byte gBattleAnimUnitEnabledLookup
 _080503E0: .4byte gUnknown_02000000
 _080503E4: .4byte gUnknown_0201FB04
 _080503E8: .4byte ekrBattle_80503EC
 
-	THUMB_FUNC_END ekrBattle_8050360
+	THUMB_FUNC_END ekrBattle_InitMainAnimations
 
 	THUMB_FUNC_START ekrBattle_80503EC
 ekrBattle_80503EC: @ 0x080503EC
 	ldr r2, _080503F8  @ gUnknown_02000024
 	movs r1, #0
 	str r1, [r2]
-	ldr r1, _080503FC  @ ekrBattle_8050400
+	ldr r1, _080503FC  @ ekrBattle_StartMainAnimations
 	str r1, [r0, #0xc]
 	bx lr
 	.align 2, 0
 _080503F8: .4byte gUnknown_02000024
-_080503FC: .4byte ekrBattle_8050400
+_080503FC: .4byte ekrBattle_StartMainAnimations
 
 	THUMB_FUNC_END ekrBattle_80503EC
 
-	THUMB_FUNC_START ekrBattle_8050400
-ekrBattle_8050400: @ 0x08050400
+	THUMB_FUNC_START ekrBattle_StartMainAnimations
+ekrBattle_StartMainAnimations: @ 0x08050400
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _0805041C  @ gUnknown_0203E120
+	ldr r0, _0805041C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -923,30 +923,30 @@ ekrBattle_8050400: @ 0x08050400
 	ldr r0, _08050420  @ gUnknown_02000000
 	ldr r0, [r0, #8]
 	bl NewEkrClassChg
-	ldr r0, _08050424  @ ekrBattle_8050440
+	ldr r0, _08050424  @ ekrBattle_WaitForClassChange
 	b _08050432
 	.align 2, 0
-_0805041C: .4byte gUnknown_0203E120
+_0805041C: .4byte gBattleAnimSceneLayoutEnum
 _08050420: .4byte gUnknown_02000000
-_08050424: .4byte ekrBattle_8050440
+_08050424: .4byte ekrBattle_WaitForClassChange
 _08050428:
 	adds r1, r4, #0
 	adds r1, #0x29
 	movs r0, #0
 	strb r0, [r1]
-	ldr r0, _0805043C  @ ekrBattle_805046C
+	ldr r0, _0805043C  @ ekrBattle_WaitForRoundAnimations
 _08050432:
 	str r0, [r4, #0xc]
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0805043C: .4byte ekrBattle_805046C
+_0805043C: .4byte ekrBattle_WaitForRoundAnimations
 
-	THUMB_FUNC_END ekrBattle_8050400
+	THUMB_FUNC_END ekrBattle_StartMainAnimations
 
-	THUMB_FUNC_START ekrBattle_8050440
-ekrBattle_8050440: @ 0x08050440
+	THUMB_FUNC_START ekrBattle_WaitForClassChange
+ekrBattle_WaitForClassChange: @ 0x08050440
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	bl EkrClasschgFinished
@@ -967,10 +967,10 @@ _0805045C:
 _08050464: .4byte gUnknown_0203E1C8
 _08050468: .4byte ekrBattle_CheckForLevelup_8050C34
 
-	THUMB_FUNC_END ekrBattle_8050440
+	THUMB_FUNC_END ekrBattle_WaitForClassChange
 
-	THUMB_FUNC_START ekrBattle_805046C
-ekrBattle_805046C: @ 0x0805046C
+	THUMB_FUNC_START ekrBattle_WaitForRoundAnimations
+ekrBattle_WaitForRoundAnimations: @ 0x0805046C
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -988,7 +988,7 @@ ekrBattle_805046C: @ 0x0805046C
 	movs r0, #1
 	strb r0, [r1]
 _0805048C:
-	ldr r0, _080504A8  @ gUnknown_0203E120
+	ldr r0, _080504A8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #3
@@ -1004,7 +1004,7 @@ _080504A2:
 	b _080505CE
 	.align 2, 0
 _080504A4: .4byte gKeySt
-_080504A8: .4byte gUnknown_0203E120
+_080504A8: .4byte gBattleAnimSceneLayoutEnum
 _080504AC:
 	cmp r0, #0
 	bge _080504B2
@@ -1018,27 +1018,27 @@ _080504B2:
 	beq _080504C0
 	b _080505CE
 _080504C0:
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	bne _080504CA
 	b _080505CC
 _080504CA:
 	ldr r4, _08050500  @ gUnknown_0203E1C8
-	ldr r0, _08050504  @ gUnknown_0203E188
+	ldr r0, _08050504  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x6e
 	ldrb r0, [r0]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	strh r0, [r4]
-	ldr r0, _08050508  @ gUnknown_0203E18C
+	ldr r0, _08050508  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x6e
 	ldrb r0, [r0]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	strh r0, [r4, #2]
-	ldr r1, _0805050C  @ gUnknown_0203E1AC
+	ldr r1, _0805050C  @ gBattleHpDisplayedValue
 	movs r2, #0
 	ldrsh r0, [r1, r2]
 	cmp r0, #0
@@ -1049,9 +1049,9 @@ _080504CA:
 	.align 2, 0
 _080504FC: .4byte gUnknown_0201FB04
 _08050500: .4byte gUnknown_0203E1C8
-_08050504: .4byte gUnknown_0203E188
-_08050508: .4byte gUnknown_0203E18C
-_0805050C: .4byte gUnknown_0203E1AC
+_08050504: .4byte gpUnitLeft_BattleStruct
+_08050508: .4byte gpUnitRight_BattleStruct
+_0805050C: .4byte gBattleHpDisplayedValue
 _08050510:
 	movs r2, #2
 	ldrsh r0, [r1, r2]
@@ -1120,22 +1120,22 @@ _08050586:
 	movs r1, #1
 	negs r1, r1
 	adds r0, r4, #0
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _08050598:
 	bl sub_8031EF0
-	bl sub_80581EC
+	bl InitBattleAnimHitArrays
 	bl BsoInit
 	bl sub_80599E8
 	bl sub_8059D28
 	movs r0, #0
 	mov r2, r8
 	strh r0, [r2, #0x2c]
-	ldr r0, _080505BC  @ ekrBattle_8050360
+	ldr r0, _080505BC  @ ekrBattle_InitMainAnimations
 	str r0, [r2, #0xc]
 	b _080505CE
 	.align 2, 0
 _080505B8: .4byte gUnknown_02000000
-_080505BC: .4byte ekrBattle_8050360
+_080505BC: .4byte ekrBattle_InitMainAnimations
 _080505C0:
 	ldr r0, _080505E4  @ gUnknown_0201FB04
 	ldr r1, [r0]
@@ -1161,7 +1161,7 @@ _080505D8:
 _080505E4: .4byte gUnknown_0201FB04
 _080505E8: .4byte ekrBattle_80505EC
 
-	THUMB_FUNC_END ekrBattle_805046C
+	THUMB_FUNC_END ekrBattle_WaitForRoundAnimations
 
 	THUMB_FUNC_START ekrBattle_80505EC
 ekrBattle_80505EC: @ 0x080505EC
@@ -1189,7 +1189,7 @@ ekrBattle_8050600: @ 0x08050600
 	ldr r4, [r0]
 	cmp r4, #0
 	bne _08050666
-	bl sub_8056E60
+	bl HasEkrNamewinAppearEnded
 	lsls r0, r0, #0x18
 	asrs r6, r0, #0x18
 	cmp r6, #1
@@ -1228,7 +1228,7 @@ _08050650:
 	ldr r0, [r0]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _08050666:
 	pop {r4, r5, r6}
 	pop {r0}
@@ -1254,7 +1254,7 @@ ekrBattle_8050684: @ 0x08050684
 	asrs r0, r0, #0x10
 	cmp r0, #0x1d
 	ble _080506BC
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	beq _080506B8
 	ldr r0, _080506B0  @ gUnknown_0203E1C8
@@ -1627,7 +1627,7 @@ _08050980:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x74
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #0x74
 	movs r1, #0x78
 	movs r2, #0
@@ -1867,7 +1867,7 @@ _08050B4C:
 	ldrsh r0, [r4, r1]
 	cmp r0, #0x28
 	ble _08050C28
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	movs r0, #0
 	bl EkrGauge_80511C0
 	bl sub_806FAB0
@@ -2037,7 +2037,7 @@ _08050C8C: .4byte ekrBattle_MakePopups
 ekrBattle_MakePopups: @ 0x08050C90
 	push {r4, lr}
 	adds r4, r0, #0
-	bl Battle_MakePopups
+	bl StartAnimsOnPopups
 	ldr r0, _08050CA4  @ ekrBattle_WaitForPopup
 	str r0, [r4, #0xc]
 	pop {r4}
@@ -2073,9 +2073,9 @@ _08050CC8: .4byte ekrBattle_8050CCC
 ekrBattle_8050CCC: @ 0x08050CCC
 	push {r4, lr}
 	adds r4, r0, #0
-	bl sub_8054ED4
-	bl sub_80546B0
-	ldr r0, _08050CF0  @ gUnknown_0203E100
+	bl EndEfxWeaponIcon
+	bl EndEfxHPBarColorChange
+	ldr r0, _08050CF0  @ gBattleAnimInitialHitSide
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	str r0, [r4, #0x44]
@@ -2087,7 +2087,7 @@ ekrBattle_8050CCC: @ 0x08050CCC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08050CF0: .4byte gUnknown_0203E100
+_08050CF0: .4byte gBattleAnimInitialHitSide
 _08050CF4: .4byte ekrBattle_8050CF8
 
 	THUMB_FUNC_END ekrBattle_8050CCC
@@ -2208,7 +2208,7 @@ ekrBattle_8050DA8: @ 0x08050DA8
 	movs r0, #2
 	movs r1, #7
 	movs r2, #0
-	bl NewEkrNamewinAppear
+	bl StartEkrNamewinAppear
 	bl sub_807289C
 _08050DCA:
 	ldr r0, _08050DDC  @ nullsub_69
@@ -2260,7 +2260,7 @@ sub_8050E00: @ 0x08050E00
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x5b
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #0x5b
 	movs r1, #0x78
 	movs r2, #0
@@ -2382,8 +2382,8 @@ _08050EF0:
 
 	THUMB_FUNC_END sub_8050E90
 
-	THUMB_FUNC_START NewEkrGauge
-NewEkrGauge: @ 0x08050EF8
+	THUMB_FUNC_START StartEkrGauge
+StartEkrGauge: @ 0x08050EF8
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -2405,7 +2405,7 @@ NewEkrGauge: @ 0x08050EF8
 	movs r2, #2
 	ldrsh r1, [r1, r2]
 	bl EkrGauge_80511D0
-	ldr r0, _08050F50  @ gUnknown_0203E1AC
+	ldr r0, _08050F50  @ gBattleHpDisplayedValue
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0x50
@@ -2419,7 +2419,7 @@ NewEkrGauge: @ 0x08050EF8
 _08050F44: .4byte gUnknown_02000068
 _08050F48: .4byte gUnknown_085B93B8
 _08050F4C: .4byte gUnknown_02000038
-_08050F50: .4byte gUnknown_0203E1AC
+_08050F50: .4byte gBattleHpDisplayedValue
 _08050F54: .4byte gUnknown_08802C84
 _08050F58: .4byte gPal+0x360
 _08050F5C:
@@ -2433,7 +2433,7 @@ _08050F5C:
 	movs r2, #0x10
 	bl CpuSet
 _08050F70:
-	ldr r0, _08050F94  @ gUnknown_0203E1AC
+	ldr r0, _08050F94  @ gBattleHpDisplayedValue
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	cmp r0, #0x50
@@ -2447,7 +2447,7 @@ _08050F70:
 _08050F88: .4byte gUnknown_0203E114
 _08050F8C: .4byte gUnknown_08802B04
 _08050F90: .4byte gPal+0x360
-_08050F94: .4byte gUnknown_0203E1AC
+_08050F94: .4byte gBattleHpDisplayedValue
 _08050F98: .4byte gUnknown_08802C84
 _08050F9C: .4byte gPal+0x380
 _08050FA0:
@@ -2580,7 +2580,7 @@ _0805106C:
 	movs r0, #0
 	movs r1, #0x1e
 	bl ApplyIconPalette
-	ldr r0, _08051160  @ gUnknown_0203E188
+	ldr r0, _08051160  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x4a
 	ldrh r0, [r0]
@@ -2588,7 +2588,7 @@ _0805106C:
 	movs r1, #0xee
 	lsls r1, r1, #1
 	bl PutIconObjImg
-	ldr r0, _08051164  @ gUnknown_0203E18C
+	ldr r0, _08051164  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x4a
 	ldrh r0, [r0]
@@ -2631,11 +2631,11 @@ _08051150: .4byte 0x01000100
 _08051154: .4byte gUnknown_088026E4
 _08051158: .4byte 0x06013A00
 _0805115C: .4byte 0x06013E00
-_08051160: .4byte gUnknown_0203E188
-_08051164: .4byte gUnknown_0203E18C
+_08051160: .4byte gpUnitLeft_BattleStruct
+_08051164: .4byte gpUnitRight_BattleStruct
 _08051168: .4byte gUnknown_0859ED70
 
-	THUMB_FUNC_END NewEkrGauge
+	THUMB_FUNC_END StartEkrGauge
 
 	THUMB_FUNC_START EndEkrGauge
 EndEkrGauge: @ 0x0805116C
@@ -2898,7 +2898,7 @@ _080512DC:
 	subs r1, r1, r0
 	lsls r1, r1, #1
 	mov r8, r1
-	ldr r0, _08051300  @ gUnknown_0203E120
+	ldr r0, _08051300  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	cmp r0, #0
@@ -2911,7 +2911,7 @@ _080512DC:
 	str r5, [sp, #0xdc]
 	b _0805130A
 	.align 2, 0
-_08051300: .4byte gUnknown_0203E120
+_08051300: .4byte gBattleAnimSceneLayoutEnum
 _08051304:
 	movs r0, #8
 	str r0, [sp, #0xdc]
@@ -3006,7 +3006,7 @@ _080513BE:
 	bl EnableBgSync
 _080513C4:
 	ldr r3, _08051424  @ gUnknown_0203E1B4
-	ldr r0, _08051428  @ gUnknown_0203E1AC
+	ldr r0, _08051428  @ gBattleHpDisplayedValue
 	movs r4, #0
 	ldrsh r2, [r3, r4]
 	ldrh r4, [r0]
@@ -3037,7 +3037,7 @@ _080513EE:
 	mov r8, r1
 	ldrh r0, [r0, #2]
 	str r0, [sp, #0xd4]
-	ldr r0, _08051430  @ gUnknown_0203E120
+	ldr r0, _08051430  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #3
@@ -3055,11 +3055,11 @@ _080513EE:
 _0805141C: .4byte gUnknown_08802428
 _08051420: .4byte gBg0Tm
 _08051424: .4byte gUnknown_0203E1B4
-_08051428: .4byte gUnknown_0203E1AC
+_08051428: .4byte gBattleHpDisplayedValue
 _0805142C: .4byte gUnknown_0203E1B0
-_08051430: .4byte gUnknown_0203E120
+_08051430: .4byte gBattleAnimSceneLayoutEnum
 _08051434:
-	ldr r0, _08051448  @ gUnknown_0203E104
+	ldr r0, _08051448  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -3070,7 +3070,7 @@ _08051434:
 	adds r0, #0x38
 	b _0805145C
 	.align 2, 0
-_08051448: .4byte gUnknown_0203E104
+_08051448: .4byte gBattleAnimUnitEnabledLookup
 _0805144C:
 	mov r4, sl
 	movs r1, #0x32
@@ -3888,8 +3888,8 @@ _08051AC0: .4byte 0x0000E1DE
 
 	THUMB_FUNC_END ekrGauge_Loop
 
-	THUMB_FUNC_START NewEkrDispUP
-NewEkrDispUP: @ 0x08051AC4
+	THUMB_FUNC_START StartEkrDispUP
+StartEkrDispUP: @ 0x08051AC4
 	push {r4, lr}
 	ldr r4, _08051AEC  @ gUnknown_0200006C
 	ldr r0, _08051AF0  @ gUnknown_085B95EC
@@ -3909,7 +3909,7 @@ NewEkrDispUP: @ 0x08051AC4
 _08051AEC: .4byte gUnknown_0200006C
 _08051AF0: .4byte gUnknown_085B95EC
 
-	THUMB_FUNC_END NewEkrDispUP
+	THUMB_FUNC_END StartEkrDispUP
 
 	THUMB_FUNC_START sub_8051AF4
 sub_8051AF4: @ 0x08051AF4
@@ -4095,7 +4095,7 @@ _08051BEA:
 	subs r1, r1, r0
 	lsls r1, r1, #1
 	str r1, [sp, #8]
-	ldr r0, _08051C08  @ gUnknown_0203E120
+	ldr r0, _08051C08  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -4105,7 +4105,7 @@ _08051BEA:
 	movs r4, #0
 	b _08051C0E
 	.align 2, 0
-_08051C08: .4byte gUnknown_0203E120
+_08051C08: .4byte gBattleAnimSceneLayoutEnum
 _08051C0C:
 	movs r4, #0xf
 _08051C0E:
@@ -4300,7 +4300,7 @@ sub_8051CC4: @ 0x08051CC4
 	adds r1, r6, #0
 	adds r2, r5, #0
 	bl CpuFastSet
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	bne _08051DCC
 	bl sub_8051E00
@@ -4354,7 +4354,7 @@ sub_8051E00: @ 0x08051E00
 	adds r0, r0, r1
 	lsls r0, r0, #3
 	adds r3, r0, r3
-	ldr r0, _08051E4C  @ gUnknown_0203E120
+	ldr r0, _08051E4C  @ gBattleAnimSceneLayoutEnum
 	movs r7, #0
 	ldrsh r1, [r0, r7]
 	mov r8, r2
@@ -4371,7 +4371,7 @@ sub_8051E00: @ 0x08051E00
 _08051E40: .4byte gUnknown_0201FADC
 _08051E44: .4byte gUnknown_0203E11C
 _08051E48: .4byte battle_terrain_table
-_08051E4C: .4byte gUnknown_0203E120
+_08051E4C: .4byte gBattleAnimSceneLayoutEnum
 _08051E50: .4byte gUnknown_020145C8
 _08051E54:
 	ldr r7, _08051E70  @ gUnknown_020145C8
@@ -4404,7 +4404,7 @@ _08051E78:
 _08051E8A:
 	mov ip, r0
 _08051E8C:
-	ldr r0, _08051F08  @ gRAMChapterData
+	ldr r0, _08051F08  @ gPlaySt
 	ldrb r0, [r0, #0x15]
 	ldr r0, _08051F0C  @ gUnknown_0200004C
 	ldr r1, [r5, #0x10]
@@ -4463,7 +4463,7 @@ _08051E8C:
 _08051EFC: .4byte gUnknown_0200003C
 _08051F00: .4byte gUnknown_02014DC8
 _08051F04: .4byte 0xFFFFF800
-_08051F08: .4byte gRAMChapterData
+_08051F08: .4byte gPlaySt
 _08051F0C: .4byte gUnknown_0200004C
 _08051F10: .4byte gUnknown_02000044
 _08051F14: .4byte gUnknown_085B9D6C
@@ -4493,7 +4493,7 @@ sub_8051F1C: @ 0x08051F1C
 	ldr r0, _08051F68  @ gUnknown_08801C14
 	ldr r1, _08051F6C  @ 0x06001000
 	bl LZ77UnCompVram
-	ldr r0, _08051F70  @ gUnknown_0203E104
+	ldr r0, _08051F70  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -4506,10 +4506,10 @@ _08051F60: .4byte gUnknown_02017648
 _08051F64: .4byte 0x06001880
 _08051F68: .4byte gUnknown_08801C14
 _08051F6C: .4byte 0x06001000
-_08051F70: .4byte gUnknown_0203E104
+_08051F70: .4byte gBattleAnimUnitEnabledLookup
 _08051F74: .4byte gUnknown_085B9354
 _08051F78:
-	ldr r0, _08051FC0  @ gUnknown_0203E188
+	ldr r0, _08051FC0  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
@@ -4532,7 +4532,7 @@ _08051F86:
 	adds r0, r4, #0
 	adds r1, r5, #0
 	bl Text_DrawString
-	ldr r0, _08051FD0  @ gUnknown_0203E104
+	ldr r0, _08051FD0  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -4540,14 +4540,14 @@ _08051F86:
 	ldr r5, _08051FD4  @ gUnknown_085B9354
 	b _08051FE6
 	.align 2, 0
-_08051FC0: .4byte gUnknown_0203E188
+_08051FC0: .4byte gpUnitLeft_BattleStruct
 _08051FC4: .4byte gUnknown_02017660
 _08051FC8: .4byte gUnknown_08801F7C
 _08051FCC: .4byte 0x06001880
-_08051FD0: .4byte gUnknown_0203E104
+_08051FD0: .4byte gBattleAnimUnitEnabledLookup
 _08051FD4: .4byte gUnknown_085B9354
 _08051FD8:
-	ldr r0, _08052020  @ gUnknown_0203E188
+	ldr r0, _08052020  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x4a
 	ldrh r0, [r0]
@@ -4570,7 +4570,7 @@ _08051FE6:
 	adds r0, r4, #0
 	adds r1, r5, #0
 	bl Text_DrawString
-	ldr r0, _08052030  @ gUnknown_0203E104
+	ldr r0, _08052030  @ gBattleAnimUnitEnabledLookup
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -4578,14 +4578,14 @@ _08051FE6:
 	ldr r5, _08052034  @ gUnknown_085B9354
 	b _08052046
 	.align 2, 0
-_08052020: .4byte gUnknown_0203E188
+_08052020: .4byte gpUnitLeft_BattleStruct
 _08052024: .4byte gUnknown_02017670
 _08052028: .4byte gUnknown_08801FF4
 _0805202C: .4byte 0x06001A40
-_08052030: .4byte gUnknown_0203E104
+_08052030: .4byte gBattleAnimUnitEnabledLookup
 _08052034: .4byte gUnknown_085B9354
 _08052038:
-	ldr r0, _08052080  @ gUnknown_0203E18C
+	ldr r0, _08052080  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	ldr r0, [r0]
 	ldrh r0, [r0]
@@ -4608,7 +4608,7 @@ _08052046:
 	adds r0, r4, #0
 	adds r1, r5, #0
 	bl Text_DrawString
-	ldr r0, _08052090  @ gUnknown_0203E104
+	ldr r0, _08052090  @ gBattleAnimUnitEnabledLookup
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -4616,14 +4616,14 @@ _08052046:
 	ldr r5, _08052094  @ gUnknown_085B9354
 	b _080520A6
 	.align 2, 0
-_08052080: .4byte gUnknown_0203E18C
+_08052080: .4byte gpUnitRight_BattleStruct
 _08052084: .4byte gUnknown_02017678
 _08052088: .4byte gUnknown_08802044
 _0805208C: .4byte 0x06001C40
-_08052090: .4byte gUnknown_0203E104
+_08052090: .4byte gBattleAnimUnitEnabledLookup
 _08052094: .4byte gUnknown_085B9354
 _08052098:
-	ldr r0, _0805215C  @ gUnknown_0203E18C
+	ldr r0, _0805215C  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x4a
 	ldrh r0, [r0]
@@ -4708,7 +4708,7 @@ _080520A6:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0805215C: .4byte gUnknown_0203E18C
+_0805215C: .4byte gpUnitRight_BattleStruct
 _08052160: .4byte gUnknown_02017668
 _08052164: .4byte gUnknown_088020BC
 _08052168: .4byte 0x06001E00
@@ -4724,7 +4724,7 @@ _08052180: .4byte gUnknown_02000038
 	THUMB_FUNC_START sub_8052184
 sub_8052184: @ 0x08052184
 	push {r4, r5, lr}
-	ldr r0, _0805219C  @ gUnknown_0203E120
+	ldr r0, _0805219C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -4735,7 +4735,7 @@ sub_8052184: @ 0x08052184
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_0805219C: .4byte gUnknown_0203E120
+_0805219C: .4byte gBattleAnimSceneLayoutEnum
 _080521A0: .4byte _080521A4
 _080521A4: @ jump table
 	.4byte _0805220C @ case 0
@@ -4744,12 +4744,12 @@ _080521A4: @ jump table
 	.4byte _0805220C @ case 3
 	.4byte _0805220C @ case 4
 _080521B8:
-	ldr r0, _080521C0  @ gUnknown_0203E100
+	ldr r0, _080521C0  @ gBattleAnimInitialHitSide
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	b _0805220E
 	.align 2, 0
-_080521C0: .4byte gUnknown_0203E100
+_080521C0: .4byte gBattleAnimInitialHitSide
 _080521C4:
 	movs r1, #0
 	movs r5, #0
@@ -4758,7 +4758,7 @@ _080521C4:
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
 	bne _080521EC
-	ldr r4, _080521F8  @ gUnknown_0203E190
+	ldr r4, _080521F8  @ gBattleCharacterIndices
 	ldrb r0, [r4]
 	ldrb r1, [r4, #1]
 	bl ShouldCallBattleQuote
@@ -4776,16 +4776,16 @@ _080521EC:
 	b _0805220E
 	.align 2, 0
 _080521F4: .4byte gUnknown_0203E0FC
-_080521F8: .4byte gUnknown_0203E190
+_080521F8: .4byte gBattleCharacterIndices
 _080521FC:
 	cmp r1, #1
 	beq _0805220C
-	ldr r0, _08052208  @ gUnknown_0203E100
+	ldr r0, _08052208  @ gBattleAnimInitialHitSide
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	b _0805220E
 	.align 2, 0
-_08052208: .4byte gUnknown_0203E100
+_08052208: .4byte gBattleAnimInitialHitSide
 _0805220C:
 	movs r0, #1
 _0805220E:
@@ -4915,8 +4915,8 @@ _08052300: .4byte gUnknown_02017780
 
 	THUMB_FUNC_END sub_80522F4
 
-	THUMB_FUNC_START sub_8052304
-sub_8052304: @ 0x08052304
+	THUMB_FUNC_START StartEfxHpBar
+StartEfxHpBar: @ 0x08052304
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	bl GetAISSubjectId
@@ -4925,7 +4925,7 @@ sub_8052304: @ 0x08052304
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #3
 	ands r1, r0
@@ -4977,7 +4977,7 @@ _08052364:
 	lsls r5, r5, #1
 	adds r5, r5, r0
 	adds r0, r5, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	str r0, [r6, #0x4c]
@@ -4987,7 +4987,7 @@ _08052364:
 	asrs r4, r4, #0xf
 	adds r4, r4, r0
 	adds r0, r4, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	str r0, [r6, #0x50]
@@ -5024,7 +5024,7 @@ _080523E0:
 	.align 2, 0
 _080523E8: .4byte gUnknown_02017780
 
-	THUMB_FUNC_END sub_8052304
+	THUMB_FUNC_END StartEfxHpBar
 
 	THUMB_FUNC_START sub_80523EC
 sub_80523EC: @ 0x080523EC
@@ -5060,7 +5060,7 @@ sub_80523EC: @ 0x080523EC
 	strh r0, [r5, #0x2e]
 	ldr r0, [r5, #0x60]
 	bl GetAISSubjectId
-	ldr r1, _08052494  @ gUnknown_0203E1AC
+	ldr r1, _08052494  @ gBattleHpDisplayedValue
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldr r2, [r5, #0x48]
@@ -5099,23 +5099,23 @@ _0805244E:
 	ldr r0, [r5, #0x50]
 	cmp r0, #0
 	bne _080524E4
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	bne _080524A0
 	movs r0, #0
 	b _080524B4
 	.align 2, 0
 _08052490: .4byte gUnknown_02000000
-_08052494: .4byte gUnknown_0203E1AC
+_08052494: .4byte gBattleHpDisplayedValue
 _08052498: .4byte gUnknown_0203E152
 _0805249C: .4byte gUnknown_02017780
 _080524A0:
-	ldr r4, _080524C4  @ gUnknown_0203E190
+	ldr r4, _080524C4  @ gBattleCharacterIndices
 	adds r0, r6, #0
 	bl GetAISSubjectId
 	adds r0, r0, r4
 	ldrb r0, [r0]
-	bl sub_80835A8
+	bl ShouldDisplayDeathQuoteForChar
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 _080524B4:
@@ -5123,18 +5123,18 @@ _080524B4:
 	bne _080524C8
 	adds r0, r6, #0
 	adds r1, r7, #0
-	bl sub_8052DD4
+	bl StartEfxDeadEVTENT
 	b _080524E4
 	.align 2, 0
-_080524C4: .4byte gUnknown_0203E190
+_080524C4: .4byte gBattleCharacterIndices
 _080524C8:
-	bl sub_805B07C
+	bl PlayBattleCroudSfxIfArena
 	adds r0, r6, #0
 	adds r1, r7, #0
-	bl sub_8052FAC
+	bl StartEfxDead
 	ldr r0, [r5, #0x60]
 	bl GetAISSubjectId
-	ldr r1, _080524EC  @ gUnknown_0203E104
+	ldr r1, _080524EC  @ gBattleAnimUnitEnabledLookup
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	movs r1, #0
@@ -5144,7 +5144,7 @@ _080524E4:
 	bl Proc_Break
 	b _080524FC
 	.align 2, 0
-_080524EC: .4byte gUnknown_0203E104
+_080524EC: .4byte gBattleAnimUnitEnabledLookup
 _080524F0:
 	adds r0, r1, #1
 	str r0, [r5, #0x54]
@@ -5175,15 +5175,15 @@ sub_8052504: @ 0x08052504
 	movs r0, #1
 	strh r0, [r5, #0x2e]
 	ldr r0, [r5, #0x64]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	bl sub_805A21C
 	cmp r0, #1
 	bne _08052596
-	ldr r0, _08052554  @ gUnknown_0203E120
+	ldr r0, _08052554  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -5196,7 +5196,7 @@ sub_8052504: @ 0x08052504
 	.align 2, 0
 _0805254C: .4byte gUnknown_0201774C
 _08052550: .4byte gUnknown_0201772C
-_08052554: .4byte gUnknown_0203E120
+_08052554: .4byte gBattleAnimSceneLayoutEnum
 _08052558: .4byte _0805255C
 _0805255C: @ jump table
 	.4byte _08052570 @ case 0
@@ -5208,19 +5208,19 @@ _08052570:
 	movs r0, #0x10
 	strh r0, [r5, #0x2e]
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _08052596
 _08052584:
 	movs r0, #0x14
 	strh r0, [r5, #0x2e]
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _08052596:
 	adds r0, r5, #0
 	bl Proc_Break
@@ -5246,7 +5246,7 @@ sub_80525A4: @ 0x080525A4
 	cmp r1, r0
 	bne _080525CA
 	ldr r0, [r2, #0x64]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	movs r0, #4
 	bl EnableBgSync
 	b _080525E0
@@ -5269,8 +5269,8 @@ _080525E4: .4byte gUnknown_02017728
 
 	THUMB_FUNC_END sub_80525A4
 
-	THUMB_FUNC_START sub_80525E8
-sub_80525E8: @ 0x080525E8
+	THUMB_FUNC_START StartEfxHpBarResire
+StartEfxHpBarResire: @ 0x080525E8
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r1, _08052620  @ gUnknown_02017728
@@ -5284,7 +5284,7 @@ sub_80525E8: @ 0x080525E8
 	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r6, #0x64]
 	adds r0, r4, #0
 	bl GetAISSubjectId
@@ -5321,7 +5321,7 @@ _08052634:
 	lsls r5, r5, #1
 	adds r5, r5, r0
 	adds r0, r5, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	str r0, [r6, #0x4c]
@@ -5331,7 +5331,7 @@ _08052634:
 	asrs r4, r4, #0xf
 	adds r4, r4, r0
 	adds r0, r4, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	str r0, [r6, #0x50]
@@ -5374,7 +5374,7 @@ _080526BA:
 _080526C0: .4byte gUnknown_02017750
 _080526C4: .4byte gUnknown_02017780
 
-	THUMB_FUNC_END sub_80525E8
+	THUMB_FUNC_END StartEfxHpBarResire
 
 	THUMB_FUNC_START sub_80526C8
 sub_80526C8: @ 0x080526C8
@@ -5401,7 +5401,7 @@ sub_80526C8: @ 0x080526C8
 	strh r0, [r5, #0x2e]
 	ldr r0, [r5, #0x60]
 	bl GetAISSubjectId
-	ldr r1, _08052764  @ gUnknown_0203E1AC
+	ldr r1, _08052764  @ gBattleHpDisplayedValue
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldr r2, [r5, #0x48]
@@ -5453,7 +5453,7 @@ _08052752:
 	bl Proc_Break
 	b _08052780
 	.align 2, 0
-_08052764: .4byte gUnknown_0203E1AC
+_08052764: .4byte gBattleHpDisplayedValue
 _08052768: .4byte gUnknown_0203E152
 _0805276C: .4byte gUnknown_02017780
 _08052770: .4byte gUnknown_02017750
@@ -5500,7 +5500,7 @@ sub_8052788: @ 0x08052788
 	lsls r5, r5, #1
 	adds r5, r5, r0
 	adds r0, r5, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	str r0, [r6, #0x4c]
@@ -5510,7 +5510,7 @@ sub_8052788: @ 0x08052788
 	asrs r4, r4, #0xf
 	adds r4, r4, r0
 	adds r0, r4, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	str r0, [r6, #0x50]
@@ -5599,7 +5599,7 @@ sub_805282C: @ 0x0805282C
 	strh r0, [r5, #0x2e]
 	ldr r0, [r5, #0x5c]
 	bl GetAISSubjectId
-	ldr r1, _08052904  @ gUnknown_0203E1AC
+	ldr r1, _08052904  @ gBattleHpDisplayedValue
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldr r2, [r5, #0x48]
@@ -5609,7 +5609,7 @@ sub_805282C: @ 0x0805282C
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x75
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r7, r0]
 	movs r0, #0x75
@@ -5649,23 +5649,23 @@ _080528BC:
 	ldrb r0, [r0]
 	cmp r0, #1
 	bne _08052954
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	bne _08052910
 	movs r0, #0
 	b _08052924
 	.align 2, 0
 _08052900: .4byte gUnknown_02000000
-_08052904: .4byte gUnknown_0203E1AC
+_08052904: .4byte gBattleHpDisplayedValue
 _08052908: .4byte gUnknown_0203E152
 _0805290C: .4byte gUnknown_02017780
 _08052910:
-	ldr r4, _08052934  @ gUnknown_0203E190
+	ldr r4, _08052934  @ gBattleCharacterIndices
 	adds r0, r6, #0
 	bl GetAISSubjectId
 	adds r0, r0, r4
 	ldrb r0, [r0]
-	bl sub_80835A8
+	bl ShouldDisplayDeathQuoteForChar
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 _08052924:
@@ -5673,18 +5673,18 @@ _08052924:
 	bne _08052938
 	adds r0, r6, #0
 	mov r1, r8
-	bl sub_8052DD4
+	bl StartEfxDeadEVTENT
 	b _08052954
 	.align 2, 0
-_08052934: .4byte gUnknown_0203E190
+_08052934: .4byte gBattleCharacterIndices
 _08052938:
-	bl sub_805B07C
+	bl PlayBattleCroudSfxIfArena
 	adds r0, r6, #0
 	mov r1, r8
-	bl sub_8052FAC
+	bl StartEfxDead
 	ldr r0, [r5, #0x60]
 	bl GetAISSubjectId
-	ldr r1, _0805295C  @ gUnknown_0203E104
+	ldr r1, _0805295C  @ gBattleAnimUnitEnabledLookup
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	movs r1, #0
@@ -5694,7 +5694,7 @@ _08052954:
 	bl Proc_Break
 	b _0805296C
 	.align 2, 0
-_0805295C: .4byte gUnknown_0203E104
+_0805295C: .4byte gBattleAnimUnitEnabledLookup
 _08052960:
 	adds r0, r1, #1
 	str r0, [r5, #0x54]
@@ -5711,8 +5711,8 @@ _0805296C:
 
 	THUMB_FUNC_END sub_805282C
 
-	THUMB_FUNC_START sub_8052978
-sub_8052978: @ 0x08052978
+	THUMB_FUNC_START StartEfxAvoid
+StartEfxAvoid: @ 0x08052978
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	ldr r1, _080529A8  @ gUnknown_02017728
@@ -5748,7 +5748,7 @@ _080529BC:
 	str r0, [r4, #0x60]
 	ldr r0, [r4, #0x60]
 	movs r1, #1
-	bl sub_806C61C
+	bl StartEfxDamagaMojiEffect
 	str r6, [r4, #0x64]
 	adds r1, r4, #0
 	adds r1, #0x29
@@ -5757,7 +5757,7 @@ _080529BC:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0xd7
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r6, r0]
 	movs r0, #0xd7
@@ -5770,7 +5770,7 @@ _080529E6:
 	.align 2, 0
 _080529EC: .4byte gUnknown_02000000
 
-	THUMB_FUNC_END sub_8052978
+	THUMB_FUNC_END StartEfxAvoid
 
 	THUMB_FUNC_START sub_80529F0
 sub_80529F0: @ 0x080529F0
@@ -5791,8 +5791,8 @@ _08052A08:
 
 	THUMB_FUNC_END sub_80529F0
 
-	THUMB_FUNC_START sub_8052A0C
-sub_8052A0C: @ 0x08052A0C
+	THUMB_FUNC_START StartEfxHpBarLive
+StartEfxHpBarLive: @ 0x08052A0C
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	ldr r1, _08052A3C  @ gUnknown_02017728
@@ -5840,7 +5840,7 @@ _08052A50:
 	lsls r5, r5, #1
 	adds r5, r5, r0
 	adds r0, r5, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	str r0, [r6, #0x4c]
@@ -5850,7 +5850,7 @@ _08052A50:
 	asrs r4, r4, #0xf
 	adds r4, r4, r0
 	adds r0, r4, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	str r1, [r6, #0x50]
@@ -5896,7 +5896,7 @@ _08052AD8:
 	.align 2, 0
 _08052AE0: .4byte gUnknown_02017780
 
-	THUMB_FUNC_END sub_8052A0C
+	THUMB_FUNC_END StartEfxHpBarLive
 
 	THUMB_FUNC_START sub_8052AE4
 sub_8052AE4: @ 0x08052AE4
@@ -5920,7 +5920,7 @@ sub_8052AE4: @ 0x08052AE4
 	strh r0, [r5, #0x2e]
 	adds r0, r6, #0
 	bl GetAISSubjectId
-	ldr r1, _08052B78  @ gUnknown_0203E1AC
+	ldr r1, _08052B78  @ gBattleHpDisplayedValue
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldr r2, [r5, #0x48]
@@ -5930,7 +5930,7 @@ sub_8052AE4: @ 0x08052AE4
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x75
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r6, r0]
 	movs r0, #0x75
@@ -5969,7 +5969,7 @@ _08052B40:
 	bl Proc_Break
 	b _08052B90
 	.align 2, 0
-_08052B78: .4byte gUnknown_0203E1AC
+_08052B78: .4byte gBattleHpDisplayedValue
 _08052B7C: .4byte gUnknown_0203E152
 _08052B80: .4byte gUnknown_02017780
 _08052B84:
@@ -5986,8 +5986,8 @@ _08052B90:
 
 	THUMB_FUNC_END sub_8052AE4
 
-	THUMB_FUNC_START sub_8052B98
-sub_8052B98: @ 0x08052B98
+	THUMB_FUNC_START StartEfxNoDamage
+StartEfxNoDamage: @ 0x08052B98
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	adds r6, r1, #0
@@ -5998,7 +5998,7 @@ sub_8052B98: @ 0x08052B98
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #3
 	ands r1, r0
@@ -6008,12 +6008,12 @@ sub_8052B98: @ 0x08052B98
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _08052BD0
-	ldr r0, _08052BCC  @ gUnknown_0203E18C
+	ldr r0, _08052BCC  @ gpUnitRight_BattleStruct
 	b _08052BD2
 	.align 2, 0
-_08052BCC: .4byte gUnknown_0203E18C
+_08052BCC: .4byte gpUnitRight_BattleStruct
 _08052BD0:
-	ldr r0, _08052C18  @ gUnknown_0203E188
+	ldr r0, _08052C18  @ gpUnitLeft_BattleStruct
 _08052BD2:
 	ldr r0, [r0]
 	adds r0, #0x4a
@@ -6039,7 +6039,7 @@ _08052BD2:
 	str r5, [r4, #0x64]
 	ldr r0, [r4, #0x5c]
 	movs r1, #0
-	bl sub_806C61C
+	bl StartEfxDamagaMojiEffect
 	ldr r0, [r4, #0x5c]
 	ldr r1, [r4, #0x60]
 	bl sub_8052C7C
@@ -6048,18 +6048,18 @@ _08052C12:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08052C18: .4byte gUnknown_0203E188
+_08052C18: .4byte gpUnitLeft_BattleStruct
 _08052C1C: .4byte gUnknown_02017728
 _08052C20: .4byte gUnknown_085B96B4
 
-	THUMB_FUNC_END sub_8052B98
+	THUMB_FUNC_END StartEfxNoDamage
 
 	THUMB_FUNC_START sub_8052C24
 sub_8052C24: @ 0x08052C24
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -6239,8 +6239,8 @@ _08052D88: .4byte gUnknown_0201FB0C
 
 	THUMB_FUNC_END sub_8052CA0
 
-	THUMB_FUNC_START sub_8052D8C
-sub_8052D8C: @ 0x08052D8C
+	THUMB_FUNC_START StartEfxStatusCHG
+StartEfxStatusCHG: @ 0x08052D8C
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r1, _08052DB0  @ gUnknown_02017728
@@ -6262,7 +6262,7 @@ _08052DA8:
 _08052DB0: .4byte gUnknown_02017728
 _08052DB4: .4byte gUnknown_085B96F4
 
-	THUMB_FUNC_END sub_8052D8C
+	THUMB_FUNC_END StartEfxStatusCHG
 
 	THUMB_FUNC_START sub_8052DB8
 sub_8052DB8: @ 0x08052DB8
@@ -6283,8 +6283,8 @@ _08052DD0:
 
 	THUMB_FUNC_END sub_8052DB8
 
-	THUMB_FUNC_START sub_8052DD4
-sub_8052DD4: @ 0x08052DD4
+	THUMB_FUNC_START StartEfxDeadEVTENT
+StartEfxDeadEVTENT: @ 0x08052DD4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -6303,14 +6303,14 @@ sub_8052DD4: @ 0x08052DD4
 _08052DF4: .4byte gUnknown_085B9724
 _08052DF8: .4byte gUnknown_02017738
 
-	THUMB_FUNC_END sub_8052DD4
+	THUMB_FUNC_END StartEfxDeadEVTENT
 
 	THUMB_FUNC_START sub_8052DFC
 sub_8052DFC: @ 0x08052DFC
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r7, r0, #0
 	movs r6, #0
 	ldr r0, _08052E68  @ gUnknown_0201774C
@@ -6335,7 +6335,7 @@ _08052E2E:
 	bne _08052E62
 	movs r0, #7
 	strh r0, [r5, #0x2c]
-	ldr r0, _08052E74  @ gUnknown_0203E120
+	ldr r0, _08052E74  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -6349,7 +6349,7 @@ _08052E2E:
 	movs r1, #1
 	negs r1, r1
 	adds r0, r7, #0
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	movs r0, #0
 	strh r0, [r5, #0x2c]
 _08052E5C:
@@ -6363,7 +6363,7 @@ _08052E62:
 _08052E68: .4byte gUnknown_0201774C
 _08052E6C: .4byte gUnknown_0201772C
 _08052E70: .4byte gUnknown_0201FB04
-_08052E74: .4byte gUnknown_0203E120
+_08052E74: .4byte gBattleAnimSceneLayoutEnum
 _08052E78: .4byte gUnknown_02017744
 
 	THUMB_FUNC_END sub_8052DFC
@@ -6381,11 +6381,11 @@ sub_8052E7C: @ 0x08052E7C
 	bne _08052EA6
 	movs r0, #1
 	movs r1, #7
-	bl NewEkrWindowAppear
+	bl StartEkrWindowAppear
 	movs r0, #1
 	movs r1, #7
 	movs r2, #0
-	bl NewEkrNamewinAppear
+	bl StartEkrNamewinAppear
 	adds r0, r4, #0
 	bl Proc_Break
 _08052EA6:
@@ -6425,12 +6425,12 @@ sub_8052EAC: @ 0x08052EAC
 	movs r0, #1
 	bl EnableBgSync
 	bl EkrGauge_8051190
-	ldr r4, _08052F20  @ gUnknown_0203E190
+	ldr r4, _08052F20  @ gBattleCharacterIndices
 	ldr r0, [r5, #0x5c]
 	bl GetAISSubjectId
 	adds r0, r0, r4
 	ldrb r0, [r0]
-	bl sub_80835DC
+	bl DisplayDeathQuoteForChar
 	adds r0, r5, #0
 	bl Proc_Break
 _08052F0A:
@@ -6442,7 +6442,7 @@ _08052F0A:
 _08052F14: .4byte gBg0Tm
 _08052F18: .4byte 0x01000200
 _08052F1C: .4byte gUnknown_02000038
-_08052F20: .4byte gUnknown_0203E190
+_08052F20: .4byte gBattleCharacterIndices
 
 	THUMB_FUNC_END sub_8052EAC
 
@@ -6454,14 +6454,14 @@ sub_8052F24: @ 0x08052F24
 	adds r5, r0, #0
 	cmp r5, #0
 	bne _08052F7A
-	bl sub_805B07C
+	bl PlayBattleCroudSfxIfArena
 	ldr r0, [r4, #0x5c]
 	ldr r1, [r4, #0x60]
-	bl sub_8052FAC
+	bl StartEfxDead
 	bl sub_8051F1C
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
-	ldr r1, _08052F80  @ gUnknown_0203E104
+	ldr r1, _08052F80  @ gBattleAnimUnitEnabledLookup
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	strh r5, [r0]
@@ -6469,11 +6469,11 @@ sub_8052F24: @ 0x08052F24
 	bl EnableBgSync
 	movs r0, #0
 	movs r1, #7
-	bl NewEkrWindowAppear
+	bl StartEkrWindowAppear
 	movs r0, #0
 	movs r1, #7
 	movs r2, #0
-	bl NewEkrNamewinAppear
+	bl StartEkrNamewinAppear
 	bl EkrGauge_8051228
 	bl sub_8051BA0
 	bl EkrGauge_8051180
@@ -6484,7 +6484,7 @@ _08052F7A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08052F80: .4byte gUnknown_0203E104
+_08052F80: .4byte gBattleAnimUnitEnabledLookup
 
 	THUMB_FUNC_END sub_8052F24
 
@@ -6511,8 +6511,8 @@ _08052FA8: .4byte gUnknown_02017738
 
 	THUMB_FUNC_END sub_8052F84
 
-	THUMB_FUNC_START sub_8052FAC
-sub_8052FAC: @ 0x08052FAC
+	THUMB_FUNC_START StartEfxDead
+StartEfxDead: @ 0x08052FAC
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -6541,7 +6541,7 @@ _08052FE0: .4byte gUnknown_02017728
 _08052FE4: .4byte gUnknown_02017734
 _08052FE8: .4byte gUnknown_085B975C
 
-	THUMB_FUNC_END sub_8052FAC
+	THUMB_FUNC_END StartEfxDead
 
 	THUMB_FUNC_START sub_8052FEC
 sub_8052FEC: @ 0x08052FEC
@@ -6567,7 +6567,7 @@ sub_8052FEC: @ 0x08052FEC
 	ldrsh r0, [r4, r2]
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	b _08053032
@@ -6602,7 +6602,7 @@ _0805305C:
 _08053068:
 	ldr r0, [r5, #0x5c]
 	ldr r1, [r5, #0x60]
-	bl sub_8053120
+	bl StartEfxDeadPika
 _08053070:
 	movs r0, #0x32
 	strh r0, [r5, #0x2e]
@@ -6644,7 +6644,7 @@ sub_8053080: @ 0x08053080
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0xd6
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r5, r0]
 	movs r0, #0xd6
@@ -6660,7 +6660,7 @@ _080530D2:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0xd6
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r2, #2
 	ldrsh r1, [r5, r2]
 	movs r0, #0xd6
@@ -6693,8 +6693,8 @@ _0805311C: .4byte gUnknown_02017734
 
 	THUMB_FUNC_END sub_8053080
 
-	THUMB_FUNC_START sub_8053120
-sub_8053120: @ 0x08053120
+	THUMB_FUNC_START StartEfxDeadPika
+StartEfxDeadPika: @ 0x08053120
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -6712,7 +6712,7 @@ sub_8053120: @ 0x08053120
 	.align 2, 0
 _08053140: .4byte gUnknown_085B977C
 
-	THUMB_FUNC_END sub_8053120
+	THUMB_FUNC_END StartEfxDeadPika
 
 	THUMB_FUNC_START sub_8053144
 sub_8053144: @ 0x08053144
@@ -7043,13 +7043,13 @@ _080533C6:
 
 	THUMB_FUNC_END sub_8053368
 
-	THUMB_FUNC_START sub_80533D0
-sub_80533D0: @ 0x080533D0
+	THUMB_FUNC_START MoveBattleCameraOnto
+MoveBattleCameraOnto: @ 0x080533D0
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	lsls r1, r1, #0x10
 	lsrs r6, r1, #0x10
-	ldr r0, _080533EC  @ gUnknown_0203E120
+	ldr r0, _080533EC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -7060,7 +7060,7 @@ sub_80533D0: @ 0x080533D0
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_080533EC: .4byte gUnknown_0203E120
+_080533EC: .4byte gBattleAnimSceneLayoutEnum
 _080533F0: .4byte _080533F4
 _080533F4: @ jump table
 	.4byte _0805349E @ case 0
@@ -7090,13 +7090,13 @@ _08053408:
 	strh r0, [r4, #0x2e]
 	subs r0, r2, r0
 	strh r0, [r4, #0x30]
-	ldr r2, _08053440  @ gUnknown_0203E120
+	ldr r2, _08053440  @ gBattleAnimSceneLayoutEnum
 	b _0805345E
 	.align 2, 0
 _0805343C: .4byte gUnknown_085B97C4
-_08053440: .4byte gUnknown_0203E120
+_08053440: .4byte gBattleAnimSceneLayoutEnum
 _08053444:
-	ldr r0, _08053454  @ gUnknown_0203E120
+	ldr r0, _08053454  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r1, [r0, r2]
 	adds r2, r0, #0
@@ -7105,7 +7105,7 @@ _08053444:
 	movs r0, #5
 	b _0805345A
 	.align 2, 0
-_08053454: .4byte gUnknown_0203E120
+_08053454: .4byte gBattleAnimSceneLayoutEnum
 _08053458:
 	movs r0, #7
 _0805345A:
@@ -7155,7 +7155,7 @@ _0805349E:
 _080534A4: .4byte gUnknown_0201FB0C
 _080534A8: .4byte gUnknown_02017748
 
-	THUMB_FUNC_END sub_80533D0
+	THUMB_FUNC_END MoveBattleCameraOnto
 
 	THUMB_FUNC_START sub_80534AC
 sub_80534AC: @ 0x080534AC
@@ -7239,7 +7239,7 @@ sub_8053514: @ 0x08053514
 	bl sub_806FB2C
 	ldr r0, [r5]
 	bl sub_8053618
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	beq _0805355A
 	ldr r0, [r5]
@@ -7294,7 +7294,7 @@ sub_8053584: @ 0x08053584
 	bl sub_806FB2C
 	ldr r0, [r5]
 	bl sub_8053618
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	beq _080535CA
 	ldr r0, [r5]
@@ -7349,7 +7349,7 @@ sub_8053618: @ 0x08053618
 	bl sub_806FAB0
 	cmp r0, #2
 	beq _08053668
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	bne _08053668
 	asrs r4, r5, #3
@@ -7495,8 +7495,8 @@ nullsub_56: @ 0x0805372C
 
 	THUMB_FUNC_END nullsub_56
 
-	THUMB_FUNC_START sub_8053730
-sub_8053730: @ 0x08053730
+	THUMB_FUNC_START StartEfxQuake
+StartEfxQuake: @ 0x08053730
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08053740  @ gUnknown_02017748
@@ -7624,7 +7624,7 @@ _08053820:
 	.align 2, 0
 _08053828: .4byte gUnknown_080DA4BA
 
-	THUMB_FUNC_END sub_8053730
+	THUMB_FUNC_END StartEfxQuake
 
 	THUMB_FUNC_START sub_805382C
 sub_805382C: @ 0x0805382C
@@ -7769,7 +7769,7 @@ _0805392C:
 	movs r3, #2
 	ldrsh r0, [r2, r3]
 	subs r5, r1, r0
-	ldr r0, _0805399C  @ gUnknown_0203E120
+	ldr r0, _0805399C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -7793,7 +7793,7 @@ _0805398C: .4byte gUnknown_02000028
 _08053990: .4byte gUnknown_0201FB0C
 _08053994: .4byte gUnknown_0200002C
 _08053998: .4byte gUnknown_02017760
-_0805399C: .4byte gUnknown_0203E120
+_0805399C: .4byte gBattleAnimSceneLayoutEnum
 _080539A0:
 	cmp r0, #0
 	blt _080539D2
@@ -7827,8 +7827,8 @@ _080539D2:
 
 	THUMB_FUNC_END sub_805382C
 
-	THUMB_FUNC_START sub_80539DC
-sub_80539DC: @ 0x080539DC
+	THUMB_FUNC_START StartEfxHitQuake
+StartEfxHitQuake: @ 0x080539DC
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -7910,13 +7910,13 @@ _08053A5E:
 	.align 2, 0
 _08053A74: .4byte gUnknown_080DA4BA
 _08053A78:
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	beq _08053A84
 	str r4, [r5, #0x64]
 	b _08053B90
 _08053A84:
-	ldr r0, _08053A94  @ gUnknown_0203E120
+	ldr r0, _08053A94  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -7924,7 +7924,7 @@ _08053A84:
 	str r0, [r5, #0x64]
 	b _08053B90
 	.align 2, 0
-_08053A94: .4byte gUnknown_0203E120
+_08053A94: .4byte gBattleAnimSceneLayoutEnum
 _08053A98:
 	ldr r0, [r5, #0x5c]
 	bl GetAISSubjectId
@@ -7994,7 +7994,7 @@ _08053B10:
 	movs r2, #0x80
 	lsls r2, r2, #4
 	bl RegisterDataMove
-	ldr r4, _08053BA4  @ gUnknown_0203E118
+	ldr r4, _08053BA4  @ gBattleSpellAnimationId1
 	mov r0, r9
 	bl GetAISSubjectId
 	lsls r0, r0, #1
@@ -8023,7 +8023,7 @@ _08053B56:
 	movs r2, #8
 	bl CpuFastSet
 	bl EnablePalSync
-	ldr r0, _08053BB4  @ gUnknown_0203E120
+	ldr r0, _08053BB4  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r4, [r0, r1]
 	mov r0, r8
@@ -8046,14 +8046,14 @@ _08053B90:
 	.align 2, 0
 _08053B9C: .4byte gUnknown_0200003C
 _08053BA0: .4byte 0x06011800
-_08053BA4: .4byte gUnknown_0203E118
+_08053BA4: .4byte gBattleSpellAnimationId1
 _08053BA8: .4byte gUnknown_0200004C
 _08053BAC: .4byte gUnknown_02016828
 _08053BB0: .4byte gPal+0x260
-_08053BB4: .4byte gUnknown_0203E120
+_08053BB4: .4byte gBattleAnimSceneLayoutEnum
 _08053BB8: .4byte gUnknown_0201FB0C
 
-	THUMB_FUNC_END sub_80539DC
+	THUMB_FUNC_END StartEfxHitQuake
 
 	THUMB_FUNC_START sub_8053BBC
 sub_8053BBC: @ 0x08053BBC
@@ -8077,7 +8077,7 @@ _08053BDC:
 	movs r0, #0
 	movs r1, #0
 	bl sub_8052214
-	ldr r0, _08053C10  @ gUnknown_0203E120
+	ldr r0, _08053C10  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	cmp r0, #0
@@ -8096,7 +8096,7 @@ _08053BDC:
 	b _08053C36
 	.align 2, 0
 _08053C0C: .4byte 0x00007FFF
-_08053C10: .4byte gUnknown_0203E120
+_08053C10: .4byte gBattleAnimSceneLayoutEnum
 _08053C14:
 	cmp r0, #0
 	blt _08053C36
@@ -8391,7 +8391,7 @@ _08053E70:
 	movs r3, #2
 	ldrsh r0, [r2, r3]
 	subs r5, r1, r0
-	ldr r0, _08053ECC  @ gUnknown_0203E120
+	ldr r0, _08053ECC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -8415,7 +8415,7 @@ _08053EBC: .4byte gUnknown_02000028
 _08053EC0: .4byte gUnknown_02017760
 _08053EC4: .4byte gUnknown_0201FB0C
 _08053EC8: .4byte gUnknown_0200002C
-_08053ECC: .4byte gUnknown_0203E120
+_08053ECC: .4byte gBattleAnimSceneLayoutEnum
 _08053ED0:
 	cmp r0, #0
 	blt _08053F02
@@ -8450,8 +8450,8 @@ _08053F02:
 
 	THUMB_FUNC_END sub_8053BBC
 
-	THUMB_FUNC_START StartSpellBG_FLASH
-StartSpellBG_FLASH: @ 0x08053F10
+	THUMB_FUNC_START StartEfxFlashBG
+StartEfxFlashBG: @ 0x08053F10
 	push {r4, r5, lr}
 	sub sp, #4
 	adds r4, r0, #0
@@ -8479,7 +8479,7 @@ _08053F40: .4byte gUnknown_085B98CC
 _08053F44: .4byte gUnknown_020165C8
 _08053F48: .4byte 0x01000100
 
-	THUMB_FUNC_END StartSpellBG_FLASH
+	THUMB_FUNC_END StartEfxFlashBG
 
 	THUMB_FUNC_START sub_8053F4C
 sub_8053F4C: @ 0x08053F4C
@@ -8642,7 +8642,7 @@ sub_8054054: @ 0x08054054
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -8698,7 +8698,7 @@ sub_80540B0: @ 0x080540B0
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -8777,7 +8777,7 @@ sub_8054158: @ 0x08054158
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0x10
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -8833,7 +8833,7 @@ sub_80541B4: @ 0x080541B4
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -8912,7 +8912,7 @@ sub_805425C: @ 0x0805425C
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -8968,7 +8968,7 @@ sub_80542B8: @ 0x080542B8
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -9047,7 +9047,7 @@ sub_8054360: @ 0x08054360
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -9103,7 +9103,7 @@ sub_80543BC: @ 0x080543BC
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -9145,8 +9145,8 @@ sub_805442C: @ 0x0805442C
 
 	THUMB_FUNC_END sub_805442C
 
-	THUMB_FUNC_START sub_8054440
-sub_8054440: @ 0x08054440
+	THUMB_FUNC_START StartEfxFlashHPBar
+StartEfxFlashHPBar: @ 0x08054440
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	adds r4, r1, #0
@@ -9175,7 +9175,7 @@ _0805446E:
 	.align 2, 0
 _08054474: .4byte gUnknown_085B9994
 
-	THUMB_FUNC_END sub_8054440
+	THUMB_FUNC_END StartEfxFlashHPBar
 
 	THUMB_FUNC_START sub_8054478
 sub_8054478: @ 0x08054478
@@ -9206,7 +9206,7 @@ sub_8054498: @ 0x08054498
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _080544D4
-	ldr r0, _080544B8  @ gUnknown_0203E1AC
+	ldr r0, _080544B8  @ gBattleHpDisplayedValue
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0x50
@@ -9215,7 +9215,7 @@ sub_8054498: @ 0x08054498
 	ldr r1, _080544C0  @ gPal+0x360
 	b _080544E2
 	.align 2, 0
-_080544B8: .4byte gUnknown_0203E1AC
+_080544B8: .4byte gBattleHpDisplayedValue
 _080544BC: .4byte gUnknown_08802B84
 _080544C0: .4byte gPal+0x360
 _080544C4:
@@ -9226,7 +9226,7 @@ _080544C4:
 _080544CC: .4byte gUnknown_08802C84
 _080544D0: .4byte gPal+0x360
 _080544D4:
-	ldr r0, _080544EC  @ gUnknown_0203E1AC
+	ldr r0, _080544EC  @ gBattleHpDisplayedValue
 	movs r2, #2
 	ldrsh r0, [r0, r2]
 	cmp r0, #0x50
@@ -9238,7 +9238,7 @@ _080544E2:
 	bl CpuSet
 	b _08054502
 	.align 2, 0
-_080544EC: .4byte gUnknown_0203E1AC
+_080544EC: .4byte gBattleHpDisplayedValue
 _080544F0: .4byte gUnknown_08802B84
 _080544F4: .4byte gPal+0x380
 _080544F8:
@@ -9277,7 +9277,7 @@ sub_805452C: @ 0x0805452C
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _0805456C
-	ldr r0, _08054554  @ gUnknown_0203E1AC
+	ldr r0, _08054554  @ gBattleHpDisplayedValue
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0x50
@@ -9291,7 +9291,7 @@ sub_805452C: @ 0x0805452C
 	ldr r1, _08054560  @ gPal+0x360
 	b _08054584
 	.align 2, 0
-_08054554: .4byte gUnknown_0203E1AC
+_08054554: .4byte gBattleHpDisplayedValue
 _08054558: .4byte gUnknown_0203E114
 _0805455C: .4byte gUnknown_08802B04
 _08054560: .4byte gPal+0x360
@@ -9301,7 +9301,7 @@ _08054564:
 	.align 2, 0
 _08054568: .4byte gUnknown_08802C84
 _0805456C:
-	ldr r0, _0805458C  @ gUnknown_0203E1AC
+	ldr r0, _0805458C  @ gBattleHpDisplayedValue
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	cmp r0, #0x50
@@ -9319,7 +9319,7 @@ _08054584:
 	bl CpuSet
 	b _080545A6
 	.align 2, 0
-_0805458C: .4byte gUnknown_0203E1AC
+_0805458C: .4byte gBattleHpDisplayedValue
 _08054590: .4byte gUnknown_0203E114
 _08054594: .4byte gUnknown_08802B04
 _08054598: .4byte gPal+0x380
@@ -9341,8 +9341,8 @@ _080545BC: .4byte gPal+0x380
 
 	THUMB_FUNC_END sub_805452C
 
-	THUMB_FUNC_START sub_80545C0
-sub_80545C0: @ 0x080545C0
+	THUMB_FUNC_START StartEfxHPBarColorChange
+StartEfxHPBarColorChange: @ 0x080545C0
 	push {r4, r5, r6, lr}
 	mov r6, sl
 	mov r5, r9
@@ -9445,10 +9445,10 @@ _080546A4: .4byte gUnknown_0201FA08
 _080546A8: .4byte gUnknown_0201FA38
 _080546AC: .4byte gUnknown_0201FA68
 
-	THUMB_FUNC_END sub_80545C0
+	THUMB_FUNC_END StartEfxHPBarColorChange
 
-	THUMB_FUNC_START sub_80546B0
-sub_80546B0: @ 0x080546B0
+	THUMB_FUNC_START EndEfxHPBarColorChange
+EndEfxHPBarColorChange: @ 0x080546B0
 	push {lr}
 	ldr r0, _080546C0  @ gUnknown_0201777C
 	ldr r0, [r0]
@@ -9458,7 +9458,7 @@ sub_80546B0: @ 0x080546B0
 	.align 2, 0
 _080546C0: .4byte gUnknown_0201777C
 
-	THUMB_FUNC_END sub_80546B0
+	THUMB_FUNC_END EndEfxHPBarColorChange
 
 	THUMB_FUNC_START sub_80546C4
 sub_80546C4: @ 0x080546C4
@@ -9500,7 +9500,7 @@ sub_80546E4: @ 0x080546E4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	cmp r0, #0
@@ -9512,14 +9512,14 @@ _0805470A:
 	adds r1, r4, #0
 	adds r1, #0x4c
 	ldr r2, [r4, #0x50]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	cmp r0, #0
 	blt _08054722
 	str r0, [r4, #0x58]
 _08054722:
-	ldr r0, _0805474C  @ gUnknown_0203E1AC
+	ldr r0, _0805474C  @ gBattleHpDisplayedValue
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0x50
@@ -9540,7 +9540,7 @@ _08054722:
 	bl sub_80715F4
 	b _08054770
 	.align 2, 0
-_0805474C: .4byte gUnknown_0203E1AC
+_0805474C: .4byte gBattleHpDisplayedValue
 _08054750: .4byte gUnknown_0201F948
 _08054754: .4byte gUnknown_0201F978
 _08054758: .4byte gUnknown_0201F9A8
@@ -9554,7 +9554,7 @@ _08054760:
 	movs r2, #8
 	bl CpuFastSet
 _08054770:
-	ldr r0, _080547A4  @ gUnknown_0203E1AC
+	ldr r0, _080547A4  @ gBattleHpDisplayedValue
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 	cmp r0, #0x50
@@ -9577,7 +9577,7 @@ _08054770:
 	.align 2, 0
 _0805479C: .4byte gUnknown_08802C84
 _080547A0: .4byte gPal+0x360
-_080547A4: .4byte gUnknown_0203E1AC
+_080547A4: .4byte gBattleHpDisplayedValue
 _080547A8: .4byte gUnknown_0201FA08
 _080547AC: .4byte gUnknown_0201FA38
 _080547B0: .4byte gUnknown_0201FA68
@@ -9603,8 +9603,8 @@ _080547D8: .4byte gPal+0x380
 
 	THUMB_FUNC_END sub_80546E4
 
-	THUMB_FUNC_START sub_80547DC
-sub_80547DC: @ 0x080547DC
+	THUMB_FUNC_START StartEfxFlashUnit
+StartEfxFlashUnit: @ 0x080547DC
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
@@ -9635,7 +9635,7 @@ sub_80547DC: @ 0x080547DC
 	.align 2, 0
 _08054814: .4byte gUnknown_085B99E4
 
-	THUMB_FUNC_END sub_80547DC
+	THUMB_FUNC_END StartEfxFlashUnit
 
 	THUMB_FUNC_START sub_8054818
 sub_8054818: @ 0x08054818
@@ -9886,20 +9886,20 @@ _08054A18: .4byte gPal+0x320
 
 	THUMB_FUNC_END sub_80549BC
 
-	THUMB_FUNC_START NewEfxStatusUnit
-NewEfxStatusUnit: @ 0x08054A1C
+	THUMB_FUNC_START StartEfxStatusUnit
+StartEfxStatusUnit: @ 0x08054A1C
 	push {r4, r5, r6, lr}
 	sub sp, #4
 	adds r5, r0, #0
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _08054A34
-	ldr r0, _08054A30  @ gUnknown_0203E188
+	ldr r0, _08054A30  @ gpUnitLeft_BattleStruct
 	b _08054A36
 	.align 2, 0
-_08054A30: .4byte gUnknown_0203E188
+_08054A30: .4byte gpUnitLeft_BattleStruct
 _08054A34:
-	ldr r0, _08054ABC  @ gUnknown_0203E18C
+	ldr r0, _08054ABC  @ gpUnitRight_BattleStruct
 _08054A36:
 	ldr r6, [r0]
 	ldr r0, _08054AC0  @ gUnknown_085B9A34
@@ -9964,7 +9964,7 @@ _08054A6A:
 	bl sub_8071574
 	b _08054B08
 	.align 2, 0
-_08054ABC: .4byte gUnknown_0203E18C
+_08054ABC: .4byte gpUnitRight_BattleStruct
 _08054AC0: .4byte gUnknown_085B9A34
 _08054AC4: .4byte gUnknown_080DACDA
 _08054AC8: .4byte gUnknown_0203E0FC
@@ -10002,7 +10002,7 @@ _08054B08:
 _08054B10: .4byte gUnknown_02000054
 _08054B14: .4byte gUnknown_020222A8+0x60
 
-	THUMB_FUNC_END NewEfxStatusUnit
+	THUMB_FUNC_END StartEfxStatusUnit
 
 	THUMB_FUNC_START sub_8054B18
 sub_8054B18: @ 0x08054B18
@@ -10237,7 +10237,7 @@ _08054CC2:
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -10386,7 +10386,7 @@ _08054DF8:
 	bl sub_80715F4
 _08054E16:
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl MU_EndAll
 	b _08054E3E
 	.align 2, 0
@@ -10443,8 +10443,8 @@ _08054E88: .4byte gPal+0x320
 
 	THUMB_FUNC_END sub_8054E4C
 
-	THUMB_FUNC_START sub_8054E8C
-sub_8054E8C: @ 0x08054E8C
+	THUMB_FUNC_START StartEfxWeaponIcon
+StartEfxWeaponIcon: @ 0x08054E8C
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -10478,10 +10478,10 @@ _08054EC8: .4byte gUnknown_085B9A5C
 _08054ECC: .4byte gUnknown_080DAD0A
 _08054ED0: .4byte gUnknown_02017774
 
-	THUMB_FUNC_END sub_8054E8C
+	THUMB_FUNC_END StartEfxWeaponIcon
 
-	THUMB_FUNC_START sub_8054ED4
-sub_8054ED4: @ 0x08054ED4
+	THUMB_FUNC_START EndEfxWeaponIcon
+EndEfxWeaponIcon: @ 0x08054ED4
 	push {r4, lr}
 	ldr r4, _08054EEC  @ gUnknown_02017774
 	ldr r0, [r4]
@@ -10497,10 +10497,10 @@ _08054EE6:
 	.align 2, 0
 _08054EEC: .4byte gUnknown_02017774
 
-	THUMB_FUNC_END sub_8054ED4
+	THUMB_FUNC_END EndEfxWeaponIcon
 
-	THUMB_FUNC_START sub_8054EF0
-sub_8054EF0: @ 0x08054EF0
+	THUMB_FUNC_START PauseEfxWeaponIcon
+PauseEfxWeaponIcon: @ 0x08054EF0
 	ldr r0, _08054EFC  @ gUnknown_02017774
 	ldr r1, [r0]
 	movs r0, #1
@@ -10509,10 +10509,10 @@ sub_8054EF0: @ 0x08054EF0
 	.align 2, 0
 _08054EFC: .4byte gUnknown_02017774
 
-	THUMB_FUNC_END sub_8054EF0
+	THUMB_FUNC_END PauseEfxWeaponIcon
 
-	THUMB_FUNC_START sub_8054F00
-sub_8054F00: @ 0x08054F00
+	THUMB_FUNC_START ResumeEfxWeaponIcon
+ResumeEfxWeaponIcon: @ 0x08054F00
 	ldr r0, _08054F0C  @ gUnknown_02017774
 	ldr r1, [r0]
 	movs r0, #0
@@ -10521,10 +10521,10 @@ sub_8054F00: @ 0x08054F00
 	.align 2, 0
 _08054F0C: .4byte gUnknown_02017774
 
-	THUMB_FUNC_END sub_8054F00
+	THUMB_FUNC_END ResumeEfxWeaponIcon
 
-	THUMB_FUNC_START sub_8054F10
-sub_8054F10: @ 0x08054F10
+	THUMB_FUNC_START EfxWeaponIcon_OnLoop
+EfxWeaponIcon_OnLoop: @ 0x08054F10
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x50]
@@ -10536,7 +10536,7 @@ sub_8054F10: @ 0x08054F10
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	cmp r0, #0
@@ -10553,7 +10553,7 @@ _08054F36:
 	ldr r3, [r4, #0x4c]
 	movs r1, #0x1d
 	movs r2, #1
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 _08054F50:
 	ldr r0, [r4, #0x58]
 	cmp r0, #0
@@ -10565,7 +10565,7 @@ _08054F50:
 	ldr r3, [r4, #0x4c]
 	movs r1, #0x1e
 	movs r2, #1
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 _08054F6A:
 	bl EnablePalSync
 _08054F6E:
@@ -10575,10 +10575,10 @@ _08054F6E:
 	.align 2, 0
 _08054F74: .4byte gPal
 
-	THUMB_FUNC_END sub_8054F10
+	THUMB_FUNC_END EfxWeaponIcon_OnLoop
 
-	THUMB_FUNC_START sub_8054F78
-sub_8054F78: @ 0x08054F78
+	THUMB_FUNC_START EfxWeaponIcon_OnEnd
+EfxWeaponIcon_OnEnd: @ 0x08054F78
 	push {r4, lr}
 	adds r4, r0, #0
 	bl InitIcons
@@ -10601,10 +10601,10 @@ _08054F9C:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8054F78
+	THUMB_FUNC_END EfxWeaponIcon_OnEnd
 
-	THUMB_FUNC_START NewEfxSpellCast
-NewEfxSpellCast: @ 0x08054FA8
+	THUMB_FUNC_START StartEfxSpellCast
+StartEfxSpellCast: @ 0x08054FA8
 	push {r4, r5, lr}
 	bl sub_806FAB0
 	adds r4, r0, #0
@@ -10645,10 +10645,10 @@ _08054FF4:
 	.align 2, 0
 _08054FFC: .4byte gUnknown_02017778
 
-	THUMB_FUNC_END NewEfxSpellCast
+	THUMB_FUNC_END StartEfxSpellCast
 
-	THUMB_FUNC_START sub_8055000
-sub_8055000: @ 0x08055000
+	THUMB_FUNC_START StartEndEfxSpellCast
+StartEndEfxSpellCast: @ 0x08055000
 	push {lr}
 	ldr r0, _08055018  @ gUnknown_02017778
 	ldr r0, [r0]
@@ -10664,7 +10664,7 @@ _08055012:
 	.align 2, 0
 _08055018: .4byte gUnknown_02017778
 
-	THUMB_FUNC_END sub_8055000
+	THUMB_FUNC_END StartEndEfxSpellCast
 
 	THUMB_FUNC_START sub_805501C
 sub_805501C: @ 0x0805501C
@@ -10709,7 +10709,7 @@ sub_8055038: @ 0x08055038
 	movs r1, #6
 	movs r2, #0xa
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r1, [r6, #0x2c]
 	adds r1, #1
@@ -10748,7 +10748,7 @@ sub_805509C: @ 0x0805509C
 	movs r1, #6
 	movs r2, #0xa
 	movs r3, #8
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r5, #0
 	adds r0, #0x29
 	ldrb r0, [r0]
@@ -10794,7 +10794,7 @@ sub_80550DC: @ 0x080550DC
 	movs r1, #6
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r1, [r5, #0x2c]
 	adds r1, #1
@@ -10834,8 +10834,8 @@ sub_805515C: @ 0x0805515C
 
 	THUMB_FUNC_END sub_805515C
 
-	THUMB_FUNC_START SetSomethingSpellFxToTrue
-SetSomethingSpellFxToTrue: @ 0x08055160
+	THUMB_FUNC_START SpellFx_Begin
+SpellFx_Begin: @ 0x08055160
 	ldr r1, _08055168  @ gUnknown_0201772C
 	movs r0, #1
 	str r0, [r1]
@@ -10843,10 +10843,10 @@ SetSomethingSpellFxToTrue: @ 0x08055160
 	.align 2, 0
 _08055168: .4byte gUnknown_0201772C
 
-	THUMB_FUNC_END SetSomethingSpellFxToTrue
+	THUMB_FUNC_END SpellFx_Begin
 
-	THUMB_FUNC_START SetSomethingSpellFxToFalse
-SetSomethingSpellFxToFalse: @ 0x0805516C
+	THUMB_FUNC_START SpellFx_Finish
+SpellFx_Finish: @ 0x0805516C
 	ldr r1, _08055174  @ gUnknown_0201772C
 	movs r0, #0
 	str r0, [r1]
@@ -10854,10 +10854,10 @@ SetSomethingSpellFxToFalse: @ 0x0805516C
 	.align 2, 0
 _08055174: .4byte gUnknown_0201772C
 
-	THUMB_FUNC_END SetSomethingSpellFxToFalse
+	THUMB_FUNC_END SpellFx_Finish
 
-	THUMB_FUNC_START ClearBG1Setup
-ClearBG1Setup: @ 0x08055178
+	THUMB_FUNC_START SpellFx_ResetBg1Offset
+SpellFx_ResetBg1Offset: @ 0x08055178
 	push {lr}
 	movs r0, #1
 	movs r1, #0
@@ -10866,10 +10866,10 @@ ClearBG1Setup: @ 0x08055178
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END ClearBG1Setup
+	THUMB_FUNC_END SpellFx_ResetBg1Offset
 
-	THUMB_FUNC_START ClearBG1
-ClearBG1: @ 0x08055188
+	THUMB_FUNC_START SpellFx_ClearBg1
+SpellFx_ClearBg1: @ 0x08055188
 	push {lr}
 	sub sp, #4
 	movs r0, #0
@@ -10887,10 +10887,10 @@ ClearBG1: @ 0x08055188
 _080551A8: .4byte gBg1Tm
 _080551AC: .4byte 0x01000200
 
-	THUMB_FUNC_END ClearBG1
+	THUMB_FUNC_END SpellFx_ClearBg1
 
-	THUMB_FUNC_START sub_80551B0
-sub_80551B0: @ 0x080551B0
+	THUMB_FUNC_START SpellFx_InitBg1Blend
+SpellFx_InitBg1Blend: @ 0x080551B0
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -10982,41 +10982,41 @@ sub_80551B0: @ 0x080551B0
 	.align 2, 0
 _08055268: .4byte gDispIo
 
-	THUMB_FUNC_END sub_80551B0
+	THUMB_FUNC_END SpellFx_InitBg1Blend
 
-	THUMB_FUNC_START sub_805526C
-sub_805526C: @ 0x0805526C
+	THUMB_FUNC_START SpellFx_EndBlend
+SpellFx_EndBlend: @ 0x0805526C
 	push {lr}
 	bl SetBlendNone
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_805526C
+	THUMB_FUNC_END SpellFx_EndBlend
 
-	THUMB_FUNC_START ThisMakesTheHPInSpellAnimGoAway
-ThisMakesTheHPInSpellAnimGoAway: @ 0x08055278
+	THUMB_FUNC_START StartBattleAnimHitEffectsDefault
+StartBattleAnimHitEffectsDefault: @ 0x08055278
 	push {lr}
 	movs r2, #3
 	movs r3, #4
-	bl sub_8055298
+	bl StartBattleAnimHitEffects
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END ThisMakesTheHPInSpellAnimGoAway
+	THUMB_FUNC_END StartBattleAnimHitEffectsDefault
 
 	THUMB_FUNC_START sub_8055288
 sub_8055288: @ 0x08055288
 	push {lr}
 	movs r2, #5
 	movs r3, #5
-	bl sub_8055298
+	bl StartBattleAnimHitEffects
 	pop {r0}
 	bx r0
 
 	THUMB_FUNC_END sub_8055288
 
-	THUMB_FUNC_START sub_8055298
-sub_8055298: @ 0x08055298
+	THUMB_FUNC_START StartBattleAnimHitEffects
+StartBattleAnimHitEffects: @ 0x08055298
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -11064,7 +11064,7 @@ _080552E4:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	lsls r0, r0, #0x10
 	lsrs r6, r0, #0x10
 	adds r0, r5, #0
@@ -11074,7 +11074,7 @@ _080552E4:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	lsls r0, r0, #0x10
 	lsrs r4, r0, #0x10
 	lsls r0, r6, #0x10
@@ -11144,7 +11144,7 @@ _08055374:
 	adds r1, r0, #0
 	lsls r0, r6, #1
 	adds r0, r0, r1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r6, r0, #0x10
 	adds r0, r5, #0
@@ -11152,13 +11152,13 @@ _08055374:
 	adds r1, r0, #0
 	lsls r0, r4, #1
 	adds r0, r0, r1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r6, r4
 	beq _08055402
 	adds r0, r5, #0
-	bl sub_8052304
+	bl StartEfxHpBar
 	adds r0, r7, #0
 	bl sub_805A268
 	cmp r0, #1
@@ -11166,7 +11166,7 @@ _08055374:
 	adds r0, r5, #0
 	adds r1, r7, #0
 	mov r2, sl
-	bl sub_80539DC
+	bl StartEfxHitQuake
 	b _080553EA
 	.align 2, 0
 _080553DC: .4byte gUnknown_0203E152
@@ -11174,27 +11174,27 @@ _080553E0:
 	adds r0, r5, #0
 	adds r1, r7, #0
 	ldr r2, [sp]
-	bl sub_80539DC
+	bl StartEfxHitQuake
 _080553EA:
 	adds r0, r5, #0
 	movs r1, #0
 	movs r2, #5
-	bl sub_8054440
+	bl StartEfxFlashHPBar
 	adds r0, r5, #0
 	movs r1, #0
 	movs r2, #8
 	movs r3, #0
-	bl sub_80547DC
+	bl StartEfxFlashUnit
 	b _08055414
 _08055402:
 	adds r0, r5, #0
 	mov r1, r8
 	movs r2, #0
-	bl sub_8052B98
+	bl StartEfxNoDamage
 	b _08055414
 _0805540E:
 	adds r0, r5, #0
-	bl sub_8052978
+	bl StartEfxAvoid
 _08055414:
 	add sp, #4
 	pop {r3, r4, r5}
@@ -11205,10 +11205,10 @@ _08055414:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8055298
+	THUMB_FUNC_END StartBattleAnimHitEffects
 
-	THUMB_FUNC_START sub_8055424
-sub_8055424: @ 0x08055424
+	THUMB_FUNC_START StartBattleAnimResireHitEffects
+StartBattleAnimResireHitEffects: @ 0x08055424
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -11250,7 +11250,7 @@ _0805544C:
 	adds r1, r0, #0
 	lsls r0, r6, #1
 	adds r0, r0, r1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r6, r0, #0x10
 	adds r0, r5, #0
@@ -11258,7 +11258,7 @@ _0805544C:
 	adds r1, r0, #0
 	lsls r0, r4, #1
 	adds r0, r0, r1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	mov r0, r9
@@ -11274,7 +11274,7 @@ _080554AC:
 	cmp r6, r4
 	beq _080554EE
 	adds r0, r5, #0
-	bl sub_80525E8
+	bl StartEfxHpBarResire
 	adds r0, r7, #0
 	bl sub_805A268
 	cmp r0, #1
@@ -11282,23 +11282,23 @@ _080554AC:
 	adds r0, r5, #0
 	adds r1, r7, #0
 	movs r2, #4
-	bl sub_80539DC
+	bl StartEfxHitQuake
 	b _080554D6
 _080554CC:
 	adds r0, r5, #0
 	adds r1, r7, #0
 	movs r2, #3
-	bl sub_80539DC
+	bl StartEfxHitQuake
 _080554D6:
 	adds r0, r5, #0
 	movs r1, #0
 	movs r2, #5
-	bl sub_8054440
+	bl StartEfxFlashHPBar
 	adds r0, r5, #0
 	movs r1, #0
 	movs r2, #8
 	movs r3, #0
-	bl sub_80547DC
+	bl StartEfxFlashUnit
 	b _0805550A
 _080554EE:
 	ldr r1, _08055500  @ gUnknown_02017750
@@ -11307,13 +11307,13 @@ _080554EE:
 	adds r0, r5, #0
 	mov r1, r8
 	movs r2, #1
-	bl sub_8052B98
+	bl StartEfxNoDamage
 	b _0805550A
 	.align 2, 0
 _08055500: .4byte gUnknown_02017750
 _08055504:
 	adds r0, r5, #0
-	bl sub_8052978
+	bl StartEfxAvoid
 _0805550A:
 	pop {r3, r4}
 	mov r8, r3
@@ -11322,7 +11322,7 @@ _0805550A:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8055424
+	THUMB_FUNC_END StartBattleAnimResireHitEffects
 
 	THUMB_FUNC_START sub_8055518
 sub_8055518: @ 0x08055518
@@ -11348,10 +11348,10 @@ _08055534:
 	.align 2, 0
 _08055540: .4byte gUnknown_02000000
 _08055544:
-	bl sub_8052D8C
+	bl StartEfxStatusCHG
 	b _0805554E
 _0805554A:
-	bl sub_8052978
+	bl StartEfxAvoid
 _0805554E:
 	pop {r4}
 	pop {r0}
@@ -11366,7 +11366,7 @@ sub_8055554: @ 0x08055554
 	adds r7, r1, #0
 	adds r6, r2, #0
 	adds r5, r3, #0
-	ldr r0, _08055578  @ gUnknown_0203E120
+	ldr r0, _08055578  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -11378,7 +11378,7 @@ sub_8055554: @ 0x08055554
 	adds r0, r7, #0
 	b _08055590
 	.align 2, 0
-_08055578: .4byte gUnknown_0203E120
+_08055578: .4byte gBattleAnimSceneLayoutEnum
 _0805557C:
 	adds r0, r6, #0
 	b _08055590
@@ -11416,7 +11416,7 @@ sub_80555B0: @ 0x080555B0
 	adds r7, r1, #0
 	adds r6, r2, #0
 	adds r5, r3, #0
-	ldr r0, _080555D4  @ gUnknown_0203E120
+	ldr r0, _080555D4  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -11428,7 +11428,7 @@ sub_80555B0: @ 0x080555B0
 	adds r0, r7, #0
 	b _080555EC
 	.align 2, 0
-_080555D4: .4byte gUnknown_0203E120
+_080555D4: .4byte gBattleAnimSceneLayoutEnum
 _080555D8:
 	adds r0, r6, #0
 	b _080555EC
@@ -11464,7 +11464,7 @@ sub_805560C: @ 0x0805560C
 	push {r4, lr}
 	sub sp, #8
 	adds r3, r0, #0
-	ldr r0, _08055640  @ gUnknown_0203E120
+	ldr r0, _08055640  @ gBattleAnimSceneLayoutEnum
 	movs r4, #0
 	ldrsh r0, [r0, r4]
 	adds r4, r2, #0
@@ -11487,7 +11487,7 @@ _08055620:
 	bl sub_8070EC4
 	b _0805565C
 	.align 2, 0
-_08055640: .4byte gUnknown_0203E120
+_08055640: .4byte gBattleAnimSceneLayoutEnum
 _08055644: .4byte gBg1Tm
 _08055648:
 	ldr r1, _0805566C  @ gBg1Tm
@@ -11511,13 +11511,13 @@ _0805566C: .4byte gBg1Tm
 
 	THUMB_FUNC_END sub_805560C
 
-	THUMB_FUNC_START sub_8055670
-sub_8055670: @ 0x08055670
+	THUMB_FUNC_START SpellFx_WriteBgMap
+SpellFx_WriteBgMap: @ 0x08055670
 	push {r4, r5, lr}
 	sub sp, #8
 	adds r4, r0, #0
 	adds r3, r1, #0
-	ldr r0, _0805568C  @ gUnknown_0203E120
+	ldr r0, _0805568C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -11527,7 +11527,7 @@ sub_8055670: @ 0x08055670
 	bl LZ77UnCompWram
 	b _0805569C
 	.align 2, 0
-_0805568C: .4byte gUnknown_0203E120
+_0805568C: .4byte gBattleAnimSceneLayoutEnum
 _08055690: .4byte gUnknown_02019790
 _08055694:
 	ldr r1, _080556C0  @ gUnknown_02019790
@@ -11572,7 +11572,7 @@ _080556DC:
 	.align 2, 0
 _080556EC: .4byte gBg1Tm
 
-	THUMB_FUNC_END sub_8055670
+	THUMB_FUNC_END SpellFx_WriteBgMap
 
 	THUMB_FUNC_START sub_80556F0
 sub_80556F0: @ 0x080556F0
@@ -11581,7 +11581,7 @@ sub_80556F0: @ 0x080556F0
 	adds r3, r1, #0
 	lsls r0, r0, #0x18
 	lsrs r4, r0, #0x18
-	ldr r0, _08055710  @ gUnknown_0203E120
+	ldr r0, _08055710  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -11591,7 +11591,7 @@ sub_80556F0: @ 0x080556F0
 	bl LZ77UnCompWram
 	b _08055720
 	.align 2, 0
-_08055710: .4byte gUnknown_0203E120
+_08055710: .4byte gBattleAnimSceneLayoutEnum
 _08055714: .4byte gUnknown_02019790
 _08055718:
 	ldr r1, _0805573C  @ gUnknown_02019790
@@ -11690,8 +11690,8 @@ _080557D4: .4byte gBg1Tm
 
 	THUMB_FUNC_END sub_805576C
 
-	THUMB_FUNC_START SomeImageStoringRoutine_SpellAnim
-SomeImageStoringRoutine_SpellAnim: @ 0x080557D8
+	THUMB_FUNC_START SpellFx_RegisterObjGfx
+SpellFx_RegisterObjGfx: @ 0x080557D8
 	push {r4, r5, r6, lr}
 	adds r6, r1, #0
 	ldr r5, _080557F8  @ 0x06010800
@@ -11709,10 +11709,10 @@ SomeImageStoringRoutine_SpellAnim: @ 0x080557D8
 _080557F8: .4byte 0x06010800
 _080557FC: .4byte gUnknown_0201A790
 
-	THUMB_FUNC_END SomeImageStoringRoutine_SpellAnim
+	THUMB_FUNC_END SpellFx_RegisterObjGfx
 
-	THUMB_FUNC_START SomePaletteStoringRoutine_SpellAnim
-SomePaletteStoringRoutine_SpellAnim: @ 0x08055800
+	THUMB_FUNC_START SpellFx_RegisterObjPal
+SpellFx_RegisterObjPal: @ 0x08055800
 	push {lr}
 	adds r2, r1, #0
 	ldr r1, _08055818  @ gPal+0x240
@@ -11725,10 +11725,10 @@ SomePaletteStoringRoutine_SpellAnim: @ 0x08055800
 	.align 2, 0
 _08055818: .4byte gPal+0x240
 
-	THUMB_FUNC_END SomePaletteStoringRoutine_SpellAnim
+	THUMB_FUNC_END SpellFx_RegisterObjPal
 
-	THUMB_FUNC_START SomeImageStoringRoutine_SpellAnim2
-SomeImageStoringRoutine_SpellAnim2: @ 0x0805581C
+	THUMB_FUNC_START SpellFx_RegisterBgGfx
+SpellFx_RegisterBgGfx: @ 0x0805581C
 	push {r4, r5, r6, lr}
 	adds r6, r1, #0
 	ldr r5, _0805583C  @ 0x06002000
@@ -11746,10 +11746,10 @@ SomeImageStoringRoutine_SpellAnim2: @ 0x0805581C
 _0805583C: .4byte 0x06002000
 _08055840: .4byte gUnknown_02017790
 
-	THUMB_FUNC_END SomeImageStoringRoutine_SpellAnim2
+	THUMB_FUNC_END SpellFx_RegisterBgGfx
 
-	THUMB_FUNC_START SomePaletteStoringRoutine_SpellAnim2
-SomePaletteStoringRoutine_SpellAnim2: @ 0x08055844
+	THUMB_FUNC_START SpellFx_RegisterBgPal
+SpellFx_RegisterBgPal: @ 0x08055844
 	push {lr}
 	adds r2, r1, #0
 	ldr r1, _0805585C  @ gPal+0x20
@@ -11762,7 +11762,7 @@ SomePaletteStoringRoutine_SpellAnim2: @ 0x08055844
 	.align 2, 0
 _0805585C: .4byte gPal+0x20
 
-	THUMB_FUNC_END SomePaletteStoringRoutine_SpellAnim2
+	THUMB_FUNC_END SpellFx_RegisterBgPal
 
 	THUMB_FUNC_START sub_8055860
 sub_8055860: @ 0x08055860
@@ -11859,8 +11859,8 @@ _080558E8:
 
 	THUMB_FUNC_END sub_80558BC
 
-	THUMB_FUNC_START sub_80558F4
-sub_80558F4: @ 0x080558F4
+	THUMB_FUNC_START SpellFx_InterpretBgAnimScript
+SpellFx_InterpretBgAnimScript: @ 0x080558F4
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	adds r3, r1, #0
@@ -11937,7 +11937,7 @@ _08055978:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_80558F4
+	THUMB_FUNC_END SpellFx_InterpretBgAnimScript
 
 	THUMB_FUNC_START sub_8055980
 sub_8055980: @ 0x08055980
@@ -11950,10 +11950,10 @@ _08055988: .4byte gUnknown_0201775C
 
 	THUMB_FUNC_END sub_8055980
 
-	THUMB_FUNC_START GetAnimationStartFrameMaybe
-GetAnimationStartFrameMaybe: @ 0x0805598C
+	THUMB_FUNC_START GetSpellAnimationStartFrame
+GetSpellAnimationStartFrame: @ 0x0805598C
 	push {lr}
-	ldr r0, _0805599C  @ gUnknown_0203E120
+	ldr r0, _0805599C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #2
@@ -11961,7 +11961,7 @@ GetAnimationStartFrameMaybe: @ 0x0805598C
 	movs r0, #0x18
 	b _080559AA
 	.align 2, 0
-_0805599C: .4byte gUnknown_0203E120
+_0805599C: .4byte gBattleAnimSceneLayoutEnum
 _080559A0:
 	cmp r0, #1
 	beq _080559A8
@@ -11973,7 +11973,7 @@ _080559AA:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetAnimationStartFrameMaybe
+	THUMB_FUNC_END GetSpellAnimationStartFrame
 
 	THUMB_FUNC_START sub_80559B0
 sub_80559B0: @ 0x080559B0
@@ -12221,7 +12221,7 @@ sub_8055B38: @ 0x08055B38
 	adds r1, r4, #0
 	adds r2, r5, #0
 	bl sub_80559F0
-	ldr r0, _08055B94  @ gUnknown_0203E120
+	ldr r0, _08055B94  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -12235,7 +12235,7 @@ sub_8055B38: @ 0x08055B38
 _08055B88: .4byte gUnknown_02000028
 _08055B8C: .4byte gUnknown_0201FB0C
 _08055B90: .4byte gUnknown_0200002C
-_08055B94: .4byte gUnknown_0203E120
+_08055B94: .4byte gBattleAnimSceneLayoutEnum
 _08055B98:
 	cmp r0, #0
 	blt _08055BA6
@@ -12255,7 +12255,7 @@ _08055BA6:
 	THUMB_FUNC_START sub_8055BB4
 sub_8055BB4: @ 0x08055BB4
 	push {lr}
-	bl PrepareBattleGraphicsMaybe
+	bl PrepareBattleGraphics
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	pop {r1}
@@ -12266,7 +12266,7 @@ sub_8055BB4: @ 0x08055BB4
 	THUMB_FUNC_START sub_8055BC4
 sub_8055BC4: @ 0x08055BC4
 	push {lr}
-	bl PrepareBattleGraphicsMaybe
+	bl PrepareBattleGraphics
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	pop {r1}
@@ -12277,24 +12277,24 @@ sub_8055BC4: @ 0x08055BC4
 	THUMB_FUNC_START BeginAnimsOnBattleAnimations
 BeginAnimsOnBattleAnimations: @ 0x08055BD4
 	push {lr}
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #1
 	bne _08055BE4
 	bl BeginAnimsOnBattle_Arena
 	b _08055C24
 _08055BE4:
-	bl sub_8076310
+	bl IsBattleAnimPromotion
 	cmp r0, #1
 	bne _08055BF2
 	bl BeginAnimsOnBattle_Hensei
 	b _08055C24
 _08055BF2:
-	bl NewEkrBattleDeamon
+	bl StartEkrBattleDeamon
 	bl BsoInit
 	bl sub_8052184
 	ldr r1, _08055C28  @ gUnknown_02017744
 	str r0, [r1]
-	bl NewEkrBattleStarting
+	bl StartEkrBattleStarting
 	ldr r0, _08055C2C  @ gUnknown_02000000
 	movs r1, #0
 	str r1, [r0]
@@ -12322,13 +12322,13 @@ _08055C34: .4byte MainUpdate_8055C68
 	THUMB_FUNC_START sub_8055C38
 sub_8055C38: @ 0x08055C38
 	push {lr}
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #1
 	bne _08055C48
 	bl sub_805B0CC
 	b _08055C60
 _08055C48:
-	bl sub_8076310
+	bl IsBattleAnimPromotion
 	cmp r0, #1
 	bne _08055C56
 	bl sub_8076354
@@ -12355,7 +12355,7 @@ MainUpdate_8055C68: @ 0x08055C68
 	ldr r4, _08055CD0  @ gProcTreeRootArray
 	ldr r0, [r4, #4]
 	bl Proc_Run
-	bl GetThread2SkipStack
+	bl GetGameLogicLock
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08055C8E
@@ -12374,7 +12374,7 @@ _08055C8E:
 	bl BattleAIS_ExecCommands
 	movs r0, #0xd
 	bl PutSpriteLayerOam
-	ldr r1, _08055CD4  @ gUnknown_0202BCB0
+	ldr r1, _08055CD4  @ gBmSt
 	movs r0, #1
 	strb r0, [r1]
 	ldr r0, _08055CD8  @ 0x04000006
@@ -12387,13 +12387,13 @@ _08055C8E:
 	.align 2, 0
 _08055CCC: .4byte gKeySt
 _08055CD0: .4byte gProcTreeRootArray
-_08055CD4: .4byte gUnknown_0202BCB0
+_08055CD4: .4byte gBmSt
 _08055CD8: .4byte 0x04000006
 
 	THUMB_FUNC_END MainUpdate_8055C68
 
-	THUMB_FUNC_START NewEkrBattleStarting
-NewEkrBattleStarting: @ 0x08055CDC
+	THUMB_FUNC_START StartEkrBattleStarting
+StartEkrBattleStarting: @ 0x08055CDC
 	push {lr}
 	ldr r0, _08055CEC  @ gUnknown_085B9AD4
 	movs r1, #3
@@ -12403,7 +12403,7 @@ NewEkrBattleStarting: @ 0x08055CDC
 	.align 2, 0
 _08055CEC: .4byte gUnknown_085B9AD4
 
-	THUMB_FUNC_END NewEkrBattleStarting
+	THUMB_FUNC_END StartEkrBattleStarting
 
 	THUMB_FUNC_START ekrBattleStarting_8055CF0
 ekrBattleStarting_8055CF0: @ 0x08055CF0
@@ -12630,7 +12630,7 @@ _08055E12:
 	strb r0, [r2]
 	movs r0, #0
 	bl InitOam
-	bl BMapDispSuspend
+	bl LockGameGraphicsLogic
 	mov r1, r9
 	mov r0, r8
 	strb r1, [r0]
@@ -12643,7 +12643,7 @@ _08055E12:
 	movs r1, #6
 	movs r2, #0xa
 	movs r3, #4
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	bl MU_EndAll
 	adds r0, r7, #0
@@ -12671,9 +12671,9 @@ ekrBattleStarting_8055F00: @ 0x08055F00
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	bne _08055F64
-	bl NewEkrGauge
-	bl NewEkrDispUP
-	ldr r0, _08055F30  @ gUnknown_0203E120
+	bl StartEkrGauge
+	bl StartEkrDispUP
+	ldr r0, _08055F30  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #3
@@ -12685,9 +12685,9 @@ ekrBattleStarting_8055F00: @ 0x08055F00
 	b _08055F64
 	.align 2, 0
 _08055F2C: .4byte gUnknown_0203E0FC
-_08055F30: .4byte gUnknown_0203E120
+_08055F30: .4byte gBattleAnimSceneLayoutEnum
 _08055F34:
-	ldr r4, _08055F58  @ gUnknown_0203E104
+	ldr r4, _08055F58  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r4, r1]
 	cmp r0, #0
@@ -12703,7 +12703,7 @@ _08055F46:
 	bl sub_8051B38
 	b _08055F64
 	.align 2, 0
-_08055F58: .4byte gUnknown_0203E104
+_08055F58: .4byte gBattleAnimUnitEnabledLookup
 _08055F5C:
 	bl EkrGauge_80511A0
 	bl sub_8051B28
@@ -12715,11 +12715,11 @@ _08055F64:
 	bl sub_805649C
 	movs r0, #0
 	movs r1, #0xb
-	bl NewEkrWindowAppear
+	bl StartEkrWindowAppear
 	movs r0, #0
 	movs r1, #0xb
 	movs r2, #0
-	bl NewEkrNamewinAppear
+	bl StartEkrNamewinAppear
 	movs r0, #0
 	movs r1, #0xb
 	bl sub_8056F20
@@ -12753,7 +12753,7 @@ ekrBattleStarting_8055FA0: @ 0x08055FA0
 	cmp r0, #0
 	beq _08055FD4
 _08055FC4:
-	bl NewEkrBattle
+	bl StartEkrBattle
 	adds r0, r4, #0
 	bl Proc_End
 	b _08055FE0
@@ -12761,7 +12761,7 @@ _08055FC4:
 _08055FD0: .4byte gUnknown_0203E0FE
 _08055FD4:
 	strh r0, [r4, #0x2c]
-	bl NewEkrBattle
+	bl StartEkrBattle
 	adds r0, r4, #0
 	bl Proc_Break
 _08055FE0:
@@ -12833,7 +12833,7 @@ _08056044:
 	movs r1, #6
 	movs r2, #0xa
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -12869,7 +12869,7 @@ ekrBattleStarting_8056078: @ 0x08056078
 	movs r1, #6
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -12948,7 +12948,7 @@ _08056118:
 	movs r1, #6
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -12993,7 +12993,7 @@ _0805618A:
 	.align 2, 0
 _08056194: .4byte gUnknown_0203E0FE
 _08056198:
-	ldr r0, _080561C4  @ gRAMChapterData
+	ldr r0, _080561C4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -13012,7 +13012,7 @@ _080561BE:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080561C4: .4byte gRAMChapterData
+_080561C4: .4byte gPlaySt
 
 	THUMB_FUNC_END ekrBattleEnding_8056170
 
@@ -13098,7 +13098,7 @@ ekrBattleEnding_8056228: @ 0x08056228
 	bl sub_805649C
 	movs r0, #1
 	movs r1, #0xb
-	bl NewEkrWindowAppear
+	bl StartEkrWindowAppear
 	movs r0, #1
 	movs r1, #0xb
 	bl sub_8056F20
@@ -13127,7 +13127,7 @@ ekrBattleEnding_8056288: @ 0x08056288
 	bl EndEkrGauge
 	adds r0, r4, #0
 	bl Proc_Break
-	bl InitBmBgLayers
+	bl ResetHLayers
 	ldr r0, _0805630C  @ gDispIo
 	mov ip, r0
 	ldrb r0, [r0, #1]
@@ -13191,11 +13191,11 @@ ekrBattleEnding_8056310: @ 0x08056310
 	strh r4, [r5, #0x2c]
 	movs r0, #0xf
 	strh r0, [r5, #0x2e]
-	bl SMS_ClearUsageTable
+	bl ResetUnitSprites
 	bl BMapDispResume_FromBattleDelayed
-	bl SMS_UpdateFromGameData
-	bl SMS_FlushIndirect
-	bl SetupMapSpritesPalettes
+	bl RefreshUnitSprites
+	bl ForceSyncUnitSpriteSheet
+	bl ApplyUnitSpritePalettes
 	movs r0, #3
 	movs r1, #0
 	movs r2, #0
@@ -13220,12 +13220,12 @@ ekrBattleEnding_8056310: @ 0x08056310
 	movs r1, #0x20
 	orrs r0, r1
 	strb r0, [r2]
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #1
 	beq _08056372
 	bl UnpackChapterMapPalette
 _08056372:
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	bne _0805637E
 	bl sub_8049788
@@ -13447,7 +13447,7 @@ _08056524:
 	blt _0805652C
 	movs r4, #5
 _0805652C:
-	ldr r0, _08056540  @ gUnknown_0203E120
+	ldr r0, _08056540  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #3
@@ -13458,7 +13458,7 @@ _0805652C:
 	beq _08056548
 	b _08056550
 	.align 2, 0
-_08056540: .4byte gUnknown_0203E120
+_08056540: .4byte gBattleAnimSceneLayoutEnum
 _08056544:
 	cmp r0, #4
 	bne _08056550
@@ -13481,7 +13481,7 @@ _08056552:
 	movs r2, #1
 	bl CpuFastSet
 	bl EnablePalSync
-	ldr r0, _08056594  @ gUnknown_0203E120
+	ldr r0, _08056594  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #4
@@ -13498,7 +13498,7 @@ _08056584: .4byte gUnknown_085B9BA4
 _08056588: .4byte 0x06010000
 _0805658C: .4byte gUnknown_080DC85C
 _08056590: .4byte gPal+0x280
-_08056594: .4byte gUnknown_0203E120
+_08056594: .4byte gBattleAnimSceneLayoutEnum
 _08056598: .4byte _0805659C
 _0805659C: @ jump table
 	.4byte _080565B0 @ case 0
@@ -13618,7 +13618,7 @@ _08056650:
 	cmp r0, #1
 	bne _080566A2
 	ldr r1, _080566B8  @ gUnknown_080DAF28
-	ldr r0, _080566BC  @ gUnknown_0203E120
+	ldr r0, _080566BC  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	lsls r0, r0, #1
@@ -13637,7 +13637,7 @@ _080566AC: .4byte gUnknown_085B9B6C
 _080566B0: .4byte gUnknown_0203E122
 _080566B4: .4byte gUnknown_02017744
 _080566B8: .4byte gUnknown_080DAF28
-_080566BC: .4byte gUnknown_0203E120
+_080566BC: .4byte gBattleAnimSceneLayoutEnum
 _080566C0: .4byte gUnknown_085B9BE4
 _080566C4:
 	ldr r0, _080566F4  @ gUnknown_085B9C44
@@ -13710,7 +13710,7 @@ _080566FE:
 	cmp r0, #0
 	bne _08056760
 	ldr r1, _0805677C  @ gUnknown_080DAF28
-	ldr r0, _08056780  @ gUnknown_0203E120
+	ldr r0, _08056780  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	lsls r0, r0, #1
@@ -13730,7 +13730,7 @@ _08056770: .4byte gUnknown_085B9B6C
 _08056774: .4byte gUnknown_0203E122
 _08056778: .4byte gUnknown_02017744
 _0805677C: .4byte gUnknown_080DAF28
-_08056780: .4byte gUnknown_0203E120
+_08056780: .4byte gBattleAnimSceneLayoutEnum
 _08056784: .4byte gUnknown_085B9C04
 _08056788:
 	ldr r0, _080567B8  @ gUnknown_085B9C64
@@ -13938,7 +13938,7 @@ sub_8056900: @ 0x08056900
 	movs r1, #0
 	str r1, [r4, #0x50]
 	str r1, [r4, #0x4c]
-	ldr r0, _08056930  @ gUnknown_0203E120
+	ldr r0, _08056930  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
@@ -13950,9 +13950,9 @@ sub_8056900: @ 0x08056900
 	b _0805696E
 	.align 2, 0
 _0805692C: .4byte gUnknown_085B9CE4
-_08056930: .4byte gUnknown_0203E120
+_08056930: .4byte gBattleAnimSceneLayoutEnum
 _08056934:
-	ldr r0, _08056958  @ gUnknown_0203E104
+	ldr r0, _08056958  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r5, [r0, r1]
 	cmp r5, #1
@@ -13962,7 +13962,7 @@ _08056934:
 	bne _08056948
 	str r5, [r4, #0x4c]
 _08056948:
-	ldr r0, _08056958  @ gUnknown_0203E104
+	ldr r0, _08056958  @ gBattleAnimUnitEnabledLookup
 	movs r2, #2
 	ldrsh r0, [r0, r2]
 	cmp r0, #1
@@ -13970,7 +13970,7 @@ _08056948:
 	str r0, [r4, #0x50]
 	b _0805696E
 	.align 2, 0
-_08056958: .4byte gUnknown_0203E104
+_08056958: .4byte gBattleAnimUnitEnabledLookup
 _0805695C:
 	cmp r5, #0
 	bne _08056968
@@ -13994,7 +13994,7 @@ sub_8056974: @ 0x08056974
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r1, _08056AE4  @ gUnknown_080DAF18
-	ldr r0, _08056AE8  @ gUnknown_0203E120
+	ldr r0, _08056AE8  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	adds r0, r0, r1
@@ -14021,7 +14021,7 @@ _080569A4:
 _080569AE:
 	bl DeleteEach6C_efxStatusUnit
 _080569B2:
-	ldr r0, _08056AF8  @ gUnknown_0203E18C
+	ldr r0, _08056AF8  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x30
 	ldrb r0, [r0]
@@ -14037,7 +14037,7 @@ _080569C6:
 	movs r2, #1
 	bl sub_8071468
 _080569D0:
-	ldr r0, _08056B00  @ gUnknown_0203E188
+	ldr r0, _08056B00  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x30
 	ldrb r0, [r0]
@@ -14067,7 +14067,7 @@ _080569EE:
 	movs r2, #1
 	bl sub_8071468
 _08056A0A:
-	ldr r5, _08056B08  @ gUnknown_0203E104
+	ldr r5, _08056B08  @ gBattleAnimUnitEnabledLookup
 	movs r3, #0
 	ldrsh r0, [r5, r3]
 	cmp r0, #1
@@ -14106,7 +14106,7 @@ _08056A32:
 	ldr r1, _08056B28  @ gUnknown_02002088
 	bl LZ77UnCompWram
 _08056A58:
-	ldr r5, _08056B2C  @ gUnknown_0203E1A4
+	ldr r5, _08056B2C  @ gBattleAnimBoolLockSheetGraphicsMaybe
 	ldr r0, [r5]
 	cmp r0, #0
 	beq _08056A66
@@ -14150,7 +14150,7 @@ _08056A72:
 	adds r0, #8
 	strh r0, [r4, #0x3c]
 	ldr r1, _08056B40  @ gUnknown_080DAF1D
-	ldr r2, _08056AE8  @ gUnknown_0203E120
+	ldr r2, _08056AE8  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r2, r3]
 	adds r0, r0, r1
@@ -14177,15 +14177,15 @@ _08056A72:
 	b _08056B60
 	.align 2, 0
 _08056AE4: .4byte gUnknown_080DAF18
-_08056AE8: .4byte gUnknown_0203E120
+_08056AE8: .4byte gBattleAnimSceneLayoutEnum
 _08056AEC: .4byte gUnknown_080DAEF0
 _08056AF0: .4byte gUnknown_02017724
 _08056AF4: .4byte gUnknown_02000000
-_08056AF8: .4byte gUnknown_0203E18C
+_08056AF8: .4byte gpUnitRight_BattleStruct
 _08056AFC: .4byte gPal
-_08056B00: .4byte gUnknown_0203E188
+_08056B00: .4byte gpUnitLeft_BattleStruct
 _08056B04: .4byte gBattleStats
-_08056B08: .4byte gUnknown_0203E104
+_08056B08: .4byte gBattleAnimUnitEnabledLookup
 _08056B0C: .4byte gUnknown_0200005C
 _08056B10: .4byte gUnknown_0200F1C8
 _08056B14: .4byte gUnknown_020041C8
@@ -14194,7 +14194,7 @@ _08056B1C: .4byte gUnknown_02000060
 _08056B20: .4byte gUnknown_02011BC8
 _08056B24: .4byte gUnknown_020099C8
 _08056B28: .4byte gUnknown_02002088
-_08056B2C: .4byte gUnknown_0203E1A4
+_08056B2C: .4byte gBattleAnimBoolLockSheetGraphicsMaybe
 _08056B30: .4byte gUnknown_02001088
 _08056B34: .4byte gUnknown_02003088
 _08056B38: .4byte 0x06014000
@@ -14445,8 +14445,8 @@ sub_8056D18: @ 0x08056D18
 
 	THUMB_FUNC_END sub_8056D18
 
-	THUMB_FUNC_START NewEkrWindowAppear
-NewEkrWindowAppear: @ 0x08056D24
+	THUMB_FUNC_START StartEkrWindowAppear
+StartEkrWindowAppear: @ 0x08056D24
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
@@ -14484,7 +14484,7 @@ _08056D68: .4byte gUnknown_085B9D0C
 _08056D6C: .4byte gUnknown_02000038
 _08056D70: .4byte gUnknown_0201FACC
 
-	THUMB_FUNC_END NewEkrWindowAppear
+	THUMB_FUNC_END StartEkrWindowAppear
 
 	THUMB_FUNC_START sub_8056D74
 sub_8056D74: @ 0x08056D74
@@ -14505,8 +14505,8 @@ _08056D8A:
 
 	THUMB_FUNC_END sub_8056D74
 
-	THUMB_FUNC_START sub_8056D90
-sub_8056D90: @ 0x08056D90
+	THUMB_FUNC_START EkrWindowAppear_Loop
+EkrWindowAppear_Loop: @ 0x08056D90
 	push {r4, lr}
 	sub sp, #4
 	adds r4, r0, #0
@@ -14571,10 +14571,10 @@ _08056E04:
 	.align 2, 0
 _08056E0C: .4byte gUnknown_02000038
 
-	THUMB_FUNC_END sub_8056D90
+	THUMB_FUNC_END EkrWindowAppear_Loop
 
-	THUMB_FUNC_START NewEkrNamewinAppear
-NewEkrNamewinAppear: @ 0x08056E10
+	THUMB_FUNC_START StartEkrNamewinAppear
+StartEkrNamewinAppear: @ 0x08056E10
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -14613,10 +14613,10 @@ _08056E4C:
 	.align 2, 0
 _08056E5C: .4byte gUnknown_0201FAD0
 
-	THUMB_FUNC_END NewEkrNamewinAppear
+	THUMB_FUNC_END StartEkrNamewinAppear
 
-	THUMB_FUNC_START sub_8056E60
-sub_8056E60: @ 0x08056E60
+	THUMB_FUNC_START HasEkrNamewinAppearEnded
+HasEkrNamewinAppearEnded: @ 0x08056E60
 	push {lr}
 	ldr r0, _08056E70  @ gUnknown_0201FAD0
 	ldr r0, [r0]
@@ -14632,7 +14632,7 @@ _08056E76:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8056E60
+	THUMB_FUNC_END HasEkrNamewinAppearEnded
 
 	THUMB_FUNC_START sub_8056E7C
 sub_8056E7C: @ 0x08056E7C
@@ -14844,8 +14844,8 @@ _08056FF0:
 
 	THUMB_FUNC_END sub_8056F84
 
-	THUMB_FUNC_START PrepareBattleGraphicsMaybe
-PrepareBattleGraphicsMaybe: @ 0x08056FF8
+	THUMB_FUNC_START PrepareBattleGraphics
+PrepareBattleGraphics: @ 0x08056FF8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -14870,20 +14870,20 @@ _08057024:
 	movs r0, #1
 	bl SetBattleAnimArenaFlag
 _0805702A:
-	ldr r0, _08057040  @ gUnknown_0202BCB0
+	ldr r0, _08057040  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x40
 	ands r0, r1
 	cmp r0, #0
 	bne _08057044
 	movs r0, #0
-	bl sub_804FD48
+	bl SetBattleAnimLinkArenaFlag
 	b _0805704A
 	.align 2, 0
-_08057040: .4byte gUnknown_0202BCB0
+_08057040: .4byte gBmSt
 _08057044:
 	movs r0, #1
-	bl sub_804FD48
+	bl SetBattleAnimLinkArenaFlag
 _0805704A:
 	ldr r0, _08057064  @ gBattleStats
 	ldrh r1, [r0]
@@ -14893,16 +14893,16 @@ _0805704A:
 	lsrs r2, r0, #0x10
 	cmp r2, #0
 	beq _0805706C
-	ldr r1, _08057068  @ gUnknown_0203E120
+	ldr r1, _08057068  @ gBattleAnimSceneLayoutEnum
 	movs r0, #4
 	strh r0, [r1]
 	mov r8, r1
 	b _08057072
 	.align 2, 0
 _08057064: .4byte gBattleStats
-_08057068: .4byte gUnknown_0203E120
+_08057068: .4byte gBattleAnimSceneLayoutEnum
 _0805706C:
-	ldr r0, _080570A4  @ gUnknown_0203E120
+	ldr r0, _080570A4  @ gBattleAnimSceneLayoutEnum
 	strh r2, [r0]
 	mov r8, r0
 _08057072:
@@ -14911,19 +14911,19 @@ _08057072:
 	ldrsh r0, [r1, r2]
 	cmp r0, #4
 	bne _080570C0
-	ldr r1, _080570A8  @ gUnknown_0203E188
-	ldr r0, _080570AC  @ gBattleActor
+	ldr r1, _080570A8  @ gpUnitLeft_BattleStruct
+	ldr r0, _080570AC  @ gBattleUnitA
 	str r0, [r1]
 	str r0, [sp, #8]
-	ldr r1, _080570B0  @ gUnknown_0203E18C
-	ldr r0, _080570B4  @ gBattleTarget
+	ldr r1, _080570B0  @ gpUnitRight_BattleStruct
+	ldr r0, _080570B4  @ gBattleUnitB
 	str r0, [r1]
 	str r0, [sp, #0xc]
-	ldr r1, _080570B8  @ gUnknown_0203E108
+	ldr r1, _080570B8  @ gBattleAnimBoolIsActorOnTheRight
 	movs r0, #0
 	strh r0, [r1, #2]
 	strh r0, [r1]
-	ldr r0, _080570BC  @ gUnknown_0203E104
+	ldr r0, _080570BC  @ gBattleAnimUnitEnabledLookup
 	movs r1, #1
 	strh r1, [r0]
 	strh r1, [r0, #2]
@@ -14931,15 +14931,15 @@ _08057072:
 	adds r3, r0, #0
 	b _080571C6
 	.align 2, 0
-_080570A4: .4byte gUnknown_0203E120
-_080570A8: .4byte gUnknown_0203E188
-_080570AC: .4byte gBattleActor
-_080570B0: .4byte gUnknown_0203E18C
-_080570B4: .4byte gBattleTarget
-_080570B8: .4byte gUnknown_0203E108
-_080570BC: .4byte gUnknown_0203E104
+_080570A4: .4byte gBattleAnimSceneLayoutEnum
+_080570A8: .4byte gpUnitLeft_BattleStruct
+_080570AC: .4byte gBattleUnitA
+_080570B0: .4byte gpUnitRight_BattleStruct
+_080570B4: .4byte gBattleUnitB
+_080570B8: .4byte gBattleAnimBoolIsActorOnTheRight
+_080570BC: .4byte gBattleAnimUnitEnabledLookup
 _080570C0:
-	ldr r5, _080570F8  @ gBattleActor
+	ldr r5, _080570F8  @ gBattleUnitA
 	ldrb r1, [r5, #0xb]
 	movs r4, #0x40
 	negs r4, r4
@@ -14948,7 +14948,7 @@ _080570C0:
 	bl GetAllegienceId
 	lsls r0, r0, #0x10
 	lsrs r7, r0, #0x10
-	ldr r0, _080570FC  @ gBattleTarget
+	ldr r0, _080570FC  @ gBattleUnitB
 	ldrb r0, [r0, #0xb]
 	ands r4, r0
 	adds r0, r4, #0
@@ -14965,8 +14965,8 @@ _080570C0:
 	str r3, [sp, #0x20]
 	b _08057128
 	.align 2, 0
-_080570F8: .4byte gBattleActor
-_080570FC: .4byte gBattleTarget
+_080570F8: .4byte gBattleUnitA
+_080570FC: .4byte gBattleUnitB
 _08057100: .4byte gBattleStats
 _08057104:
 	adds r1, r5, #0
@@ -14987,12 +14987,12 @@ _08057114:
 	lsrs r0, r0, #0x18
 	str r0, [sp, #0x20]
 _08057128:
-	ldr r1, _08057180  @ gUnknown_0203E104
+	ldr r1, _08057180  @ gBattleAnimUnitEnabledLookup
 	movs r0, #1
 	strh r0, [r1, #2]
 	strh r0, [r1]
 	movs r4, #0
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	beq _08057150
 	lsls r0, r7, #0x10
@@ -15011,53 +15011,53 @@ _08057150:
 	adds r2, r4, #0
 	cmp r2, #1
 	bne _0805719C
-	ldr r1, _08057184  @ gUnknown_0203E188
-	ldr r0, _08057188  @ gBattleTarget
+	ldr r1, _08057184  @ gpUnitLeft_BattleStruct
+	ldr r0, _08057188  @ gBattleUnitB
 	str r0, [r1]
 	str r0, [sp, #8]
-	ldr r1, _0805718C  @ gUnknown_0203E18C
-	ldr r0, _08057190  @ gBattleActor
+	ldr r1, _0805718C  @ gpUnitRight_BattleStruct
+	ldr r0, _08057190  @ gBattleUnitA
 	str r0, [r1]
 	str r0, [sp, #0xc]
-	ldr r0, _08057194  @ gUnknown_0203E108
+	ldr r0, _08057194  @ gBattleAnimBoolIsActorOnTheRight
 	movs r1, #0
 	strh r2, [r0]
 	strh r1, [r0, #2]
-	ldr r5, _08057198  @ gUnknown_0203E120
+	ldr r5, _08057198  @ gBattleAnimSceneLayoutEnum
 	mov r8, r5
 	ldr r6, [sp, #0xc]
-	ldr r3, _08057180  @ gUnknown_0203E104
+	ldr r3, _08057180  @ gBattleAnimUnitEnabledLookup
 	ldr r7, [sp, #0x20]
 	cmp r7, #1
 	bne _080571C6
 	strh r1, [r3]
 	b _080571C6
 	.align 2, 0
-_08057180: .4byte gUnknown_0203E104
-_08057184: .4byte gUnknown_0203E188
-_08057188: .4byte gBattleTarget
-_0805718C: .4byte gUnknown_0203E18C
-_08057190: .4byte gBattleActor
-_08057194: .4byte gUnknown_0203E108
-_08057198: .4byte gUnknown_0203E120
+_08057180: .4byte gBattleAnimUnitEnabledLookup
+_08057184: .4byte gpUnitLeft_BattleStruct
+_08057188: .4byte gBattleUnitB
+_0805718C: .4byte gpUnitRight_BattleStruct
+_08057190: .4byte gBattleUnitA
+_08057194: .4byte gBattleAnimBoolIsActorOnTheRight
+_08057198: .4byte gBattleAnimSceneLayoutEnum
 _0805719C:
-	ldr r1, _08057284  @ gUnknown_0203E188
-	ldr r0, _08057288  @ gBattleActor
+	ldr r1, _08057284  @ gpUnitLeft_BattleStruct
+	ldr r0, _08057288  @ gBattleUnitA
 	str r0, [r1]
 	str r0, [sp, #8]
-	ldr r1, _0805728C  @ gUnknown_0203E18C
-	ldr r0, _08057290  @ gBattleTarget
+	ldr r1, _0805728C  @ gpUnitRight_BattleStruct
+	ldr r0, _08057290  @ gBattleUnitB
 	str r0, [r1]
 	str r0, [sp, #0xc]
-	ldr r1, _08057294  @ gUnknown_0203E108
+	ldr r1, _08057294  @ gBattleAnimBoolIsActorOnTheRight
 	movs r2, #0
 	strh r2, [r1]
 	movs r0, #1
 	strh r0, [r1, #2]
-	ldr r0, _08057298  @ gUnknown_0203E120
+	ldr r0, _08057298  @ gBattleAnimSceneLayoutEnum
 	mov r8, r0
 	ldr r6, [sp, #8]
-	ldr r3, _0805729C  @ gUnknown_0203E104
+	ldr r3, _0805729C  @ gBattleAnimUnitEnabledLookup
 	ldr r1, [sp, #0x20]
 	cmp r1, #1
 	bne _080571C6
@@ -15104,7 +15104,7 @@ _08057206:
 	movs r0, #0x10
 	ldrsb r0, [r2, r0]
 	lsls r0, r0, #4
-	ldr r2, _080572A4  @ gUnknown_0202BCB0
+	ldr r2, _080572A4  @ gBmSt
 	movs r7, #0xc
 	ldrsh r1, [r2, r7]
 	subs r0, r0, r1
@@ -15127,7 +15127,7 @@ _08057232:
 	movs r0, #0x10
 	ldrsb r0, [r1, r0]
 	lsls r0, r0, #4
-	ldr r2, _080572A4  @ gUnknown_0202BCB0
+	ldr r2, _080572A4  @ gBmSt
 	movs r7, #0xc
 	ldrsh r1, [r2, r7]
 	subs r0, r0, r1
@@ -15161,15 +15161,15 @@ _0805725E:
 	strh r0, [r3]
 	b _0805732C
 	.align 2, 0
-_08057284: .4byte gUnknown_0203E188
-_08057288: .4byte gBattleActor
-_0805728C: .4byte gUnknown_0203E18C
-_08057290: .4byte gBattleTarget
-_08057294: .4byte gUnknown_0203E108
-_08057298: .4byte gUnknown_0203E120
-_0805729C: .4byte gUnknown_0203E104
+_08057284: .4byte gpUnitLeft_BattleStruct
+_08057288: .4byte gBattleUnitA
+_0805728C: .4byte gpUnitRight_BattleStruct
+_08057290: .4byte gBattleUnitB
+_08057294: .4byte gBattleAnimBoolIsActorOnTheRight
+_08057298: .4byte gBattleAnimSceneLayoutEnum
+_0805729C: .4byte gBattleAnimUnitEnabledLookup
 _080572A0: .4byte gUnknown_0203E122
-_080572A4: .4byte gUnknown_0202BCB0
+_080572A4: .4byte gBmSt
 _080572A8:
 	movs r0, #3
 	mov r7, r8
@@ -15223,21 +15223,21 @@ _080572F4:
 	adds r0, r1, r0
 	cmp r0, #1
 	bgt _08057314
-	ldr r1, _08057310  @ gUnknown_0203E120
+	ldr r1, _08057310  @ gBattleAnimSceneLayoutEnum
 	movs r0, #0
 	b _08057328
 	.align 2, 0
-_08057310: .4byte gUnknown_0203E120
+_08057310: .4byte gBattleAnimSceneLayoutEnum
 _08057314:
 	cmp r0, #3
 	bgt _08057324
-	ldr r1, _08057320  @ gUnknown_0203E120
+	ldr r1, _08057320  @ gBattleAnimSceneLayoutEnum
 	movs r0, #1
 	b _08057328
 	.align 2, 0
-_08057320: .4byte gUnknown_0203E120
+_08057320: .4byte gBattleAnimSceneLayoutEnum
 _08057324:
-	ldr r1, _08057374  @ gUnknown_0203E120
+	ldr r1, _08057374  @ gBattleAnimSceneLayoutEnum
 	movs r0, #2
 _08057328:
 	strh r0, [r1]
@@ -15257,8 +15257,8 @@ _08057336:
 	ldr r1, [sp, #0x3c]
 	mov r3, sp
 	bl GetBattleAnimationId
-	ldr r6, _08057378  @ gUnknown_0203E182
-	ldr r4, _0805737C  @ gUnknown_0203E10C
+	ldr r6, _08057378  @ gBattleAnimAnimationIndex
+	ldr r4, _0805737C  @ gStoredBattleAnimId21Ptr
 	strh r0, [r4]
 	strh r0, [r6]
 	ldr r5, [sp, #0xc]
@@ -15278,9 +15278,9 @@ _08057336:
 	str r5, [sp, #0x30]
 	b _080573FC
 	.align 2, 0
-_08057374: .4byte gUnknown_0203E120
-_08057378: .4byte gUnknown_0203E182
-_0805737C: .4byte gUnknown_0203E10C
+_08057374: .4byte gBattleAnimSceneLayoutEnum
+_08057378: .4byte gBattleAnimAnimationIndex
+_0805737C: .4byte gStoredBattleAnimId21Ptr
 _08057380:
 	ldr r0, _08057390  @ gUnknown_0203E110
 	ldr r1, _08057394  @ gUnknown_0895EEA4
@@ -15316,8 +15316,8 @@ _080573B0:
 	ldr r1, [sp, #0x3c]
 	mov r3, sp
 	bl GetBattleAnimationId
-	ldr r2, _080575A4  @ gUnknown_0203E182
-	ldr r1, _080575A8  @ gUnknown_0203E10C
+	ldr r2, _080575A4  @ gBattleAnimAnimationIndex
+	ldr r1, _080575A8  @ gStoredBattleAnimId21Ptr
 	strh r0, [r1]
 	strh r0, [r2]
 _080573D2:
@@ -15337,8 +15337,8 @@ _080573D2:
 	mov r0, sl
 	ldr r1, [sp, #0x18]
 	bl GetBattleAnimationId
-	ldr r2, _080575A4  @ gUnknown_0203E182
-	ldr r1, _080575A8  @ gUnknown_0203E10C
+	ldr r2, _080575A4  @ gBattleAnimAnimationIndex
+	ldr r1, _080575A8  @ gStoredBattleAnimId21Ptr
 	strh r0, [r1, #2]
 	strh r0, [r2, #2]
 _080573FC:
@@ -15423,7 +15423,7 @@ _08057486:
 	asrs r6, r1, #0x10
 	cmp r6, #0
 	beq _080574A2
-	ldr r0, _080575A4  @ gUnknown_0203E182
+	ldr r0, _080575A4  @ gBattleAnimAnimationIndex
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	ldr r1, [sp, #8]
@@ -15437,7 +15437,7 @@ _080574A2:
 	asrs r5, r3, #0x10
 	cmp r5, #0
 	beq _080574BE
-	ldr r0, _080575A4  @ gUnknown_0203E182
+	ldr r0, _080575A4  @ gBattleAnimAnimationIndex
 	movs r4, #2
 	ldrsh r0, [r0, r4]
 	ldr r1, [sp, #0xc]
@@ -15465,11 +15465,11 @@ _080574BE:
 	cmp r6, #0
 	beq _080574F8
 	ldrb r4, [r1]
-	ldr r0, _080575C4  @ gRAMChapterData
+	ldr r0, _080575C4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x13]
 	adds r0, r4, #0
 	bl sub_8057DA8
@@ -15479,17 +15479,17 @@ _080574F8:
 	beq _08057516
 	ldr r0, [sp, #0x38]
 	ldrb r4, [r0]
-	ldr r0, _080575C4  @ gRAMChapterData
+	ldr r0, _080575C4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x13]
 	adds r0, r4, #0
 	bl sub_8057DA8
 	strh r0, [r7, #2]
 _08057516:
-	ldr r0, _080575C8  @ gUnknown_0202BCB0
+	ldr r0, _080575C8  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x40
 	ands r0, r1
@@ -15501,11 +15501,11 @@ _08057516:
 	strh r0, [r1, #2]
 	cmp r6, #0
 	beq _08057544
-	ldr r0, _080575C4  @ gRAMChapterData
+	ldr r0, _080575C4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x13]
 	movs r0, #0x30
 	bl sub_8057DA8
@@ -15515,17 +15515,17 @@ _08057544:
 	beq _08057562
 	mov r2, r8
 	ldrh r4, [r2, #2]
-	ldr r0, _080575C4  @ gRAMChapterData
+	ldr r0, _080575C4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x13]
 	adds r0, r4, #0
 	bl sub_8057DA8
 	strh r0, [r7, #2]
 _08057562:
-	bl sub_8076310
+	bl IsBattleAnimPromotion
 	cmp r0, #1
 	bne _0805757A
 	ldr r1, _080575C0  @ gUnknown_0203E11C
@@ -15537,7 +15537,7 @@ _08057562:
 	strh r0, [r1, #2]
 	strh r0, [r1]
 _0805757A:
-	ldr r0, _080575CC  @ gUnknown_0203E120
+	ldr r0, _080575CC  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	cmp r0, #0
@@ -15550,7 +15550,7 @@ _0805757A:
 	ldrh r0, [r1, #2]
 	strh r0, [r1]
 _08057592:
-	ldr r0, _080575C4  @ gRAMChapterData
+	ldr r0, _080575C4  @ gPlaySt
 	ldrb r0, [r0, #0x15]
 	cmp r0, #2
 	bgt _080575D4
@@ -15560,17 +15560,17 @@ _08057592:
 	movs r0, #1
 	b _080575D8
 	.align 2, 0
-_080575A4: .4byte gUnknown_0203E182
-_080575A8: .4byte gUnknown_0203E10C
+_080575A4: .4byte gBattleAnimAnimationIndex
+_080575A8: .4byte gStoredBattleAnimId21Ptr
 _080575AC: .4byte gUnknown_0203E110
 _080575B0: .4byte 0x0000FFFF
 _080575B4: .4byte gUnknown_0895E0A4
 _080575B8: .4byte gUnknown_0203E19C
 _080575BC: .4byte gUnknown_0203E1CC
 _080575C0: .4byte gUnknown_0203E11C
-_080575C4: .4byte gRAMChapterData
-_080575C8: .4byte gUnknown_0202BCB0
-_080575CC: .4byte gUnknown_0203E120
+_080575C4: .4byte gPlaySt
+_080575C8: .4byte gBmSt
+_080575CC: .4byte gBattleAnimSceneLayoutEnum
 _080575D0: .4byte gUnknown_0203E102
 _080575D4:
 	ldr r1, _08057658  @ gUnknown_0203E102
@@ -15603,7 +15603,7 @@ _080575F0:
 _08057606:
 	cmp r4, #0
 	beq _08057622
-	ldr r1, _08057660  @ gUnknown_0203E1AC
+	ldr r1, _08057660  @ gBattleHpDisplayedValue
 	ldr r0, [sp, #8]
 	adds r0, #0x72
 	ldrb r0, [r0]
@@ -15618,7 +15618,7 @@ _08057606:
 _08057622:
 	cmp r6, #0
 	beq _0805763E
-	ldr r1, _08057660  @ gUnknown_0203E1AC
+	ldr r1, _08057660  @ gBattleHpDisplayedValue
 	ldr r0, [sp, #0xc]
 	adds r0, #0x72
 	ldrb r0, [r0]
@@ -15631,13 +15631,13 @@ _08057622:
 	ldrsb r0, [r5, r0]
 	strh r0, [r1, #2]
 _0805763E:
-	bl sub_80581EC
-	ldr r0, _08057668  @ gUnknown_0203E120
+	bl InitBattleAnimHitArrays
+	ldr r0, _08057668  @ gBattleAnimSceneLayoutEnum
 	movs r7, #0
 	ldrsh r0, [r0, r7]
 	cmp r0, #4
 	bne _08057670
-	ldr r1, _0805766C  @ gUnknown_0203E118
+	ldr r1, _0805766C  @ gBattleSpellAnimationId1
 	movs r0, #1
 	strh r0, [r1, #2]
 	strh r0, [r1]
@@ -15645,10 +15645,10 @@ _0805763E:
 	.align 2, 0
 _08057658: .4byte gUnknown_0203E102
 _0805765C: .4byte gUnknown_0203E1D0
-_08057660: .4byte gUnknown_0203E1AC
+_08057660: .4byte gBattleHpDisplayedValue
 _08057664: .4byte gUnknown_0203E1B0
-_08057668: .4byte gUnknown_0203E120
-_0805766C: .4byte gUnknown_0203E118
+_08057668: .4byte gBattleAnimSceneLayoutEnum
+_0805766C: .4byte gBattleSpellAnimationId1
 _08057670:
 	cmp r4, #0
 	beq _08057688
@@ -15659,7 +15659,7 @@ _08057670:
 	adds r1, #0x4a
 	ldrh r1, [r1]
 	bl GetSpellAnimId
-	ldr r1, _08057714  @ gUnknown_0203E118
+	ldr r1, _08057714  @ gBattleSpellAnimationId1
 	strh r0, [r1]
 _08057688:
 	cmp r6, #0
@@ -15671,7 +15671,7 @@ _08057688:
 	adds r1, #0x4a
 	ldrh r1, [r1]
 	bl GetSpellAnimId
-	ldr r1, _08057714  @ gUnknown_0203E118
+	ldr r1, _08057714  @ gBattleSpellAnimationId1
 	strh r0, [r1, #2]
 _080576A0:
 	ldr r0, _08057718  @ gBattleStats
@@ -15692,14 +15692,14 @@ _080576A0:
 	ldrb r0, [r0, #4]
 	cmp r0, #0x4d
 	bne _080576CC
-	ldr r1, _08057714  @ gUnknown_0203E118
+	ldr r1, _08057714  @ gBattleSpellAnimationId1
 	movs r0, #0xf
 	strh r0, [r1, #2]
 _080576CC:
 	ldr r4, [sp, #0x24]
 	cmp r4, #0
 	beq _080576E0
-	ldr r0, _08057714  @ gUnknown_0203E118
+	ldr r0, _08057714  @ gBattleSpellAnimationId1
 	ldr r1, [sp, #8]
 	adds r1, #0x4a
 	ldrh r2, [r1]
@@ -15709,14 +15709,14 @@ _080576E0:
 	ldr r5, [sp, #0x28]
 	cmp r5, #0
 	beq _080576F4
-	ldr r0, _0805771C  @ gUnknown_0203E11A
+	ldr r0, _0805771C  @ gBattleSpellAnimationId2
 	ldr r1, [sp, #0xc]
 	adds r1, #0x4a
 	ldrh r2, [r1]
 	movs r1, #1
 	bl sub_80581A0
 _080576F4:
-	ldr r0, _08057720  @ gUnknown_0203E120
+	ldr r0, _08057720  @ gBattleAnimSceneLayoutEnum
 	movs r7, #0
 	ldrsh r0, [r0, r7]
 	cmp r0, #0
@@ -15732,10 +15732,10 @@ _080576F4:
 	beq _08057734
 	b _0805773E
 	.align 2, 0
-_08057714: .4byte gUnknown_0203E118
+_08057714: .4byte gBattleSpellAnimationId1
 _08057718: .4byte gBattleStats
-_0805771C: .4byte gUnknown_0203E11A
-_08057720: .4byte gUnknown_0203E120
+_0805771C: .4byte gBattleSpellAnimationId2
+_08057720: .4byte gBattleAnimSceneLayoutEnum
 _08057724:
 	ldr r0, _08057730  @ gUnknown_02000000
 	ldr r0, [r0]
@@ -15776,7 +15776,7 @@ _08057758:
 	ldr r1, _080579E0  @ gUnknown_0203E114
 	strh r0, [r1, #2]
 _08057772:
-	ldr r1, _080579E4  @ gUnknown_0203E190
+	ldr r1, _080579E4  @ gBattleCharacterIndices
 	movs r7, #0
 	strb r7, [r1, #1]
 	strb r7, [r1]
@@ -15940,7 +15940,7 @@ _0805788E:
 	ldr r0, _080579EC  @ 0x0000FFFF
 	strh r0, [r4, #2]
 _0805789E:
-	ldr r2, _080579F8  @ gUnknown_0203E120
+	ldr r2, _080579F8  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r2, r3]
 	cmp r0, #4
@@ -16071,7 +16071,7 @@ _08057976:
 	asrs r0, r0, #0x18
 	strh r0, [r4, #2]
 _08057996:
-	ldr r0, _08057A0C  @ gUnknown_0203E1A4
+	ldr r0, _08057A0C  @ gBattleAnimBoolLockSheetGraphicsMaybe
 	movs r4, #0
 	str r4, [r0, #4]
 	str r4, [r0]
@@ -16091,10 +16091,10 @@ _080579AE:
 	ldrh r0, [r0]
 	bl GetItemIndex
 _080579BE:
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	beq _080579D2
-	ldr r0, _08057A10  @ gRAMChapterData
+	ldr r0, _08057A10  @ gPlaySt
 	adds r0, #0x40
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1f
@@ -16109,18 +16109,18 @@ _080579D2:
 	.align 2, 0
 _080579DC: .4byte gUnknown_02000000
 _080579E0: .4byte gUnknown_0203E114
-_080579E4: .4byte gUnknown_0203E190
+_080579E4: .4byte gBattleCharacterIndices
 _080579E8: .4byte gUnknown_0203E1B8
 _080579EC: .4byte 0x0000FFFF
 _080579F0: .4byte gUnknown_0203E1BC
 _080579F4: .4byte gUnknown_0203E1C0
-_080579F8: .4byte gUnknown_0203E120
+_080579F8: .4byte gBattleAnimSceneLayoutEnum
 _080579FC: .4byte gUnknown_0203E1C4
 _08057A00: .4byte gUnknown_0203E1C8
 _08057A04: .4byte gUnknown_0203E1D4
 _08057A08: .4byte gUnknown_0203E1D8
-_08057A0C: .4byte gUnknown_0203E1A4
-_08057A10: .4byte gRAMChapterData
+_08057A0C: .4byte gBattleAnimBoolLockSheetGraphicsMaybe
+_08057A10: .4byte gPlaySt
 _08057A14: .4byte gUnknown_0203E1DC
 _08057A18:
 	ldr r0, _08057A3C  @ gUnknown_0203E1DC
@@ -16133,7 +16133,7 @@ _08057A1E:
 	bl GetBattleAnimType
 	cmp r0, #3
 	bne _08057A66
-	ldr r0, _08057A44  @ gUnknown_0203E104
+	ldr r0, _08057A44  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -16144,23 +16144,23 @@ _08057A1E:
 	.align 2, 0
 _08057A3C: .4byte gUnknown_0203E1DC
 _08057A40: .4byte gUnknown_0203E0FE
-_08057A44: .4byte gUnknown_0203E104
+_08057A44: .4byte gBattleAnimUnitEnabledLookup
 _08057A48: .4byte gUnknown_0203E1CC
 _08057A4C:
 	ldr r0, _08057C78  @ gUnknown_0203E1CC
 	ldrh r4, [r0, #2]
 _08057A50:
-	ldr r0, _08057C7C  @ gRAMChapterData
+	ldr r0, _08057C7C  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	ldrb r1, [r0, #0x13]
 	adds r0, r4, #0
 	bl sub_8057ED0
 	strh r0, [r5]
 _08057A66:
-	bl sub_8076310
+	bl IsBattleAnimPromotion
 	cmp r0, #1
 	bne _08057A74
 	ldr r1, _08057C80  @ gUnknown_0203E0FE
@@ -16181,14 +16181,14 @@ _08057A8A:
 	bl GetBattleAnimType
 	cmp r0, #1
 	bne _08057AB6
-	ldr r0, _08057C84  @ gUnknown_0203E120
+	ldr r0, _08057C84  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #4
 	bne _08057A9E
 	movs r4, #1
 _08057A9E:
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #1
 	bne _08057AA8
 	movs r4, #1
@@ -16201,7 +16201,7 @@ _08057AA8:
 	movs r4, #1
 _08057AB6:
 	bl sub_8058B70
-	ldr r0, _08057C84  @ gUnknown_0203E120
+	ldr r0, _08057C84  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	cmp r0, #4
@@ -16347,7 +16347,7 @@ _08057BAA:
 _08057BD6:
 	cmp r4, #0
 	beq _08057C72
-	ldr r0, _08057C88  @ gUnknown_0203E104
+	ldr r0, _08057C88  @ gBattleAnimUnitEnabledLookup
 	movs r2, #0
 	ldrsh r1, [r0, r2]
 	adds r3, r0, #0
@@ -16360,14 +16360,14 @@ _08057BD6:
 	ands r0, r1
 	cmp r0, #4
 	beq _08057C72
-	ldr r0, _08057C8C  @ gUnknown_0203E182
+	ldr r0, _08057C8C  @ gBattleAnimAnimationIndex
 	movs r4, #0
 	ldrsh r0, [r0, r4]
 	movs r2, #1
 	negs r2, r2
 	cmp r0, r2
 	beq _08057C72
-	ldr r0, _08057C90  @ gUnknown_0203E118
+	ldr r0, _08057C90  @ gBattleSpellAnimationId1
 	movs r5, #0
 	ldrsh r1, [r0, r5]
 	movs r0, #2
@@ -16398,14 +16398,14 @@ _08057C28:
 	ands r0, r1
 	cmp r0, #4
 	beq _08057C72
-	ldr r0, _08057C8C  @ gUnknown_0203E182
+	ldr r0, _08057C8C  @ gBattleAnimAnimationIndex
 	movs r3, #2
 	ldrsh r0, [r0, r3]
 	movs r2, #1
 	negs r2, r2
 	cmp r0, r2
 	beq _08057C72
-	ldr r0, _08057C90  @ gUnknown_0203E118
+	ldr r0, _08057C90  @ gBattleSpellAnimationId1
 	movs r4, #2
 	ldrsh r1, [r0, r4]
 	movs r0, #2
@@ -16429,12 +16429,12 @@ _08057C72:
 	b _08057C9A
 	.align 2, 0
 _08057C78: .4byte gUnknown_0203E1CC
-_08057C7C: .4byte gRAMChapterData
+_08057C7C: .4byte gPlaySt
 _08057C80: .4byte gUnknown_0203E0FE
-_08057C84: .4byte gUnknown_0203E120
-_08057C88: .4byte gUnknown_0203E104
-_08057C8C: .4byte gUnknown_0203E182
-_08057C90: .4byte gUnknown_0203E118
+_08057C84: .4byte gBattleAnimSceneLayoutEnum
+_08057C88: .4byte gBattleAnimUnitEnabledLookup
+_08057C8C: .4byte gBattleAnimAnimationIndex
+_08057C90: .4byte gBattleSpellAnimationId1
 _08057C94: .4byte gUnknown_0203E11C
 _08057C98:
 	movs r0, #1
@@ -16448,7 +16448,7 @@ _08057C9A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END PrepareBattleGraphicsMaybe
+	THUMB_FUNC_END PrepareBattleGraphics
 
 	THUMB_FUNC_START sub_8057CAC
 sub_8057CAC: @ 0x08057CAC
@@ -17076,7 +17076,7 @@ sub_80581A0: @ 0x080581A0
 	movs r0, #0
 	strh r0, [r4]
 _080581C6:
-	ldr r0, _080581E8  @ gUnknown_0203E100
+	ldr r0, _080581E8  @ gBattleAnimInitialHitSide
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, r5
@@ -17095,12 +17095,12 @@ _080581E0:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080581E8: .4byte gUnknown_0203E100
+_080581E8: .4byte gBattleAnimInitialHitSide
 
 	THUMB_FUNC_END sub_80581A0
 
-	THUMB_FUNC_START sub_80581EC
-sub_80581EC: @ 0x080581EC
+	THUMB_FUNC_START InitBattleAnimHitArrays
+InitBattleAnimHitArrays: @ 0x080581EC
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -17109,9 +17109,9 @@ sub_80581EC: @ 0x080581EC
 	sub sp, #0x20
 	ldr r7, _08058244  @ gBattleHitArray
 	movs r2, #0
-	ldr r4, _08058248  @ gUnknown_0203E12A
-	ldr r5, _0805824C  @ gUnknown_0203E194
-	ldr r6, _08058250  @ gUnknown_0203E120
+	ldr r4, _08058248  @ gBattleAnimRoundTypeArray
+	ldr r5, _0805824C  @ gpBattleAnimTAUnits
+	ldr r6, _08058250  @ gBattleAnimSceneLayoutEnum
 	ldr r0, _08058254  @ 0x0000FFFF
 	adds r3, r0, #0
 	adds r1, r4, #0
@@ -17124,7 +17124,7 @@ _08058208:
 	cmp r2, #0x13
 	bls _08058208
 	movs r2, #0
-	ldr r0, _08058258  @ gUnknown_0203E156
+	ldr r0, _08058258  @ gBattleAnimHpValueArray
 	ldr r1, _08058254  @ 0x0000FFFF
 	adds r3, r1, #0
 	adds r1, r0, #4
@@ -17148,11 +17148,11 @@ _08058220:
 	b _08058834
 	.align 2, 0
 _08058244: .4byte gBattleHitArray
-_08058248: .4byte gUnknown_0203E12A
-_0805824C: .4byte gUnknown_0203E194
-_08058250: .4byte gUnknown_0203E120
+_08058248: .4byte gBattleAnimRoundTypeArray
+_0805824C: .4byte gpBattleAnimTAUnits
+_08058250: .4byte gBattleAnimSceneLayoutEnum
 _08058254: .4byte 0x0000FFFF
-_08058258: .4byte gUnknown_0203E156
+_08058258: .4byte gBattleAnimHpValueArray
 _0805825C:
 	ldr r0, _08058270  @ gBattleStats
 	ldrh r1, [r0]
@@ -17170,10 +17170,10 @@ _08058274:
 	ldrh r6, [r6]
 	str r6, [sp, #0x14]
 	str r6, [sp, #0x18]
-	ldr r0, _08058348  @ gUnknown_0203E188
+	ldr r0, _08058348  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	str r0, [sp, #4]
-	ldr r0, _0805834C  @ gUnknown_0203E18C
+	ldr r0, _0805834C  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	str r0, [sp, #8]
 	ldr r0, [sp, #4]
@@ -17262,8 +17262,8 @@ _0805831E:
 	movs r0, #1
 	str r0, [sp, #0x18]
 _08058332:
-	ldr r3, _08058350  @ gUnknown_0203E156
-	ldr r1, _08058354  @ gUnknown_0203E1AC
+	ldr r3, _08058350  @ gBattleAnimHpValueArray
+	ldr r1, _08058354  @ gBattleHpDisplayedValue
 	ldrh r0, [r1]
 	strh r0, [r3]
 	ldrh r0, [r1, #2]
@@ -17274,10 +17274,10 @@ _08058332:
 	mov r9, r1
 	b _08058824
 	.align 2, 0
-_08058348: .4byte gUnknown_0203E188
-_0805834C: .4byte gUnknown_0203E18C
-_08058350: .4byte gUnknown_0203E156
-_08058354: .4byte gUnknown_0203E1AC
+_08058348: .4byte gpUnitLeft_BattleStruct
+_0805834C: .4byte gpUnitRight_BattleStruct
+_08058350: .4byte gBattleAnimHpValueArray
+_08058354: .4byte gBattleHpDisplayedValue
 _08058358:
 	lsls r0, r2, #8
 	lsrs r0, r0, #0x1b
@@ -17286,7 +17286,7 @@ _08058358:
 	negs r0, r0
 	lsrs r0, r0, #0x1f
 	str r0, [sp, #0x10]
-	ldr r0, _08058390  @ gUnknown_0203E108
+	ldr r0, _08058390  @ gBattleAnimBoolIsActorOnTheRight
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	ldr r3, [sp, #0x10]
@@ -17304,12 +17304,12 @@ _08058358:
 	ldr r2, [sp, #0xc]
 	cmp r2, #0
 	bne _080583B4
-	ldr r0, _08058394  @ gUnknown_0203E100
+	ldr r0, _08058394  @ gBattleAnimInitialHitSide
 	strh r2, [r0]
 	b _080583B4
 	.align 2, 0
-_08058390: .4byte gUnknown_0203E108
-_08058394: .4byte gUnknown_0203E100
+_08058390: .4byte gBattleAnimBoolIsActorOnTheRight
+_08058394: .4byte gBattleAnimInitialHitSide
 _08058398:
 	mov r5, sp
 	adds r5, #2
@@ -17322,7 +17322,7 @@ _08058398:
 	ldr r0, [sp, #0xc]
 	cmp r0, #0
 	bne _080583B4
-	ldr r1, _080583F0  @ gUnknown_0203E100
+	ldr r1, _080583F0  @ gBattleAnimInitialHitSide
 	movs r0, #1
 	strh r0, [r1]
 _080583B4:
@@ -17334,7 +17334,7 @@ _080583B4:
 	ands r0, r1
 	cmp r0, #0
 	beq _080583D0
-	ldr r2, _080583F4  @ gUnknown_0203E194
+	ldr r2, _080583F4  @ gpBattleAnimTAUnits
 	ldr r1, _080583F8  @ gBattleStats
 	ldr r0, [r1, #0x10]
 	str r0, [r2]
@@ -17349,15 +17349,15 @@ _080583D0:
 	cmp r0, #0
 	beq _08058408
 	adds r0, r6, #0
-	bl UnitHasMagicRank
+	bl UnitKnowsMagic
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08058400
 	ldr r0, _080583FC  @ gUnknown_080DAEA0
 	b _08058482
 	.align 2, 0
-_080583F0: .4byte gUnknown_0203E100
-_080583F4: .4byte gUnknown_0203E194
+_080583F0: .4byte gBattleAnimInitialHitSide
+_080583F4: .4byte gpBattleAnimTAUnits
 _080583F8: .4byte gBattleStats
 _080583FC: .4byte gUnknown_080DAEA0
 _08058400:
@@ -17372,7 +17372,7 @@ _08058408:
 	cmp r1, #0
 	beq _08058430
 	adds r0, r6, #0
-	bl UnitHasMagicRank
+	bl UnitKnowsMagic
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08058428
@@ -17390,7 +17390,7 @@ _08058430:
 	cmp r0, #0
 	blt _08058454
 	adds r0, r6, #0
-	bl UnitHasMagicRank
+	bl UnitKnowsMagic
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0805844C
@@ -17405,7 +17405,7 @@ _0805844C:
 _08058450: .4byte gUnknown_080DAEBE
 _08058454:
 	movs r0, #2
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	cmp r0, #1
 	beq _08058478
 	cmp r0, #1
@@ -17444,7 +17444,7 @@ _0805848C:
 	cmp r0, #0
 	beq _080584DC
 	adds r0, r6, #0
-	bl UnitHasMagicRank
+	bl UnitKnowsMagic
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _080584B4
@@ -17483,7 +17483,7 @@ _080584DC:
 	mov r1, r8
 	strh r0, [r1]
 _080584EC:
-	ldr r1, _08058564  @ gUnknown_0203E12A
+	ldr r1, _08058564  @ gBattleAnimRoundTypeArray
 	ldr r2, [sp, #0xc]
 	lsls r0, r2, #2
 	adds r5, r0, r1
@@ -17511,7 +17511,7 @@ _0805851A:
 	ands r0, r1
 	cmp r0, #0
 	beq _080585B4
-	ldr r0, _08058568  @ gUnknown_0203E108
+	ldr r0, _08058568  @ gBattleAnimBoolIsActorOnTheRight
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	ldr r2, [sp, #0x10]
@@ -17519,7 +17519,7 @@ _0805851A:
 	bne _08058574
 	mov r3, r9
 	lsls r0, r3, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	subs r0, r0, r1
@@ -17535,7 +17535,7 @@ _08058546:
 	lsrs r0, r0, #0x10
 	mov r9, r0
 	lsls r0, r0, #2
-	ldr r1, _0805856C  @ gUnknown_0203E156
+	ldr r1, _0805856C  @ gBattleAnimHpValueArray
 	adds r0, r0, r1
 	strh r2, [r0]
 	ldrh r0, [r5]
@@ -17544,15 +17544,15 @@ _08058546:
 	b _0805875E
 	.align 2, 0
 _08058560: .4byte gUnknown_080DAEB4
-_08058564: .4byte gUnknown_0203E12A
-_08058568: .4byte gUnknown_0203E108
-_0805856C: .4byte gUnknown_0203E156
+_08058564: .4byte gBattleAnimRoundTypeArray
+_08058568: .4byte gBattleAnimBoolIsActorOnTheRight
+_0805856C: .4byte gBattleAnimHpValueArray
 _08058570: .4byte 0xFFFF8000
 _08058574:
 	mov r3, sl
 	lsls r0, r3, #1
 	adds r0, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	subs r0, r0, r1
@@ -17570,14 +17570,14 @@ _0805858E:
 	lsls r0, r0, #1
 	adds r0, #1
 	lsls r0, r0, #1
-	ldr r5, _080585AC  @ gUnknown_0203E156
+	ldr r5, _080585AC  @ gBattleAnimHpValueArray
 	adds r0, r0, r5
 	strh r2, [r0]
 	ldrh r0, [r4]
 	ldr r2, _080585B0  @ 0xFFFF8000
 	b _08058816
 	.align 2, 0
-_080585AC: .4byte gUnknown_0203E156
+_080585AC: .4byte gBattleAnimHpValueArray
 _080585B0: .4byte 0xFFFF8000
 _080585B4:
 	movs r0, #0x80
@@ -17585,7 +17585,7 @@ _080585B4:
 	ands r1, r0
 	cmp r1, #0
 	beq _080586A0
-	ldr r0, _08058628  @ gUnknown_0203E108
+	ldr r0, _08058628  @ gBattleAnimBoolIsActorOnTheRight
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	ldr r5, [sp, #0x10]
@@ -17594,7 +17594,7 @@ _080585B4:
 	mov r1, sl
 	lsls r0, r1, #1
 	adds r0, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	subs r0, r0, r1
@@ -17609,7 +17609,7 @@ _080585E4:
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	mov sl, r0
-	ldr r4, _0805862C  @ gUnknown_0203E156
+	ldr r4, _0805862C  @ gBattleAnimHpValueArray
 	lsls r0, r0, #1
 	adds r0, #1
 	lsls r0, r0, #1
@@ -17617,7 +17617,7 @@ _080585E4:
 	strh r2, [r0]
 	mov r2, r9
 	lsls r0, r2, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	adds r0, r0, r1
@@ -17639,13 +17639,13 @@ _0805861A:
 	lsls r0, r0, #2
 	b _08058690
 	.align 2, 0
-_08058628: .4byte gUnknown_0203E108
-_0805862C: .4byte gUnknown_0203E156
+_08058628: .4byte gBattleAnimBoolIsActorOnTheRight
+_0805862C: .4byte gBattleAnimHpValueArray
 _08058630: .4byte gUnknown_0203E1B0
 _08058634:
 	mov r1, r9
 	lsls r0, r1, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	subs r0, r0, r1
@@ -17660,14 +17660,14 @@ _0805864C:
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	mov r9, r0
-	ldr r4, _08058698  @ gUnknown_0203E156
+	ldr r4, _08058698  @ gBattleAnimHpValueArray
 	lsls r0, r0, #2
 	adds r0, r0, r4
 	strh r2, [r0]
 	mov r2, sl
 	lsls r0, r2, #1
 	adds r0, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	adds r0, r0, r1
@@ -17694,10 +17694,10 @@ _08058690:
 	strh r2, [r0]
 	b _0805881C
 	.align 2, 0
-_08058698: .4byte gUnknown_0203E156
+_08058698: .4byte gBattleAnimHpValueArray
 _0805869C: .4byte gUnknown_0203E1B0
 _080586A0:
-	ldr r0, _08058764  @ gUnknown_0203E108
+	ldr r0, _08058764  @ gBattleAnimBoolIsActorOnTheRight
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	ldr r2, [sp, #0x10]
@@ -17706,7 +17706,7 @@ _080586A0:
 	mov r3, sl
 	lsls r0, r3, #1
 	adds r0, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	subs r0, r0, r1
@@ -17724,7 +17724,7 @@ _080586C6:
 	lsls r0, r0, #1
 	adds r0, #1
 	lsls r0, r0, #1
-	ldr r1, _08058768  @ gUnknown_0203E156
+	ldr r1, _08058768  @ gBattleAnimHpValueArray
 	adds r0, r0, r1
 	strh r2, [r0]
 	ldr r0, [r7]
@@ -17801,12 +17801,12 @@ _0805875E:
 	strh r0, [r5]
 	b _0805881C
 	.align 2, 0
-_08058764: .4byte gUnknown_0203E108
-_08058768: .4byte gUnknown_0203E156
+_08058764: .4byte gBattleAnimBoolIsActorOnTheRight
+_08058768: .4byte gBattleAnimHpValueArray
 _0805876C:
 	mov r1, r9
 	lsls r0, r1, #1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	movs r1, #3
 	ldrsb r1, [r7, r1]
 	subs r0, r0, r1
@@ -17822,7 +17822,7 @@ _08058784:
 	lsrs r0, r0, #0x10
 	mov r9, r0
 	lsls r0, r0, #2
-	ldr r3, _08058844  @ gUnknown_0203E156
+	ldr r3, _08058844  @ gBattleAnimHpValueArray
 	adds r0, r0, r3
 	strh r2, [r0]
 	ldr r0, [r7]
@@ -17921,9 +17921,9 @@ _08058834:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08058844: .4byte gUnknown_0203E156
+_08058844: .4byte gBattleAnimHpValueArray
 
-	THUMB_FUNC_END sub_80581EC
+	THUMB_FUNC_END InitBattleAnimHitArrays
 
 	THUMB_FUNC_START GetBattleAnimationId
 GetBattleAnimationId: @ 0x08058848
@@ -18179,26 +18179,26 @@ sub_80589E0: @ 0x080589E0
 	lsls r4, r1, #0x10
 	lsrs r4, r4, #0x10
 	bl GetAISSubjectId
-	ldr r1, _08058A08  @ gUnknown_0203E182
+	ldr r1, _08058A08  @ gBattleAnimAnimationIndex
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	strh r4, [r0]
 	bl sub_80599E8
 	adds r0, r5, #0
 	movs r1, #6
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	pop {r4, r5}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08058A08: .4byte gUnknown_0203E182
+_08058A08: .4byte gBattleAnimAnimationIndex
 
 	THUMB_FUNC_END sub_80589E0
 
-	THUMB_FUNC_START GetSomeAISRelatedIndexMaybeByID
-GetSomeAISRelatedIndexMaybeByID: @ 0x08058A0C
+	THUMB_FUNC_START GetBattleAnimHitType
+GetBattleAnimHitType: @ 0x08058A0C
 	push {lr}
-	ldr r1, _08058A28  @ gUnknown_0203E12A
+	ldr r1, _08058A28  @ gBattleAnimRoundTypeArray
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldrh r2, [r0]
@@ -18212,19 +18212,19 @@ GetSomeAISRelatedIndexMaybeByID: @ 0x08058A0C
 	ands r0, r2
 	b _08058A2E
 	.align 2, 0
-_08058A28: .4byte gUnknown_0203E12A
+_08058A28: .4byte gBattleAnimRoundTypeArray
 _08058A2C:
 	adds r0, r1, #0
 _08058A2E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetSomeAISRelatedIndexMaybeByID
+	THUMB_FUNC_END GetBattleAnimHitType
 
-	THUMB_FUNC_START sub_8058A34
-sub_8058A34: @ 0x08058A34
+	THUMB_FUNC_START GetBattleAnimHitFlags
+GetBattleAnimHitFlags: @ 0x08058A34
 	push {lr}
-	ldr r1, _08058A54  @ gUnknown_0203E12A
+	ldr r1, _08058A54  @ gBattleAnimRoundTypeArray
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldrh r2, [r0]
@@ -18240,30 +18240,30 @@ sub_8058A34: @ 0x08058A34
 	asrs r0, r0, #0x10
 	b _08058A5A
 	.align 2, 0
-_08058A54: .4byte gUnknown_0203E12A
+_08058A54: .4byte gBattleAnimRoundTypeArray
 _08058A58:
 	movs r0, #0
 _08058A5A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8058A34
+	THUMB_FUNC_END GetBattleAnimHitFlags
 
-	THUMB_FUNC_START sub_8058A60
-sub_8058A60: @ 0x08058A60
-	ldr r1, _08058A6C  @ gUnknown_0203E156
+	THUMB_FUNC_START GetBattleAnimHpValue
+GetBattleAnimHpValue: @ 0x08058A60
+	ldr r1, _08058A6C  @ gBattleAnimHpValueArray
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldrb r0, [r0]
 	bx lr
 	.align 2, 0
-_08058A6C: .4byte gUnknown_0203E156
+_08058A6C: .4byte gBattleAnimHpValueArray
 
-	THUMB_FUNC_END sub_8058A60
+	THUMB_FUNC_END GetBattleAnimHpValue
 
 	THUMB_FUNC_START sub_8058A70
 sub_8058A70: @ 0x08058A70
-	ldr r1, _08058A84  @ gUnknown_0203E156
+	ldr r1, _08058A84  @ gBattleAnimHpValueArray
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldrh r1, [r0]
@@ -18273,7 +18273,7 @@ sub_8058A70: @ 0x08058A70
 	asrs r0, r0, #0x10
 	bx lr
 	.align 2, 0
-_08058A84: .4byte gUnknown_0203E156
+_08058A84: .4byte gBattleAnimHpValueArray
 _08058A88: .4byte 0xFFFFFF00
 
 	THUMB_FUNC_END sub_8058A70
@@ -18352,8 +18352,8 @@ _08058B04:
 
 	THUMB_FUNC_END sub_8058AC8
 
-	THUMB_FUNC_START sub_8058B08
-sub_8058B08: @ 0x08058B08
+	THUMB_FUNC_START IsHolyRenaisTwinWeapon
+IsHolyRenaisTwinWeapon: @ 0x08058B08
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
@@ -18371,16 +18371,16 @@ _08058B20:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8058B08
+	THUMB_FUNC_END IsHolyRenaisTwinWeapon
 
-	THUMB_FUNC_START sub_8058B24
-sub_8058B24: @ 0x08058B24
+	THUMB_FUNC_START DoesBattleAnimSideTakeAction
+DoesBattleAnimSideTakeAction: @ 0x08058B24
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r2, r0, #0x10
 	cmp r2, #0x13
 	bgt _08058B5C
-	ldr r1, _08058B50  @ gUnknown_0203E12A
+	ldr r1, _08058B50  @ gBattleAnimRoundTypeArray
 	lsls r0, r2, #1
 	adds r0, r0, r1
 _08058B34:
@@ -18400,7 +18400,7 @@ _08058B4C:
 	movs r0, #1
 	b _08058B5E
 	.align 2, 0
-_08058B50: .4byte gUnknown_0203E12A
+_08058B50: .4byte gBattleAnimRoundTypeArray
 _08058B54:
 	adds r0, #4
 	adds r2, #2
@@ -18412,41 +18412,41 @@ _08058B5E:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8058B24
+	THUMB_FUNC_END DoesBattleAnimSideTakeAction
 
 	THUMB_FUNC_START sub_8058B64
 sub_8058B64: @ 0x08058B64
-	ldr r1, _08058B6C  @ gUnknown_0203E1E0
+	ldr r1, _08058B6C  @ gBoolBattleIsScripted_maybe
 	movs r0, #1
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_08058B6C: .4byte gUnknown_0203E1E0
+_08058B6C: .4byte gBoolBattleIsScripted_maybe
 
 	THUMB_FUNC_END sub_8058B64
 
 	THUMB_FUNC_START sub_8058B70
 sub_8058B70: @ 0x08058B70
-	ldr r1, _08058B78  @ gUnknown_0203E1E0
+	ldr r1, _08058B78  @ gBoolBattleIsScripted_maybe
 	movs r0, #0
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_08058B78: .4byte gUnknown_0203E1E0
+_08058B78: .4byte gBoolBattleIsScripted_maybe
 
 	THUMB_FUNC_END sub_8058B70
 
 	THUMB_FUNC_START sub_8058B7C
 sub_8058B7C: @ 0x08058B7C
 	push {lr}
-	ldr r0, _08058B8C  @ gUnknown_0203E1E0
+	ldr r0, _08058B8C  @ gBoolBattleIsScripted_maybe
 	ldr r0, [r0]
 	cmp r0, #0
 	beq _08058B90
 	movs r0, #1
 	b _08058B92
 	.align 2, 0
-_08058B8C: .4byte gUnknown_0203E1E0
+_08058B8C: .4byte gBoolBattleIsScripted_maybe
 _08058B90:
 	movs r0, #0
 _08058B92:
@@ -18507,7 +18507,7 @@ BattleAIS_ExecCommands: @ 0x08058BC8
 
 	THUMB_FUNC_START sub_8058BD4
 sub_8058BD4: @ 0x08058BD4
-	ldr r0, _08058C38  @ gUnknown_03004FAC
+	ldr r0, _08058C38  @ gBattleAnimCurrentAISIndex
 	str r2, [r0]
 	ldr r1, _08058C3C  @ gUnknown_02000000
 	lsls r0, r2, #2
@@ -18558,7 +18558,7 @@ _08058C2E:
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_08058C38: .4byte gUnknown_03004FAC
+_08058C38: .4byte gBattleAnimCurrentAISIndex
 _08058C3C: .4byte gUnknown_02000000
 _08058C40: .4byte _08058C44
 _08058C44: @ jump table
@@ -18793,7 +18793,7 @@ _08058F04:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _08058F26
 	adds r0, r7, #0
@@ -18835,17 +18835,17 @@ _08058F52:
 	orrs r1, r5
 	strh r1, [r7, #0x10]
 	adds r0, r7, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r2, r0, #0
 	adds r0, r7, #0
 	str r2, [sp]
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
 	mov r4, r8
 	adds r0, r4, #0
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	ldr r2, [sp]
 	cmp r0, #1
 	beq _08058F8E
@@ -18860,7 +18860,7 @@ _08058F94:
 	strh r0, [r2, #0x10]
 	adds r0, r7, #0
 	str r2, [sp]
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _08058FA8
 	b _080596CC
@@ -18901,7 +18901,7 @@ _08058FD6:
 	orrs r1, r0
 	strh r1, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _08058FF6
 	b _080596CC
@@ -18921,7 +18921,7 @@ _08059010: .4byte 0x0000FFDF
 _08059014: .4byte 0x0000FFBF
 _08059018:
 	adds r0, r7, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r2, r0, #0
 	cmp r2, #0
 	bne _08059026
@@ -18952,7 +18952,7 @@ _08059048:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #4
 	ands r1, r0
@@ -18970,7 +18970,7 @@ _08059074:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _08059140
 	adds r0, r7, #0
@@ -18984,7 +18984,7 @@ _0805908C:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #3
 	ands r1, r0
@@ -19002,7 +19002,7 @@ _080590B8:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _08059140
 	adds r0, r7, #0
@@ -19017,7 +19017,7 @@ _080590D2:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #2
 	ands r1, r0
@@ -19036,7 +19036,7 @@ _08059100:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _08059140
 	adds r0, r7, #0
@@ -19076,21 +19076,21 @@ _08059150: .4byte gUnknown_02000000
 _08059154: .4byte 0x0000FFF7
 _08059158:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _08059164
 	b _080596CC
 _08059164:
 	adds r0, r7, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r2, r0, #0
 	adds r0, r7, #0
 	str r2, [sp]
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	ldr r2, [sp]
 	cmp r0, #0
 	bne _080591C6
@@ -19108,7 +19108,7 @@ _08059164:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #5
 	ands r1, r0
@@ -19116,12 +19116,12 @@ _08059164:
 	cmp r1, #0
 	beq _080591BC
 	adds r0, r2, #0
-	bl sub_806E014
+	bl StartEfxChillEffect
 	b _080591C4
 _080591BC:
 	adds r0, r2, #0
 	str r2, [sp]
-	bl sub_806C71C
+	bl StartEfxCriticalEffect
 _080591C4:
 	ldr r2, [sp]
 _080591C6:
@@ -19135,20 +19135,20 @@ _080591CC:
 	strh r0, [r2, #0x10]
 	adds r0, r7, #0
 	str r2, [sp]
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
 _080591E2:
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r1, r0, #0
 	ldr r2, [sp]
 	adds r0, r2, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	b _080596CC
 _080591F2:
 	adds r0, r7, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
@@ -19207,10 +19207,10 @@ _0805926E:
 	adds r0, r2, #0
 	mov r1, r8
 	str r2, [sp]
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	adds r0, r6, #0
 	mov r1, r8
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	ldr r2, [sp]
 	ldrh r0, [r2, #0x10]
 	movs r1, #4
@@ -19220,7 +19220,7 @@ _0805926E:
 	orrs r1, r0
 	strh r1, [r6, #0x10]
 	ldr r1, _080592C4  @ gUnknown_080DAF18
-	ldr r0, _080592C8  @ gUnknown_0203E120
+	ldr r0, _080592C8  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	adds r0, r0, r1
@@ -19240,7 +19240,7 @@ _0805926E:
 	b _080592D6
 	.align 2, 0
 _080592C4: .4byte gUnknown_080DAF18
-_080592C8: .4byte gUnknown_0203E120
+_080592C8: .4byte gBattleAnimSceneLayoutEnum
 _080592CC: .4byte gUnknown_080DAEF0
 _080592D0: .4byte gUnknown_0200005C
 _080592D4:
@@ -19272,7 +19272,7 @@ _080592D6:
 	ldr r0, _0805935C  @ 0x000057F0
 	adds r4, r4, r0
 	str r4, [r6, #0x3c]
-	ldr r4, _08059360  @ gUnknown_0203E1A4
+	ldr r4, _08059360  @ gBattleAnimBoolLockSheetGraphicsMaybe
 	adds r0, r7, #0
 	str r2, [sp]
 	bl GetAISSubjectId
@@ -19293,7 +19293,7 @@ _080592D6:
 	cmp r1, r0
 	beq _0805938A
 	adds r0, r2, #0
-	bl NewEkrChienCHR
+	bl StartEkrChienCHR
 	ldr r2, [sp]
 	adds r0, r2, #0
 	bl GetAISSubjectId
@@ -19307,11 +19307,11 @@ _080592D6:
 _08059354: .4byte gUnknown_02000060
 _08059358: .4byte gUnknown_0200F1C8
 _0805935C: .4byte 0x000057F0
-_08059360: .4byte gUnknown_0203E1A4
+_08059360: .4byte gBattleAnimBoolLockSheetGraphicsMaybe
 _08059364: .4byte gUnknown_0201FB1C
 _08059368:
 	ldr r1, _08059398  @ gUnknown_080DAF18
-	ldr r0, _0805939C  @ gUnknown_0203E120
+	ldr r0, _0805939C  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	adds r0, r0, r1
@@ -19321,10 +19321,10 @@ _08059376:
 	adds r0, r2, #0
 	mov r1, r8
 	str r2, [sp]
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	adds r0, r6, #0
 	mov r1, r8
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	ldr r2, [sp]
 _0805938A:
 	adds r0, r2, #0
@@ -19334,7 +19334,7 @@ _0805938A:
 	b _080596D6
 	.align 2, 0
 _08059398: .4byte gUnknown_080DAF18
-_0805939C: .4byte gUnknown_0203E120
+_0805939C: .4byte gBattleAnimSceneLayoutEnum
 _080593A0:
 	ldrh r2, [r7, #0x10]
 	movs r1, #0x20
@@ -19363,23 +19363,23 @@ _080593C8: .4byte gUnknown_02017758
 _080593CC: .4byte 0x0000FFDF
 _080593D0:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _080593DC
 	b _080596CC
 _080593DC:
 	movs r0, #3
-	bl sub_8053730
+	bl StartEfxQuake
 	b _080596CC
 _080593E4:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _080593F0
 	b _080596CC
 _080593F0:
 	movs r0, #0
-	bl sub_8053730
+	bl StartEfxQuake
 	b _080596CC
 _080593F8:
 	ldrh r1, [r7, #0x10]
@@ -19410,13 +19410,13 @@ _08059424: .4byte 0x0000FFFE
 _08059428: .4byte 0x0000F3FF
 _0805942C:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _08059438
 	b _080596CC
 _08059438:
 	adds r0, r7, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r2, r0, #0
 	cmp r2, #0
 	beq _0805946A
@@ -19426,15 +19426,15 @@ _08059438:
 	strh r0, [r2, #0x10]
 	adds r0, r7, #0
 	str r2, [sp]
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r1, r0, #0
 	ldr r2, [sp]
 	adds r0, r2, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldr r2, [sp]
 _0805946A:
 	adds r0, r2, #0
@@ -19453,7 +19453,7 @@ _0805947C:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #5
 	ands r1, r0
@@ -19461,7 +19461,7 @@ _0805947C:
 	cmp r1, #0
 	beq _080594A4
 	adds r0, r2, #0
-	bl sub_806E014
+	bl StartEfxChillEffect
 	b _080596CC
 _080594A4:
 	adds r0, r7, #0
@@ -19469,7 +19469,7 @@ _080594A4:
 	b _080596CC
 _080594AC:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _080594B8
 	b _080596CC
@@ -19480,7 +19480,7 @@ _080594B8:
 	b _080596CC
 _080594C2:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _080594CE
 	b _080596CC
@@ -19491,7 +19491,7 @@ _080594CE:
 	b _080596CC
 _080594D8:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _080594E4
 	b _080596CC
@@ -19507,7 +19507,7 @@ _080594EC:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #5
 	ands r1, r0
@@ -19527,18 +19527,18 @@ _0805951A:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _0805952C
 	b _080596CC
 _0805952C:
 	adds r0, r7, #0
 	movs r1, #0
-	bl sub_806E1F0
+	bl StartEfxChillAnime
 	b _080596CC
 _08059536:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _08059542
 	b _080596CC
@@ -19549,7 +19549,7 @@ _08059542:
 	b _080596CC
 _0805954C:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _08059558
 	b _080596CC
@@ -19560,7 +19560,7 @@ _08059558:
 	b _080596CC
 _08059562:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _0805956E
 	b _080596CC
@@ -19571,7 +19571,7 @@ _0805956E:
 	b _080596CC
 _08059578:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _08059584
 	b _080596CC
@@ -19582,7 +19582,7 @@ _08059584:
 	b _080596CC
 _0805958E:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _0805959A
 	b _080596CC
@@ -19602,7 +19602,7 @@ _080595A4:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	beq _080595C2
 	b _080596CC
@@ -19623,7 +19623,7 @@ _080595D8:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _080595EE
 	movs r0, #1
@@ -19653,7 +19653,7 @@ _0805960C:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _080596CC
 	adds r0, r7, #0
@@ -19667,7 +19667,7 @@ _08059630:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #5
 	ands r1, r0
@@ -19683,12 +19683,12 @@ _08059630:
 	orrs r0, r1
 	strh r0, [r7, #0x10]
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _080596CC
 	adds r0, r7, #0
 	movs r1, #1
-	bl sub_806E1F0
+	bl StartEfxChillAnime
 	b _080596CC
 _08059674:
 	movs r0, #0x40
@@ -19719,7 +19719,7 @@ _08059698:
 	b _080596CC
 _080596A6:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _080596CC
 	movs r0, #0x14
@@ -19729,7 +19729,7 @@ _080596B2:
 	b _080596CC
 _080596BA:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _080596CC
 	movs r0, #0x64
@@ -19758,10 +19758,10 @@ sub_80596E0: @ 0x080596E0
 	cmp r0, #0
 	beq _08059746
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _0805973C
-	ldr r4, _0805979C  @ gUnknown_0203E1A4
+	ldr r4, _0805979C  @ gBattleAnimBoolLockSheetGraphicsMaybe
 	adds r0, r7, #0
 	bl GetAISSubjectId
 	lsls r0, r0, #2
@@ -19817,7 +19817,7 @@ _0805975C:
 	cmp r0, #0
 	beq _080597E8
 	adds r0, r7, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
@@ -19834,13 +19834,13 @@ _0805975C:
 	adds r0, r2, #0
 	mov r1, r8
 	str r2, [sp]
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	ldr r2, [sp]
 	ldrh r1, [r2, #0x10]
 	ldr r4, _080597AC  @ 0x0000FFFD
 	b _08059824
 	.align 2, 0
-_0805979C: .4byte gUnknown_0203E1A4
+_0805979C: .4byte gBattleAnimBoolLockSheetGraphicsMaybe
 _080597A0: .4byte gUnknown_0201FB1C
 _080597A4: .4byte gUnknown_02000024
 _080597A8: .4byte gUnknown_02000000
@@ -19878,7 +19878,7 @@ _080597E8:
 	cmp r0, #0
 	beq _08059874
 	adds r0, r7, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
@@ -19895,7 +19895,7 @@ _080597E8:
 	adds r0, r2, #0
 	mov r1, r8
 	str r2, [sp]
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	ldr r2, [sp]
 	ldrh r1, [r2, #0x10]
 	ldr r4, _08059870  @ 0x00007FFF
@@ -19915,7 +19915,7 @@ _08059824:
 	ldr r6, [r0]
 	adds r0, r6, #0
 	mov r1, r8
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	ldrh r0, [r6, #0x10]
 	ands r4, r0
 	orrs r4, r5
@@ -19937,7 +19937,7 @@ _0805986C: .4byte gUnknown_02000000
 _08059870: .4byte 0x00007FFF
 _08059874:
 	adds r0, r7, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _080598AE
 	adds r0, r7, #0
@@ -19946,7 +19946,7 @@ _08059874:
 	ldrh r0, [r7, #0xe]
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl GetSomeAISRelatedIndexMaybeByID
+	bl GetBattleAnimHitType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	mov r8, r0
@@ -20018,8 +20018,8 @@ _08059906:
 
 	THUMB_FUNC_END sub_80598CC
 
-	THUMB_FUNC_START NewEkrChienCHR
-NewEkrChienCHR: @ 0x0805990C
+	THUMB_FUNC_START StartEkrChienCHR
+StartEkrChienCHR: @ 0x0805990C
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08059920  @ gUnknown_085B9D94
@@ -20032,10 +20032,10 @@ NewEkrChienCHR: @ 0x0805990C
 	.align 2, 0
 _08059920: .4byte gUnknown_085B9D94
 
-	THUMB_FUNC_END NewEkrChienCHR
+	THUMB_FUNC_END StartEkrChienCHR
 
-	THUMB_FUNC_START sub_8059924
-sub_8059924: @ 0x08059924
+	THUMB_FUNC_START EkrChienCHR_OnLoop
+EkrChienCHR_OnLoop: @ 0x08059924
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
@@ -20046,7 +20046,7 @@ sub_8059924: @ 0x08059924
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8059924
+	THUMB_FUNC_END EkrChienCHR_OnLoop
 
 	THUMB_FUNC_START RegisterAISSheetGraphics
 RegisterAISSheetGraphics: @ 0x0805993C
@@ -20109,12 +20109,12 @@ sub_805999C: @ 0x0805999C
 	adds r2, r0, #0
 	cmp r1, #0
 	bne _080599AC
-	ldr r0, _080599A8  @ gUnknown_0203E188
+	ldr r0, _080599A8  @ gpUnitLeft_BattleStruct
 	b _080599AE
 	.align 2, 0
-_080599A8: .4byte gUnknown_0203E188
+_080599A8: .4byte gpUnitLeft_BattleStruct
 _080599AC:
-	ldr r0, _080599C4  @ gUnknown_0203E18C
+	ldr r0, _080599C4  @ gpUnitRight_BattleStruct
 _080599AE:
 	ldr r0, [r0]
 	ldr r0, [r0, #4]
@@ -20127,7 +20127,7 @@ _080599AE:
 	beq _080599D2
 	b _080599E2
 	.align 2, 0
-_080599C4: .4byte gUnknown_0203E18C
+_080599C4: .4byte gpUnitRight_BattleStruct
 _080599C8:
 	cmp r0, #0x1b
 	beq _080599DA
@@ -20168,12 +20168,12 @@ sub_80599E8: @ 0x080599E8
 	movs r0, #0
 	str r0, [r1, #4]
 	str r0, [r1]
-	ldr r0, _08059BE0  @ gUnknown_0203E104
+	ldr r0, _08059BE0  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
 	bne _08059ADE
-	ldr r0, _08059BE4  @ gUnknown_0203E182
+	ldr r0, _08059BE4  @ gBattleAnimAnimationIndex
 	movs r2, #0
 	ldrsh r7, [r0, r2]
 	ldr r0, _08059BE8  @ gUnknown_0203E114
@@ -20229,7 +20229,7 @@ _08059A64:
 	adds r1, #0x20
 	movs r2, #8
 	bl CpuFastSet
-	ldr r0, _08059C0C  @ gBattleActor
+	ldr r0, _08059C0C  @ gBattleUnitA
 	adds r0, #0x30
 	ldrb r0, [r0]
 	movs r1, #0xf
@@ -20245,7 +20245,7 @@ _08059A98:
 	movs r2, #1
 	bl sub_8071468
 _08059AA4:
-	ldr r0, _08059C14  @ gBattleTarget
+	ldr r0, _08059C14  @ gBattleUnitB
 	adds r0, #0x30
 	ldrb r0, [r0]
 	movs r1, #0xf
@@ -20274,13 +20274,13 @@ _08059AC4:
 	movs r0, #1
 	str r0, [r4]
 _08059ADE:
-	ldr r0, _08059BE0  @ gUnknown_0203E104
+	ldr r0, _08059BE0  @ gBattleAnimUnitEnabledLookup
 	movs r2, #2
 	ldrsh r1, [r0, r2]
 	mov r9, r1
 	cmp r1, #1
 	bne _08059B7E
-	ldr r0, _08059BE4  @ gUnknown_0203E182
+	ldr r0, _08059BE4  @ gBattleAnimAnimationIndex
 	movs r1, #2
 	ldrsh r7, [r0, r1]
 	ldr r0, _08059BE8  @ gUnknown_0203E114
@@ -20347,7 +20347,7 @@ _08059B46:
 	mov r1, r9
 	str r1, [r4]
 _08059B7E:
-	ldr r4, _08059C38  @ gUnknown_0203E194
+	ldr r4, _08059C38  @ gpBattleAnimTAUnits
 	ldr r2, [r4]
 	cmp r2, #0
 	bne _08059B88
@@ -20394,8 +20394,8 @@ _08059B88:
 	.align 2, 0
 _08059BD8: .4byte banim_data
 _08059BDC: .4byte gUnknown_0201FB1C
-_08059BE0: .4byte gUnknown_0203E104
-_08059BE4: .4byte gUnknown_0203E182
+_08059BE0: .4byte gBattleAnimUnitEnabledLookup
+_08059BE4: .4byte gBattleAnimAnimationIndex
 _08059BE8: .4byte gUnknown_0203E114
 _08059BEC: .4byte gUnknown_0203E110
 _08059BF0: .4byte gUnknown_0200F1C8
@@ -20405,9 +20405,9 @@ _08059BFC: .4byte character_battle_animation_palette_table
 _08059C00: .4byte gUnknown_02000054
 _08059C04: .4byte gPal+0x2E0
 _08059C08: .4byte gUnknown_0203E19C
-_08059C0C: .4byte gBattleActor
+_08059C0C: .4byte gBattleUnitA
 _08059C10: .4byte 0xFFFFFD20
-_08059C14: .4byte gBattleTarget
+_08059C14: .4byte gBattleUnitB
 _08059C18: .4byte gPal
 _08059C1C: .4byte gUnknown_020041C8
 _08059C20: .4byte 0x000057F0
@@ -20416,7 +20416,7 @@ _08059C28: .4byte gUnknown_02000060
 _08059C2C: .4byte gUnknown_02004128
 _08059C30: .4byte gPal+0x320
 _08059C34: .4byte gUnknown_020099C8
-_08059C38: .4byte gUnknown_0203E194
+_08059C38: .4byte gpBattleAnimTAUnits
 _08059C3C: .4byte gUnknown_0895E0A4
 _08059C40: .4byte gUnknown_0895EEA4
 _08059C44:
@@ -20444,7 +20444,7 @@ _08059C44:
 	ldr r0, [r0, #0xc]
 	str r0, [r1]
 _08059C72:
-	ldr r4, _08059CD4  @ gUnknown_0203E194
+	ldr r4, _08059CD4  @ gpBattleAnimTAUnits
 	ldr r0, [r4, #4]
 	ldr r1, [r0, #4]
 	ldr r1, [r1, #0x34]
@@ -20488,7 +20488,7 @@ _08059CC4: .4byte gUnknown_0895E0A4
 _08059CC8: .4byte gUnknown_0203E19C
 _08059CCC: .4byte gUnknown_0895EEA4
 _08059CD0: .4byte character_battle_animation_palette_table
-_08059CD4: .4byte gUnknown_0203E194
+_08059CD4: .4byte gpBattleAnimTAUnits
 _08059CD8:
 	adds r0, r3, #1
 	lsls r0, r0, #0x10
@@ -20533,7 +20533,7 @@ _08059D24: .4byte character_battle_animation_palette_table
 	THUMB_FUNC_START sub_8059D28
 sub_8059D28: @ 0x08059D28
 	push {lr}
-	ldr r0, _08059D40  @ gUnknown_0203E120
+	ldr r0, _08059D40  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -20544,7 +20544,7 @@ sub_8059D28: @ 0x08059D28
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_08059D40: .4byte gUnknown_0203E120
+_08059D40: .4byte gBattleAnimSceneLayoutEnum
 _08059D44: .4byte _08059D48
 _08059D48: @ jump table
 	.4byte _08059D5C @ case 0
@@ -20611,7 +20611,7 @@ sub_8059DB8: @ 0x08059DB8
 	str r0, [r4, #4]
 	str r0, [r4, #8]
 	str r0, [r4, #0xc]
-	ldr r5, _08059E10  @ gUnknown_0203E104
+	ldr r5, _08059E10  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r5, r1]
 	cmp r0, #1
@@ -20626,7 +20626,7 @@ _08059DDA:
 	adds r0, r6, #0
 	bl sub_8059F5C
 _08059DE8:
-	ldr r0, _08059E14  @ gUnknown_0203E120
+	ldr r0, _08059E14  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -20646,8 +20646,8 @@ _08059E04:
 	bx r0
 	.align 2, 0
 _08059E0C: .4byte gUnknown_02000000
-_08059E10: .4byte gUnknown_0203E104
-_08059E14: .4byte gUnknown_0203E120
+_08059E10: .4byte gBattleAnimUnitEnabledLookup
+_08059E14: .4byte gBattleAnimSceneLayoutEnum
 
 	THUMB_FUNC_END sub_8059DB8
 
@@ -20674,7 +20674,7 @@ sub_8059E18: @ 0x08059E18
 	ldrb r1, [r1]
 	mov r9, r1
 	ldr r0, _08059F24  @ gUnknown_080DAF1D
-	ldr r1, _08059F28  @ gUnknown_0203E120
+	ldr r1, _08059F28  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r1, [r1, r2]
 	adds r0, r1, r0
@@ -20787,7 +20787,7 @@ _08059ED4:
 	.align 2, 0
 _08059F20: .4byte gUnknown_080DAEF0
 _08059F24: .4byte gUnknown_080DAF1D
-_08059F28: .4byte gUnknown_0203E120
+_08059F28: .4byte gBattleAnimSceneLayoutEnum
 _08059F2C: .4byte gUnknown_02000030
 _08059F30: .4byte gUnknown_080DAF28
 _08059F34: .4byte gUnknown_02000034
@@ -20821,7 +20821,7 @@ sub_8059F5C: @ 0x08059F5C
 	adds r1, r1, r2
 	ldrb r7, [r1]
 	ldr r1, _0805A048  @ gUnknown_080DAF22
-	ldr r0, _0805A04C  @ gUnknown_0203E120
+	ldr r0, _0805A04C  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	adds r0, r0, r1
@@ -20924,7 +20924,7 @@ _0805A000:
 	.align 2, 0
 _0805A044: .4byte gUnknown_080DAEF0
 _0805A048: .4byte gUnknown_080DAF22
-_0805A04C: .4byte gUnknown_0203E120
+_0805A04C: .4byte gBattleAnimSceneLayoutEnum
 _0805A050: .4byte gUnknown_02000030
 _0805A054: .4byte gUnknown_02000034
 _0805A058: .4byte gUnknown_02000028
@@ -20939,12 +20939,12 @@ _0805A078: .4byte gUnknown_02000000
 
 	THUMB_FUNC_END sub_8059F5C
 
-	THUMB_FUNC_START sub_805A07C
-sub_805A07C: @ 0x0805A07C
+	THUMB_FUNC_START SwitchAISFrameDataFromBARoundType
+SwitchAISFrameDataFromBARoundType: @ 0x0805A07C
 	push {r4, r5, r6, r7, lr}
 	adds r4, r0, #0
 	adds r6, r1, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _0805A09C
 	ldr r0, _0805A098  @ gUnknown_080DAEF0
@@ -21045,10 +21045,10 @@ _0805A148: .4byte gUnknown_085B9D5C
 _0805A14C: .4byte 0x0000F3FF
 _0805A150: .4byte gUnknown_020041C8
 
-	THUMB_FUNC_END sub_805A07C
+	THUMB_FUNC_END SwitchAISFrameDataFromBARoundType
 
-	THUMB_FUNC_START sub_805A154
-sub_805A154: @ 0x0805A154
+	THUMB_FUNC_START GetAISLayerId
+GetAISLayerId: @ 0x0805A154
 	push {lr}
 	ldrh r1, [r0, #0xc]
 	movs r0, #0x80
@@ -21064,7 +21064,7 @@ _0805A168:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_805A154
+	THUMB_FUNC_END GetAISLayerId
 
 	THUMB_FUNC_START GetAISSubjectId
 GetAISSubjectId: @ 0x0805A16C
@@ -21085,8 +21085,8 @@ _0805A180:
 
 	THUMB_FUNC_END GetAISSubjectId
 
-	THUMB_FUNC_START GetSomeBoolean
-GetSomeBoolean: @ 0x0805A184
+	THUMB_FUNC_START IsBatteRoundTypeAMiss
+IsBatteRoundTypeAMiss: @ 0x0805A184
 	push {lr}
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
@@ -21119,7 +21119,7 @@ _0805A1CA:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetSomeBoolean
+	THUMB_FUNC_END IsBatteRoundTypeAMiss
 
 	THUMB_FUNC_START sub_805A1D0
 sub_805A1D0: @ 0x0805A1D0
@@ -21228,8 +21228,8 @@ _0805A2AE:
 
 	THUMB_FUNC_END sub_805A268
 
-	THUMB_FUNC_START GetCoreAIStruct
-GetCoreAIStruct: @ 0x0805A2B4
+	THUMB_FUNC_START GetOpponentFrontAIS
+GetOpponentFrontAIS: @ 0x0805A2B4
 	push {r4, lr}
 	ldr r4, _0805A2CC  @ gUnknown_02000000
 	bl GetAISSubjectId
@@ -21244,7 +21244,7 @@ GetCoreAIStruct: @ 0x0805A2B4
 	.align 2, 0
 _0805A2CC: .4byte gUnknown_02000000
 
-	THUMB_FUNC_END GetCoreAIStruct
+	THUMB_FUNC_END GetOpponentFrontAIS
 
 	THUMB_FUNC_START sub_805A2D0
 sub_805A2D0: @ 0x0805A2D0
@@ -21256,7 +21256,7 @@ sub_805A2D0: @ 0x0805A2D0
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl GetSomeAISRelatedIndexMaybeByID
+	bl GetBattleAnimHitType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	pop {r4}
@@ -21265,8 +21265,8 @@ sub_805A2D0: @ 0x0805A2D0
 
 	THUMB_FUNC_END sub_805A2D0
 
-	THUMB_FUNC_START sub_805A2F0
-sub_805A2F0: @ 0x0805A2F0
+	THUMB_FUNC_START GetAISNextBattleAnimRoundType
+GetAISNextBattleAnimRoundType: @ 0x0805A2F0
 	push {r4, lr}
 	adds r4, r0, #0
 	bl GetAISSubjectId
@@ -21274,17 +21274,17 @@ sub_805A2F0: @ 0x0805A2F0
 	ldrh r0, [r4, #0xe]
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl GetSomeAISRelatedIndexMaybeByID
+	bl GetBattleAnimHitType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	pop {r4}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_805A2F0
+	THUMB_FUNC_END GetAISNextBattleAnimRoundType
 
-	THUMB_FUNC_START GetSomeAISRelatedIndexMaybe
-GetSomeAISRelatedIndexMaybe: @ 0x0805A310
+	THUMB_FUNC_START GetAISCurrentRoundType
+GetAISCurrentRoundType: @ 0x0805A310
 	push {r4, lr}
 	adds r4, r0, #0
 	bl GetAISSubjectId
@@ -21295,14 +21295,14 @@ GetSomeAISRelatedIndexMaybe: @ 0x0805A310
 	movs r1, #1
 	eors r1, r2
 	adds r0, r0, r1
-	bl GetSomeAISRelatedIndexMaybeByID
+	bl GetBattleAnimHitType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	pop {r4}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetSomeAISRelatedIndexMaybe
+	THUMB_FUNC_END GetAISCurrentRoundType
 
 	THUMB_FUNC_START sub_805A334
 sub_805A334: @ 0x0805A334
@@ -21315,7 +21315,7 @@ sub_805A334: @ 0x0805A334
 	movs r1, #1
 	eors r1, r2
 	adds r0, r0, r1
-	bl GetSomeAISRelatedIndexMaybeByID
+	bl GetBattleAnimHitType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	pop {r4}
@@ -21503,7 +21503,7 @@ _0805A4F0:
 	b _0805A526
 _0805A4F8:
 	adds r0, r4, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _0805A508
 	adds r0, r4, #0
@@ -21542,7 +21542,7 @@ _0805A538:
 	cmp r0, #0
 	beq _0805A568
 	adds r0, r4, #0
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _0805A55E
 	ldr r1, [r6, #0x2c]
@@ -21607,7 +21607,7 @@ sub_805A5A8: @ 0x0805A5A8
 	adds r6, r0, #0
 	ldr r5, [r6, #0x44]
 	ldr r4, _0805A600  @ banim_data
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #0
 	bne _0805A5FA
 	ldr r0, _0805A604  @ gUnknown_080DAEF0
@@ -21639,7 +21639,7 @@ sub_805A5A8: @ 0x0805A5A8
 	cmp r1, r0
 	beq _0805A5FA
 	adds r0, r6, #0
-	bl NewEkrChienCHR
+	bl StartEkrChienCHR
 	ldr r0, [r6, #0x28]
 	str r0, [r5, #0x2c]
 _0805A5FA:
@@ -22151,8 +22151,8 @@ _0805A9BA:
 
 	THUMB_FUNC_END sub_805A9A4
 
-	THUMB_FUNC_START NewEfxAnimeDrvProc
-NewEfxAnimeDrvProc: @ 0x0805A9C0
+	THUMB_FUNC_START StartEkrAnimeDrvProc
+StartEkrAnimeDrvProc: @ 0x0805A9C0
 	push {r4, lr}
 	ldr r4, _0805A9D8  @ gUnknown_0201FB18
 	ldr r0, _0805A9DC  @ gUnknown_085B9DAC
@@ -22167,10 +22167,10 @@ NewEfxAnimeDrvProc: @ 0x0805A9C0
 _0805A9D8: .4byte gUnknown_0201FB18
 _0805A9DC: .4byte gUnknown_085B9DAC
 
-	THUMB_FUNC_END NewEfxAnimeDrvProc
+	THUMB_FUNC_END StartEkrAnimeDrvProc
 
-	THUMB_FUNC_START sub_805A9E0
-sub_805A9E0: @ 0x0805A9E0
+	THUMB_FUNC_START EndEkrAnimeDrvProc
+EndEkrAnimeDrvProc: @ 0x0805A9E0
 	push {lr}
 	ldr r0, _0805A9F0  @ gUnknown_0201FB18
 	ldr r0, [r0]
@@ -22180,7 +22180,7 @@ sub_805A9E0: @ 0x0805A9E0
 	.align 2, 0
 _0805A9F0: .4byte gUnknown_0201FB18
 
-	THUMB_FUNC_END sub_805A9E0
+	THUMB_FUNC_END EndEkrAnimeDrvProc
 
 	THUMB_FUNC_START ExecAllAIS
 ExecAllAIS: @ 0x0805A9F4
@@ -22191,8 +22191,8 @@ ExecAllAIS: @ 0x0805A9F4
 
 	THUMB_FUNC_END ExecAllAIS
 
-	THUMB_FUNC_START sub_805AA00
-sub_805AA00: @ 0x0805AA00
+	THUMB_FUNC_START StartEkrUnitMainMini
+StartEkrUnitMainMini: @ 0x0805AA00
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, _0805AA24  @ gUnknown_085B9DC4
@@ -22211,7 +22211,7 @@ sub_805AA00: @ 0x0805AA00
 	.align 2, 0
 _0805AA24: .4byte gUnknown_085B9DC4
 
-	THUMB_FUNC_END sub_805AA00
+	THUMB_FUNC_END StartEkrUnitMainMini
 
 	THUMB_FUNC_START sub_805AA28
 sub_805AA28: @ 0x0805AA28
@@ -22232,8 +22232,8 @@ sub_805AA28: @ 0x0805AA28
 
 	THUMB_FUNC_END sub_805AA28
 
-	THUMB_FUNC_START sub_805AA4C
-sub_805AA4C: @ 0x0805AA4C
+	THUMB_FUNC_START EkrUnitMainMini_OnLoop
+EkrUnitMainMini_OnLoop: @ 0x0805AA4C
 	push {r4, lr}
 	ldr r4, [r0, #0x5c]
 	ldr r1, [r4, #0x14]
@@ -22246,7 +22246,7 @@ sub_805AA4C: @ 0x0805AA4C
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_805AA4C
+	THUMB_FUNC_END EkrUnitMainMini_OnLoop
 
 	THUMB_FUNC_START sub_805AA68
 sub_805AA68: @ 0x0805AA68
@@ -22579,7 +22579,7 @@ _0805ACE8:
 _0805AD0C:
 	movs r1, #0x68
 	movs r3, #2
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	str r0, [r6, #0x18]
 _0805AD16:
 	movs r0, #0
@@ -22694,7 +22694,7 @@ _0805ADD4:
 _0805ADF8:
 	movs r1, #0x68
 	movs r3, #2
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	str r0, [r6, #0x14]
 _0805AE02:
 	add sp, #0xc
@@ -22982,23 +22982,23 @@ _0805B018: .4byte gUnknown_0201CF84
 
 	THUMB_FUNC_START SetBattleAnimArenaFlag
 SetBattleAnimArenaFlag: @ 0x0805B01C
-	ldr r1, _0805B024  @ gUnknown_0203E1E4
+	ldr r1, _0805B024  @ gBoolBattleAnimIsArena
 	str r0, [r1]
 	bx lr
 	.align 2, 0
-_0805B024: .4byte gUnknown_0203E1E4
+_0805B024: .4byte gBoolBattleAnimIsArena
 
 	THUMB_FUNC_END SetBattleAnimArenaFlag
 
-	THUMB_FUNC_START sub_805B028
-sub_805B028: @ 0x0805B028
-	ldr r0, _0805B030  @ gUnknown_0203E1E4
+	THUMB_FUNC_START GetBattleAnimArenaFlag
+GetBattleAnimArenaFlag: @ 0x0805B028
+	ldr r0, _0805B030  @ gBoolBattleAnimIsArena
 	ldr r0, [r0]
 	bx lr
 	.align 2, 0
-_0805B030: .4byte gUnknown_0203E1E4
+_0805B030: .4byte gBoolBattleAnimIsArena
 
-	THUMB_FUNC_END sub_805B028
+	THUMB_FUNC_END GetBattleAnimArenaFlag
 
 	THUMB_FUNC_START sub_805B034
 sub_805B034: @ 0x0805B034
@@ -23037,26 +23037,26 @@ _0805B078: .4byte gBg3Tm
 
 	THUMB_FUNC_END sub_805B034
 
-	THUMB_FUNC_START sub_805B07C
-sub_805B07C: @ 0x0805B07C
+	THUMB_FUNC_START PlayBattleCroudSfxIfArena
+PlayBattleCroudSfxIfArena: @ 0x0805B07C
 	push {lr}
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	beq _0805B090
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x8f
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 _0805B090:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_805B07C
+	THUMB_FUNC_END PlayBattleCroudSfxIfArena
 
 	THUMB_FUNC_START sub_805B094
 sub_805B094: @ 0x0805B094
 	push {lr}
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	beq _0805B0A4
 	movs r0, #0x8e
@@ -23070,7 +23070,7 @@ _0805B0A4:
 	THUMB_FUNC_START BeginAnimsOnBattle_Arena
 BeginAnimsOnBattle_Arena: @ 0x0805B0A8
 	push {lr}
-	bl NewEkrBattleDeamon
+	bl StartEkrBattleDeamon
 	bl BsoInit
 	bl sub_8052184
 	ldr r1, _0805B0C8  @ gUnknown_02017744
@@ -23124,15 +23124,15 @@ sub_805B104: @ 0x0805B104
 	movs r0, #0
 	bl InitOam
 	ldr r1, _0805B178  @ gUnknown_02017744
-	ldr r0, _0805B17C  @ gUnknown_0203E100
+	ldr r0, _0805B17C  @ gBattleAnimInitialHitSide
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	str r0, [r1]
 	bl sub_8051CC4
 	bl sub_80599E8
-	bl NewEkrGauge
-	bl NewEkrDispUP
-	bl NewEkrBattle
+	bl StartEkrGauge
+	bl StartEkrDispUP
+	bl StartEkrBattle
 	ldr r0, _0805B180  @ gUnknown_085BEF94
 	ldr r4, _0805B184  @ gPal+0xC0
 	adds r1, r4, #0
@@ -23154,7 +23154,7 @@ sub_805B104: @ 0x0805B104
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	mov r0, r8
 	bl Proc_Break
@@ -23165,7 +23165,7 @@ sub_805B104: @ 0x0805B104
 	bx r0
 	.align 2, 0
 _0805B178: .4byte gUnknown_02017744
-_0805B17C: .4byte gUnknown_0203E100
+_0805B17C: .4byte gBattleAnimInitialHitSide
 _0805B180: .4byte gUnknown_085BEF94
 _0805B184: .4byte gPal+0xC0
 _0805B188: .4byte gUnknown_020165C8
@@ -23208,7 +23208,7 @@ sub_805B18C: @ 0x0805B18C
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x8e
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	adds r0, r5, #0
 	bl Proc_Break
 	add sp, #0x10
@@ -23249,7 +23249,7 @@ sub_805B200: @ 0x0805B200
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r1, [r6, #0x2c]
 	adds r1, #1
@@ -23350,7 +23350,7 @@ sub_805B2BC: @ 0x0805B2BC
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r1, [r6, #0x2c]
 	adds r1, #1
@@ -23381,9 +23381,9 @@ sub_805B320: @ 0x0805B320
 	adds r4, r0, #0
 	bl EndEkrBattleDeamon
 	bl EndEkrGauge
-	ldr r0, _0805B344  @ SomeUpdateRoutine
+	ldr r0, _0805B344  @ OnGameLoopMain
 	bl SetMainFunc
-	ldr r0, _0805B348  @ OnVSync
+	ldr r0, _0805B348  @ OnVBlank
 	bl SetOnVBlank
 	adds r0, r4, #0
 	bl Proc_Break
@@ -23391,8 +23391,8 @@ sub_805B320: @ 0x0805B320
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0805B344: .4byte SomeUpdateRoutine
-_0805B348: .4byte OnVSync
+_0805B344: .4byte OnGameLoopMain
+_0805B348: .4byte OnVBlank
 
 	THUMB_FUNC_END sub_805B320
 
@@ -23443,7 +23443,7 @@ sub_805B394: @ 0x0805B394
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	cmp r0, #0
@@ -23469,7 +23469,7 @@ _0805B3C8: .4byte gPal+0xC0
 StartSpellAnimation: @ 0x0805B3CC
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	ldr r4, _0805B3F4  @ gUnknown_0203E118
+	ldr r4, _0805B3F4  @ gBattleSpellAnimationId1
 	bl GetAISSubjectId
 	lsls r0, r0, #1
 	adds r0, r0, r4
@@ -23485,7 +23485,7 @@ StartSpellAnimation: @ 0x0805B3CC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0805B3F4: .4byte gUnknown_0203E118
+_0805B3F4: .4byte gBattleSpellAnimationId1
 _0805B3F8: .4byte gUnknown_085D4E60
 
 	THUMB_FUNC_END StartSpellAnimation
@@ -23793,7 +23793,7 @@ sub_805B5E0: @ 0x0805B5E0
 	str r5, [r7, #0x54]
 	str r6, [r7, #0x58]
 	mov r0, r8
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _0805B634
@@ -23807,7 +23807,7 @@ _0805B634:
 	ldr r0, _0805B654  @ 0x0000FFF8
 _0805B636:
 	strh r0, [r7, #0x32]
-	ldr r0, _0805B658  @ gUnknown_0203E120
+	ldr r0, _0805B658  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -23821,7 +23821,7 @@ _0805B636:
 	b _0805B660
 	.align 2, 0
 _0805B654: .4byte 0x0000FFF8
-_0805B658: .4byte gUnknown_0203E120
+_0805B658: .4byte gBattleAnimSceneLayoutEnum
 _0805B65C:
 	ldrh r0, [r7, #0x32]
 	subs r0, #0x18
@@ -24239,7 +24239,7 @@ sub_805B94C: @ 0x0805B94C
 sub_805B958: @ 0x0805B958
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _0805B984  @ gUnknown_0202BCB0
+	ldr r0, _0805B984  @ gBmSt
 	ldrb r0, [r0]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -24259,7 +24259,7 @@ sub_805B958: @ 0x0805B958
 	ldr r0, _0805B994  @ gUnknown_0201FB38
 	b _0805B99E
 	.align 2, 0
-_0805B984: .4byte gUnknown_0202BCB0
+_0805B984: .4byte gBmSt
 _0805B988: .4byte gUnknown_0201FB30
 _0805B98C: .4byte gUnknown_0201FDBC
 _0805B990: .4byte gUnknown_0201FB2C
@@ -24503,7 +24503,7 @@ sub_805BB24: @ 0x0805BB24
 	mov r0, sl
 	str r0, [r4, #0x54]
 	mov r0, r8
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	strh r5, [r4, #0x32]
 	strh r6, [r4, #0x3a]
 	pop {r3, r4, r5}
@@ -24908,8 +24908,8 @@ _0805BE8C: .4byte gUnknown_02000038
 StartSpellAnimDummy: @ 0x0805BE90
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805BEB0  @ gUnknown_085D5070
 	movs r1, #3
 	bl SpawnProc
@@ -24929,7 +24929,7 @@ Loop6C_efxDummymagic: @ 0x0805BEB4
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -24948,7 +24948,7 @@ _0805BEDA:
 	cmp r0, #0xa
 	bne _0805BF02
 	adds r0, r4, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	movs r1, #1
@@ -24960,7 +24960,7 @@ _0805BEDA:
 	orrs r0, r1
 	strh r0, [r4, #0x10]
 _0805BEF8:
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _0805BF02:
@@ -24974,8 +24974,8 @@ _0805BF02:
 StartSpellAnimHandAxe: @ 0x0805BF08
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805BF3C  @ gUnknown_085D5088
 	movs r1, #3
 	bl SpawnProc
@@ -24984,10 +24984,10 @@ StartSpellAnimHandAxe: @ 0x0805BF08
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -25003,7 +25003,7 @@ sub_805BF40: @ 0x0805BF40
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -25015,7 +25015,7 @@ sub_805BF40: @ 0x0805BF40
 	ldr r0, [r5, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	ldr r0, [r5, #0x5c]
 	bl sub_805BFDC
 	movs r1, #0x2c
@@ -25030,7 +25030,7 @@ sub_805BF40: @ 0x0805BF40
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r6, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	adds r0, r6, #0
 	bl sub_8072400
 	lsls r0, r0, #0x10
@@ -25042,7 +25042,7 @@ sub_805BF40: @ 0x0805BF40
 	cmp r0, #1
 	bne _0805BFA6
 	adds r0, r6, #0
-	bl sub_806C71C
+	bl StartEfxCriticalEffect
 	b _0805BFB2
 _0805BFA6:
 	ldrb r0, [r4]
@@ -25064,7 +25064,7 @@ _0805BFC0:
 	beq _0805BFD6
 	cmp r0, #0x50
 	bne _0805BFD6
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _0805BFD6:
@@ -25118,7 +25118,7 @@ _0805C038:
 	subs r0, #0x48
 _0805C03C:
 	strh r0, [r5, #2]
-	ldr r0, _0805C04C  @ gUnknown_0203E120
+	ldr r0, _0805C04C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -25126,7 +25126,7 @@ _0805C03C:
 	movs r0, #0x23
 	b _0805C052
 	.align 2, 0
-_0805C04C: .4byte gUnknown_0203E120
+_0805C04C: .4byte gBattleAnimSceneLayoutEnum
 _0805C050:
 	movs r0, #0xa
 _0805C052:
@@ -25137,11 +25137,11 @@ _0805C052:
 	str r0, [r6, #0x64]
 	ldr r0, _0805C078  @ gUnknown_085DA05C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C07C  @ gUnknown_085D9C5C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -25171,7 +25171,7 @@ sub_805C080: @ 0x0805C080
 	str r0, [r1]
 	ldr r0, [r4, #0x60]
 	bl BsoRemove
-	ldr r0, _0805C0C8  @ gUnknown_0203E120
+	ldr r0, _0805C0C8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -25186,7 +25186,7 @@ sub_805C080: @ 0x0805C080
 	b _0805C0D6
 	.align 2, 0
 _0805C0C4: .4byte gUnknown_0201774C
-_0805C0C8: .4byte gUnknown_0203E120
+_0805C0C8: .4byte gBattleAnimSceneLayoutEnum
 _0805C0CC: .4byte gUnknown_02017758
 _0805C0D0:
 	adds r0, r4, #0
@@ -25262,11 +25262,11 @@ _0805C158:
 	strh r0, [r5, #2]
 	ldr r0, _0805C180  @ gUnknown_085DA05C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C184  @ gUnknown_085D9C5C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r0, [r6, #0x5c]
 	ldr r1, [r6, #0x60]
 	bl sub_805C1C8
@@ -25406,8 +25406,8 @@ _0805C25C:
 StartSpellAnimArrow: @ 0x0805C264
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C298  @ gUnknown_085D50F8
 	movs r1, #3
 	bl SpawnProc
@@ -25416,10 +25416,10 @@ StartSpellAnimArrow: @ 0x0805C264
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -25435,9 +25435,9 @@ sub_805C29C: @ 0x0805C29C
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r4, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -25449,7 +25449,7 @@ sub_805C29C: @ 0x0805C29C
 	ldr r0, [r5, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	ldr r0, [r5, #0x5c]
 	bl sub_805C358
 	movs r1, #0x80
@@ -25472,7 +25472,7 @@ sub_805C29C: @ 0x0805C29C
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r6, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	adds r0, r6, #0
 	bl sub_8072400
 	lsls r0, r0, #0x10
@@ -25484,7 +25484,7 @@ sub_805C29C: @ 0x0805C29C
 	cmp r0, #1
 	bne _0805C31A
 	adds r0, r6, #0
-	bl sub_806C71C
+	bl StartEfxCriticalEffect
 	b _0805C326
 _0805C31A:
 	ldrb r0, [r4]
@@ -25509,7 +25509,7 @@ _0805C334:
 	adds r0, #1
 	cmp r1, r0
 	bne _0805C350
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _0805C350:
@@ -25545,10 +25545,10 @@ sub_805C358: @ 0x0805C358
 	str r0, [r4, #0x60]
 	ldr r0, _0805C3B8  @ gUnknown_085DA05C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C3BC  @ gUnknown_085DA7AC
 	movs r1, #0x60
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -25597,8 +25597,8 @@ _0805C3EC: .4byte gUnknown_0201774C
 StartSpellAnimJavelin: @ 0x0805C3F0
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C440  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25607,10 +25607,10 @@ StartSpellAnimJavelin: @ 0x0805C3F0
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25618,11 +25618,11 @@ StartSpellAnimJavelin: @ 0x0805C3F0
 	bl sub_805C88C
 	ldr r0, _0805C444  @ gUnknown_085DAB30
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C448  @ gUnknown_085DA900
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25637,8 +25637,8 @@ _0805C448: .4byte gUnknown_085DA900
 sub_805C44C: @ 0x0805C44C
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C49C  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25647,10 +25647,10 @@ sub_805C44C: @ 0x0805C44C
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25658,11 +25658,11 @@ sub_805C44C: @ 0x0805C44C
 	bl sub_805C88C
 	ldr r0, _0805C4A0  @ gUnknown_085DAD6C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C4A4  @ gUnknown_085DAB50
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25677,8 +25677,8 @@ _0805C4A4: .4byte gUnknown_085DAB50
 sub_805C4A8: @ 0x0805C4A8
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C4F8  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25687,10 +25687,10 @@ sub_805C4A8: @ 0x0805C4A8
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25698,11 +25698,11 @@ sub_805C4A8: @ 0x0805C4A8
 	bl sub_805C88C
 	ldr r0, _0805C4FC  @ gUnknown_085DAFA4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C500  @ gUnknown_085DAD8C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25717,8 +25717,8 @@ _0805C500: .4byte gUnknown_085DAD8C
 sub_805C504: @ 0x0805C504
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C554  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25727,10 +25727,10 @@ sub_805C504: @ 0x0805C504
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25738,11 +25738,11 @@ sub_805C504: @ 0x0805C504
 	bl sub_805C88C
 	ldr r0, _0805C558  @ gUnknown_085DB1E0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C55C  @ gUnknown_085DAFC4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25757,8 +25757,8 @@ _0805C55C: .4byte gUnknown_085DAFC4
 sub_805C560: @ 0x0805C560
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C5B0  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25767,10 +25767,10 @@ sub_805C560: @ 0x0805C560
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25778,11 +25778,11 @@ sub_805C560: @ 0x0805C560
 	bl sub_805C88C
 	ldr r0, _0805C5B4  @ gUnknown_085DB42C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C5B8  @ gUnknown_085DB200
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25797,8 +25797,8 @@ _0805C5B8: .4byte gUnknown_085DB200
 sub_805C5BC: @ 0x0805C5BC
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C60C  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25807,10 +25807,10 @@ sub_805C5BC: @ 0x0805C5BC
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25818,11 +25818,11 @@ sub_805C5BC: @ 0x0805C5BC
 	bl sub_805C88C
 	ldr r0, _0805C610  @ gUnknown_085DB694
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C614  @ gUnknown_085DB44C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25837,8 +25837,8 @@ _0805C614: .4byte gUnknown_085DB44C
 sub_805C618: @ 0x0805C618
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C668  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25847,10 +25847,10 @@ sub_805C618: @ 0x0805C618
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25858,11 +25858,11 @@ sub_805C618: @ 0x0805C618
 	bl sub_805C88C
 	ldr r0, _0805C66C  @ gUnknown_085DB8EC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C670  @ gUnknown_085DB6B4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25877,8 +25877,8 @@ _0805C670: .4byte gUnknown_085DB6B4
 sub_805C674: @ 0x0805C674
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C6C4  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25887,10 +25887,10 @@ sub_805C674: @ 0x0805C674
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25898,11 +25898,11 @@ sub_805C674: @ 0x0805C674
 	bl sub_805C88C
 	ldr r0, _0805C6C8  @ gUnknown_085DBB70
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C6CC  @ gUnknown_085DB90C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25917,8 +25917,8 @@ _0805C6CC: .4byte gUnknown_085DB90C
 sub_805C6D0: @ 0x0805C6D0
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C720  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25927,10 +25927,10 @@ sub_805C6D0: @ 0x0805C6D0
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25938,11 +25938,11 @@ sub_805C6D0: @ 0x0805C6D0
 	bl sub_805C88C
 	ldr r0, _0805C724  @ gUnknown_085DBE00
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C728  @ gUnknown_085DBB90
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25957,8 +25957,8 @@ _0805C728: .4byte gUnknown_085DBB90
 sub_805C72C: @ 0x0805C72C
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C77C  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -25967,10 +25967,10 @@ sub_805C72C: @ 0x0805C72C
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -25978,11 +25978,11 @@ sub_805C72C: @ 0x0805C72C
 	bl sub_805C88C
 	ldr r0, _0805C780  @ gUnknown_085DC050
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C784  @ gUnknown_085DBE20
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -25997,8 +25997,8 @@ _0805C784: .4byte gUnknown_085DBE20
 sub_805C788: @ 0x0805C788
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C7D8  @ gUnknown_085D5128
 	movs r1, #3
 	bl SpawnProc
@@ -26007,10 +26007,10 @@ sub_805C788: @ 0x0805C788
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	adds r0, r5, #0
@@ -26018,11 +26018,11 @@ sub_805C788: @ 0x0805C788
 	bl sub_805C88C
 	ldr r0, _0805C7DC  @ gUnknown_085DB1E0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805C7E0  @ gUnknown_085DAFC4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -26047,7 +26047,7 @@ sub_805C7E4: @ 0x0805C7E4
 	ldr r0, [r5, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	movs r1, #0x80
 	lsls r1, r1, #1
 	ldr r0, [r5, #0x5c]
@@ -26061,7 +26061,7 @@ sub_805C7E4: @ 0x0805C7E4
 	cmp r0, #1
 	bne _0805C870
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
 	ldrh r0, [r6, #0x10]
 	movs r1, #9
@@ -26071,7 +26071,7 @@ sub_805C7E4: @ 0x0805C7E4
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r6, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	adds r0, r6, #0
 	bl sub_8072400
 	lsls r0, r0, #0x10
@@ -26083,7 +26083,7 @@ sub_805C7E4: @ 0x0805C7E4
 	cmp r0, #1
 	bne _0805C856
 	adds r0, r6, #0
-	bl sub_806C71C
+	bl StartEfxCriticalEffect
 	b _0805C862
 _0805C856:
 	ldrb r0, [r4]
@@ -26105,7 +26105,7 @@ _0805C870:
 	beq _0805C886
 	cmp r0, #0x10
 	bne _0805C886
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _0805C886:
@@ -26206,8 +26206,8 @@ _0805C930: .4byte gUnknown_0201774C
 StartSpellAnimSong: @ 0x0805C934
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805C968  @ gUnknown_085D5158
 	movs r1, #3
 	bl SpawnProc
@@ -26216,10 +26216,10 @@ StartSpellAnimSong: @ 0x0805C934
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -26236,7 +26236,7 @@ sub_805C96C: @ 0x0805C96C
 	sub sp, #8
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -26334,7 +26334,7 @@ _0805CA44:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r4, #0x10]
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _0805CA5A:
@@ -26374,8 +26374,8 @@ sub_805CA64: @ 0x0805CA64
 	adds r4, r4, r0
 	adds r0, r4, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -26399,7 +26399,7 @@ sub_805CAC4: @ 0x0805CAC4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -26417,7 +26417,7 @@ sub_805CAC4: @ 0x0805CAC4
 	movs r1, #0x80
 	lsls r1, r1, #6
 	adds r0, r2, #0
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 _0805CAFE:
 	ldr r0, [r6]
 	str r0, [r4, #0x58]
@@ -26427,19 +26427,19 @@ _0805CAFE:
 	mov r3, r8
 	adds r2, r5, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805CB32
 _0805CB14:
 	movs r0, #1
 	negs r0, r0
 	cmp r1, r0
 	bne _0805CB32
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805CB3C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0805CB32:
@@ -26484,11 +26484,11 @@ sub_805CB40: @ 0x0805CB40
 	adds r5, r5, r0
 	adds r0, r5, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805CBA4  @ gUnknown_08755FD4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -26536,8 +26536,8 @@ _0805CBD8: .4byte gUnknown_0201774C
 StartSpellAnimDance: @ 0x0805CBDC
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805CC10  @ gUnknown_085D5278
 	movs r1, #3
 	bl SpawnProc
@@ -26546,10 +26546,10 @@ StartSpellAnimDance: @ 0x0805CBDC
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -26566,7 +26566,7 @@ sub_805CC14: @ 0x0805CC14
 	sub sp, #8
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -26664,7 +26664,7 @@ _0805CCEC:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r4, #0x10]
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _0805CD02:
@@ -26679,8 +26679,8 @@ _0805CD02:
 sub_805CD0C: @ 0x0805CD0C
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805CD58  @ gUnknown_085D5290
 	movs r1, #3
 	bl SpawnProc
@@ -26689,10 +26689,10 @@ sub_805CD0C: @ 0x0805CD0C
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r1, r4, #0
 	adds r1, #0x29
 	strb r0, [r1]
@@ -26718,7 +26718,7 @@ sub_805CD5C: @ 0x0805CD5C
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -26730,7 +26730,7 @@ sub_805CD5C: @ 0x0805CD5C
 	ldr r0, [r5, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0805CE14
 _0805CD82:
 	movs r1, #0x2c
@@ -26765,7 +26765,7 @@ _0805CDB0:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r6, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	adds r0, r6, #0
 	bl sub_8072400
 	lsls r0, r0, #0x10
@@ -26777,7 +26777,7 @@ _0805CDB0:
 	cmp r0, #1
 	bne _0805CDE8
 	adds r0, r6, #0
-	bl sub_806C71C
+	bl StartEfxCriticalEffect
 	b _0805CDF4
 _0805CDE8:
 	ldrb r0, [r4]
@@ -26797,7 +26797,7 @@ _0805CE02:
 	beq _0805CE14
 	cmp r0, #0x40
 	bne _0805CE14
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _0805CE14:
@@ -26906,9 +26906,9 @@ nullsub_42: @ 0x0805CEC4
 sub_805CEC8: @ 0x0805CEC8
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805CF00  @ gUnknown_085D52C0
 	movs r1, #3
 	bl SpawnProc
@@ -26917,10 +26917,10 @@ sub_805CEC8: @ 0x0805CEC8
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -26937,9 +26937,9 @@ sub_805CF04: @ 0x0805CF04
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -26952,7 +26952,7 @@ sub_805CF04: @ 0x0805CF04
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805CF32:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -26970,7 +26970,7 @@ _0805CF32:
 	bl sub_805CFC0
 	ldr r0, [r4, #0x5c]
 	movs r1, #6
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -26978,7 +26978,7 @@ _0805CF32:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805CFB6
@@ -27008,8 +27008,8 @@ _0805CF9A:
 	adds r0, #5
 	cmp r1, r0
 	bne _0805CFB6
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805CFB6:
@@ -27053,11 +27053,11 @@ _0805CFF0:
 	str r0, [r4, #0x60]
 	ldr r0, _0805D028  @ gUnknown_085DE964
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805D02C  @ gUnknown_085DDC64
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -27106,8 +27106,8 @@ _0805D060: .4byte gUnknown_0201774C
 StartSpellAnimFireBreath: @ 0x0805D064
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805D098  @ gUnknown_085D52F0
 	movs r1, #3
 	bl SpawnProc
@@ -27116,10 +27116,10 @@ StartSpellAnimFireBreath: @ 0x0805D064
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -27136,7 +27136,7 @@ sub_805D09C: @ 0x0805D09C
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -27149,7 +27149,7 @@ sub_805D09C: @ 0x0805D09C
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805D0C4:
 	movs r1, #0x2c
 	ldrsh r0, [r4, r1]
@@ -27192,7 +27192,7 @@ _0805D110:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805D142
@@ -27202,7 +27202,7 @@ _0805D110:
 _0805D134:
 	cmp r0, #0x82
 	bne _0805D142
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r4, #0
 	bl Proc_Break
 _0805D142:
@@ -27245,7 +27245,7 @@ _0805D17C:
 	bl sub_8055554
 	adds r4, r0, #0
 	str r4, [r5, #0x60]
-	ldr r0, _0805D1B8  @ gUnknown_0203E120
+	ldr r0, _0805D1B8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -27262,7 +27262,7 @@ _0805D1A8: .4byte gUnknown_0201774C
 _0805D1AC: .4byte gUnknown_085D5308
 _0805D1B0: .4byte gUnknown_085E35DC
 _0805D1B4: .4byte gUnknown_085E2A24
-_0805D1B8: .4byte gUnknown_0203E120
+_0805D1B8: .4byte gBattleAnimSceneLayoutEnum
 _0805D1BC:
 	ldrh r0, [r4, #2]
 	subs r0, #0x10
@@ -27282,11 +27282,11 @@ _0805D1D6:
 	strh r0, [r4, #2]
 	ldr r0, _0805D1F4  @ gUnknown_085DE964
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805D1F8  @ gUnknown_085DDC64
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -27301,7 +27301,7 @@ _0805D1F8: .4byte gUnknown_085DDC64
 sub_805D1FC: @ 0x0805D1FC
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _0805D220  @ gUnknown_0203E120
+	ldr r0, _0805D220  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -27316,7 +27316,7 @@ sub_805D1FC: @ 0x0805D1FC
 	adds r0, #0x48
 	b _0805D22C
 	.align 2, 0
-_0805D220: .4byte gUnknown_0203E120
+_0805D220: .4byte gBattleAnimSceneLayoutEnum
 _0805D224:
 	ldr r1, [r4, #0x60]
 	ldr r0, [r4, #0x5c]
@@ -27371,13 +27371,13 @@ sub_805D260: @ 0x0805D260
 	ldr r0, _0805D2AC  @ gUnknown_087246D8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r2, _0805D2B0  @ gUnknown_08725AF0
 	ldr r0, [r4, #0x5c]
 	adds r1, r2, #0
-	bl sub_8055670
-	bl ClearBG1Setup
-	bl sub_80551B0
+	bl SpellFx_WriteBgMap
+	bl SpellFx_ResetBg1Offset
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -27402,8 +27402,8 @@ sub_805D2B4: @ 0x0805D2B4
 	ldrsh r1, [r4, r2]
 	cmp r0, r1
 	bne _0805D2E0
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	ldr r1, _0805D2E8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -27457,7 +27457,7 @@ sub_805D328: @ 0x0805D328
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -27471,10 +27471,10 @@ sub_805D328: @ 0x0805D328
 	movs r1, #0
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	adds r0, r4, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0805D37E
 	.align 2, 0
 _0805D364: .4byte gUnknown_020165C8
@@ -27502,9 +27502,9 @@ _0805D384: .4byte gUnknown_0201774C
 StartSpellAnimIceBreath: @ 0x0805D388
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805D3C0  @ gUnknown_085D5358
 	movs r1, #3
 	bl SpawnProc
@@ -27513,10 +27513,10 @@ StartSpellAnimIceBreath: @ 0x0805D388
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -27532,7 +27532,7 @@ sub_805D3C4: @ 0x0805D3C4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -27567,7 +27567,7 @@ _0805D400:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805D43E
@@ -27579,8 +27579,8 @@ _0805D428:
 	beq _0805D43E
 	cmp r0, #0x3c
 	bne _0805D43E
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805D43E:
@@ -27631,11 +27631,11 @@ _0805D494:
 	strh r0, [r6, #2]
 	ldr r0, _0805D4B0  @ gUnknown_085DFA28
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805D4B4  @ gUnknown_085DDC64
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -27666,8 +27666,8 @@ _0805D4CC: .4byte gUnknown_0201774C
 StartSpellAnimDarkBreath: @ 0x0805D4D0
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805D504  @ gUnknown_085D5390
 	movs r1, #3
 	bl SpawnProc
@@ -27676,10 +27676,10 @@ StartSpellAnimDarkBreath: @ 0x0805D4D0
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -27695,7 +27695,7 @@ Loop6C_efxDarkbreath: @ 0x0805D508
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -27707,7 +27707,7 @@ Loop6C_efxDarkbreath: @ 0x0805D508
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	ldr r0, [r4, #0x5c]
 	movs r1, #0x5a
 	movs r2, #0xa
@@ -27737,7 +27737,7 @@ _0805D558:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805D596
@@ -27751,7 +27751,7 @@ _0805D584:
 	beq _0805D596
 	cmp r0, #0x30
 	bne _0805D596
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r4, #0
 	bl Proc_Break
 _0805D596:
@@ -27784,8 +27784,8 @@ sub_805D59C: @ 0x0805D59C
 	ldr r0, _0805D5E8  @ gUnknown_085E5AE4
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -27806,7 +27806,7 @@ sub_805D5EC: @ 0x0805D5EC
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -27819,19 +27819,19 @@ sub_805D5EC: @ 0x0805D5EC
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805D638
 _0805D61A:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _0805D638
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805D640  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0805D638:
@@ -27881,7 +27881,7 @@ sub_805D680: @ 0x0805D680
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -27890,14 +27890,14 @@ sub_805D680: @ 0x0805D680
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0805D6C0
 _0805D6A6:
 	movs r0, #1
 	negs r0, r0
 	cmp r1, r0
 	bne _0805D6C0
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	ldr r1, _0805D6C8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -27943,7 +27943,7 @@ sub_805D6CC: @ 0x0805D6CC
 	strh r0, [r5, #0x32]
 	ldr r0, _0805D738  @ 0x0000FFFC
 	strh r0, [r5, #0x3a]
-	ldr r0, _0805D73C  @ gUnknown_0203E120
+	ldr r0, _0805D73C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -27965,7 +27965,7 @@ _0805D72C: .4byte gUnknown_085D5410
 _0805D730: .4byte gUnknown_085E5A78
 _0805D734: .4byte gUnknown_08723208
 _0805D738: .4byte 0x0000FFFC
-_0805D73C: .4byte gUnknown_0203E120
+_0805D73C: .4byte gBattleAnimSceneLayoutEnum
 _0805D740:
 	ldrh r0, [r4, #2]
 	ldrh r1, [r5, #0x32]
@@ -27978,11 +27978,11 @@ _0805D746:
 	strh r0, [r4, #4]
 	ldr r0, _0805D76C  @ gUnknown_085DFA48
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805D770  @ gUnknown_085DDC64
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -27997,7 +27997,7 @@ _0805D770: .4byte gUnknown_085DDC64
 sub_805D774: @ 0x0805D774
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _0805D798  @ gUnknown_0203E120
+	ldr r0, _0805D798  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -28013,7 +28013,7 @@ sub_805D774: @ 0x0805D774
 	adds r0, r0, r1
 	b _0805D7A6
 	.align 2, 0
-_0805D798: .4byte gUnknown_0203E120
+_0805D798: .4byte gBattleAnimSceneLayoutEnum
 _0805D79C:
 	ldr r2, [r4, #0x60]
 	ldr r0, [r4, #0x5c]
@@ -28053,9 +28053,9 @@ _0805D7D4: .4byte gUnknown_0201774C
 StartSpellAnimThunder: @ 0x0805D7D8
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805D810  @ gUnknown_085D5428
 	movs r1, #3
 	bl SpawnProc
@@ -28064,10 +28064,10 @@ StartSpellAnimThunder: @ 0x0805D7D8
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -28078,14 +28078,14 @@ _0805D810: .4byte gUnknown_085D5428
 
 	THUMB_FUNC_END StartSpellAnimThunder
 
-	THUMB_FUNC_START Loop6C_efxThunder
-Loop6C_efxThunder: @ 0x0805D814
+	THUMB_FUNC_START EfxThunder_Main
+EfxThunder_Main: @ 0x0805D814
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -28097,7 +28097,7 @@ Loop6C_efxThunder: @ 0x0805D814
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805D83E:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -28105,11 +28105,11 @@ _0805D83E:
 	cmp r1, r0
 	bne _0805D85C
 	adds r0, r5, #0
-	bl sub_805D8B4
+	bl StartEfxThunderBG
 	adds r0, r5, #0
-	bl sub_805D9BC
+	bl StartEfxThunderBGCOL
 	adds r0, r5, #0
-	bl sub_805DA44
+	bl StartEfxThunderOBJ
 	b _0805D8AE
 _0805D85C:
 	adds r0, r6, #4
@@ -28122,7 +28122,7 @@ _0805D85C:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #2
@@ -28144,8 +28144,8 @@ _0805D892:
 	adds r0, #0x10
 	cmp r1, r0
 	bne _0805D8AE
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805D8AE:
@@ -28153,10 +28153,10 @@ _0805D8AE:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END Loop6C_efxThunder
+	THUMB_FUNC_END EfxThunder_Main
 
-	THUMB_FUNC_START sub_805D8B4
-sub_805D8B4: @ 0x0805D8B4
+	THUMB_FUNC_START StartEfxThunderBG
+StartEfxThunderBG: @ 0x0805D8B4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r1, _0805D90C  @ gUnknown_0201774C
@@ -28180,9 +28180,9 @@ sub_805D8B4: @ 0x0805D8B4
 	ldr r0, _0805D920  @ gUnknown_085F2DC0
 	movs r1, #0x86
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0805D924  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0805D924  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -28203,7 +28203,7 @@ _0805D914: .4byte gUnknown_080DCCA6
 _0805D918: .4byte gUnknown_085D5458
 _0805D91C: .4byte gUnknown_085D5460
 _0805D920: .4byte gUnknown_085F2DC0
-_0805D924: .4byte gUnknown_0203E120
+_0805D924: .4byte gBattleAnimSceneLayoutEnum
 _0805D928:
 	movs r0, #1
 	movs r1, #0xe8
@@ -28214,10 +28214,10 @@ _0805D932:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_805D8B4
+	THUMB_FUNC_END StartEfxThunderBG
 
-	THUMB_FUNC_START sub_805D938
-sub_805D938: @ 0x0805D938
+	THUMB_FUNC_START EfxThunderBG_Main
+EfxThunderBG_Main: @ 0x0805D938
 	push {r4, r5, r6, lr}
 	sub sp, #4
 	adds r4, r0, #0
@@ -28226,7 +28226,7 @@ sub_805D938: @ 0x0805D938
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -28239,7 +28239,7 @@ sub_805D938: @ 0x0805D938
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	cmp r5, #0
 	bne _0805D96E
 	ldr r6, _0805D988  @ 0x0000011F
@@ -28264,12 +28264,12 @@ _0805D990:
 	negs r0, r0
 	cmp r5, r0
 	bne _0805D9AE
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805D9B8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0805D9AE:
@@ -28280,10 +28280,10 @@ _0805D9AE:
 	.align 2, 0
 _0805D9B8: .4byte gUnknown_0201774C
 
-	THUMB_FUNC_END sub_805D938
+	THUMB_FUNC_END EfxThunderBG_Main
 
-	THUMB_FUNC_START sub_805D9BC
-sub_805D9BC: @ 0x0805D9BC
+	THUMB_FUNC_START StartEfxThunderBGCOL
+StartEfxThunderBGCOL: @ 0x0805D9BC
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r1, _0805D9E8  @ gUnknown_0201774C
@@ -28310,17 +28310,17 @@ _0805D9EC: .4byte gUnknown_085D5468
 _0805D9F0: .4byte gUnknown_080DCCC0
 _0805D9F4: .4byte gUnknown_085F367C
 
-	THUMB_FUNC_END sub_805D9BC
+	THUMB_FUNC_END StartEfxThunderBGCOL
 
-	THUMB_FUNC_START sub_805D9F8
-sub_805D9F8: @ 0x0805D9F8
+	THUMB_FUNC_START EfxThunderBGCOL_Main
+EfxThunderBGCOL_Main: @ 0x0805D9F8
 	push {r4, lr}
 	adds r4, r0, #0
 	adds r0, #0x2c
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -28329,14 +28329,14 @@ sub_805D9F8: @ 0x0805D9F8
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0805DA38
 _0805DA1E:
 	movs r0, #1
 	negs r0, r0
 	cmp r1, r0
 	bne _0805DA38
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	ldr r1, _0805DA40  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -28350,10 +28350,10 @@ _0805DA38:
 	.align 2, 0
 _0805DA40: .4byte gUnknown_0201774C
 
-	THUMB_FUNC_END sub_805D9F8
+	THUMB_FUNC_END EfxThunderBGCOL_Main
 
-	THUMB_FUNC_START sub_805DA44
-sub_805DA44: @ 0x0805DA44
+	THUMB_FUNC_START StartEfxThunderOBJ
+StartEfxThunderOBJ: @ 0x0805DA44
 	push {r4, r5, lr}
 	sub sp, #4
 	adds r5, r0, #0
@@ -28377,11 +28377,11 @@ sub_805DA44: @ 0x0805DA44
 	str r0, [r4, #0x60]
 	ldr r0, _0805DA9C  @ gUnknown_085F3F40
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805DAA0  @ gUnknown_085F3AA8
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -28394,10 +28394,10 @@ _0805DA98: .4byte gUnknown_085F4A24
 _0805DA9C: .4byte gUnknown_085F3F40
 _0805DAA0: .4byte gUnknown_085F3AA8
 
-	THUMB_FUNC_END sub_805DA44
+	THUMB_FUNC_END StartEfxThunderOBJ
 
-	THUMB_FUNC_START sub_805DAA4
-sub_805DAA4: @ 0x0805DAA4
+	THUMB_FUNC_START EfxThunderOBJ_Main
+EfxThunderOBJ_Main: @ 0x0805DAA4
 	push {r4, lr}
 	adds r4, r0, #0
 	ldrh r0, [r4, #0x2c]
@@ -28422,15 +28422,15 @@ _0805DACA:
 	.align 2, 0
 _0805DAD0: .4byte gUnknown_0201774C
 
-	THUMB_FUNC_END sub_805DAA4
+	THUMB_FUNC_END EfxThunderOBJ_Main
 
 	THUMB_FUNC_START StartSpellAnimFire
 StartSpellAnimFire: @ 0x0805DAD4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805DB14  @ gUnknown_085D54A0
 	movs r1, #3
 	bl SpawnProc
@@ -28443,10 +28443,10 @@ StartSpellAnimFire: @ 0x0805DAD4
 	adds r0, #0x2a
 	strb r1, [r0]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -28461,9 +28461,9 @@ _0805DB14: .4byte gUnknown_085D54A0
 StartSpellAnimElfire: @ 0x0805DB18
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805DB58  @ gUnknown_085D54A0
 	movs r1, #3
 	bl SpawnProc
@@ -28476,10 +28476,10 @@ StartSpellAnimElfire: @ 0x0805DB18
 	movs r0, #1
 	strb r0, [r1]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -28490,17 +28490,17 @@ _0805DB58: .4byte gUnknown_085D54A0
 
 	THUMB_FUNC_END StartSpellAnimElfire
 
-	THUMB_FUNC_START Loop6C_efxFire
-Loop6C_efxFire: @ 0x0805DB5C
+	THUMB_FUNC_START EfxFire_Main
+EfxFire_Main: @ 0x0805DB5C
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
 	push {r6, r7}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
-	ldr r0, _0805DB88  @ gUnknown_0203E120
+	ldr r0, _0805DB88  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -28513,7 +28513,7 @@ Loop6C_efxFire: @ 0x0805DB5C
 	mov r9, r0
 	b _0805DB98
 	.align 2, 0
-_0805DB88: .4byte gUnknown_0203E120
+_0805DB88: .4byte gBattleAnimSceneLayoutEnum
 _0805DB8C:
 	movs r5, #0x28
 	movs r7, #0x3c
@@ -28549,7 +28549,7 @@ _0805DBC4:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0805DC58
 _0805DBD8:
 	cmp r0, r7
@@ -28562,7 +28562,7 @@ _0805DBD8:
 	adds r5, #0x29
 	ldrb r1, [r5]
 	adds r0, r6, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r5]
 	cmp r0, #0
 	bne _0805DC58
@@ -28604,8 +28604,8 @@ _0805DC42:
 	beq _0805DC58
 	cmp r0, r9
 	bne _0805DC58
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805DC58:
@@ -28616,7 +28616,7 @@ _0805DC58:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END Loop6C_efxFire
+	THUMB_FUNC_END EfxFire_Main
 
 	THUMB_FUNC_START sub_805DC64
 sub_805DC64: @ 0x0805DC64
@@ -28641,12 +28641,12 @@ sub_805DC64: @ 0x0805DC64
 	str r1, [r0, #0x50]
 	ldr r0, _0805DCBC  @ gUnknown_085F6230
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _0805DCC0  @ gUnknown_085F5638
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -28669,7 +28669,7 @@ Loop6C_efxFireBG: @ 0x0805DCC4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -28682,19 +28682,19 @@ Loop6C_efxFireBG: @ 0x0805DCC4
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805DD10
 _0805DCF2:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _0805DD10
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805DD18  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0805DD10:
@@ -28755,11 +28755,11 @@ _0805DD7C:
 	strh r0, [r5, #4]
 	ldr r0, _0805DDA0  @ gUnknown_085F7D64
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805DDA4  @ gUnknown_085F7768
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -28835,9 +28835,9 @@ StartSubSpell_efxFireHITBG: @ 0x0805DDF0
 	str r0, [r5, #0x54]
 	ldr r0, _0805DE5C  @ gUnknown_0860108C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0805DE60  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0805DE60  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -28858,7 +28858,7 @@ _0805DE50: .4byte gUnknown_080DCD72
 _0805DE54: .4byte gUnknown_085D55B4
 _0805DE58: .4byte gUnknown_085D5560
 _0805DE5C: .4byte gUnknown_0860108C
-_0805DE60: .4byte gUnknown_0203E120
+_0805DE60: .4byte gBattleAnimSceneLayoutEnum
 _0805DE64:
 	movs r0, #1
 	movs r1, #0xe8
@@ -28879,7 +28879,7 @@ sub_805DE74: @ 0x0805DE74
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -28892,25 +28892,25 @@ sub_805DE74: @ 0x0805DE74
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805DECE
 _0805DEB0:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _0805DECE
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805DED4  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_End
 _0805DECE:
@@ -28941,14 +28941,14 @@ StartSubSpell_efxElfireBG: @ 0x0805DED8
 	ldr r0, _0805DF3C  @ gUnknown_08602B94
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r5, #0x5c]
 	ldr r2, _0805DF40  @ gUnknown_08603D50
 	adds r1, r2, #0
-	bl sub_8055670
-	bl ClearBG1Setup
-	bl sub_80551B0
-	ldr r0, _0805DF44  @ gUnknown_0203E120
+	bl SpellFx_WriteBgMap
+	bl SpellFx_ResetBg1Offset
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0805DF44  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -28967,7 +28967,7 @@ _0805DF34: .4byte gUnknown_0201774C
 _0805DF38: .4byte gUnknown_085D5608
 _0805DF3C: .4byte gUnknown_08602B94
 _0805DF40: .4byte gUnknown_08603D50
-_0805DF44: .4byte gUnknown_0203E120
+_0805DF44: .4byte gBattleAnimSceneLayoutEnum
 _0805DF48:
 	movs r0, #1
 	movs r1, #0xe8
@@ -29003,8 +29003,8 @@ sub_805DF70: @ 0x0805DF70
 	asrs r0, r0, #0x10
 	cmp r0, #0x28
 	bne _0805DF98
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	ldr r1, _0805DFA0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -29041,7 +29041,7 @@ StartSubSpell_efxElfireBGCOL: @ 0x0805DFA4
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -29061,7 +29061,7 @@ sub_805DFE8: @ 0x0805DFE8
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -29070,7 +29070,7 @@ sub_805DFE8: @ 0x0805DFE8
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0805E024
 _0805E00E:
 	movs r0, #1
@@ -29140,11 +29140,11 @@ _0805E084:
 	str r0, [r6, #0x1c]
 	ldr r0, _0805E0AC  @ gUnknown_08604210
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805E0B0  @ gUnknown_08603F98
 	movs r1, #0x80
 	lsls r1, r1, #4
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -29187,9 +29187,9 @@ _0805E0E0: .4byte gUnknown_0201774C
 StartSpellAnimFimbulvetr: @ 0x0805E0E4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805E11C  @ gUnknown_085D5658
 	movs r1, #3
 	bl SpawnProc
@@ -29198,10 +29198,10 @@ StartSpellAnimFimbulvetr: @ 0x0805E0E4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -29218,9 +29218,9 @@ sub_805E120: @ 0x0805E120
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -29233,7 +29233,7 @@ sub_805E120: @ 0x0805E120
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805E14E:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -29274,7 +29274,7 @@ _0805E194:
 	bne _0805E1AA
 	ldr r0, [r4, #0x5c]
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0805E228
 _0805E1AA:
 	adds r0, r6, #0
@@ -29314,7 +29314,7 @@ _0805E1E4:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805E228
@@ -29329,8 +29329,8 @@ _0805E20C:
 	adds r0, #0x19
 	cmp r1, r0
 	bne _0805E228
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805E228:
@@ -29366,8 +29366,8 @@ sub_805E230: @ 0x0805E230
 	str r0, [r5, #0x54]
 	ldr r0, _0805E298  @ gUnknown_08617F04
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	ldr r0, _0805E29C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	ldr r0, _0805E29C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -29388,14 +29388,14 @@ _0805E28C: .4byte gUnknown_080DCE6E
 _0805E290: .4byte gUnknown_085D5688
 _0805E294: .4byte gUnknown_085D56A0
 _0805E298: .4byte gUnknown_08617F04
-_0805E29C: .4byte gUnknown_0203E120
+_0805E29C: .4byte gBattleAnimSceneLayoutEnum
 _0805E2A0:
 	movs r0, #1
 	movs r1, #0xe8
 	movs r2, #0
 	bl SetBgOffset
 _0805E2AA:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -29410,7 +29410,7 @@ sub_805E2B4: @ 0x0805E2B4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -29424,24 +29424,24 @@ sub_805E2B4: @ 0x0805E2B4
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _0805E30E
 _0805E2F0:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _0805E30E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805E314  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0805E30E:
@@ -29478,8 +29478,8 @@ sub_805E318: @ 0x0805E318
 	str r0, [r5, #0x54]
 	ldr r0, _0805E380  @ gUnknown_086101DC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	ldr r0, _0805E384  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	ldr r0, _0805E384  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -29500,14 +29500,14 @@ _0805E374: .4byte gUnknown_080DCEEC
 _0805E378: .4byte gUnknown_085D56D0
 _0805E37C: .4byte gUnknown_085D56FC
 _0805E380: .4byte gUnknown_086101DC
-_0805E384: .4byte gUnknown_0203E120
+_0805E384: .4byte gBattleAnimSceneLayoutEnum
 _0805E388:
 	movs r0, #1
 	movs r1, #0x18
 	movs r2, #0
 	bl SetBgOffset
 _0805E392:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -29518,7 +29518,7 @@ _0805E392:
 sub_805E39C: @ 0x0805E39C
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
-	ldr r0, _0805E3C0  @ gUnknown_0203E120
+	ldr r0, _0805E3C0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -29533,7 +29533,7 @@ sub_805E39C: @ 0x0805E39C
 	bl SetBgOffset
 	b _0805E3CE
 	.align 2, 0
-_0805E3C0: .4byte gUnknown_0203E120
+_0805E3C0: .4byte gBattleAnimSceneLayoutEnum
 _0805E3C4:
 	movs r0, #1
 	movs r1, #0xe8
@@ -29545,7 +29545,7 @@ _0805E3CE:
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -29559,24 +29559,24 @@ _0805E3CE:
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _0805E426
 _0805E408:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _0805E426
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805E42C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r6, #0
 	bl Proc_Break
 _0805E426:
@@ -29616,11 +29616,11 @@ sub_805E430: @ 0x0805E430
 	strh r1, [r0, #2]
 	ldr r0, _0805E48C  @ gUnknown_08670528
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805E490  @ gUnknown_08618BBC
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -29682,11 +29682,11 @@ sub_805E4C4: @ 0x0805E4C4
 	str r2, [r0, #0x48]
 	ldr r0, _0805E508  @ gUnknown_08670528
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805E50C  @ gUnknown_08618BBC
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -29775,16 +29775,16 @@ sub_805E53C: @ 0x0805E53C
 	strh r1, [r0, #4]
 	ldr r5, _0805E5D8  @ 0x0000FFFF
 	adds r0, r5, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	strh r0, [r7, #0x32]
 	adds r0, r5, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	strh r0, [r7, #0x3a]
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805E5E0
 	adds r0, r5, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	ldr r2, _0805E5DC  @ 0x000001FF
 	adds r1, r2, #0
 	ands r0, r1
@@ -29799,7 +29799,7 @@ _0805E5D8: .4byte 0x0000FFFF
 _0805E5DC: .4byte 0x000001FF
 _0805E5E0:
 	adds r0, r5, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	ldr r2, _0805E63C  @ 0x000001FF
 	adds r1, r2, #0
 	ands r0, r1
@@ -29811,7 +29811,7 @@ _0805E5F2:
 	strh r0, [r7, #0x34]
 	ldr r4, _0805E640  @ 0x0000FF0F
 	adds r0, r4, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	ldr r2, _0805E644  @ 0x000003FF
 	adds r1, r2, #0
 	ands r0, r1
@@ -29819,10 +29819,10 @@ _0805E5F2:
 	adds r0, r0, r1
 	strh r0, [r7, #0x3c]
 	adds r0, r4, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	strh r0, [r7, #0x36]
 	adds r0, r4, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	strh r0, [r7, #0x3e]
 	movs r0, #7
 	mov r2, r8
@@ -29832,7 +29832,7 @@ _0805E5F2:
 	cmp r0, #0
 	bne _0805E64C
 	adds r0, r4, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	ldr r2, _0805E63C  @ 0x000001FF
 	adds r1, r2, #0
 	ands r0, r1
@@ -29846,7 +29846,7 @@ _0805E644: .4byte 0x000003FF
 _0805E648: .4byte 0xFFFFFF00
 _0805E64C:
 	adds r0, r4, #0
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	ldr r2, _0805E684  @ 0x000001FF
 	adds r1, r2, #0
 	ands r0, r1
@@ -29857,7 +29857,7 @@ _0805E65E:
 	adds r0, r0, r1
 	strh r0, [r7, #0x38]
 	ldr r0, _0805E688  @ 0x0000FF0F
-	bl sub_80716B0
+	bl AestheticRandNext_N1
 	ldr r2, _0805E68C  @ 0x000003FF
 	adds r1, r2, #0
 	ands r0, r1
@@ -29987,9 +29987,9 @@ _0805E750: .4byte gUnknown_0861AD8C
 sub_805E754: @ 0x0805E754
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805E78C  @ gUnknown_085D5770
 	movs r1, #3
 	bl SpawnProc
@@ -29998,10 +29998,10 @@ sub_805E754: @ 0x0805E754
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -30017,9 +30017,9 @@ sub_805E790: @ 0x0805E790
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -30031,7 +30031,7 @@ sub_805E790: @ 0x0805E790
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805E7BA:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -30076,7 +30076,7 @@ _0805E7F6:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805E848
@@ -30093,8 +30093,8 @@ _0805E82C:
 	adds r0, #5
 	cmp r1, r0
 	bne _0805E848
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805E848:
@@ -30128,8 +30128,8 @@ sub_805E850: @ 0x0805E850
 	str r1, [r0, #0x54]
 	ldr r0, _0805E8A0  @ gUnknown_08608838
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -30151,7 +30151,7 @@ sub_805E8A4: @ 0x0805E8A4
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -30164,13 +30164,13 @@ sub_805E8A4: @ 0x0805E8A4
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805E8F6
 _0805E8E0:
 	movs r0, #1
@@ -30227,11 +30227,11 @@ sub_805E924: @ 0x0805E924
 	str r0, [r4, #0x60]
 	ldr r0, _0805E960  @ gUnknown_085F3F40
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805E964  @ gUnknown_085F3AA8
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	add sp, #4
@@ -30301,7 +30301,7 @@ sub_805E9B0: @ 0x0805E9B0
 	bl sub_80729A4
 	ldr r0, [r4, #0x5c]
 	movs r1, #0x26
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	movs r0, #5
@@ -30339,7 +30339,7 @@ sub_805E9E4: @ 0x0805E9E4
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r5, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
 	strh r0, [r6, #0x2c]
@@ -30396,8 +30396,8 @@ sub_805EA4C: @ 0x0805EA4C
 	ldrsh r1, [r4, r2]
 	cmp r0, r1
 	ble _0805EA9E
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	ldr r1, _0805EAA8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -30467,7 +30467,7 @@ sub_805EAF0: @ 0x0805EAF0
 	adds r0, r4, #0
 	movs r1, #0
 	movs r2, #0x20
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	movs r2, #0x80
@@ -30538,9 +30538,9 @@ _0805EB94: .4byte gUnknown_0201774C
 sub_805EB98: @ 0x0805EB98
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805EBD0  @ gUnknown_085D5880
 	movs r1, #3
 	bl SpawnProc
@@ -30549,10 +30549,10 @@ sub_805EB98: @ 0x0805EB98
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -30569,11 +30569,11 @@ sub_805EBD4: @ 0x0805EBD4
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
-	ldr r0, _0805EC2C  @ gUnknown_0203E120
+	ldr r0, _0805EC2C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	movs r3, #0x3a
@@ -30603,10 +30603,10 @@ _0805EBF6:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0805ECCC
 	.align 2, 0
-_0805EC2C: .4byte gUnknown_0203E120
+_0805EC2C: .4byte gBattleAnimSceneLayoutEnum
 _0805EC30:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -30615,7 +30615,7 @@ _0805EC30:
 	bne _0805EC44
 	ldr r0, [r4, #0x5c]
 	movs r1, #6
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0805ECCC
 _0805EC44:
 	adds r0, r2, #6
@@ -30656,7 +30656,7 @@ _0805EC80:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805ECCC
@@ -30674,8 +30674,8 @@ _0805ECAA:
 	adds r0, r3, r0
 	cmp r1, r0
 	bne _0805ECCC
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805ECCC:
@@ -30709,8 +30709,8 @@ sub_805ECD4: @ 0x0805ECD4
 	ldr r0, _0805ED30  @ gUnknown_08621960
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
 	cmp r0, #0
@@ -30746,7 +30746,7 @@ sub_805ED44: @ 0x0805ED44
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -30765,12 +30765,12 @@ _0805ED70:
 	negs r0, r0
 	cmp r1, r0
 	bne _0805ED8E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805ED94  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0805ED8E:
@@ -30804,7 +30804,7 @@ sub_805ED98: @ 0x0805ED98
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -30824,7 +30824,7 @@ sub_805EDDC: @ 0x0805EDDC
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -30833,7 +30833,7 @@ sub_805EDDC: @ 0x0805EDDC
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0805EE18
 _0805EE02:
 	movs r0, #1
@@ -30903,11 +30903,11 @@ _0805EE84:
 	strh r0, [r6, #0x2e]
 	ldr r0, _0805EEA4  @ gUnknown_08623A9C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805EEA8  @ gUnknown_086234D8
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -30949,9 +30949,9 @@ _0805EED4: .4byte gUnknown_0201774C
 sub_805EED8: @ 0x0805EED8
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805EF10  @ gUnknown_085D58F0
 	movs r1, #3
 	bl SpawnProc
@@ -30960,10 +30960,10 @@ sub_805EED8: @ 0x0805EED8
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -30979,9 +30979,9 @@ sub_805EF14: @ 0x0805EF14
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -31014,7 +31014,7 @@ _0805EF5C:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0805EFFE
 _0805EF6C:
 	movs r0, #0x2c
@@ -31059,7 +31059,7 @@ _0805EFB8:
 	bne _0805EFE8
 	ldr r0, [r4, #0x5c]
 	movs r1, #6
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -31067,7 +31067,7 @@ _0805EFB8:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805EFFE
@@ -31079,8 +31079,8 @@ _0805EFE8:
 	adds r0, #0xa4
 	cmp r1, r0
 	bne _0805EFFE
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805EFFE:
@@ -31115,9 +31115,9 @@ sub_805F004: @ 0x0805F004
 	str r0, [r5, #0x54]
 	ldr r0, _0805F070  @ gUnknown_0862A2D0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0805F074  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0805F074  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -31138,7 +31138,7 @@ _0805F064: .4byte gUnknown_080DD094
 _0805F068: .4byte gUnknown_085D5920
 _0805F06C: .4byte gUnknown_085D59C4
 _0805F070: .4byte gUnknown_0862A2D0
-_0805F074: .4byte gUnknown_0203E120
+_0805F074: .4byte gBattleAnimSceneLayoutEnum
 _0805F078:
 	movs r0, #1
 	movs r1, #0x18
@@ -31197,14 +31197,14 @@ sub_805F0B0: @ 0x0805F0B0
 	str r0, [r5, #0x54]
 	ldr r0, _0805F128  @ gUnknown_0862A2F0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0xa
 	movs r2, #7
 	movs r3, #0
 	bl SetBlendConfig
-	ldr r0, _0805F12C  @ gUnknown_0203E120
+	ldr r0, _0805F12C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -31225,7 +31225,7 @@ _0805F11C: .4byte gUnknown_080DD0C6
 _0805F120: .4byte gUnknown_085D5920
 _0805F124: .4byte gUnknown_085D59C4
 _0805F128: .4byte gUnknown_0862A2F0
-_0805F12C: .4byte gUnknown_0203E120
+_0805F12C: .4byte gBattleAnimSceneLayoutEnum
 _0805F130:
 	movs r0, #1
 	movs r1, #0x18
@@ -31246,7 +31246,7 @@ sub_805F140: @ 0x0805F140
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -31259,25 +31259,25 @@ sub_805F140: @ 0x0805F140
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805F19A
 _0805F17C:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _0805F19A
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805F1A0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_End
 _0805F19A:
@@ -31304,7 +31304,7 @@ sub_805F1A4: @ 0x0805F1A4
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	ldr r3, _0805F1E4  @ gUnknown_085D4F90
 	ldr r0, [r4, #0x5c]
 	str r3, [sp]
@@ -31338,7 +31338,7 @@ sub_805F1E8: @ 0x0805F1E8
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	ldr r3, _0805F230  @ gUnknown_085D4F90
 	ldr r0, [r4, #0x5c]
 	str r3, [sp]
@@ -31389,11 +31389,11 @@ sub_805F24C: @ 0x0805F24C
 	strh r0, [r1, #6]
 	ldr r0, _0805F280  @ gUnknown_0862D424
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805F284  @ gUnknown_0862C82C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -31418,11 +31418,11 @@ sub_805F288: @ 0x0805F288
 	strh r0, [r1, #6]
 	ldr r0, _0805F2BC  @ gUnknown_0862D424
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805F2C0  @ gUnknown_0862CC2C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -31447,11 +31447,11 @@ sub_805F2C4: @ 0x0805F2C4
 	strh r0, [r1, #6]
 	ldr r0, _0805F2F8  @ gUnknown_0862D424
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805F2FC  @ gUnknown_0862D06C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -31519,9 +31519,9 @@ _0805F350: .4byte gUnknown_0862DC58
 StartSpellAnimNosferatu: @ 0x0805F354
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805F38C  @ gUnknown_085D5AE0
 	movs r1, #3
 	bl SpawnProc
@@ -31530,10 +31530,10 @@ StartSpellAnimNosferatu: @ 0x0805F354
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -31544,15 +31544,15 @@ _0805F38C: .4byte gUnknown_085D5AE0
 
 	THUMB_FUNC_END StartSpellAnimNosferatu
 
-	THUMB_FUNC_START Loop6C_efxResire
-Loop6C_efxResire: @ 0x0805F390
+	THUMB_FUNC_START EfxResire_Main
+EfxResire_Main: @ 0x0805F390
 	push {r4, r5, r6, r7, lr}
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -31565,7 +31565,7 @@ Loop6C_efxResire: @ 0x0805F390
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805F3BE:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -31656,7 +31656,7 @@ _0805F468:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl sub_8055424
+	bl StartBattleAnimResireHitEffects
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805F4A8
@@ -31671,7 +31671,7 @@ _0805F490:
 	adds r0, #0x14
 	cmp r1, r0
 	bne _0805F4A8
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r4, #0
 	bl Proc_Break
 _0805F4A8:
@@ -31680,7 +31680,7 @@ _0805F4A8:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END Loop6C_efxResire
+	THUMB_FUNC_END EfxResire_Main
 
 	THUMB_FUNC_START sub_805F4B0
 sub_805F4B0: @ 0x0805F4B0
@@ -31711,9 +31711,9 @@ sub_805F4B0: @ 0x0805F4B0
 	str r0, [r6, #0x54]
 	ldr r0, _0805F524  @ gUnknown_08636640
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0805F528  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0805F528  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -31734,7 +31734,7 @@ _0805F518: .4byte gUnknown_080DD186
 _0805F51C: .4byte gUnknown_085D5C0C
 _0805F520: .4byte gUnknown_085D5B40
 _0805F524: .4byte gUnknown_08636640
-_0805F528: .4byte gUnknown_0203E120
+_0805F528: .4byte gBattleAnimSceneLayoutEnum
 _0805F52C:
 	movs r0, #1
 	movs r1, #0xe8
@@ -31772,8 +31772,8 @@ sub_805F53C: @ 0x0805F53C
 	str r0, [r5, #0x54]
 	ldr r0, _0805F5C0  @ gUnknown_08636640
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	ldr r2, _0805F5C4  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
@@ -31785,7 +31785,7 @@ sub_805F53C: @ 0x0805F53C
 	movs r1, #0x7f
 	ands r0, r1
 	strb r0, [r2, #1]
-	ldr r0, _0805F5C8  @ gUnknown_0203E120
+	ldr r0, _0805F5C8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -31807,7 +31807,7 @@ _0805F5B8: .4byte gUnknown_085D5C0C
 _0805F5BC: .4byte gUnknown_085D5B40
 _0805F5C0: .4byte gUnknown_08636640
 _0805F5C4: .4byte gDispIo
-_0805F5C8: .4byte gUnknown_0203E120
+_0805F5C8: .4byte gBattleAnimSceneLayoutEnum
 _0805F5CC:
 	movs r0, #1
 	movs r1, #0xe8
@@ -31828,7 +31828,7 @@ sub_805F5DC: @ 0x0805F5DC
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -31841,20 +31841,20 @@ sub_805F5DC: @ 0x0805F5DC
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805F65A
 _0805F618:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _0805F65A
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	adds r0, r7, #0
 	adds r0, #0x29
 	ldrb r0, [r0]
@@ -31864,8 +31864,8 @@ _0805F618:
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
-	bl sub_8055000
+	bl SpellFx_EndBlend
+	bl StartEndEfxSpellCast
 	adds r0, r7, #0
 	bl Proc_End
 	b _0805F65A
@@ -31897,8 +31897,8 @@ sub_805F660: @ 0x0805F660
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
-	bl sub_8055000
+	bl SpellFx_EndBlend
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_End
 	b _0805F6E6
@@ -31936,17 +31936,17 @@ _0805F6A4:
 	str r0, [r4, #0x50]
 	ldr r0, _0805F6F4  @ gUnknown_085D5B40
 	str r0, [r4, #0x54]
-	ldr r0, _0805F6F8  @ gUnknown_0203E120
+	ldr r0, _0805F6F8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	beq _0805F6E0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	strh r0, [r4, #0x2e]
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805F6E0:
 	adds r0, r4, #0
 	bl Proc_Break
@@ -31958,7 +31958,7 @@ _0805F6E6:
 _0805F6EC: .4byte gUnknown_080DD1F4
 _0805F6F0: .4byte gUnknown_085D5C0C
 _0805F6F4: .4byte gUnknown_085D5B40
-_0805F6F8: .4byte gUnknown_0203E120
+_0805F6F8: .4byte gBattleAnimSceneLayoutEnum
 
 	THUMB_FUNC_END sub_805F660
 
@@ -31967,7 +31967,7 @@ sub_805F6FC: @ 0x0805F6FC
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -31978,7 +31978,7 @@ sub_805F6FC: @ 0x0805F6FC
 	ldrsh r1, [r4, r2]
 	cmp r0, r1
 	ble _0805F766
-	ldr r0, _0805F73C  @ gUnknown_0203E120
+	ldr r0, _0805F73C  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	cmp r0, #0
@@ -31993,7 +31993,7 @@ sub_805F6FC: @ 0x0805F6FC
 	bl SetBgOffset
 	b _0805F74A
 	.align 2, 0
-_0805F73C: .4byte gUnknown_0203E120
+_0805F73C: .4byte gBattleAnimSceneLayoutEnum
 _0805F740:
 	movs r0, #1
 	movs r1, #0x18
@@ -32027,7 +32027,7 @@ sub_805F76C: @ 0x0805F76C
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -32040,26 +32040,26 @@ sub_805F76C: @ 0x0805F76C
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805F7CA
 _0805F7A8:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _0805F7CA
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805F7D0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
-	bl sub_8055000
+	bl SpellFx_EndBlend
+	bl StartEndEfxSpellCast
 	adds r0, r7, #0
 	bl Proc_Break
 _0805F7CA:
@@ -32079,7 +32079,7 @@ sub_805F7D4: @ 0x0805F7D4
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -32092,25 +32092,25 @@ sub_805F7D4: @ 0x0805F7D4
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805F82E
 _0805F810:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _0805F82E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805F834  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _0805F82E:
@@ -32194,9 +32194,9 @@ _0805F8B0: .4byte gUnknown_0201774C
 sub_805F8B4: @ 0x0805F8B4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805F8EC  @ gUnknown_085D5CF0
 	movs r1, #3
 	bl SpawnProc
@@ -32205,10 +32205,10 @@ sub_805F8B4: @ 0x0805F8B4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -32224,9 +32224,9 @@ sub_805F8F0: @ 0x0805F8F0
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -32238,7 +32238,7 @@ sub_805F8F0: @ 0x0805F8F0
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805F91A:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -32270,7 +32270,7 @@ _0805F93E:
 	bl sub_80729A4
 	ldr r0, [r4, #0x5c]
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -32278,7 +32278,7 @@ _0805F93E:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805F9A0
@@ -32295,8 +32295,8 @@ _0805F984:
 	adds r0, #1
 	cmp r1, r0
 	bne _0805F9A0
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805F9A0:
@@ -32331,8 +32331,8 @@ sub_805F9A8: @ 0x0805F9A8
 	str r0, [r5, #0x54]
 	ldr r0, _0805FA10  @ gUnknown_085D5DA4
 	str r0, [r5, #0x58]
-	bl sub_80551B0
-	ldr r0, _0805FA14  @ gUnknown_0203E120
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0805FA14  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -32353,7 +32353,7 @@ _0805FA04: .4byte gUnknown_080DD288
 _0805FA08: .4byte gUnknown_085D5E28
 _0805FA0C: .4byte gUnknown_085D5D20
 _0805FA10: .4byte gUnknown_085D5DA4
-_0805FA14: .4byte gUnknown_0203E120
+_0805FA14: .4byte gBattleAnimSceneLayoutEnum
 _0805FA18:
 	movs r0, #1
 	movs r1, #0xe8
@@ -32377,7 +32377,7 @@ sub_805FA28: @ 0x0805FA28
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -32392,18 +32392,18 @@ sub_805FA28: @ 0x0805FA28
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r5, r4
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r7, #0x5c]
 	adds r6, r5, r6
 	ldr r1, [r6]
 	add r5, r8
 	ldr r2, [r5]
-	bl sub_8055670
-	ldr r0, _0805FA90  @ gUnknown_0203E120
+	bl SpellFx_WriteBgMap
+	ldr r0, _0805FA90  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -32416,7 +32416,7 @@ sub_805FA28: @ 0x0805FA28
 	ldr r0, _0805FA94  @ gBg1Tm
 	b _0805FA9C
 	.align 2, 0
-_0805FA90: .4byte gUnknown_0203E120
+_0805FA90: .4byte gBattleAnimSceneLayoutEnum
 _0805FA94: .4byte gBg1Tm
 _0805FA98:
 	ldr r0, _0805FAAC  @ gBg1Tm+0x3A
@@ -32435,12 +32435,12 @@ _0805FAB0:
 	negs r0, r0
 	cmp r5, r0
 	bne _0805FACE
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805FADC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_End
 _0805FACE:
@@ -32459,9 +32459,9 @@ _0805FADC: .4byte gUnknown_0201774C
 StartSpellAnimPurge: @ 0x0805FAE0
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805FB1C  @ gUnknown_085D5EAC
 	movs r1, #3
 	bl SpawnProc
@@ -32470,10 +32470,10 @@ StartSpellAnimPurge: @ 0x0805FAE0
 	movs r6, #0
 	strh r6, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	ldr r0, _0805FB20  @ gUnknown_02020044
@@ -32527,9 +32527,9 @@ sub_805FB60: @ 0x0805FB60
 	sub sp, #8
 	adds r6, r0, #0
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r4, r0, #0
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
@@ -32542,7 +32542,7 @@ sub_805FB60: @ 0x0805FB60
 	ldr r0, [r6, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0805FB8E:
 	movs r0, #0x2c
 	ldrsh r1, [r6, r0]
@@ -32551,7 +32551,7 @@ _0805FB8E:
 	bne _0805FBB0
 	adds r0, r5, #0
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	adds r0, r5, #0
 	bl sub_805FC90
 	adds r0, r5, #0
@@ -32565,7 +32565,7 @@ _0805FBB0:
 	bne _0805FBC4
 	adds r0, r5, #0
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	movs r0, #0xa0
 	b _0805FBD6
 _0805FBC4:
@@ -32575,7 +32575,7 @@ _0805FBC4:
 	bne _0805FBDE
 	adds r0, r5, #0
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	movs r0, #0x70
 _0805FBD6:
 	movs r1, #0
@@ -32588,7 +32588,7 @@ _0805FBDE:
 	bne _0805FC12
 	adds r0, r5, #0
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	movs r0, #0x10
 	str r0, [sp]
 	str r7, [sp, #4]
@@ -32612,7 +32612,7 @@ _0805FC12:
 	bne _0805FC58
 	adds r0, r5, #0
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -32621,7 +32621,7 @@ _0805FC12:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldr r0, _0805FC54  @ 0x00000101
 	movs r1, #0x80
 	lsls r1, r1, #1
@@ -32655,8 +32655,8 @@ _0805FC72:
 	adds r0, #0x71
 	cmp r1, r0
 	bne _0805FC88
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r6, #0
 	bl Proc_Break
 _0805FC88:
@@ -32691,7 +32691,7 @@ sub_805FC90: @ 0x0805FC90
 	str r1, [r0, #0x54]
 	ldr r1, _0805FCDC  @ gUnknown_085D6014
 	str r1, [r0, #0x58]
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -32715,7 +32715,7 @@ sub_805FCE0: @ 0x0805FCE0
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -32730,29 +32730,29 @@ sub_805FCE0: @ 0x0805FCE0
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r5, r4
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r7, #0x5c]
 	adds r6, r5, r6
 	ldr r1, [r6]
 	add r5, r8
 	ldr r2, [r5]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0805FD4C
 _0805FD2E:
 	movs r0, #1
 	negs r0, r0
 	cmp r5, r0
 	bne _0805FD4C
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0805FD58  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_End
 _0805FD4C:
@@ -32879,11 +32879,11 @@ sub_805FDFC: @ 0x0805FDFC
 	strh r1, [r0, #4]
 	ldr r0, _0805FE60  @ gUnknown_0866F2B4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0805FE64  @ gUnknown_0866EFF0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r3}
 	mov r8, r3
@@ -32925,9 +32925,9 @@ nullsub_41: @ 0x0805FE80
 StartSpellAnimDivine: @ 0x0805FE84
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0805FEBC  @ gUnknown_085D62FC
 	movs r1, #3
 	bl SpawnProc
@@ -32936,10 +32936,10 @@ StartSpellAnimDivine: @ 0x0805FE84
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -32955,9 +32955,9 @@ DivineSfxLoop: @ 0x0805FEC0
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r3, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -32998,7 +32998,7 @@ _0805FF18:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0805FFAA
 _0805FF28:
 	movs r0, #0x2c
@@ -33027,7 +33027,7 @@ _0805FF50:
 	bne _0805FF62
 	ldr r0, [r4, #0x5c]
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0805FFAA
 _0805FF62:
 	adds r0, r3, #0
@@ -33043,7 +33043,7 @@ _0805FF62:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0805FFAA
@@ -33057,8 +33057,8 @@ _0805FF90:
 	beq _0805FFAA
 	cmp r2, #0x64
 	bne _0805FFAA
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0805FFAA:
@@ -33093,8 +33093,8 @@ sub_805FFB0: @ 0x0805FFB0
 	str r0, [r5, #0x54]
 	ldr r0, _08060018  @ gUnknown_08641D84
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	ldr r0, _0806001C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	ldr r0, _0806001C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -33115,14 +33115,14 @@ _0806000C: .4byte gUnknown_080DD4D4
 _08060010: .4byte gUnknown_085D637C
 _08060014: .4byte gUnknown_085D632C
 _08060018: .4byte gUnknown_08641D84
-_0806001C: .4byte gUnknown_0203E120
+_0806001C: .4byte gBattleAnimSceneLayoutEnum
 _08060020:
 	movs r0, #1
 	movs r1, #0x18
 	movs r2, #0
 	bl SetBgOffset
 _0806002A:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -33154,8 +33154,8 @@ sub_8060034: @ 0x08060034
 	str r0, [r5, #0x54]
 	ldr r0, _0806009C  @ gUnknown_08641D84
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	ldr r0, _080600A0  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	ldr r0, _080600A0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -33176,14 +33176,14 @@ _08060090: .4byte gUnknown_080DD542
 _08060094: .4byte gUnknown_085D63D8
 _08060098: .4byte gUnknown_085D63CC
 _0806009C: .4byte gUnknown_08641D84
-_080600A0: .4byte gUnknown_0203E120
+_080600A0: .4byte gBattleAnimSceneLayoutEnum
 _080600A4:
 	movs r0, #1
 	movs r1, #0xe8
 	movs r2, #0
 	bl SetBgOffset
 _080600AE:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -33215,8 +33215,8 @@ sub_80600B8: @ 0x080600B8
 	str r0, [r5, #0x54]
 	ldr r0, _08060120  @ gUnknown_08641D64
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	ldr r0, _08060124  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	ldr r0, _08060124  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -33237,14 +33237,14 @@ _08060114: .4byte gUnknown_080DD550
 _08060118: .4byte gUnknown_085D6438
 _0806011C: .4byte gUnknown_085D63E4
 _08060120: .4byte gUnknown_08641D64
-_08060124: .4byte gUnknown_0203E120
+_08060124: .4byte gBattleAnimSceneLayoutEnum
 _08060128:
 	movs r0, #1
 	movs r1, #0xe8
 	movs r2, #0
 	bl SetBgOffset
 _08060132:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -33260,7 +33260,7 @@ sub_806013C: @ 0x0806013C
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -33273,14 +33273,14 @@ sub_806013C: @ 0x0806013C
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
-	ldr r0, _08060194  @ gUnknown_0203E120
+	bl SpellFx_WriteBgMap
+	ldr r0, _08060194  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -33293,7 +33293,7 @@ sub_806013C: @ 0x0806013C
 	ldr r0, _08060198  @ gBg1Tm
 	b _080601A0
 	.align 2, 0
-_08060194: .4byte gUnknown_0203E120
+_08060194: .4byte gBattleAnimSceneLayoutEnum
 _08060198: .4byte gBg1Tm
 _0806019C:
 	ldr r0, _080601B0  @ gBg1Tm+0x3A
@@ -33312,12 +33312,12 @@ _080601B4:
 	negs r0, r0
 	cmp r4, r0
 	bne _080601D2
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080601DC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _080601D2:
@@ -33372,11 +33372,11 @@ _08060230:
 	strh r0, [r6, #2]
 	ldr r0, _0806024C  @ gUnknown_08645F44
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08060250  @ gUnknown_08645DD8
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -33415,11 +33415,11 @@ _08060280: .4byte gUnknown_0201774C
 
 	THUMB_FUNC_END sub_8060254
 
-	THUMB_FUNC_START sub_8060284
-sub_8060284: @ 0x08060284
+	THUMB_FUNC_START nullsub_39
+nullsub_39: @ 0x08060284
 	bx lr
 
-	THUMB_FUNC_END sub_8060284
+	THUMB_FUNC_END nullsub_39
 
 	THUMB_FUNC_START nullsub_40
 nullsub_40: @ 0x08060288
@@ -33431,9 +33431,9 @@ nullsub_40: @ 0x08060288
 sub_806028C: @ 0x0806028C
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080602C4  @ gUnknown_085D64A4
 	movs r1, #3
 	bl SpawnProc
@@ -33442,10 +33442,10 @@ sub_806028C: @ 0x0806028C
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -33462,9 +33462,9 @@ sub_80602C8: @ 0x080602C8
 	sub sp, #8
 	adds r6, r0, #0
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r4, r0, #0
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
@@ -33477,7 +33477,7 @@ sub_80602C8: @ 0x080602C8
 	ldr r0, [r6, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _080602F6:
 	movs r0, #0x2c
 	ldrsh r1, [r6, r0]
@@ -33582,7 +33582,7 @@ _080603B8:
 	bl sub_80729A4
 	adds r0, r5, #0
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -33591,7 +33591,7 @@ _080603B8:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _08060438
@@ -33621,8 +33621,8 @@ _08060420:
 	adds r0, r4, r2
 	cmp r1, r0
 	bne _08060438
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r6, #0
 	bl Proc_Break
 _08060438:
@@ -33658,8 +33658,8 @@ sub_8060440: @ 0x08060440
 	str r2, [r0, #0x58]
 	ldr r0, _080604A8  @ gUnknown_08636640
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	ldr r2, _080604AC  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
@@ -33710,8 +33710,8 @@ sub_80604B0: @ 0x080604B0
 	str r2, [r0, #0x58]
 	ldr r0, _08060510  @ gUnknown_0864E790
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0xc
 	movs r2, #6
@@ -33755,8 +33755,8 @@ sub_8060514: @ 0x08060514
 	str r2, [r0, #0x58]
 	ldr r0, _08060568  @ gUnknown_0864E7B0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -33780,7 +33780,7 @@ sub_806056C: @ 0x0806056C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -33798,7 +33798,7 @@ sub_806056C: @ 0x0806056C
 	movs r1, #0x80
 	lsls r1, r1, #6
 	adds r0, r2, #0
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 _080605A6:
 	ldr r0, [r6]
 	str r0, [r4, #0x58]
@@ -33808,19 +33808,19 @@ _080605A6:
 	mov r3, r8
 	adds r2, r5, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _080605DA
 _080605BC:
 	movs r0, #1
 	negs r0, r0
 	cmp r1, r0
 	bne _080605DA
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080605E4  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _080605DA:
@@ -33849,7 +33849,7 @@ sub_80605E8: @ 0x080605E8
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -33933,11 +33933,11 @@ sub_806067C: @ 0x0806067C
 	strh r0, [r1, #0x2e]
 	ldr r0, _080606B8  @ gUnknown_0865163C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080606BC  @ gUnknown_086508DC
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	b _080606D0
 	.align 2, 0
 _080606B4: .4byte gUnknown_086517DC
@@ -33979,11 +33979,11 @@ sub_80606D8: @ 0x080606D8
 	strh r0, [r1, #0x2e]
 	ldr r0, _08060714  @ gUnknown_0865163C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08060718  @ gUnknown_08650DA8
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	b _0806072C
 	.align 2, 0
 _08060710: .4byte gUnknown_08651AE4
@@ -34025,11 +34025,11 @@ sub_8060734: @ 0x08060734
 	strh r0, [r1, #0x2e]
 	ldr r0, _08060770  @ gUnknown_0865163C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08060774  @ gUnknown_08651240
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	b _08060788
 	.align 2, 0
 _0806076C: .4byte gUnknown_08651DE0
@@ -34069,11 +34069,11 @@ sub_8060790: @ 0x08060790
 	strh r1, [r0, #0x30]
 	ldr r0, _080607D0  @ gUnknown_0862D424
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080607D4  @ gUnknown_0862C82C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -34199,9 +34199,9 @@ _080608A0: .4byte gUnknown_0201774C
 StartSpellAnimFenrir: @ 0x080608A4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080608DC  @ gUnknown_085D6644
 	movs r1, #3
 	bl SpawnProc
@@ -34210,10 +34210,10 @@ StartSpellAnimFenrir: @ 0x080608A4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -34230,9 +34230,9 @@ sub_80608E0: @ 0x080608E0
 	sub sp, #8
 	adds r6, r0, #0
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r4, r0, #0
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
@@ -34245,7 +34245,7 @@ sub_80608E0: @ 0x080608E0
 	ldr r0, [r6, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0806090E:
 	movs r0, #0x2c
 	ldrsh r1, [r6, r0]
@@ -34371,7 +34371,7 @@ _08060A04:
 	bne _08060A50
 	adds r0, r5, #0
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	adds r0, r5, #0
 	bl sub_8060E90
 	ldrh r1, [r5, #0x10]
@@ -34382,7 +34382,7 @@ _08060A04:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldr r0, _08060A4C  @ 0x00000133
 	movs r1, #0x80
 	lsls r1, r1, #1
@@ -34425,8 +34425,8 @@ _08060A72:
 	adds r0, r4, r3
 	cmp r1, r0
 	bne _08060A94
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r6, #0
 	bl Proc_Break
 _08060A94:
@@ -34457,8 +34457,8 @@ sub_8060A9C: @ 0x08060A9C
 	ldr r0, _08060B18  @ gUnknown_08651DF4
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl ClearBG1
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_ClearBg1
 	ldr r0, _08060B1C  @ gUnknown_08652734
 	ldr r4, _08060B20  @ gUnknown_02019790
 	adds r1, r4, #0
@@ -34474,7 +34474,7 @@ sub_8060A9C: @ 0x08060A9C
 	bl sub_8070E94
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	ldr r2, _08060B28  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
@@ -34504,12 +34504,12 @@ _08060B28: .4byte gDispIo
 	THUMB_FUNC_START sub_8060B2C
 sub_8060B2C: @ 0x08060B2C
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08060B44  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -34571,7 +34571,7 @@ sub_8060B7C: @ 0x08060B7C
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -34603,7 +34603,7 @@ sub_8060BD4: @ 0x08060BD4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -34612,7 +34612,7 @@ sub_8060BD4: @ 0x08060BD4
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 _08060BF8:
 	ldrh r0, [r4, #0x2e]
 	adds r0, #1
@@ -34659,11 +34659,11 @@ sub_8060C18: @ 0x08060C18
 	str r0, [r4, #0x60]
 	ldr r0, _08060C70  @ gUnknown_0865BAB8
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08060C74  @ gUnknown_0865AF3C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -34733,13 +34733,13 @@ sub_8060CAC: @ 0x08060CAC
 	str r1, [r5, #0x58]
 	ldr r0, _08060D24  @ gUnknown_086568F4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	ldr r0, _08060D28  @ gUnknown_0203E120
+	ldr r0, _08060D28  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -34760,7 +34760,7 @@ _08060D18: .4byte gUnknown_080DD76A
 _08060D1C: .4byte gUnknown_085D67A0
 _08060D20: .4byte gUnknown_085D66D4
 _08060D24: .4byte gUnknown_086568F4
-_08060D28: .4byte gUnknown_0203E120
+_08060D28: .4byte gBattleAnimSceneLayoutEnum
 _08060D2C:
 	movs r0, #1
 	movs r1, #0xe8
@@ -34799,9 +34799,9 @@ sub_8060D3C: @ 0x08060D3C
 	str r1, [r5, #0x58]
 	ldr r0, _08060DAC  @ gUnknown_08656914
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _08060DB0  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _08060DB0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -34822,7 +34822,7 @@ _08060DA0: .4byte gUnknown_080DCD72
 _08060DA4: .4byte gUnknown_085D55B4
 _08060DA8: .4byte gUnknown_085D5560
 _08060DAC: .4byte gUnknown_08656914
-_08060DB0: .4byte gUnknown_0203E120
+_08060DB0: .4byte gBattleAnimSceneLayoutEnum
 _08060DB4:
 	movs r0, #1
 	movs r1, #0xe8
@@ -34846,7 +34846,7 @@ sub_8060DC4: @ 0x08060DC4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -34864,7 +34864,7 @@ sub_8060DC4: @ 0x08060DC4
 	movs r1, #0x80
 	lsls r1, r1, #6
 	adds r0, r2, #0
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 _08060E00:
 	ldr r0, [r6]
 	str r0, [r4, #0x58]
@@ -34874,8 +34874,8 @@ _08060E00:
 	mov r3, r8
 	adds r2, r5, r3
 	ldr r2, [r2]
-	bl sub_8055670
-	ldr r0, _08060E3C  @ gUnknown_0203E120
+	bl SpellFx_WriteBgMap
+	ldr r0, _08060E3C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -34893,7 +34893,7 @@ _08060E00:
 	bl FillBGRect
 	b _08060E54
 	.align 2, 0
-_08060E3C: .4byte gUnknown_0203E120
+_08060E3C: .4byte gBattleAnimSceneLayoutEnum
 _08060E40: .4byte gBg1Tm
 _08060E44:
 	ldr r0, _08060E5C  @ gBg1Tm+0x3A
@@ -34914,12 +34914,12 @@ _08060E60:
 	negs r0, r0
 	cmp r1, r0
 	bne _08060E7E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08060E8C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _08060E7E:
@@ -34952,11 +34952,11 @@ sub_8060E90: @ 0x08060E90
 	str r1, [r0, #0x44]
 	ldr r0, _08060ED0  @ gUnknown_0865BAD8
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08060ED4  @ gUnknown_0865AF3C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -35148,9 +35148,9 @@ _08061020: .4byte gUnknown_0201774C
 StartSpellAnimHeal: @ 0x08061024
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08061048  @ gUnknown_085D68BC
 	movs r1, #3
 	bl SpawnProc
@@ -35170,7 +35170,7 @@ sub_806104C: @ 0x0806104C
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -35264,15 +35264,15 @@ _08061118:
 	cmp r0, #0xa6
 	bne _08061124
 	adds r0, r5, #0
-	bl sub_8052A0C
+	bl StartEfxHpBarLive
 	b _08061150
 _08061124:
 	cmp r0, #0xb5
 	bne _08061150
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	movs r1, #1
@@ -35297,9 +35297,9 @@ _08061150:
 StartSpellAnimMend: @ 0x08061158
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806117C  @ gUnknown_085D68D4
 	movs r1, #3
 	bl SpawnProc
@@ -35319,9 +35319,9 @@ sub_8061180: @ 0x08061180
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -35387,7 +35387,7 @@ _0806120E:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _080612B4
 _0806121E:
 	movs r0, #0x2c
@@ -35434,17 +35434,17 @@ _08061274:
 	cmp r1, r0
 	bne _08061284
 	adds r0, r5, #0
-	bl sub_8052A0C
+	bl StartEfxHpBarLive
 	b _080612B4
 _08061284:
 	adds r0, r2, #0
 	adds r0, #0xb5
 	cmp r1, r0
 	bne _080612B4
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	movs r1, #1
@@ -35469,9 +35469,9 @@ _080612B4:
 StartSpellAnimRecover: @ 0x080612BC
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080612E0  @ gUnknown_085D68EC
 	movs r1, #3
 	bl SpawnProc
@@ -35491,9 +35491,9 @@ sub_80612E4: @ 0x080612E4
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -35559,7 +35559,7 @@ _08061372:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _08061418
 _08061382:
 	movs r0, #0x2c
@@ -35606,17 +35606,17 @@ _080613D8:
 	cmp r1, r0
 	bne _080613E8
 	adds r0, r5, #0
-	bl sub_8052A0C
+	bl StartEfxHpBarLive
 	b _08061418
 _080613E8:
 	adds r0, r2, #0
 	adds r0, #0xb5
 	cmp r1, r0
 	bne _08061418
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	movs r1, #1
@@ -35641,9 +35641,9 @@ _08061418:
 sub_8061420: @ 0x08061420
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08061444  @ gUnknown_085D6904
 	movs r1, #3
 	bl SpawnProc
@@ -35663,9 +35663,9 @@ sub_8061448: @ 0x08061448
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -35737,7 +35737,7 @@ _080614DE:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0806158C
 _080614F6:
 	movs r0, #0x2c
@@ -35784,17 +35784,17 @@ _0806154C:
 	cmp r1, r0
 	bne _0806155C
 	adds r0, r5, #0
-	bl sub_8052A0C
+	bl StartEfxHpBarLive
 	b _0806158C
 _0806155C:
 	adds r0, r2, #0
 	adds r0, #0xdd
 	cmp r1, r0
 	bne _0806158C
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
-	bl sub_805A2F0
+	bl GetAISNextBattleAnimRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	movs r1, #1
@@ -35849,7 +35849,7 @@ sub_8061594: @ 0x08061594
 	ldr r0, _080615F0  @ gUnknown_08670548
 	movs r1, #0xa8
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _08061646
 	.align 2, 0
 _080615DC: .4byte gUnknown_0201774C
@@ -35871,8 +35871,8 @@ _080615F4:
 	ldr r0, _08061634  @ gUnknown_0866F5E4
 	movs r1, #0x80
 	lsls r1, r1, #3
-	bl SomeImageStoringRoutine_SpellAnim2
-	ldr r0, _08061638  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	ldr r0, _08061638  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -35888,7 +35888,7 @@ _080615F4:
 _0806162C: .4byte gUnknown_080DD8C6
 _08061630: .4byte gUnknown_0866F774
 _08061634: .4byte gUnknown_0866F5E4
-_08061638: .4byte gUnknown_0203E120
+_08061638: .4byte gBattleAnimSceneLayoutEnum
 _0806163C:
 	movs r0, #1
 	movs r1, #0xe8
@@ -35896,7 +35896,7 @@ _08061640:
 	movs r2, #0
 	bl SetBgOffset
 _08061646:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -35937,7 +35937,7 @@ sub_8061650: @ 0x08061650
 	ldr r0, _080616AC  @ gUnknown_08670548
 	movs r1, #0xa8
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _080616FA
 	.align 2, 0
 _08061698: .4byte gUnknown_0201774C
@@ -35955,8 +35955,8 @@ _080616B0:
 	ldr r0, _080616E8  @ gUnknown_0866F5E4
 	movs r1, #0x80
 	lsls r1, r1, #3
-	bl SomeImageStoringRoutine_SpellAnim2
-	ldr r0, _080616EC  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	ldr r0, _080616EC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -35972,7 +35972,7 @@ _080616B0:
 _080616E0: .4byte gUnknown_080DD8CC
 _080616E4: .4byte gUnknown_0866F774
 _080616E8: .4byte gUnknown_0866F5E4
-_080616EC: .4byte gUnknown_0203E120
+_080616EC: .4byte gBattleAnimSceneLayoutEnum
 _080616F0:
 	movs r0, #1
 	movs r1, #0x18
@@ -35980,7 +35980,7 @@ _080616F4:
 	movs r2, #0
 	bl SetBgOffset
 _080616FA:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -35995,7 +35995,7 @@ sub_8061704: @ 0x08061704
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -36022,8 +36022,8 @@ _08061736:
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _08061750
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 _08061750:
 	movs r0, #1
 	movs r1, #0
@@ -36176,7 +36176,7 @@ sub_8061854: @ 0x08061854
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -36185,7 +36185,7 @@ sub_8061854: @ 0x08061854
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08061890
 _0806187A:
 	movs r0, #1
@@ -36349,11 +36349,11 @@ sub_806196C: @ 0x0806196C
 	str r0, [r4, #0x60]
 	ldr r0, _080619C4  @ gUnknown_08670528
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080619C8  @ gUnknown_086702D4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -36396,11 +36396,11 @@ sub_80619CC: @ 0x080619CC
 	str r0, [r4, #0x60]
 	ldr r0, _08061A28  @ gUnknown_08670528
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08061A2C  @ gUnknown_086702D4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -36571,7 +36571,7 @@ sub_8061B14: @ 0x08061B14
 	ldr r0, _08061B60  @ gUnknown_086766C0
 	mov r8, r0
 	ldr r7, _08061B64  @ gUnknown_08677CC0
-	ldr r0, _08061B68  @ gUnknown_0203E120
+	ldr r0, _08061B68  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -36586,7 +36586,7 @@ sub_8061B14: @ 0x08061B14
 	.align 2, 0
 _08061B60: .4byte gUnknown_086766C0
 _08061B64: .4byte gUnknown_08677CC0
-_08061B68: .4byte gUnknown_0203E120
+_08061B68: .4byte gBattleAnimSceneLayoutEnum
 _08061B6C:
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
@@ -36601,7 +36601,7 @@ _08061B7E:
 	ldr r2, _08061BA0  @ gUnknown_08676734
 	mov r8, r2
 	ldr r7, _08061BA4  @ gUnknown_08677D34
-	ldr r0, _08061BA8  @ gUnknown_0203E120
+	ldr r0, _08061BA8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -36616,7 +36616,7 @@ _08061B7E:
 	.align 2, 0
 _08061BA0: .4byte gUnknown_08676734
 _08061BA4: .4byte gUnknown_08677D34
-_08061BA8: .4byte gUnknown_0203E120
+_08061BA8: .4byte gBattleAnimSceneLayoutEnum
 _08061BAC:
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
@@ -36682,9 +36682,9 @@ _08061C14: .4byte gUnknown_0201774C
 sub_8061C18: @ 0x08061C18
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08061C44  @ gUnknown_085D69CC
 	movs r1, #3
 	bl SpawnProc
@@ -36706,9 +36706,9 @@ _08061C44: .4byte gUnknown_085D69CC
 sub_8061C48: @ 0x08061C48
 	push {r4, lr}
 	adds r4, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08061C74  @ gUnknown_085D69CC
 	movs r1, #3
 	bl SpawnProc
@@ -36797,8 +36797,8 @@ _08061D0A:
 	ldr r0, _08061D24  @ 0x000001C5
 	cmp r1, r0
 	bne _08061D1E
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08061D1E:
@@ -36833,8 +36833,8 @@ sub_8061D28: @ 0x08061D28
 	ldr r0, _08061D74  @ gUnknown_0866F5E4
 	movs r1, #0x80
 	lsls r1, r1, #3
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -36852,14 +36852,14 @@ sub_8061D78: @ 0x08061D78
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
 	adds r0, r4, #0
 	adds r0, #0x2c
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -36872,7 +36872,7 @@ sub_8061D78: @ 0x08061D78
 	adds r0, r0, r2
 	ldr r2, [r0]
 	adds r0, r6, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	ldr r0, _08061DC8  @ gUnknown_080DDA50
 	lsls r1, r5, #1
 	adds r0, r1, r0
@@ -36893,12 +36893,12 @@ _08061DD0:
 	negs r0, r0
 	cmp r5, r0
 	bne _08061DEE
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08061DF4  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _08061DEE:
@@ -36958,7 +36958,7 @@ sub_8061E44: @ 0x08061E44
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -36967,7 +36967,7 @@ sub_8061E44: @ 0x08061E44
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08061E80
 _08061E6A:
 	movs r0, #1
@@ -37018,7 +37018,7 @@ sub_8061E8C: @ 0x08061E8C
 	ldr r0, _08061F68  @ gUnknown_08670548
 	movs r1, #0xa8
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r3, _08061F6C  @ gDispIo
 	ldrb r2, [r3, #0xc]
 	movs r1, #4
@@ -37065,7 +37065,7 @@ sub_8061E8C: @ 0x08061E8C
 	orrs r0, r6
 	strh r0, [r2, #8]
 _08061F26:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	mov r0, r8
 	str r0, [sp]
 	movs r0, #0
@@ -37104,7 +37104,7 @@ sub_8061F78: @ 0x08061F78
 	adds r5, r0, #0
 	ldr r6, [r5, #0x5c]
 	adds r0, r6, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r7, r0, #0
 	ldr r4, _08061FD4  @ gUnknown_02000010
 	adds r0, r6, #0
@@ -37128,7 +37128,7 @@ _08061FA8:
 	adds r1, r5, #0
 	adds r1, #0x44
 	ldr r2, [r5, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -37141,7 +37141,7 @@ _08061FA8:
 	adds r0, r0, r2
 	ldr r2, [r0]
 	adds r0, r7, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08062046
 	.align 2, 0
 _08061FD4: .4byte gUnknown_02000010
@@ -37151,7 +37151,7 @@ _08061FDC:
 	negs r0, r0
 	cmp r3, r0
 	bne _08062046
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806204C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -37195,7 +37195,7 @@ _08061FDC:
 	orrs r0, r2
 	strh r0, [r4, #8]
 _0806203C:
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r5, #0
 	bl Proc_Break
 _08062046:
@@ -37257,7 +37257,7 @@ sub_80620A4: @ 0x080620A4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -37266,7 +37266,7 @@ sub_80620A4: @ 0x080620A4
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080620E0
 _080620CA:
 	movs r0, #1
@@ -37292,9 +37292,9 @@ _080620E8: .4byte gUnknown_0201774C
 sub_80620EC: @ 0x080620EC
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08062124  @ gUnknown_085D6A68
 	movs r1, #3
 	bl SpawnProc
@@ -37303,10 +37303,10 @@ sub_80620EC: @ 0x080620EC
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -37325,9 +37325,9 @@ sub_8062128: @ 0x08062128
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -37342,7 +37342,7 @@ sub_8062128: @ 0x08062128
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0806215E:
 	movs r2, #0x2c
 	ldrsh r1, [r4, r2]
@@ -37413,7 +37413,7 @@ _080621E4:
 	movs r1, #1
 	movs r2, #5
 	movs r3, #0
-	bl sub_80547DC
+	bl StartEfxFlashUnit
 	b _08062294
 _080621FA:
 	adds r0, r5, #0
@@ -37433,12 +37433,12 @@ _080621FA:
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _08062228
-	ldr r0, _08062224  @ gUnknown_0203E188
+	ldr r0, _08062224  @ gpUnitLeft_BattleStruct
 	b _0806222A
 	.align 2, 0
-_08062224: .4byte gUnknown_0203E188
+_08062224: .4byte gpUnitLeft_BattleStruct
 _08062228:
-	ldr r0, _0806226C  @ gUnknown_0203E18C
+	ldr r0, _0806226C  @ gpUnitRight_BattleStruct
 _0806222A:
 	ldr r4, [r0]
 	adds r0, r4, #0
@@ -37460,7 +37460,7 @@ _0806222A:
 	ands r0, r1
 	str r0, [r4, #0xc]
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	bl MU_EndAll
 _08062260:
 	adds r0, r6, #0
@@ -37468,7 +37468,7 @@ _08062260:
 	bl sub_8054BA4
 	b _08062294
 	.align 2, 0
-_0806226C: .4byte gUnknown_0203E18C
+_0806226C: .4byte gpUnitRight_BattleStruct
 _08062270: .4byte 0xFFFFFBBD
 _08062274:
 	movs r2, #0x96
@@ -37480,8 +37480,8 @@ _08062274:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r6, #0x10]
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08062294:
@@ -37518,8 +37518,8 @@ sub_80622A0: @ 0x080622A0
 	str r1, [r0, #0x54]
 	ldr r0, _080622F0  @ gUnknown_0867B5A4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -37541,7 +37541,7 @@ sub_80622F4: @ 0x080622F4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -37555,24 +37555,24 @@ sub_80622F4: @ 0x080622F4
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _0806234E
 _08062330:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _0806234E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08062354  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806234E:
@@ -37627,11 +37627,11 @@ _080623A4:
 	strh r0, [r6, #4]
 	ldr r0, _080623C8  @ gUnknown_0868716C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080623CC  @ gUnknown_08686F84
 	movs r1, #0x80
 	lsls r1, r1, #4
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -37658,9 +37658,9 @@ _080623DC: .4byte gUnknown_0201774C
 StartSpellAnimSilence: @ 0x080623E0
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08062418  @ gUnknown_085D6B20
 	movs r1, #3
 	bl SpawnProc
@@ -37669,10 +37669,10 @@ StartSpellAnimSilence: @ 0x080623E0
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -37691,9 +37691,9 @@ sub_806241C: @ 0x0806241C
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -37723,7 +37723,7 @@ _08062460:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _08062518
 _08062474:
 	movs r3, #0x2c
@@ -37761,7 +37761,7 @@ _080624A8:
 	movs r0, #0xfc
 	movs r3, #1
 	bl sub_80729A4
-	bl sub_8071A7C
+	bl StopBattleMusic
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -37773,7 +37773,7 @@ _080624A8:
 	bl sub_8055518
 	ldr r0, [r4, #0x5c]
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrb r0, [r6]
 	cmp r0, #0
 	bne _08062518
@@ -37794,8 +37794,8 @@ _080624FA:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r5, #0x10]
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08062518:
@@ -37831,13 +37831,13 @@ sub_8062524: @ 0x08062524
 	str r0, [r5, #0x50]
 	ldr r0, _08062594  @ gUnknown_08680DC0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _08062598  @ gUnknown_0867EEB4
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0806259C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0806259C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -37858,7 +37858,7 @@ _0806258C: .4byte gUnknown_080DDCE6
 _08062590: .4byte gUnknown_085D6B50
 _08062594: .4byte gUnknown_08680DC0
 _08062598: .4byte gUnknown_0867EEB4
-_0806259C: .4byte gUnknown_0203E120
+_0806259C: .4byte gBattleAnimSceneLayoutEnum
 _080625A0:
 	movs r0, #1
 	movs r1, #0x18
@@ -37879,7 +37879,7 @@ sub_80625B0: @ 0x080625B0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -37892,19 +37892,19 @@ sub_80625B0: @ 0x080625B0
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _080625FC
 _080625DE:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _080625FC
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08062604  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _080625FC:
@@ -37939,11 +37939,11 @@ sub_8062608: @ 0x08062608
 	str r0, [r4, #0x60]
 	ldr r0, _08062658  @ gUnknown_08680DC0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806265C  @ gUnknown_086808A0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -37977,9 +37977,9 @@ _08062674: .4byte gUnknown_0201774C
 StartSpellAnimSleep: @ 0x08062678
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080626B0  @ gUnknown_085D6BB8
 	movs r1, #3
 	bl SpawnProc
@@ -37988,10 +37988,10 @@ StartSpellAnimSleep: @ 0x08062678
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -38010,9 +38010,9 @@ sub_80626B4: @ 0x080626B4
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -38042,7 +38042,7 @@ _080626F8:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0806270A:
 	movs r2, #0x2c
 	ldrsh r1, [r4, r2]
@@ -38109,8 +38109,8 @@ _08062786:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r5, #0x10]
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _080627A6:
@@ -38146,13 +38146,13 @@ sub_80627B4: @ 0x080627B4
 	str r0, [r5, #0x50]
 	ldr r0, _08062824  @ gUnknown_086861A4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _08062828  @ gUnknown_086852D8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0806282C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0806282C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -38173,7 +38173,7 @@ _0806281C: .4byte gUnknown_080DDD58
 _08062820: .4byte gUnknown_085D6BE8
 _08062824: .4byte gUnknown_086861A4
 _08062828: .4byte gUnknown_086852D8
-_0806282C: .4byte gUnknown_0203E120
+_0806282C: .4byte gBattleAnimSceneLayoutEnum
 _08062830:
 	movs r0, #1
 	movs r1, #0x18
@@ -38194,7 +38194,7 @@ sub_8062840: @ 0x08062840
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -38207,19 +38207,19 @@ sub_8062840: @ 0x08062840
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806288C
 _0806286E:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _0806288C
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08062894  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806288C:
@@ -38254,11 +38254,11 @@ sub_8062898: @ 0x08062898
 	str r0, [r4, #0x60]
 	ldr r0, _080628E8  @ gUnknown_0868716C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080628EC  @ gUnknown_08686F84
 	movs r1, #0x80
 	lsls r1, r1, #4
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -38375,9 +38375,9 @@ _08062994: .4byte gUnknown_0201774C
 StartSpellAnimHammerne: @ 0x08062998
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080629D0  @ gUnknown_085D6CB0
 	movs r1, #3
 	bl SpawnProc
@@ -38386,10 +38386,10 @@ StartSpellAnimHammerne: @ 0x08062998
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -38408,9 +38408,9 @@ sub_80629D4: @ 0x080629D4
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -38425,7 +38425,7 @@ sub_80629D4: @ 0x080629D4
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _08062A0A:
 	movs r2, #0x2c
 	ldrsh r1, [r4, r2]
@@ -38498,7 +38498,7 @@ _08062A94:
 	movs r1, #1
 	movs r2, #5
 	movs r3, #0
-	bl sub_80547DC
+	bl StartEfxFlashUnit
 	b _08062AE8
 _08062AAA:
 	adds r0, r5, #0
@@ -38525,8 +38525,8 @@ _08062AC8:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r6, #0x10]
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08062AE8:
@@ -38563,8 +38563,8 @@ sub_8062AF4: @ 0x08062AF4
 	str r1, [r0, #0x54]
 	ldr r0, _08062B44  @ gUnknown_086810B8
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -38586,7 +38586,7 @@ sub_8062B48: @ 0x08062B48
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -38600,24 +38600,24 @@ sub_8062B48: @ 0x08062B48
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _08062BA2
 _08062B84:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _08062BA2
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08062BA8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _08062BA2:
@@ -38652,11 +38652,11 @@ sub_8062BAC: @ 0x08062BAC
 	str r0, [r4, #0x60]
 	ldr r0, _08062BFC  @ gUnknown_0868718C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08062C00  @ gUnknown_08686F84
 	movs r1, #0x80
 	lsls r1, r1, #4
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -38686,9 +38686,9 @@ _08062C10: .4byte gUnknown_0201774C
 StartSpellAnimBerserk: @ 0x08062C14
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08062C4C  @ gUnknown_085D6D68
 	movs r1, #3
 	bl SpawnProc
@@ -38697,10 +38697,10 @@ StartSpellAnimBerserk: @ 0x08062C14
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -38717,9 +38717,9 @@ sub_8062C50: @ 0x08062C50
 	sub sp, #4
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -38732,7 +38732,7 @@ sub_8062C50: @ 0x08062C50
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _08062C7E:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -38774,7 +38774,7 @@ _08062CCC:
 	bne _08062D08
 	adds r0, r5, #0
 	movs r1, #5
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -38803,8 +38803,8 @@ _08062D08:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r5, #0x10]
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08062D26:
@@ -38839,11 +38839,11 @@ sub_8062D30: @ 0x08062D30
 	strh r4, [r0, #0x2e]
 	ldr r0, _08062E2C  @ gUnknown_0868C338
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _08062E30  @ gUnknown_086849B8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08062E34  @ gUnknown_08684AB8
 	ldr r1, _08062E38  @ gBg1Tm
 	movs r2, #1
@@ -38856,7 +38856,7 @@ sub_8062D30: @ 0x08062D30
 	bl sub_8070E94
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0xe
 	movs r2, #8
@@ -38959,8 +38959,8 @@ sub_8062E44: @ 0x08062E44
 	ldrsh r1, [r4, r2]
 	cmp r0, r1
 	bne _08062E96
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	bl sub_8070874
 	ldr r0, [r5, #0x1c]
 	ldr r1, _08062EA0  @ 0xFFFFF7FF
@@ -39097,7 +39097,7 @@ sub_8062F4C: @ 0x08062F4C
 	adds r4, r0, #0
 	str r5, [r4, #0x5c]
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	ldr r3, _08062F9C  @ gUnknown_085D4F90
 	ldr r0, [r4, #0x5c]
 	str r3, [sp]
@@ -39153,11 +39153,11 @@ sub_8062FBC: @ 0x08062FBC
 	strh r0, [r1, #6]
 	ldr r0, _08062FF0  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08062FF4  @ gUnknown_0868C358
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39182,11 +39182,11 @@ sub_8062FF8: @ 0x08062FF8
 	strh r0, [r1, #6]
 	ldr r0, _0806302C  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08063030  @ gUnknown_0868C358
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39211,11 +39211,11 @@ sub_8063034: @ 0x08063034
 	strh r0, [r1, #6]
 	ldr r0, _08063068  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806306C  @ gUnknown_0868C358
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39240,11 +39240,11 @@ sub_8063070: @ 0x08063070
 	strh r0, [r1, #6]
 	ldr r0, _080630A4  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080630A8  @ gUnknown_0868C358
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39269,11 +39269,11 @@ sub_80630AC: @ 0x080630AC
 	strh r0, [r1, #6]
 	ldr r0, _080630E0  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080630E4  @ gUnknown_0868C358
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39298,11 +39298,11 @@ sub_80630E8: @ 0x080630E8
 	strh r0, [r1, #6]
 	ldr r0, _0806311C  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08063120  @ gUnknown_0868C7F0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39327,11 +39327,11 @@ sub_8063124: @ 0x08063124
 	strh r0, [r1, #6]
 	ldr r0, _08063158  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806315C  @ gUnknown_0868C7F0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39356,11 +39356,11 @@ sub_8063160: @ 0x08063160
 	strh r0, [r1, #6]
 	ldr r0, _08063194  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08063198  @ gUnknown_0868C7F0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39385,11 +39385,11 @@ sub_806319C: @ 0x0806319C
 	strh r0, [r1, #6]
 	ldr r0, _080631D0  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080631D4  @ gUnknown_0868C7F0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39414,11 +39414,11 @@ sub_80631D8: @ 0x080631D8
 	strh r0, [r1, #6]
 	ldr r0, _0806320C  @ gUnknown_0868CC10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08063210  @ gUnknown_0868C7F0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r4, #0
 	bl Proc_Break
 	pop {r4}
@@ -39435,9 +39435,9 @@ _08063210: .4byte gUnknown_0868C7F0
 sub_8063214: @ 0x08063214
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806324C  @ gUnknown_085D6E70
 	movs r1, #3
 	bl SpawnProc
@@ -39446,10 +39446,10 @@ sub_8063214: @ 0x08063214
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -39465,9 +39465,9 @@ sub_8063250: @ 0x08063250
 	push {r4, r5, r6, r7, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -39480,7 +39480,7 @@ sub_8063250: @ 0x08063250
 	ldr r0, [r5, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0806327C:
 	movs r0, #0x2c
 	ldrsh r1, [r5, r0]
@@ -39524,7 +39524,7 @@ _080632C4:
 	movs r1, #1
 	movs r2, #5
 	movs r3, #0
-	bl sub_80547DC
+	bl StartEfxFlashUnit
 	b _08063316
 _080632DA:
 	adds r0, r6, #0
@@ -39550,8 +39550,8 @@ _080632F8:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r4, #0x10]
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
 	bl Proc_Break
 _08063316:
@@ -39583,12 +39583,12 @@ sub_806331C: @ 0x0806331C
 	str r1, [r0, #0x50]
 	ldr r0, _08063370  @ gUnknown_0868DF5C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _08063374  @ gUnknown_0868D6D0
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -39610,7 +39610,7 @@ sub_8063378: @ 0x08063378
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -39623,19 +39623,19 @@ sub_8063378: @ 0x08063378
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _080633C4
 _080633A6:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _080633C4
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080633CC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _080633C4:
@@ -39670,11 +39670,11 @@ sub_80633D0: @ 0x080633D0
 	str r0, [r4, #0x60]
 	ldr r0, _08063420  @ gUnknown_0868E46C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08063424  @ gUnknown_08686F84
 	movs r1, #0x80
 	lsls r1, r1, #4
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -39740,9 +39740,9 @@ _0806347C: .4byte gUnknown_0201774C
 StartSpellAnimShine: @ 0x08063480
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080634B8  @ gUnknown_085D6EF4
 	movs r1, #3
 	bl SpawnProc
@@ -39751,10 +39751,10 @@ StartSpellAnimShine: @ 0x08063480
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -39770,9 +39770,9 @@ sub_80634BC: @ 0x080634BC
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -39784,7 +39784,7 @@ sub_80634BC: @ 0x080634BC
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _080634E6:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -39793,7 +39793,7 @@ _080634E6:
 	bne _080634FA
 	adds r0, r5, #0
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _08063588
 _080634FA:
 	adds r0, r6, #0
@@ -39818,7 +39818,7 @@ _0806351C:
 	bne _08063534
 	adds r0, r5, #0
 	movs r1, #5
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	adds r0, r5, #0
 	bl sub_80637F8
 	b _08063588
@@ -39844,7 +39844,7 @@ _0806354A:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _08063588
@@ -39856,8 +39856,8 @@ _08063572:
 	adds r0, #0x23
 	cmp r1, r0
 	bne _08063588
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08063588:
@@ -39894,7 +39894,7 @@ sub_8063590: @ 0x08063590
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -39916,7 +39916,7 @@ sub_80635E8: @ 0x080635E8
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -39929,25 +39929,25 @@ sub_80635E8: @ 0x080635E8
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08063642
 _08063624:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _08063642
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08063648  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _08063642:
@@ -39982,12 +39982,12 @@ sub_806364C: @ 0x0806364C
 	str r0, [r5, #0x50]
 	ldr r0, _080636B8  @ gUnknown_08727C48
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _080636BC  @ gUnknown_0872796C
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	ldr r0, _080636C0  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	ldr r0, _080636C0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -40008,14 +40008,14 @@ _080636B0: .4byte gUnknown_080DE050
 _080636B4: .4byte gUnknown_085D6F48
 _080636B8: .4byte gUnknown_08727C48
 _080636BC: .4byte gUnknown_0872796C
-_080636C0: .4byte gUnknown_0203E120
+_080636C0: .4byte gBattleAnimSceneLayoutEnum
 _080636C4:
 	movs r0, #1
 	movs r1, #0xe8
 	movs r2, #0
 	bl SetBgOffset
 _080636CE:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -40031,7 +40031,7 @@ sub_80636D8: @ 0x080636D8
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -40044,8 +40044,8 @@ sub_80636D8: @ 0x080636D8
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
-	ldr r0, _08063720  @ gUnknown_0203E120
+	bl SpellFx_WriteBgMap
+	ldr r0, _08063720  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -40058,7 +40058,7 @@ sub_80636D8: @ 0x080636D8
 	ldr r0, _08063724  @ gBg1Tm
 	b _0806372C
 	.align 2, 0
-_08063720: .4byte gUnknown_0203E120
+_08063720: .4byte gBattleAnimSceneLayoutEnum
 _08063724: .4byte gBg1Tm
 _08063728:
 	ldr r0, _0806373C  @ gBg1Tm+0x3A
@@ -40077,12 +40077,12 @@ _08063740:
 	negs r0, r0
 	cmp r2, r0
 	bne _0806375E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08063768  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806375E:
@@ -40117,7 +40117,7 @@ sub_806376C: @ 0x0806376C
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -40137,7 +40137,7 @@ sub_80637B0: @ 0x080637B0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -40146,7 +40146,7 @@ sub_80637B0: @ 0x080637B0
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080637EC
 _080637D6:
 	movs r0, #1
@@ -40187,11 +40187,11 @@ sub_80637F8: @ 0x080637F8
 	strh r2, [r0, #0x30]
 	ldr r0, _08063838  @ gUnknown_08728920
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806383C  @ gUnknown_0872865C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -40368,9 +40368,9 @@ _08063970: .4byte gUnknown_0201774C
 StartSpellAnimLuna: @ 0x08063974
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080639AC  @ gUnknown_085D6FCC
 	movs r1, #3
 	bl SpawnProc
@@ -40379,10 +40379,10 @@ StartSpellAnimLuna: @ 0x08063974
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -40399,9 +40399,9 @@ sub_80639B0: @ 0x080639B0
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r6, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -40414,7 +40414,7 @@ sub_80639B0: @ 0x080639B0
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _080639DE:
 	movs r0, #0x2c
 	ldrsh r1, [r4, r0]
@@ -40553,7 +40553,7 @@ _08063B02:
 	bne _08063B32
 	adds r0, r6, #0
 	movs r1, #5
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r6, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -40561,7 +40561,7 @@ _08063B02:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r6, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _08063B62
@@ -40585,8 +40585,8 @@ _08063B4C:
 	adds r0, #0xbe
 	cmp r1, r0
 	bne _08063B62
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08063B62:
@@ -40619,12 +40619,12 @@ sub_8063B6C: @ 0x08063B6C
 	str r1, [r0, #0x50]
 	ldr r0, _08063BC0  @ gUnknown_0872972C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _08063BC4  @ gUnknown_08728C5C
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -40646,7 +40646,7 @@ sub_8063BC8: @ 0x08063BC8
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -40659,19 +40659,19 @@ sub_8063BC8: @ 0x08063BC8
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08063C14
 _08063BF6:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _08063C14
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08063C1C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _08063C14:
@@ -40879,11 +40879,11 @@ sub_8063D64: @ 0x08063D64
 	ldr r0, _08063DD0  @ gUnknown_0872987C
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08063DD4  @ gUnknown_08729FDC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl ClearBG1
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_ClearBg1
 	ldr r0, _08063DD8  @ gUnknown_0872A1BC
 	ldr r4, _08063DDC  @ gUnknown_02019790
 	adds r1, r4, #0
@@ -40923,8 +40923,8 @@ _08063DE4:
 _08063DF8:
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
-	ldr r0, _08063E28  @ gUnknown_0203E120
+	bl SpellFx_InitBg1Blend
+	ldr r0, _08063E28  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -40940,7 +40940,7 @@ _08063DF8:
 	b _08063E36
 	.align 2, 0
 _08063E24: .4byte gBg1Tm
-_08063E28: .4byte gUnknown_0203E120
+_08063E28: .4byte gBattleAnimSceneLayoutEnum
 _08063E2C:
 	movs r0, #1
 	movs r1, #0xe8
@@ -40970,12 +40970,12 @@ _08063E54: .4byte gDispIo
 	THUMB_FUNC_START sub_8063E58
 sub_8063E58: @ 0x08063E58
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08063E70  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -41034,7 +41034,7 @@ sub_8063EA0: @ 0x08063EA0
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -41066,7 +41066,7 @@ sub_8063EF8: @ 0x08063EF8
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -41075,7 +41075,7 @@ sub_8063EF8: @ 0x08063EF8
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 _08063F1C:
 	ldrh r0, [r4, #0x2e]
 	adds r0, #1
@@ -41120,9 +41120,9 @@ sub_8063F3C: @ 0x08063F3C
 	str r0, [r5, #0x54]
 	ldr r0, _08063FA8  @ gUnknown_0872CE60
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _08063FAC  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _08063FAC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -41143,7 +41143,7 @@ _08063F9C: .4byte gUnknown_080DE150
 _08063FA0: .4byte gUnknown_085D7150
 _08063FA4: .4byte gUnknown_085D7180
 _08063FA8: .4byte gUnknown_0872CE60
-_08063FAC: .4byte gUnknown_0203E120
+_08063FAC: .4byte gBattleAnimSceneLayoutEnum
 _08063FB0:
 	movs r0, #1
 	movs r1, #0x18
@@ -41164,7 +41164,7 @@ sub_8063FC0: @ 0x08063FC0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -41178,24 +41178,24 @@ sub_8063FC0: @ 0x08063FC0
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _0806401A
 _08063FFC:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _0806401A
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08064020  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806401A:
@@ -41223,11 +41223,11 @@ _0806402A:
 	bls _0806402A
 	ldr r0, _08064058  @ gUnknown_0872DE04
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806405C  @ gUnknown_0872DA04
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -41598,9 +41598,9 @@ _08064304: .4byte gUnknown_0201774C
 sub_8064308: @ 0x08064308
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08064340  @ gUnknown_085D71F8
 	movs r1, #3
 	bl SpawnProc
@@ -41609,10 +41609,10 @@ sub_8064308: @ 0x08064308
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -41629,9 +41629,9 @@ sub_8064344: @ 0x08064344
 	sub sp, #8
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r6, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -41644,7 +41644,7 @@ sub_8064344: @ 0x08064344
 	ldr r0, [r5, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0806441C
 _08064374:
 	movs r0, #0x2c
@@ -41752,14 +41752,14 @@ _08064444:
 	bne _0806446E
 	adds r0, r4, #0
 	movs r1, #5
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r4, #0x10]
 	movs r1, #9
 	orrs r1, r0
 	strh r1, [r4, #0x10]
 	ldrb r1, [r7]
 	adds r0, r4, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	adds r0, r4, #0
 	bl sub_8072450
 _0806446E:
@@ -41780,8 +41780,8 @@ _08064486:
 	adds r0, #0xa7
 	cmp r1, r0
 	bne _080644D8
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
 	bl Proc_Break
 	b _080644D8
@@ -41798,7 +41798,7 @@ _080644A2:
 	strh r1, [r4, #0x10]
 	ldrb r1, [r7]
 	adds r0, r4, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 _080644BE:
 	movs r3, #0x2c
 	ldrsh r1, [r5, r3]
@@ -41806,8 +41806,8 @@ _080644BE:
 	adds r0, #0x6f
 	cmp r1, r0
 	bne _080644D8
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
 	bl Proc_Break
 _080644D8:
@@ -41837,12 +41837,12 @@ sub_80644E0: @ 0x080644E0
 	ldr r0, _0806453C  @ gUnknown_0872E25C
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl ClearBG1
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_ClearBg1
 	ldr r0, _08064540  @ gUnknown_0872E7EC
 	ldr r1, _08064544  @ gUnknown_02019790
 	bl LZ77UnCompWram
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	ldr r2, _08064548  @ gDispIo
 	ldrb r1, [r2, #1]
 	movs r0, #0x21
@@ -41870,12 +41870,12 @@ _08064548: .4byte gDispIo
 	THUMB_FUNC_START sub_806454C
 sub_806454C: @ 0x0806454C
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08064564  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -42043,7 +42043,7 @@ sub_806466C: @ 0x0806466C
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -42075,7 +42075,7 @@ sub_80646C0: @ 0x080646C0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -42084,7 +42084,7 @@ sub_80646C0: @ 0x080646C0
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080646F4
 _080646E6:
 	movs r0, #1
@@ -42294,9 +42294,9 @@ sub_8064838: @ 0x08064838
 	ldr r0, _08064884  @ gUnknown_0872E998
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl ClearBG1
-	ldr r0, _08064888  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_ClearBg1
+	ldr r0, _08064888  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -42309,7 +42309,7 @@ sub_8064838: @ 0x08064838
 _0806487C: .4byte gUnknown_0201774C
 _08064880: .4byte gUnknown_085D7398
 _08064884: .4byte gUnknown_0872E998
-_08064888: .4byte gUnknown_0203E120
+_08064888: .4byte gBattleAnimSceneLayoutEnum
 _0806488C: .4byte gUnknown_0872FA84
 _08064890: .4byte gUnknown_02019790
 _08064894:
@@ -42348,7 +42348,7 @@ _080648C8:
 _080648DC:
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
@@ -42378,12 +42378,12 @@ _08064918: .4byte gDispIo
 	THUMB_FUNC_START sub_806491C
 sub_806491C: @ 0x0806491C
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08064934  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -42434,7 +42434,7 @@ sub_8064958: @ 0x08064958
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -42454,7 +42454,7 @@ sub_806499C: @ 0x0806499C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -42463,7 +42463,7 @@ sub_806499C: @ 0x0806499C
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080649D8
 _080649C2:
 	movs r0, #1
@@ -42506,9 +42506,9 @@ sub_80649E4: @ 0x080649E4
 	ldr r0, _08064A30  @ gUnknown_08725DCC
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl ClearBG1
-	ldr r0, _08064A34  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_ClearBg1
+	ldr r0, _08064A34  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -42521,7 +42521,7 @@ sub_80649E4: @ 0x080649E4
 _08064A28: .4byte gUnknown_0201774C
 _08064A2C: .4byte gUnknown_085D73D8
 _08064A30: .4byte gUnknown_08725DCC
-_08064A34: .4byte gUnknown_0203E120
+_08064A34: .4byte gBattleAnimSceneLayoutEnum
 _08064A38: .4byte gUnknown_087270B4
 _08064A3C: .4byte gUnknown_02019790
 _08064A40:
@@ -42560,7 +42560,7 @@ _08064A74:
 _08064A88:
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
@@ -42590,12 +42590,12 @@ _08064AC4: .4byte gDispIo
 	THUMB_FUNC_START sub_8064AC8
 sub_8064AC8: @ 0x08064AC8
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08064AE0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -42646,7 +42646,7 @@ sub_8064B04: @ 0x08064B04
 	str r1, [r0, #0x4c]
 	adds r0, r1, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -42666,7 +42666,7 @@ sub_8064B48: @ 0x08064B48
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -42675,7 +42675,7 @@ sub_8064B48: @ 0x08064B48
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08064B84
 _08064B6E:
 	movs r0, #1
@@ -42730,11 +42730,11 @@ sub_8064B90: @ 0x08064B90
 	strh r1, [r0, #4]
 	ldr r0, _08064BF4  @ gUnknown_08730780
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08064BF8  @ gUnknown_08730324
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -42800,8 +42800,8 @@ sub_8064C28: @ 0x08064C28
 	str r1, [r0, #0x54]
 	ldr r0, _08064C7C  @ gUnknown_08724424
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -42834,7 +42834,7 @@ sub_8064C80: @ 0x08064C80
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -42852,19 +42852,19 @@ sub_8064C80: @ 0x08064C80
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _08064CF2
 _08064CD4:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _08064CF2
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08064CF8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _08064CF2:
@@ -42902,11 +42902,11 @@ sub_8064D00: @ 0x08064D00
 	ldr r0, _08064D90  @ gUnknown_087313C8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08064D94  @ gUnknown_08732228
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl ClearBG1
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_ClearBg1
 	ldr r0, _08064D98  @ gUnknown_08732368
 	ldr r4, _08064D9C  @ gUnknown_02019790
 	adds r1, r4, #0
@@ -42922,7 +42922,7 @@ sub_8064D00: @ 0x08064D00
 	bl sub_8070EC4
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
@@ -42957,12 +42957,12 @@ _08064DA4: .4byte gDispIo
 	THUMB_FUNC_START sub_8064DA8
 sub_8064DA8: @ 0x08064DA8
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08064DC0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -43013,7 +43013,7 @@ sub_8064DE4: @ 0x08064DE4
 	str r1, [r0, #0x4c]
 	ldr r0, _08064E28  @ gUnknown_08731348
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -43034,7 +43034,7 @@ sub_8064E2C: @ 0x08064E2C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -43043,7 +43043,7 @@ sub_8064E2C: @ 0x08064E2C
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08064E68
 _08064E52:
 	movs r0, #1
@@ -43069,9 +43069,9 @@ _08064E70: .4byte gUnknown_0201774C
 StartSpellAnimAura: @ 0x08064E74
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08064EAC  @ gUnknown_085D7490
 	movs r1, #3
 	bl SpawnProc
@@ -43080,10 +43080,10 @@ StartSpellAnimAura: @ 0x08064E74
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -43100,9 +43100,9 @@ sub_8064EB0: @ 0x08064EB0
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -43147,10 +43147,10 @@ _08064F10:
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	adds r0, r5, #0
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _08064FFE
 _08064F28:
 	movs r0, #0x2c
@@ -43206,7 +43206,7 @@ _08064F86:
 	bne _08064FB6
 	adds r0, r5, #0
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldrh r0, [r5, #0x10]
 	movs r1, #9
 	orrs r0, r1
@@ -43214,7 +43214,7 @@ _08064F86:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _08064FFE
@@ -43249,8 +43249,8 @@ _08064FE8:
 	adds r0, #0xf5
 	cmp r1, r0
 	bne _08064FFE
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08064FFE:
@@ -43285,15 +43285,15 @@ sub_8065008: @ 0x08065008
 	ldr r0, _0806507C  @ gUnknown_087327C4
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08065080  @ gUnknown_0873313C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	ldr r0, _08065084  @ gUnknown_0203E120
+	ldr r0, _08065084  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -43314,14 +43314,14 @@ _08065074: .4byte gUnknown_080DE346
 _08065078: .4byte gUnknown_085D74C0
 _0806507C: .4byte gUnknown_087327C4
 _08065080: .4byte gUnknown_0873313C
-_08065084: .4byte gUnknown_0203E120
+_08065084: .4byte gBattleAnimSceneLayoutEnum
 _08065088:
 	movs r0, #1
 	movs r1, #0xe8
 	movs r2, #0
 	bl SetBgOffset
 _08065092:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -43352,15 +43352,15 @@ sub_806509C: @ 0x0806509C
 	ldr r0, _08065110  @ gUnknown_087327C4
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08065114  @ gUnknown_0873313C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	ldr r0, _08065118  @ gUnknown_0203E120
+	ldr r0, _08065118  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -43381,14 +43381,14 @@ _08065108: .4byte gUnknown_080DE374
 _0806510C: .4byte gUnknown_085D74C0
 _08065110: .4byte gUnknown_087327C4
 _08065114: .4byte gUnknown_0873313C
-_08065118: .4byte gUnknown_0203E120
+_08065118: .4byte gBattleAnimSceneLayoutEnum
 _0806511C:
 	movs r0, #1
 	movs r1, #0x18
 	movs r2, #0
 	bl SetBgOffset
 _08065126:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -43419,15 +43419,15 @@ sub_8065130: @ 0x08065130
 	ldr r0, _080651A4  @ gUnknown_087327C4
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _080651A8  @ gUnknown_0873313C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	ldr r0, _080651AC  @ gUnknown_0203E120
+	ldr r0, _080651AC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -43448,14 +43448,14 @@ _0806519C: .4byte gUnknown_080DE3A6
 _080651A0: .4byte gUnknown_085D74C0
 _080651A4: .4byte gUnknown_087327C4
 _080651A8: .4byte gUnknown_0873313C
-_080651AC: .4byte gUnknown_0203E120
+_080651AC: .4byte gBattleAnimSceneLayoutEnum
 _080651B0:
 	movs r0, #1
 	movs r1, #0xe8
 	movs r2, #0
 	bl SetBgOffset
 _080651BA:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -43470,7 +43470,7 @@ sub_80651C4: @ 0x080651C4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -43483,19 +43483,19 @@ sub_80651C4: @ 0x080651C4
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08065210
 _080651F2:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _08065210
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08065218  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _08065210:
@@ -43528,9 +43528,9 @@ sub_806521C: @ 0x0806521C
 	ldr r0, _08065268  @ gUnknown_08725DCC
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl ClearBG1
-	ldr r0, _0806526C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_ClearBg1
+	ldr r0, _0806526C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -43543,7 +43543,7 @@ sub_806521C: @ 0x0806521C
 _08065260: .4byte gUnknown_0201774C
 _08065264: .4byte gUnknown_085D7530
 _08065268: .4byte gUnknown_08725DCC
-_0806526C: .4byte gUnknown_0203E120
+_0806526C: .4byte gBattleAnimSceneLayoutEnum
 _08065270: .4byte gUnknown_087270B4
 _08065274: .4byte gUnknown_02019790
 _08065278:
@@ -43582,7 +43582,7 @@ _080652AC:
 _080652C0:
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
@@ -43612,12 +43612,12 @@ _080652FC: .4byte gDispIo
 	THUMB_FUNC_START sub_8065300
 sub_8065300: @ 0x08065300
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08065318  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -43669,7 +43669,7 @@ sub_806533C: @ 0x0806533C
 	str r0, [r1, #0x4c]
 	adds r0, #0x60
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -43689,7 +43689,7 @@ sub_8065384: @ 0x08065384
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -43698,7 +43698,7 @@ sub_8065384: @ 0x08065384
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080653C0
 _080653AA:
 	movs r0, #1
@@ -43744,12 +43744,12 @@ sub_80653CC: @ 0x080653CC
 	str r1, [r0, #0x54]
 	ldr r0, _08065428  @ gUnknown_0874394C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -43771,7 +43771,7 @@ sub_806542C: @ 0x0806542C
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -43784,25 +43784,25 @@ sub_806542C: @ 0x0806542C
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08065486
 _08065468:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _08065486
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806548C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _08065486:
@@ -43814,11 +43814,11 @@ _0806548C: .4byte gUnknown_0201774C
 
 	THUMB_FUNC_END sub_806542C
 
-	THUMB_FUNC_START sub_8065490
-sub_8065490: @ 0x08065490
+	THUMB_FUNC_START nullsub_52
+nullsub_52: @ 0x08065490
 	bx lr
 
-	THUMB_FUNC_END sub_8065490
+	THUMB_FUNC_END nullsub_52
 
 	THUMB_FUNC_START nullsub_53
 nullsub_53: @ 0x08065494
@@ -43851,8 +43851,8 @@ sub_8065498: @ 0x08065498
 	str r2, [r0, #0x58]
 	ldr r0, _080654F4  @ gUnknown_08750268
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
@@ -43881,7 +43881,7 @@ sub_80654F8: @ 0x080654F8
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -43899,7 +43899,7 @@ sub_80654F8: @ 0x080654F8
 	movs r1, #0x80
 	lsls r1, r1, #6
 	adds r0, r2, #0
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 _08065534:
 	ldr r0, [r6]
 	str r0, [r4, #0x58]
@@ -43909,8 +43909,8 @@ _08065534:
 	mov r3, r8
 	adds r2, r5, r3
 	ldr r2, [r2]
-	bl sub_8055670
-	ldr r0, _08065570  @ gUnknown_0203E120
+	bl SpellFx_WriteBgMap
+	ldr r0, _08065570  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -43928,7 +43928,7 @@ _08065534:
 	bl FillBGRect
 	b _08065588
 	.align 2, 0
-_08065570: .4byte gUnknown_0203E120
+_08065570: .4byte gBattleAnimSceneLayoutEnum
 _08065574: .4byte gBg1Tm
 _08065578:
 	ldr r0, _08065590  @ gBg1Tm+0x3A
@@ -43949,12 +43949,12 @@ _08065594:
 	negs r0, r0
 	cmp r1, r0
 	bne _080655B2
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080655C0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _080655B2:
@@ -43997,10 +43997,10 @@ sub_80655C4: @ 0x080655C4
 	ldr r0, _0806561C  @ gUnknown_08751808
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r0, _08065620  @ gUnknown_08751DB4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -44030,8 +44030,8 @@ _08065630: .4byte gUnknown_0201774C
 sub_8065634: @ 0x08065634
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806566C  @ gUnknown_085D7670
 	movs r1, #3
 	bl SpawnProc
@@ -44042,10 +44042,10 @@ sub_8065634: @ 0x08065634
 	movs r0, #1
 	str r0, [r4, #0x44]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -44060,8 +44060,8 @@ _0806566C: .4byte gUnknown_085D7670
 sub_8065670: @ 0x08065670
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080656A8  @ gUnknown_085D7670
 	movs r1, #3
 	bl SpawnProc
@@ -44072,10 +44072,10 @@ sub_8065670: @ 0x08065670
 	movs r0, #2
 	str r0, [r4, #0x44]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -44090,8 +44090,8 @@ _080656A8: .4byte gUnknown_085D7670
 sub_80656AC: @ 0x080656AC
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080656E4  @ gUnknown_085D7670
 	movs r1, #3
 	bl SpawnProc
@@ -44102,10 +44102,10 @@ sub_80656AC: @ 0x080656AC
 	movs r0, #3
 	str r0, [r4, #0x44]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -44120,8 +44120,8 @@ _080656E4: .4byte gUnknown_085D7670
 sub_80656E8: @ 0x080656E8
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08065720  @ gUnknown_085D7670
 	movs r1, #3
 	bl SpawnProc
@@ -44132,10 +44132,10 @@ sub_80656E8: @ 0x080656E8
 	movs r0, #4
 	str r0, [r4, #0x44]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -44152,7 +44152,7 @@ sub_8065724: @ 0x08065724
 	sub sp, #8
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -44220,7 +44220,7 @@ _080657B6:
 	movs r1, #2
 	orrs r0, r1
 	strh r0, [r4, #0x10]
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r5, #0
 	bl Proc_Break
 _080657CC:
@@ -44235,9 +44235,9 @@ _080657CC:
 StartSpellAnimIvaldi: @ 0x080657D4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806580C  @ gUnknown_085D7688
 	movs r1, #3
 	bl SpawnProc
@@ -44246,10 +44246,10 @@ StartSpellAnimIvaldi: @ 0x080657D4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -44266,9 +44266,9 @@ Loop6C_efxIvaldi: @ 0x08065810
 	sub sp, #4
 	adds r6, r0, #0
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r4, r0, #0
 	movs r7, #0x3e
 	ldrh r0, [r6, #0x2c]
@@ -44281,7 +44281,7 @@ Loop6C_efxIvaldi: @ 0x08065810
 	ldr r0, [r6, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _0806583E:
 	movs r0, #0x2c
 	ldrsh r1, [r6, r0]
@@ -44409,7 +44409,7 @@ _0806592A:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _080659A4
@@ -44439,7 +44439,7 @@ _08065960:
 _08065982:
 	adds r0, r5, #0
 	movs r1, #2
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _080659A4
 _0806598C:
 	adds r0, r4, #0
@@ -44447,8 +44447,8 @@ _0806598C:
 	adds r0, r2, r0
 	cmp r1, r0
 	bne _080659A4
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r6, #0
 	bl Proc_Break
 _080659A4:
@@ -44482,15 +44482,15 @@ StartSpellBG_IvaldiBG1: @ 0x080659AC
 	ldr r0, _08065A08  @ gUnknown_086937C0
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08065A0C  @ gUnknown_086945C4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -44509,13 +44509,13 @@ Loop6C_efxIvaldiBG1: @ 0x08065A10
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r0, r5, #0
 	adds r0, #0x2c
 	adds r1, r5, #0
 	adds r1, #0x44
 	ldr r2, [r5, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
@@ -44535,19 +44535,19 @@ Loop6C_efxIvaldiBG1: @ 0x08065A10
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08065A74
 _08065A56:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _08065A74
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08065A7C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r5, #0
 	bl Proc_Break
 _08065A74:
@@ -44572,7 +44572,7 @@ StartSpellBG_IvaldiBG2: @ 0x08065A80
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -44585,15 +44585,15 @@ StartSpellBG_IvaldiBG2: @ 0x08065A80
 	ldr r0, _08065AE4  @ gUnknown_08695B10
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08065AE8  @ gUnknown_08696840
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -44615,7 +44615,7 @@ Loop6C_efxIvaldiBG2: @ 0x08065AEC
 	adds r1, r5, #0
 	adds r1, #0x44
 	ldr r2, [r5, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
@@ -44635,19 +44635,19 @@ Loop6C_efxIvaldiBG2: @ 0x08065AEC
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08065B48
 _08065B2A:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _08065B48
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08065B50  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r5, #0
 	bl Proc_Break
 _08065B48:
@@ -44663,8 +44663,8 @@ _08065B50: .4byte gUnknown_0201774C
 StartSpellBG_IvaldiBG3: @ 0x08065B54
 	push {r4, lr}
 	adds r4, r0, #0
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	ldr r1, _08065BA0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	adds r0, #1
@@ -44689,7 +44689,7 @@ StartSpellBG_IvaldiBG3: @ 0x08065B54
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -44711,7 +44711,7 @@ Loop6C_efxIvaldiBG3: @ 0x08065BB8
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
@@ -44733,28 +44733,28 @@ Loop6C_efxIvaldiBG3: @ 0x08065BB8
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08065C2E
 _08065C10:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _08065C2E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08065C34  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _08065C2E:
@@ -44791,15 +44791,15 @@ StartSpellBG_IvaldiBG4: @ 0x08065C38
 	ldr r0, _08065C98  @ gUnknown_086A06A8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _08065C9C  @ gUnknown_086A1CE0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -44828,7 +44828,7 @@ sub_8065CA0: @ 0x08065CA0
 	adds r1, r5, #0
 	adds r1, #0x44
 	ldr r2, [r5, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
@@ -44844,7 +44844,7 @@ sub_8065CA0: @ 0x08065CA0
 	blt _08065D58
 	ldr r2, [r5, #0x4c]
 	ldr r1, [r5, #0x50]
-	ldr r0, _08065CF8  @ gUnknown_0203E120
+	ldr r0, _08065CF8  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0
 	ldrsh r0, [r0, r3]
 	cmp r0, #0
@@ -44856,7 +44856,7 @@ sub_8065CA0: @ 0x08065CA0
 	bl LZ77UnCompWram
 	b _08065D0C
 	.align 2, 0
-_08065CF8: .4byte gUnknown_0203E120
+_08065CF8: .4byte gBattleAnimSceneLayoutEnum
 _08065CFC: .4byte gUnknown_02019790
 _08065D00:
 	lsls r0, r4, #2
@@ -44904,12 +44904,12 @@ _08065D58:
 	negs r0, r0
 	cmp r4, r0
 	bne _08065D76
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08065D80  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r5, #0
 	bl Proc_Break
 _08065D76:
@@ -44927,11 +44927,11 @@ PrepareSomeIvaldiParticleGraphics: @ 0x08065D84
 	push {lr}
 	ldr r0, _08065D9C  @ gUnknown_08692B10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08065DA0  @ gUnknown_086926E0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -44948,11 +44948,11 @@ StartSpellOBJ_IvaldiFall: @ 0x08065DA4
 	bl GetAISSubjectId
 	ldr r0, _08065DE8  @ gUnknown_08692B10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08065DEC  @ gUnknown_086926E0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r1, _08065DF0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	adds r0, #1
@@ -44962,7 +44962,7 @@ StartSpellOBJ_IvaldiFall: @ 0x08065DA4
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -45137,11 +45137,11 @@ StartSpellOBJ_IvaldiSideWash: @ 0x08065F10
 	bl GetAISSubjectId
 	ldr r0, _08065F54  @ gUnknown_08692B10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08065F58  @ gUnknown_086926E0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r1, _08065F5C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	adds r0, #1
@@ -45151,7 +45151,7 @@ StartSpellOBJ_IvaldiSideWash: @ 0x08065F10
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -45304,11 +45304,11 @@ sub_8066060: @ 0x08066060
 	bl GetAISSubjectId
 	ldr r0, _080660A4  @ gUnknown_08692B10
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080660A8  @ gUnknown_086926E0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r1, _080660AC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	adds r0, #1
@@ -45318,7 +45318,7 @@ sub_8066060: @ 0x08066060
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -45597,7 +45597,7 @@ sub_8066258: @ 0x08066258
 	bl SpawnProc
 	adds r7, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r7, #0x5c]
 	movs r0, #0
 	strh r0, [r7, #0x2c]
@@ -45745,7 +45745,7 @@ sub_8066390: @ 0x08066390
 	bl SpawnProc
 	adds r5, r0, #0
 	mov r0, r8
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r5, #0x5c]
 	movs r0, #0
 	strh r0, [r5, #0x2c]
@@ -45850,7 +45850,7 @@ sub_8066470: @ 0x08066470
 	strh r5, [r0, #0x2e]
 	adds r0, r4, #0
 	adds r1, r6, #0
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -45885,7 +45885,7 @@ sub_80664A8: @ 0x080664A8
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r5, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
 	strh r0, [r6, #0x2c]
@@ -45917,9 +45917,9 @@ _08066510: .4byte gUnknown_0201774C
 sub_8066514: @ 0x08066514
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806654C  @ gUnknown_085D785C
 	movs r1, #3
 	bl SpawnProc
@@ -45928,10 +45928,10 @@ sub_8066514: @ 0x08066514
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -45948,9 +45948,9 @@ sub_8066550: @ 0x08066550
 	sub sp, #8
 	adds r6, r0, #0
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r7, r0, #0
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
@@ -46041,11 +46041,11 @@ _0806660A:
 _08066624:
 	adds r0, r4, #0
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldr r0, [r6, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _08066636:
 	movs r0, #0x2c
 	ldrsh r1, [r6, r0]
@@ -46061,7 +46061,7 @@ _08066636:
 	adds r5, #0x29
 	ldrb r1, [r5]
 	adds r0, r4, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r5]
 	cmp r0, #0
 	bne _0806669C
@@ -46104,8 +46104,8 @@ _080666A6:
 	movs r0, #2
 	orrs r0, r1
 	strh r0, [r4, #0x10]
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r6, #0
 	bl Proc_Break
 _080666C4:
@@ -46136,7 +46136,7 @@ sub_80666D0: @ 0x080666D0
 	str r0, [r1, #0x44]
 	ldr r0, _08066714  @ gUnknown_080DE65C
 	str r0, [r1, #0x48]
-	ldr r0, _08066718  @ gUnknown_0203E120
+	ldr r0, _08066718  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
@@ -46152,7 +46152,7 @@ sub_80666D0: @ 0x080666D0
 _0806670C: .4byte gUnknown_0201774C
 _08066710: .4byte gUnknown_085D7874
 _08066714: .4byte gUnknown_080DE65C
-_08066718: .4byte gUnknown_0203E120
+_08066718: .4byte gBattleAnimSceneLayoutEnum
 _0806671C: .4byte gUnknown_085D7A0C
 _08066720: .4byte gUnknown_085D7A8C
 _08066724: .4byte gUnknown_085D7B0C
@@ -46169,7 +46169,7 @@ _08066734:
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -46185,13 +46185,13 @@ sub_8066758: @ 0x08066758
 	push {r4, r5, r6, r7, lr}
 	adds r7, r0, #0
 	ldr r0, [r7, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r0, r7, #0
 	adds r0, #0x2c
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
@@ -46213,28 +46213,28 @@ sub_8066758: @ 0x08066758
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080667D6
 _080667B8:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _080667D6
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080667DC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _080667D6:
@@ -46274,7 +46274,7 @@ sub_80667E0: @ 0x080667E0
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -46296,10 +46296,10 @@ sub_806683C: @ 0x0806683C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
-	ldr r0, _08066868  @ gUnknown_0203E120
+	ldr r0, _08066868  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -46310,7 +46310,7 @@ sub_806683C: @ 0x0806683C
 	bl SetBgOffset
 	b _08066876
 	.align 2, 0
-_08066868: .4byte gUnknown_0203E120
+_08066868: .4byte gBattleAnimSceneLayoutEnum
 _0806686C:
 	movs r0, #1
 	movs r1, #0
@@ -46331,29 +46331,29 @@ _08066876:
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	bl sub_80668DC
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080668D0
 _080668B2:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _080668D0
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080668D8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _080668D0:
@@ -46417,7 +46417,7 @@ sub_8066914: @ 0x08066914
 	str r0, [r1, #0x44]
 	ldr r0, _08066958  @ gUnknown_080DE710
 	str r0, [r1, #0x48]
-	ldr r0, _0806695C  @ gUnknown_0203E120
+	ldr r0, _0806695C  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
@@ -46433,7 +46433,7 @@ sub_8066914: @ 0x08066914
 _08066950: .4byte gUnknown_0201774C
 _08066954: .4byte gUnknown_085D7BC8
 _08066958: .4byte gUnknown_080DE710
-_0806695C: .4byte gUnknown_0203E120
+_0806695C: .4byte gBattleAnimSceneLayoutEnum
 _08066960: .4byte gUnknown_085D7C1C
 _08066964: .4byte gUnknown_085D7C30
 _08066968: .4byte gUnknown_085D7C44
@@ -46450,7 +46450,7 @@ _08066978:
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -46469,7 +46469,7 @@ sub_806699C: @ 0x0806699C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -46484,28 +46484,28 @@ sub_806699C: @ 0x0806699C
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08066A02
 _080669E4:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _08066A02
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08066A08  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _08066A02:
@@ -46535,7 +46535,7 @@ sub_8066A0C: @ 0x08066A0C
 	str r0, [r1, #0x44]
 	ldr r0, _08066A50  @ gUnknown_080DE748
 	str r0, [r1, #0x48]
-	ldr r0, _08066A54  @ gUnknown_0203E120
+	ldr r0, _08066A54  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
@@ -46551,7 +46551,7 @@ sub_8066A0C: @ 0x08066A0C
 _08066A48: .4byte gUnknown_0201774C
 _08066A4C: .4byte gUnknown_085D7C58
 _08066A50: .4byte gUnknown_080DE748
-_08066A54: .4byte gUnknown_0203E120
+_08066A54: .4byte gBattleAnimSceneLayoutEnum
 _08066A58: .4byte gUnknown_085D7CD0
 _08066A5C: .4byte gUnknown_085D7CF0
 _08066A60: .4byte gUnknown_085D7D10
@@ -46568,7 +46568,7 @@ _08066A70:
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -46587,7 +46587,7 @@ sub_8066A94: @ 0x08066A94
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	lsrs r4, r4, #0x10
@@ -46609,28 +46609,28 @@ sub_8066A94: @ 0x08066A94
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08066B0A
 _08066AEC:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _08066B0A
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08066B10  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _08066B0A:
@@ -46693,7 +46693,7 @@ sub_8066B40: @ 0x08066B40
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -46763,7 +46763,7 @@ sub_8066BD4: @ 0x08066BD4
 	str r1, [r0, #0x4c]
 	ldr r0, _08066C18  @ gUnknown_08603B50
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -46785,7 +46785,7 @@ sub_8066C1C: @ 0x08066C1C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -46796,7 +46796,7 @@ sub_8066C1C: @ 0x08066C1C
 	bl sub_8077FC8
 	mov r0, sp
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08066C66
 	.align 2, 0
 _08066C4C: .4byte gUnknown_087F3C54
@@ -46825,7 +46825,7 @@ _08066C70: .4byte gUnknown_0201774C
 sub_8066C74: @ 0x08066C74
 	push {lr}
 	adds r2, r0, #0
-	ldr r0, _08066C94  @ gUnknown_0203E120
+	ldr r0, _08066C94  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	movs r1, #0
@@ -46841,7 +46841,7 @@ _08066C8C:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08066C94: .4byte gUnknown_0203E120
+_08066C94: .4byte gBattleAnimSceneLayoutEnum
 
 	THUMB_FUNC_END sub_8066C74
 
@@ -46850,11 +46850,11 @@ sub_8066C98: @ 0x08066C98
 	push {lr}
 	ldr r0, _08066CB0  @ gUnknown_087A574C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08066CB4  @ gUnknown_087A5390
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -46896,7 +46896,7 @@ sub_8066CB8: @ 0x08066CB8
 	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r6, #0x5c]
 	movs r1, #0
 	strh r1, [r6, #0x2c]
@@ -47023,7 +47023,7 @@ sub_8066DB0: @ 0x08066DB0
 	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r6, #0x5c]
 	movs r1, #0
 	strh r1, [r6, #0x2c]
@@ -47122,11 +47122,11 @@ sub_8066EA8: @ 0x08066EA8
 	push {lr}
 	ldr r0, _08066EC0  @ gUnknown_087A5118
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08066EC4  @ gUnknown_087A4EEC
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -47168,7 +47168,7 @@ sub_8066EC8: @ 0x08066EC8
 	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r6, #0x5c]
 	movs r0, #0
 	strh r0, [r6, #0x2c]
@@ -47296,7 +47296,7 @@ sub_8066FC4: @ 0x08066FC4
 	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r6, #0x5c]
 	movs r0, #0
 	strh r0, [r6, #0x2c]
@@ -47351,11 +47351,11 @@ _0806705E:
 	strh r0, [r4, #8]
 	ldr r0, _080670A0  @ gUnknown_087A61EC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080670A4  @ gUnknown_087A5BA4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #0xc
 	pop {r3, r4}
 	mov r8, r3
@@ -47433,7 +47433,7 @@ sub_80670DC: @ 0x080670DC
 	bl SpawnProc
 	adds r6, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r6, #0x5c]
 	movs r0, #0
 	strh r0, [r6, #0x2c]
@@ -47488,11 +47488,11 @@ _08067176:
 	strh r0, [r4, #8]
 	ldr r0, _080671B8  @ gUnknown_087A61EC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080671BC  @ gUnknown_087A5E9C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #0xc
 	pop {r3, r4}
 	mov r8, r3
@@ -47551,18 +47551,18 @@ sub_80671F4: @ 0x080671F4
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	strh r6, [r4, #0x2e]
 	ldr r0, _0806723C  @ gUnknown_087A574C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08067240  @ gUnknown_087A5390
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4, r5, r6}
 	pop {r0}
 	bx r0
@@ -47847,7 +47847,7 @@ sub_8067400: @ 0x08067400
 	bl SpawnProc
 	adds r4, r0, #0
 	mov r0, r8
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -47876,11 +47876,11 @@ sub_8067400: @ 0x08067400
 	strh r1, [r0, #8]
 	ldr r0, _08067498  @ gUnknown_087A574C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806749C  @ gUnknown_087A5390
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r3, r4}
 	mov r8, r3
@@ -47932,9 +47932,9 @@ _080674D0: .4byte gUnknown_0201774C
 StartSpellAnimStone: @ 0x080674D4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806750C  @ gUnknown_085D7E20
 	movs r1, #3
 	bl SpawnProc
@@ -47943,10 +47943,10 @@ StartSpellAnimStone: @ 0x080674D4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -47962,9 +47962,9 @@ sub_8067510: @ 0x08067510
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -47976,7 +47976,7 @@ sub_8067510: @ 0x08067510
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _080675CE
 _0806753C:
 	movs r0, #0x2c
@@ -48031,7 +48031,7 @@ _08067564:
 _080675A8:
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	b _080675CE
 	.align 2, 0
 _080675B4: .4byte 0x000003B9
@@ -48040,8 +48040,8 @@ _080675B8:
 	adds r0, #0xec
 	cmp r1, r0
 	bne _080675CE
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _080675CE:
@@ -48064,7 +48064,7 @@ sub_80675D4: @ 0x080675D4
 	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r5, #0x5c]
 	movs r0, #0
 	strh r0, [r5, #0x2c]
@@ -48078,9 +48078,9 @@ sub_80675D4: @ 0x080675D4
 	str r0, [r5, #0x54]
 	ldr r0, _08067648  @ gUnknown_086C790C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0806764C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0806764C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -48101,7 +48101,7 @@ _0806763C: .4byte gUnknown_080DE974
 _08067640: .4byte gUnknown_085D7E9C
 _08067644: .4byte gUnknown_085D7E50
 _08067648: .4byte gUnknown_086C790C
-_0806764C: .4byte gUnknown_0203E120
+_0806764C: .4byte gBattleAnimSceneLayoutEnum
 _08067650:
 	movs r0, #1
 	movs r1, #0x18
@@ -48122,7 +48122,7 @@ sub_8067660: @ 0x08067660
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r6, r0, #0x10
 	cmp r6, #0
@@ -48136,23 +48136,23 @@ sub_8067660: @ 0x08067660
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	cmp r6, #0x11
 	bne _080676A6
 	ldr r0, _080676B4  @ gUnknown_086C792C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 _080676A6:
 	cmp r6, #0x12
 	bne _080676DA
 	ldr r0, _080676B8  @ gUnknown_086C794C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _080676DA
 	.align 2, 0
 _080676B4: .4byte gUnknown_086C792C
@@ -48162,12 +48162,12 @@ _080676BC:
 	negs r0, r0
 	cmp r6, r0
 	bne _080676DA
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080676E0  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _080676DA:
@@ -48196,7 +48196,7 @@ sub_80676E4: @ 0x080676E4
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r6, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r5, #0
 	strh r5, [r4, #0x2c]
@@ -48218,11 +48218,11 @@ sub_80676E4: @ 0x080676E4
 	bl BsoSort
 	ldr r0, _0806775C  @ gUnknown_086BD76C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08067760  @ gUnknown_086BD260
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r3}
 	mov r8, r3
@@ -48272,9 +48272,9 @@ _08067794: .4byte gUnknown_0201774C
 StartSpellAnimEvilEye: @ 0x08067798
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _080677D0  @ gUnknown_085D7F00
 	movs r1, #3
 	bl SpawnProc
@@ -48283,10 +48283,10 @@ StartSpellAnimEvilEye: @ 0x08067798
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -48302,9 +48302,9 @@ sub_80677D4: @ 0x080677D4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -48316,7 +48316,7 @@ sub_80677D4: @ 0x080677D4
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _08067886
 _08067800:
 	movs r0, #0x2c
@@ -48365,7 +48365,7 @@ _08067848:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _08067886
@@ -48377,8 +48377,8 @@ _08067870:
 	adds r0, #0x74
 	cmp r1, r0
 	bne _08067886
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08067886:
@@ -48401,7 +48401,7 @@ sub_806788C: @ 0x0806788C
 	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r5, #0x5c]
 	movs r0, #0
 	strh r0, [r5, #0x2c]
@@ -48415,8 +48415,8 @@ sub_806788C: @ 0x0806788C
 	str r0, [r5, #0x54]
 	ldr r0, _080678FC  @ gUnknown_085D7FD0
 	str r0, [r5, #0x58]
-	bl sub_80551B0
-	ldr r0, _08067900  @ gUnknown_0203E120
+	bl SpellFx_InitBg1Blend
+	ldr r0, _08067900  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -48437,7 +48437,7 @@ _080678F0: .4byte gUnknown_080DE9EA
 _080678F4: .4byte gUnknown_085D7F80
 _080678F8: .4byte gUnknown_085D7F30
 _080678FC: .4byte gUnknown_085D7FD0
-_08067900: .4byte gUnknown_0203E120
+_08067900: .4byte gBattleAnimSceneLayoutEnum
 _08067904:
 	movs r0, #1
 	movs r1, #0x18
@@ -48458,7 +48458,7 @@ sub_8067914: @ 0x08067914
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -48473,28 +48473,28 @@ sub_8067914: @ 0x08067914
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0806797A
 _0806795C:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _0806797A
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08067980  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _0806797A:
@@ -48519,14 +48519,14 @@ sub_8067984: @ 0x08067984
 	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r5, #0x5c]
 	movs r0, #0
 	strh r0, [r5, #0x2c]
 	str r0, [r5, #0x44]
 	ldr r0, _080679C4  @ gUnknown_080DEA4A
 	str r0, [r5, #0x48]
-	ldr r0, _080679C8  @ gUnknown_0203E120
+	ldr r0, _080679C8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -48537,7 +48537,7 @@ sub_8067984: @ 0x08067984
 _080679BC: .4byte gUnknown_0201774C
 _080679C0: .4byte gUnknown_085D8020
 _080679C4: .4byte gUnknown_080DEA4A
-_080679C8: .4byte gUnknown_0203E120
+_080679C8: .4byte gBattleAnimSceneLayoutEnum
 _080679CC: .4byte gUnknown_085D8068
 _080679D0:
 	ldr r0, _08067A0C  @ gUnknown_085D8050
@@ -48550,9 +48550,9 @@ _080679D2:
 	str r0, [r5, #0x58]
 	ldr r0, _08067A18  @ gUnknown_086D8A94
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _08067A1C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _08067A1C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -48571,7 +48571,7 @@ _08067A0C: .4byte gUnknown_085D8050
 _08067A10: .4byte gUnknown_085D8038
 _08067A14: .4byte gUnknown_085D8080
 _08067A18: .4byte gUnknown_086D8A94
-_08067A1C: .4byte gUnknown_0203E120
+_08067A1C: .4byte gBattleAnimSceneLayoutEnum
 _08067A20:
 	movs r0, #1
 	movs r1, #0x18
@@ -48592,7 +48592,7 @@ sub_8067A30: @ 0x08067A30
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -48607,28 +48607,28 @@ sub_8067A30: @ 0x08067A30
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08067A96
 _08067A78:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _08067A96
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08067A9C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _08067A96:
@@ -48668,7 +48668,7 @@ sub_8067AA0: @ 0x08067AA0
 	bl SpawnProc
 	adds r5, r0, #0
 	adds r0, r6, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r5, #0x5c]
 	movs r0, #0
 	mov r8, r0
@@ -48696,11 +48696,11 @@ sub_8067AA0: @ 0x08067AA0
 	bl BsoSort
 	ldr r0, _08067B40  @ gUnknown_086C93FC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08067B44  @ gUnknown_086C90A4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #0xc
 	pop {r3, r4}
 	mov r8, r3
@@ -48751,9 +48751,9 @@ _08067B78: .4byte gUnknown_0201774C
 StartSpellAnimNaglfar: @ 0x08067B7C
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08067BB4  @ gUnknown_085D80B0
 	movs r1, #3
 	bl SpawnProc
@@ -48762,10 +48762,10 @@ StartSpellAnimNaglfar: @ 0x08067B7C
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -48782,9 +48782,9 @@ Loop6C_efxNaglfar: @ 0x08067BB8
 	sub sp, #8
 	adds r7, r0, #0
 	ldr r0, [r7, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r5, r0, #0
 	ldrh r0, [r7, #0x2c]
 	adds r0, #1
@@ -48797,7 +48797,7 @@ Loop6C_efxNaglfar: @ 0x08067BB8
 	ldr r0, [r7, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _08067DBC
 _08067BE8:
 	movs r0, #0x2c
@@ -48860,7 +48860,7 @@ _08067C5A:
 _08067C62:
 	adds r0, r4, #0
 	movs r1, #2
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _08067DBC
 _08067C6C:
 	adds r0, r5, #0
@@ -48962,7 +48962,7 @@ _08067D20:
 	adds r6, #0x29
 	ldrb r1, [r6]
 	adds r0, r4, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r6, [r6]
 	cmp r6, #0
 	bne _08067D84
@@ -49015,8 +49015,8 @@ _08067DA4:
 	adds r0, r5, r3
 	cmp r1, r0
 	bne _08067DBC
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r7, #0
 	bl Proc_Break
 _08067DBC:
@@ -49052,8 +49052,8 @@ sub_8067DC4: @ 0x08067DC4
 	str r1, [r0, #0x54]
 	ldr r0, _08067E18  @ gUnknown_087013A0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -49086,7 +49086,7 @@ Loop6C_efxNaglfarBG: @ 0x08067E1C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -49104,19 +49104,19 @@ Loop6C_efxNaglfarBG: @ 0x08067E1C
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _08067E8E
 _08067E70:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _08067E8E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08067E94  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _08067E8E:
@@ -49152,7 +49152,7 @@ sub_8067E98: @ 0x08067E98
 	str r1, [r0, #0x54]
 	ldr r1, _08067EE4  @ gUnknown_085D8180
 	str r1, [r0, #0x58]
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -49179,7 +49179,7 @@ Loop6C_efxNaglfarBG2: @ 0x08067EE8
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -49194,28 +49194,28 @@ Loop6C_efxNaglfarBG2: @ 0x08067EE8
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08067F5A
 _08067F3C:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _08067F5A
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08067F60  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _08067F5A:
@@ -49251,8 +49251,8 @@ sub_8067F64: @ 0x08067F64
 	str r1, [r0, #0x54]
 	ldr r0, _08067FB4  @ gUnknown_087197E4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -49279,7 +49279,7 @@ sub_8067FB8: @ 0x08067FB8
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -49293,24 +49293,24 @@ sub_8067FB8: @ 0x08067FB8
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _0806801E
 _08068000:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _0806801E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08068024  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _0806801E:
@@ -49346,8 +49346,8 @@ sub_8068028: @ 0x08068028
 	str r1, [r0, #0x54]
 	ldr r0, _08068078  @ gUnknown_08720D84
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -49374,7 +49374,7 @@ sub_806807C: @ 0x0806807C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -49388,24 +49388,24 @@ sub_806807C: @ 0x0806807C
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _080680E2
 _080680C4:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _080680E2
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _080680E8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _080680E2:
@@ -49471,7 +49471,7 @@ sub_80680EC: @ 0x080680EC
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -49536,11 +49536,11 @@ _080681D0:
 _080681DE:
 	ldr r0, _08068200  @ gUnknown_086FF3A4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08068204  @ gUnknown_086FE938
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #0x64
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -49616,7 +49616,7 @@ sub_806823C: @ 0x0806823C
 	bl SpawnProc
 	adds r5, r0, #0
 	mov r0, r8
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r5, #0x5c]
 	movs r0, #0
 	strh r0, [r5, #0x2c]
@@ -49640,11 +49640,11 @@ sub_806823C: @ 0x0806823C
 	strh r1, [r0, #4]
 	ldr r0, _080682D8  @ gUnknown_086FFD3C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080682DC  @ gUnknown_086FF5EC
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #0x14
 	pop {r3, r4}
 	mov r8, r3
@@ -49705,7 +49705,7 @@ sub_8068314: @ 0x08068314
 	bl SpawnProc
 	adds r4, r0, #0
 	adds r0, r5, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r4, #0x5c]
 	movs r0, #0
 	strh r0, [r4, #0x2c]
@@ -50156,7 +50156,7 @@ sub_8068638: @ 0x08068638
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -50202,22 +50202,22 @@ sub_8068680: @ 0x08068680
 	movs r1, #4
 	movs r2, #2
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #6
 	movs r2, #0xa
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #0x17
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #0x19
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -50289,22 +50289,22 @@ sub_8068738: @ 0x08068738
 	movs r1, #4
 	movs r2, #2
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #6
 	movs r2, #0xa
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #0x17
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #0x19
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -50352,8 +50352,8 @@ sub_80687D0: @ 0x080687D0
 sub_80687E4: @ 0x080687E4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08068818  @ gUnknown_085D82B0
 	movs r1, #3
 	bl SpawnProc
@@ -50362,10 +50362,10 @@ sub_80687E4: @ 0x080687E4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -50382,7 +50382,7 @@ sub_806881C: @ 0x0806881C
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -50395,7 +50395,7 @@ sub_806881C: @ 0x0806881C
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 _08068844:
 	movs r1, #0x2c
 	ldrsh r0, [r4, r1]
@@ -50434,7 +50434,7 @@ _08068884:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _080688B6
@@ -50444,7 +50444,7 @@ _08068884:
 _080688A8:
 	cmp r0, #0x82
 	bne _080688B6
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r4, #0
 	bl Proc_Break
 _080688B6:
@@ -50487,7 +50487,7 @@ _080688F0:
 	bl sub_8055554
 	adds r4, r0, #0
 	str r4, [r5, #0x60]
-	ldr r0, _0806892C  @ gUnknown_0203E120
+	ldr r0, _0806892C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -50504,7 +50504,7 @@ _0806891C: .4byte gUnknown_0201774C
 _08068920: .4byte gUnknown_085D82C8
 _08068924: .4byte gUnknown_085E35DC
 _08068928: .4byte gUnknown_085E2A24
-_0806892C: .4byte gUnknown_0203E120
+_0806892C: .4byte gBattleAnimSceneLayoutEnum
 _08068930:
 	ldrh r0, [r4, #2]
 	subs r0, #0x10
@@ -50524,11 +50524,11 @@ _0806894A:
 	strh r0, [r4, #2]
 	ldr r0, _08068968  @ gUnknown_085DFA68
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806896C  @ gUnknown_085DDC64
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -50543,7 +50543,7 @@ _0806896C: .4byte gUnknown_085DDC64
 sub_8068970: @ 0x08068970
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r0, _08068994  @ gUnknown_0203E120
+	ldr r0, _08068994  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -50558,7 +50558,7 @@ sub_8068970: @ 0x08068970
 	adds r0, #0x48
 	b _080689A0
 	.align 2, 0
-_08068994: .4byte gUnknown_0203E120
+_08068994: .4byte gBattleAnimSceneLayoutEnum
 _08068998:
 	ldr r1, [r4, #0x60]
 	ldr r0, [r4, #0x5c]
@@ -50613,13 +50613,13 @@ sub_80689D4: @ 0x080689D4
 	ldr r0, _08068A20  @ gUnknown_087246D8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r2, _08068A24  @ gUnknown_08725AF0
 	ldr r0, [r4, #0x5c]
 	adds r1, r2, #0
-	bl sub_8055670
-	bl ClearBG1Setup
-	bl sub_80551B0
+	bl SpellFx_WriteBgMap
+	bl SpellFx_ResetBg1Offset
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -50644,8 +50644,8 @@ sub_8068A28: @ 0x08068A28
 	ldrsh r1, [r4, r2]
 	cmp r0, r1
 	bne _08068A54
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	ldr r1, _08068A5C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -50699,7 +50699,7 @@ sub_8068A9C: @ 0x08068A9C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -50713,10 +50713,10 @@ sub_8068A9C: @ 0x08068A9C
 	movs r1, #0
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	adds r0, r4, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08068AF2
 	.align 2, 0
 _08068AD8: .4byte gUnknown_020165C8
@@ -50746,7 +50746,7 @@ sub_8068AFC: @ 0x08068AFC
 	adds r4, r0, #0
 	lsls r3, r3, #0x18
 	lsrs r5, r3, #0x18
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r0, r4, #0
 	bl GetAISSubjectId
 	cmp r0, #0
@@ -50761,7 +50761,7 @@ _08068B18:
 	adds r2, r0, #0
 	adds r2, #0x3a
 	adds r4, r0, #0
-	ldr r5, _08068B48  @ gUnknown_0203E120
+	ldr r5, _08068B48  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0x13
 _08068B28:
 	ldrh r1, [r2]
@@ -50781,12 +50781,12 @@ _08068B38:
 	b _08068B70
 	.align 2, 0
 _08068B44: .4byte gBg1Tm
-_08068B48: .4byte gUnknown_0203E120
+_08068B48: .4byte gBattleAnimSceneLayoutEnum
 _08068B4C:
 	ldr r2, _08068B78  @ gBg1Tm
 	adds r4, r2, #0
 	adds r4, #0x3a
-	ldr r5, _08068B7C  @ gUnknown_0203E120
+	ldr r5, _08068B7C  @ gBattleAnimSceneLayoutEnum
 	movs r3, #0x13
 _08068B56:
 	ldrh r1, [r2]
@@ -50809,7 +50809,7 @@ _08068B70:
 	bx r0
 	.align 2, 0
 _08068B78: .4byte gBg1Tm
-_08068B7C: .4byte gUnknown_0203E120
+_08068B7C: .4byte gBattleAnimSceneLayoutEnum
 
 	THUMB_FUNC_END sub_8068AFC
 
@@ -50817,8 +50817,8 @@ _08068B7C: .4byte gUnknown_0203E120
 sub_8068B80: @ 0x08068B80
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08068BB4  @ gUnknown_085D8318
 	movs r1, #3
 	bl SpawnProc
@@ -50827,10 +50827,10 @@ sub_8068B80: @ 0x08068B80
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -50846,9 +50846,9 @@ sub_8068BB8: @ 0x08068BB8
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -50860,7 +50860,7 @@ sub_8068BB8: @ 0x08068BB8
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _08068D14
 _08068BE4:
 	movs r0, #0x2c
@@ -50916,7 +50916,7 @@ _08068C42:
 	bne _08068C8C
 	adds r0, r5, #0
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	bl sub_806FAB0
 	cmp r0, #1
 	beq _08068C68
@@ -50925,7 +50925,7 @@ _08068C42:
 	beq _08068C68
 	bl sub_8068D9C
 _08068C68:
-	bl NewEfxSpellCast
+	bl StartEfxSpellCast
 	ldrh r1, [r5, #0x10]
 	movs r0, #9
 	orrs r0, r1
@@ -50933,7 +50933,7 @@ _08068C68:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _08068D14
@@ -50951,8 +50951,8 @@ _08068C8C:
 	ldrb r0, [r0]
 	cmp r0, #0
 	beq _08068D14
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 	b _08068D14
@@ -50997,8 +50997,8 @@ _08068CFE:
 	adds r0, r2, r3
 	cmp r1, r0
 	bne _08068D14
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08068D14:
@@ -51027,7 +51027,7 @@ sub_8068D20: @ 0x08068D20
 	ldr r0, _08068D70  @ gPal
 	movs r1, #6
 	movs r2, #0xa
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -51097,7 +51097,7 @@ _08068DB4:
 	movs r1, #6
 	movs r2, #0xa
 	movs r3, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 _08068DCE:
 	pop {r0}
@@ -51563,7 +51563,7 @@ sub_8069100: @ 0x08069100
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
 	mov r8, r0
@@ -51733,13 +51733,13 @@ _08069246:
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r7, #0x5c]
 	adds r5, r4, r5
 	ldr r1, [r5]
 	adds r4, r4, r6
 	ldr r2, [r4]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	mov r0, r8
 	strh r0, [r7, #0x2e]
 	b _080692A0
@@ -51750,14 +51750,14 @@ _0806927C:
 	negs r0, r0
 	cmp r4, r0
 	bne _080692A0
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	movs r0, #0
 	bl SetOnHBlankA
 	ldr r1, _080692AC  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _080692A0:
@@ -51799,8 +51799,8 @@ sub_80692B0: @ 0x080692B0
 	str r0, [r5, #0x54]
 	ldr r0, _08069324  @ gUnknown_086A66D8
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	ldr r0, _08069328  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	ldr r0, _08069328  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -51822,7 +51822,7 @@ _08069318: .4byte gUnknown_080DEDBC
 _0806931C: .4byte gUnknown_085D8348
 _08069320: .4byte gUnknown_085D8374
 _08069324: .4byte gUnknown_086A66D8
-_08069328: .4byte gUnknown_0203E120
+_08069328: .4byte gBattleAnimSceneLayoutEnum
 _0806932C: .4byte 0x0000FFF0
 _08069330:
 	ldr r1, _0806933C  @ 0x0000FFE8
@@ -51839,7 +51839,7 @@ _08069344:
 	movs r1, #0
 	bl SetBgOffset
 _0806934E:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -51856,7 +51856,7 @@ sub_806935C: @ 0x0806935C
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -51869,11 +51869,11 @@ sub_806935C: @ 0x0806935C
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r5, r4
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r7, #0x5c]
 	adds r5, r5, r6
 	ldr r1, [r5]
@@ -51920,7 +51920,7 @@ sub_80693CC: @ 0x080693CC
 	str r1, [r0, #0x54]
 	ldr r0, _080693FC  @ gUnknown_086B52CC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r0}
 	bx r0
 	.align 2, 0
@@ -51957,7 +51957,7 @@ _08069416:
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -51969,7 +51969,7 @@ _08069416:
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r6, #0x5c]
 	adds r4, r4, r5
 	ldr r1, [r4]
@@ -51982,12 +51982,12 @@ _08069460:
 	negs r0, r0
 	cmp r4, r0
 	bne _0806947E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _08069484  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r6, #0
 	bl Proc_Break
 _0806947E:
@@ -52022,7 +52022,7 @@ sub_8069488: @ 0x08069488
 	str r1, [r0, #0x54]
 	ldr r1, _080694E4  @ gUnknown_085D8438
 	str r1, [r0, #0x58]
-	ldr r0, _080694E8  @ gUnknown_0203E120
+	ldr r0, _080694E8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -52041,7 +52041,7 @@ _080694D8: .4byte gUnknown_080DEDFA
 _080694DC: .4byte gUnknown_085D83B8
 _080694E0: .4byte gUnknown_085D83F8
 _080694E4: .4byte gUnknown_085D8438
-_080694E8: .4byte gUnknown_0203E120
+_080694E8: .4byte gBattleAnimSceneLayoutEnum
 _080694EC:
 	ldr r1, _080694F4  @ 0x0000FFE8
 	movs r0, #1
@@ -52065,7 +52065,7 @@ _0806950E:
 	movs r2, #0
 	bl SetBgOffset
 _08069518:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	movs r0, #0
 	bl SetBlendBackdropB
 	pop {r4}
@@ -52599,7 +52599,7 @@ _0806992E:
 	strh r0, [r5, #0x32]
 	movs r0, #0x50
 	strh r0, [r5, #0x3a]
-	ldr r0, _08069950  @ gUnknown_0203E120
+	ldr r0, _08069950  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -52612,7 +52612,7 @@ _0806992E:
 	subs r0, #0x18
 	b _08069958
 	.align 2, 0
-_08069950: .4byte gUnknown_0203E120
+_08069950: .4byte gBattleAnimSceneLayoutEnum
 _08069954:
 	ldrh r0, [r5, #0x32]
 	adds r0, #0x18
@@ -52814,11 +52814,11 @@ sub_8069AC4: @ 0x08069AC4
 	strh r1, [r0, #0x2e]
 	ldr r0, _08069AF4  @ gUnknown_086A2614
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08069AF8  @ gUnknown_086A21F4
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -52944,7 +52944,7 @@ _08069BD8:
 	add r0, r9
 _08069BDC:
 	strh r0, [r4, #2]
-	ldr r0, _08069BF8  @ gUnknown_0203E120
+	ldr r0, _08069BF8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -52957,7 +52957,7 @@ _08069BDC:
 	subs r0, #0x18
 	b _08069C00
 	.align 2, 0
-_08069BF8: .4byte gUnknown_0203E120
+_08069BF8: .4byte gBattleAnimSceneLayoutEnum
 _08069BFC:
 	ldrh r0, [r4, #2]
 	adds r0, #0x18
@@ -53034,7 +53034,7 @@ _08069C88:
 	add r0, r9
 _08069C8C:
 	strh r0, [r4, #2]
-	ldr r0, _08069CA8  @ gUnknown_0203E120
+	ldr r0, _08069CA8  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #1
@@ -53047,7 +53047,7 @@ _08069C8C:
 	subs r0, #0x18
 	b _08069CB0
 	.align 2, 0
-_08069CA8: .4byte gUnknown_0203E120
+_08069CA8: .4byte gBattleAnimSceneLayoutEnum
 _08069CAC:
 	ldrh r0, [r4, #2]
 	adds r0, #0x18
@@ -53311,11 +53311,11 @@ sub_8069E88: @ 0x08069E88
 	str r1, [r0, #0x48]
 	ldr r0, _08069EBC  @ gUnknown_086A2CE8
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08069EC0  @ gUnknown_086A2874
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -53330,9 +53330,9 @@ _08069EC0: .4byte gUnknown_086A2874
 StartSpellAnimCrimsonEye: @ 0x08069EC4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08069EFC  @ gUnknown_085D8764
 	movs r1, #3
 	bl SpawnProc
@@ -53341,10 +53341,10 @@ StartSpellAnimCrimsonEye: @ 0x08069EC4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -53360,9 +53360,9 @@ sub_8069F00: @ 0x08069F00
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -53374,7 +53374,7 @@ sub_8069F00: @ 0x08069F00
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _08069FFE
 _08069F2C:
 	movs r0, #0x2c
@@ -53409,7 +53409,7 @@ _08069F64:
 	bne _08069F76
 	adds r0, r5, #0
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _08069FFE
 _08069F76:
 	adds r0, r2, #0
@@ -53456,7 +53456,7 @@ _08069FBC:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _08069FFE
@@ -53470,8 +53470,8 @@ _08069FE8:
 	adds r0, r2, r3
 	cmp r1, r0
 	bne _08069FFE
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _08069FFE:
@@ -53491,7 +53491,7 @@ sub_806A008: @ 0x0806A008
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -53503,12 +53503,12 @@ sub_806A008: @ 0x0806A008
 	adds r1, r4, r1
 	ldr r2, [r1]
 	adds r1, r2, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 _0806A03E:
 	ldrh r0, [r6, #0x2e]
 	adds r0, #1
@@ -53517,7 +53517,7 @@ _0806A03E:
 	asrs r0, r0, #0x10
 	cmp r0, #0x30
 	bne _0806A05E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806A064  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -53557,7 +53557,7 @@ sub_806A068: @ 0x0806A068
 	str r1, [r0, #0x54]
 	ldr r0, _0806A0C4  @ gUnknown_086BC824
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
@@ -54013,7 +54013,7 @@ sub_806A3F4: @ 0x0806A3F4
 	str r1, [r0, #0x4c]
 	ldr r1, _0806A448  @ gUnknown_085D8CA0
 	str r1, [r0, #0x54]
-	ldr r0, _0806A44C  @ gUnknown_0203E120
+	ldr r0, _0806A44C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -54031,7 +54031,7 @@ _0806A43C: .4byte gUnknown_085D8CC4
 _0806A440: .4byte gUnknown_080DF0E0
 _0806A444: .4byte gUnknown_085D8C7C
 _0806A448: .4byte gUnknown_085D8CA0
-_0806A44C: .4byte gUnknown_0203E120
+_0806A44C: .4byte gBattleAnimSceneLayoutEnum
 _0806A450:
 	ldr r1, _0806A45C  @ 0x0000FFE8
 	movs r0, #1
@@ -54049,7 +54049,7 @@ _0806A460:
 _0806A46A:
 	ldr r0, _0806A478  @ gUnknown_086B5A2C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -54066,7 +54066,7 @@ sub_806A47C: @ 0x0806A47C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -54077,14 +54077,14 @@ sub_806A47C: @ 0x0806A47C
 	adds r1, r1, r2
 	ldr r2, [r1]
 	adds r1, r2, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806A4C0
 _0806A4A6:
 	movs r0, #1
 	negs r0, r0
 	cmp r1, r0
 	bne _0806A4C0
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806A4C8  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -54123,11 +54123,11 @@ sub_806A4CC: @ 0x0806A4CC
 	ldr r0, _0806A530  @ gUnknown_086B5A4C
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _0806A534  @ gUnknown_086B5EAC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	ldr r0, _0806A538  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	ldr r0, _0806A538  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -54146,7 +54146,7 @@ _0806A528: .4byte gUnknown_080DEF20
 _0806A52C: .4byte gUnknown_085D8874
 _0806A530: .4byte gUnknown_086B5A4C
 _0806A534: .4byte gUnknown_086B5EAC
-_0806A538: .4byte gUnknown_0203E120
+_0806A538: .4byte gBattleAnimSceneLayoutEnum
 _0806A53C:
 	ldr r1, _0806A548  @ 0x0000FFE8
 	movs r0, #1
@@ -54162,7 +54162,7 @@ _0806A54C:
 	movs r2, #0
 	bl SetBgOffset
 _0806A556:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -55059,7 +55059,7 @@ _0806AC0A:
 	strh r0, [r5, #0x32]
 	movs r0, #0x48
 	strh r0, [r5, #0x3a]
-	ldr r0, _0806AC2C  @ gUnknown_0203E120
+	ldr r0, _0806AC2C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -55072,7 +55072,7 @@ _0806AC0A:
 	subs r0, #0x18
 	b _0806AC34
 	.align 2, 0
-_0806AC2C: .4byte gUnknown_0203E120
+_0806AC2C: .4byte gBattleAnimSceneLayoutEnum
 _0806AC30:
 	ldrh r0, [r5, #0x32]
 	adds r0, #0x18
@@ -55367,11 +55367,11 @@ _0806AC36:
 	bl SetObjAffine
 	ldr r0, _0806AEEC  @ gUnknown_086B58DC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806AEF0  @ gUnknown_086B5580
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r3, r4}
 	mov r8, r3
@@ -55396,9 +55396,9 @@ _0806AEF0: .4byte gUnknown_086B5580
 sub_806AEF4: @ 0x0806AEF4
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806AF2C  @ gUnknown_085D89A0
 	movs r1, #3
 	bl SpawnProc
@@ -55407,10 +55407,10 @@ sub_806AEF4: @ 0x0806AEF4
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -55427,9 +55427,9 @@ sub_806AF30: @ 0x0806AF30
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -55442,7 +55442,7 @@ sub_806AF30: @ 0x0806AF30
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0806B07A
 _0806AF60:
 	movs r0, #0x2c
@@ -55495,7 +55495,7 @@ _0806AFAE:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0806B07A
@@ -55512,8 +55512,8 @@ _0806AFD6:
 	ldrb r0, [r0]
 	cmp r0, #0
 	beq _0806B07A
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 	b _0806B07A
@@ -55528,7 +55528,7 @@ _0806AFF8:
 	bl StartSpellThing_MagicQuake
 	ldr r0, [r4, #0x5c]
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0806B07A
 _0806B014:
 	adds r0, r2, #0
@@ -55567,14 +55567,14 @@ _0806B058:
 	adds r0, r2, r3
 	cmp r1, r0
 	bne _0806B068
-	bl sub_8055000
+	bl StartEndEfxSpellCast
 	b _0806B07A
 _0806B068:
 	ldr r3, _0806B084  @ 0x0000012B
 	adds r0, r2, r3
 	cmp r1, r0
 	bne _0806B07A
-	bl SetSomethingSpellFxToFalse
+	bl SpellFx_Finish
 	adds r0, r4, #0
 	bl Proc_Break
 _0806B07A:
@@ -55618,7 +55618,7 @@ sub_806B0AC: @ 0x0806B0AC
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -55631,29 +55631,29 @@ sub_806B0AC: @ 0x0806B0AC
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r5, r4
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r7, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r5, r6
 	ldr r2, [r5]
 	adds r1, r2, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806B112
 _0806B0F4:
 	movs r0, #1
 	negs r0, r0
 	cmp r5, r0
 	bne _0806B112
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806B118  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _0806B112:
@@ -55730,26 +55730,26 @@ sub_806B194: @ 0x0806B194
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
 	blt _0806B1C2
 	ldr r4, [r6, #0x4c]
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	lsls r1, r5, #2
 	adds r1, r1, r4
 	ldr r2, [r1]
 	adds r1, r2, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806B1DC
 _0806B1C2:
 	movs r0, #1
 	negs r0, r0
 	cmp r5, r0
 	bne _0806B1DC
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806B1E4  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -55787,15 +55787,15 @@ sub_806B1E8: @ 0x0806B1E8
 	ldr r0, _0806B244  @ gUnknown_086E7EB0
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _0806B248  @ gUnknown_086E91B8
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
 	bl SetBgOffset
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -55919,11 +55919,11 @@ _0806B312:
 	strh r0, [r5, #4]
 	ldr r0, _0806B334  @ gUnknown_086DA33C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806B338  @ gUnknown_086D9C40
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -56149,9 +56149,9 @@ _0806B4F4: .4byte gUnknown_085D8AEC
 sub_806B4F8: @ 0x0806B4F8
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl SetSomethingSpellFxToTrue
-	bl NewEfxSpellCast
-	bl ClearBG1Setup
+	bl SpellFx_Begin
+	bl StartEfxSpellCast
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806B530  @ gUnknown_085D8B0C
 	movs r1, #3
 	bl SpawnProc
@@ -56160,10 +56160,10 @@ sub_806B4F8: @ 0x0806B4F8
 	movs r0, #0
 	strh r0, [r4, #0x2c]
 	adds r0, r5, #0
-	bl GetSomeAISRelatedIndexMaybe
+	bl GetAISCurrentRoundType
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
-	bl GetSomeBoolean
+	bl IsBatteRoundTypeAMiss
 	adds r4, #0x29
 	strb r0, [r4]
 	pop {r4, r5}
@@ -56179,9 +56179,9 @@ sub_806B534: @ 0x0806B534
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -56193,7 +56193,7 @@ sub_806B534: @ 0x0806B534
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0806B646
 _0806B560:
 	movs r0, #0x2c
@@ -56287,7 +56287,7 @@ _0806B608:
 	adds r4, #0x29
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl ThisMakesTheHPInSpellAnimGoAway
+	bl StartBattleAnimHitEffectsDefault
 	ldrb r0, [r4]
 	cmp r0, #0
 	bne _0806B646
@@ -56299,8 +56299,8 @@ _0806B630:
 	adds r0, #0xa9
 	cmp r1, r0
 	bne _0806B646
-	bl SetSomethingSpellFxToFalse
-	bl sub_8055000
+	bl SpellFx_Finish
+	bl StartEndEfxSpellCast
 	adds r0, r4, #0
 	bl Proc_Break
 _0806B646:
@@ -56381,7 +56381,7 @@ _0806B6CA:
 	strh r0, [r4, #2]
 	movs r0, #0x54
 	strh r0, [r4, #4]
-	ldr r0, _0806B6EC  @ gUnknown_0203E120
+	ldr r0, _0806B6EC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -56394,7 +56394,7 @@ _0806B6CA:
 	subs r0, #0x18
 	b _0806B6F4
 	.align 2, 0
-_0806B6EC: .4byte gUnknown_0203E120
+_0806B6EC: .4byte gBattleAnimSceneLayoutEnum
 _0806B6F0:
 	ldrh r0, [r4, #2]
 	adds r0, #0x18
@@ -56421,10 +56421,10 @@ _0806B712:
 	ldr r0, _0806B734  @ gUnknown_086E9D40
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r0, _0806B738  @ gUnknown_086EA3EC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -56443,7 +56443,7 @@ sub_806B73C: @ 0x0806B73C
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -56456,28 +56456,28 @@ sub_806B73C: @ 0x0806B73C
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r5, r4
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r7, #0x5c]
 	adds r5, r5, r6
 	ldr r2, [r5]
 	adds r1, r2, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806B79E
 _0806B780:
 	movs r0, #1
 	negs r0, r0
 	cmp r5, r0
 	bne _0806B79E
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806B7A4  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _0806B79E:
@@ -56512,7 +56512,7 @@ sub_806B7A8: @ 0x0806B7A8
 	str r1, [r0, #0x54]
 	ldr r1, _0806B804  @ gUnknown_085D8BA4
 	str r1, [r0, #0x58]
-	ldr r0, _0806B808  @ gUnknown_0203E120
+	ldr r0, _0806B808  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -56531,7 +56531,7 @@ _0806B7F8: .4byte gUnknown_080DF042
 _0806B7FC: .4byte gUnknown_085D8B4C
 _0806B800: .4byte gUnknown_085D8B78
 _0806B804: .4byte gUnknown_085D8BA4
-_0806B808: .4byte gUnknown_0203E120
+_0806B808: .4byte gBattleAnimSceneLayoutEnum
 _0806B80C:
 	ldr r1, _0806B818  @ 0x0000FFE8
 	movs r0, #1
@@ -56547,7 +56547,7 @@ _0806B81C:
 	movs r2, #0
 	bl SetBgOffset
 _0806B826:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -56562,7 +56562,7 @@ sub_806B830: @ 0x0806B830
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -56575,11 +56575,11 @@ sub_806B830: @ 0x0806B830
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r5, r4
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r7, #0x5c]
 	adds r5, r5, r6
 	ldr r1, [r5]
@@ -56592,7 +56592,7 @@ _0806B876:
 	negs r0, r0
 	cmp r5, r0
 	bne _0806B890
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806B898  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
@@ -56631,7 +56631,7 @@ sub_806B89C: @ 0x0806B89C
 	str r1, [r0, #0x54]
 	ldr r1, _0806B8F8  @ gUnknown_085D8C00
 	str r1, [r0, #0x58]
-	ldr r0, _0806B8FC  @ gUnknown_0203E120
+	ldr r0, _0806B8FC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -56650,7 +56650,7 @@ _0806B8EC: .4byte gUnknown_080DF080
 _0806B8F0: .4byte gUnknown_085D8BE8
 _0806B8F4: .4byte gUnknown_085D8BF4
 _0806B8F8: .4byte gUnknown_085D8C00
-_0806B8FC: .4byte gUnknown_0203E120
+_0806B8FC: .4byte gBattleAnimSceneLayoutEnum
 _0806B900:
 	ldr r1, _0806B908  @ 0x0000FFE8
 	movs r0, #1
@@ -56674,7 +56674,7 @@ _0806B922:
 	movs r2, #0
 	bl SetBgOffset
 _0806B92C:
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -57126,7 +57126,7 @@ _0806BCF2:
 	strh r0, [r4, #2]
 	movs r0, #0x58
 	strh r0, [r4, #4]
-	ldr r0, _0806BD14  @ gUnknown_0203E120
+	ldr r0, _0806BD14  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -57139,7 +57139,7 @@ _0806BCF2:
 	subs r0, #0x18
 	b _0806BD1C
 	.align 2, 0
-_0806BD14: .4byte gUnknown_0203E120
+_0806BD14: .4byte gBattleAnimSceneLayoutEnum
 _0806BD18:
 	ldrh r0, [r4, #2]
 	adds r0, #0x18
@@ -57396,7 +57396,7 @@ _0806BF2A:
 	strh r0, [r5, #0x32]
 	movs r0, #0x48
 	strh r0, [r5, #0x3a]
-	ldr r0, _0806BF4C  @ gUnknown_0203E120
+	ldr r0, _0806BF4C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -57409,7 +57409,7 @@ _0806BF2A:
 	subs r0, #0x18
 	b _0806BF54
 	.align 2, 0
-_0806BF4C: .4byte gUnknown_0203E120
+_0806BF4C: .4byte gBattleAnimSceneLayoutEnum
 _0806BF50:
 	ldrh r0, [r5, #0x32]
 	adds r0, #0x18
@@ -57509,11 +57509,11 @@ _0806BF56:
 	bl SetObjAffine
 	ldr r0, _0806C048  @ gUnknown_086B58DC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806C04C  @ gUnknown_086B5580
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r3, r4, r5}
 	mov r8, r3
@@ -57537,7 +57537,7 @@ sub_806C050: @ 0x0806C050
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -57549,9 +57549,9 @@ sub_806C050: @ 0x0806C050
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r4, r5
 	ldr r2, [r4]
 	adds r1, r2, #0
@@ -57563,12 +57563,12 @@ _0806C08E:
 	negs r0, r0
 	cmp r4, r0
 	bne _0806C0AC
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806C0B4  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r6, #0
 	bl Proc_Break
 _0806C0AC:
@@ -57601,7 +57601,7 @@ sub_806C0B8: @ 0x0806C0B8
 	str r1, [r0, #0x4c]
 	ldr r1, _0806C10C  @ gUnknown_085D8CA0
 	str r1, [r0, #0x54]
-	ldr r0, _0806C110  @ gUnknown_0203E120
+	ldr r0, _0806C110  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -57619,7 +57619,7 @@ _0806C100: .4byte gUnknown_085D8CC4
 _0806C104: .4byte gUnknown_080DF0E0
 _0806C108: .4byte gUnknown_085D8C7C
 _0806C10C: .4byte gUnknown_085D8CA0
-_0806C110: .4byte gUnknown_0203E120
+_0806C110: .4byte gBattleAnimSceneLayoutEnum
 _0806C114:
 	ldr r1, _0806C120  @ 0x0000FFE8
 	movs r0, #1
@@ -57637,7 +57637,7 @@ _0806C124:
 _0806C12E:
 	ldr r0, _0806C144  @ gUnknown_086FDA44
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _0806C148  @ sub_806B088
 	bl SetOnHBlankA
 	pop {r4}
@@ -58204,8 +58204,8 @@ _0806C618: .4byte gUnknown_085D8D14
 
 	THUMB_FUNC_END sub_806C608
 
-	THUMB_FUNC_START sub_806C61C
-sub_806C61C: @ 0x0806C61C
+	THUMB_FUNC_START StartEfxDamagaMojiEffect
+StartEfxDamagaMojiEffect: @ 0x0806C61C
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -58228,7 +58228,7 @@ _0806C644: .4byte gUnknown_085D8D44
 _0806C648: .4byte gUnknown_085BA0B8
 _0806C64C: .4byte 0x06012000
 
-	THUMB_FUNC_END sub_806C61C
+	THUMB_FUNC_END StartEfxDamagaMojiEffect
 
 	THUMB_FUNC_START sub_806C650
 sub_806C650: @ 0x0806C650
@@ -58244,7 +58244,7 @@ sub_806C650: @ 0x0806C650
 	ldr r0, [r1, #0x5c]
 	adds r1, #0x29
 	ldrb r1, [r1]
-	bl sub_806C67C
+	bl StartEfxDamageMojiEffectOBJ
 	b _0806C678
 _0806C66E:
 	cmp r0, #0xa
@@ -58257,8 +58257,8 @@ _0806C678:
 
 	THUMB_FUNC_END sub_806C650
 
-	THUMB_FUNC_START sub_806C67C
-sub_806C67C: @ 0x0806C67C
+	THUMB_FUNC_START StartEfxDamageMojiEffectOBJ
+StartEfxDamageMojiEffectOBJ: @ 0x0806C67C
 	push {r4, r5, r6, lr}
 	sub sp, #0xc
 	adds r5, r0, #0
@@ -58305,7 +58305,7 @@ _0806C6C0:
 	str r2, [sp, #8]
 	adds r2, r4, #0
 	movs r3, #2
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	str r0, [r6, #0x60]
 	add sp, #0xc
 	pop {r4, r5, r6}
@@ -58314,7 +58314,7 @@ _0806C6C0:
 	.align 2, 0
 _0806C6E8: .4byte gUnknown_085C8218
 
-	THUMB_FUNC_END sub_806C67C
+	THUMB_FUNC_END StartEfxDamageMojiEffectOBJ
 
 	THUMB_FUNC_START sub_806C6EC
 sub_806C6EC: @ 0x0806C6EC
@@ -58344,11 +58344,11 @@ _0806C716:
 
 	THUMB_FUNC_END sub_806C6EC
 
-	THUMB_FUNC_START sub_806C71C
-sub_806C71C: @ 0x0806C71C
+	THUMB_FUNC_START StartEfxCriticalEffect
+StartEfxCriticalEffect: @ 0x0806C71C
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	bl GetAISSubjectId
 	adds r1, r0, #0
@@ -58356,7 +58356,7 @@ sub_806C71C: @ 0x0806C71C
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #2
 	ands r1, r0
@@ -58365,10 +58365,10 @@ sub_806C71C: @ 0x0806C71C
 	cmp r4, #0
 	beq _0806C74E
 	adds r0, r5, #0
-	bl sub_806C9E8
+	bl StartEfxPierceCriticalEffect
 	b _0806C75E
 _0806C74E:
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806C764  @ gUnknown_085D8D74
 	movs r1, #3
 	bl SpawnProc
@@ -58381,7 +58381,7 @@ _0806C75E:
 	.align 2, 0
 _0806C764: .4byte gUnknown_085D8D74
 
-	THUMB_FUNC_END sub_806C71C
+	THUMB_FUNC_END StartEfxCriticalEffect
 
 	THUMB_FUNC_START sub_806C768
 sub_806C768: @ 0x0806C768
@@ -58425,15 +58425,15 @@ sub_806C798: @ 0x0806C798
 	ldr r0, _0806C7D8  @ gUnknown_085E7028
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _0806C7DC  @ gUnknown_085E8108
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r4, #0x5c]
 	ldr r1, _0806C7E0  @ gUnknown_085E8308
 	ldr r2, _0806C7E4  @ gUnknown_085E87A8
-	bl sub_8055670
-	bl sub_80551B0
+	bl SpellFx_WriteBgMap
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -58457,8 +58457,8 @@ sub_806C7E8: @ 0x0806C7E8
 	asrs r0, r0, #0x10
 	cmp r0, #0x11
 	bne _0806C808
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806C808:
@@ -58501,7 +58501,7 @@ sub_806C840: @ 0x0806C840
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -58510,7 +58510,7 @@ sub_806C840: @ 0x0806C840
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0806C874
 _0806C866:
 	movs r0, #1
@@ -58530,7 +58530,7 @@ _0806C874:
 sub_806C87C: @ 0x0806C87C
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	adds r0, r4, #0
 	bl GetAISSubjectId
 	adds r1, r0, #0
@@ -58538,7 +58538,7 @@ sub_806C87C: @ 0x0806C87C
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #2
 	ands r1, r0
@@ -58569,7 +58569,7 @@ sub_806C8C4: @ 0x0806C8C4
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r1, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -58580,7 +58580,7 @@ sub_806C8C4: @ 0x0806C8C4
 	bne _0806C8E8
 	ldr r0, [r4, #0x5c]
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0806C8FE
 _0806C8E8:
 	cmp r0, #4
@@ -58623,13 +58623,13 @@ sub_806C904: @ 0x0806C904
 	str r0, [r5, #0x50]
 	ldr r0, _0806C974  @ gUnknown_085E9150
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _0806C978  @ gUnknown_085E8D88
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0806C97C  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0806C97C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -58650,7 +58650,7 @@ _0806C96C: .4byte gUnknown_080DF1EE
 _0806C970: .4byte gUnknown_085D8DF4
 _0806C974: .4byte gUnknown_085E9150
 _0806C978: .4byte gUnknown_085E8D88
-_0806C97C: .4byte gUnknown_0203E120
+_0806C97C: .4byte gBattleAnimSceneLayoutEnum
 _0806C980:
 	movs r0, #1
 	movs r1, #0xe8
@@ -58671,7 +58671,7 @@ sub_806C990: @ 0x0806C990
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -58684,19 +58684,19 @@ sub_806C990: @ 0x0806C990
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806C9DC
 _0806C9BE:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _0806C9DC
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806C9E4  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806C9DC:
@@ -58708,11 +58708,11 @@ _0806C9E4: .4byte gUnknown_0201774C
 
 	THUMB_FUNC_END sub_806C990
 
-	THUMB_FUNC_START sub_806C9E8
-sub_806C9E8: @ 0x0806C9E8
+	THUMB_FUNC_START StartEfxPierceCriticalEffect
+StartEfxPierceCriticalEffect: @ 0x0806C9E8
 	push {r4, lr}
 	adds r4, r0, #0
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806CA04  @ gUnknown_085D8E1C
 	movs r1, #3
 	bl SpawnProc
@@ -58725,7 +58725,7 @@ sub_806C9E8: @ 0x0806C9E8
 	.align 2, 0
 _0806CA04: .4byte gUnknown_085D8E1C
 
-	THUMB_FUNC_END sub_806C9E8
+	THUMB_FUNC_END StartEfxPierceCriticalEffect
 
 	THUMB_FUNC_START sub_806CA08
 sub_806CA08: @ 0x0806CA08
@@ -58769,15 +58769,15 @@ sub_806CA38: @ 0x0806CA38
 	ldr r0, _0806CA78  @ gUnknown_085CFB70
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _0806CA7C  @ gUnknown_085D0820
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r4, #0x5c]
 	ldr r1, _0806CA80  @ gUnknown_085D0A20
 	ldr r2, _0806CA84  @ gUnknown_085D0CE0
-	bl sub_8055670
-	bl sub_80551B0
+	bl SpellFx_WriteBgMap
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -58801,8 +58801,8 @@ sub_806CA88: @ 0x0806CA88
 	asrs r0, r0, #0x10
 	cmp r0, #0x11
 	bne _0806CAA8
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806CAA8:
@@ -58845,7 +58845,7 @@ sub_806CAE0: @ 0x0806CAE0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -58854,7 +58854,7 @@ sub_806CAE0: @ 0x0806CAE0
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0806CB14
 _0806CB06:
 	movs r0, #1
@@ -58874,7 +58874,7 @@ _0806CB14:
 sub_806CB1C: @ 0x0806CB1C
 	push {r4, lr}
 	adds r4, r0, #0
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806CB38  @ gUnknown_085D8E6C
 	movs r1, #3
 	bl SpawnProc
@@ -58894,7 +58894,7 @@ sub_806CB3C: @ 0x0806CB3C
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r1, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -58905,7 +58905,7 @@ sub_806CB3C: @ 0x0806CB3C
 	bne _0806CB60
 	ldr r0, [r4, #0x5c]
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0806CB76
 _0806CB60:
 	cmp r0, #4
@@ -58948,13 +58948,13 @@ sub_806CB7C: @ 0x0806CB7C
 	str r0, [r5, #0x50]
 	ldr r0, _0806CBEC  @ gUnknown_085D1470
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _0806CBF0  @ gUnknown_085D0FD0
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0806CBF4  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0806CBF4  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -58975,7 +58975,7 @@ _0806CBE4: .4byte gUnknown_080DF2DC
 _0806CBE8: .4byte gUnknown_085D8E9C
 _0806CBEC: .4byte gUnknown_085D1470
 _0806CBF0: .4byte gUnknown_085D0FD0
-_0806CBF4: .4byte gUnknown_0203E120
+_0806CBF4: .4byte gBattleAnimSceneLayoutEnum
 _0806CBF8:
 	movs r0, #1
 	movs r1, #0xe8
@@ -58996,7 +58996,7 @@ sub_806CC08: @ 0x0806CC08
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -59009,19 +59009,19 @@ sub_806CC08: @ 0x0806CC08
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806CC54
 _0806CC36:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _0806CC54
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806CC5C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806CC54:
@@ -59304,7 +59304,7 @@ sub_806CE30: @ 0x0806CE30
 	bl SpawnProc
 	str r4, [r0, #0x5c]
 	strh r5, [r0, #0x2c]
-	ldr r0, _0806CE64  @ gUnknown_0203E120
+	ldr r0, _0806CE64  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -59315,7 +59315,7 @@ sub_806CE30: @ 0x0806CE30
 	.align 2, 0
 _0806CE5C: .4byte gUnknown_0201774C
 _0806CE60: .4byte gUnknown_085D8F0C
-_0806CE64: .4byte gUnknown_0203E120
+_0806CE64: .4byte gBattleAnimSceneLayoutEnum
 _0806CE68:
 	adds r0, r4, #0
 	bl sub_806CF80
@@ -59391,11 +59391,11 @@ _0806CEDE:
 	strh r0, [r4, #6]
 	ldr r0, _0806CF08  @ gUnknown_085DFA08
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806CF0C  @ gUnknown_085DE984
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r5, #0
 	bl Proc_Break
 	pop {r4, r5}
@@ -59430,11 +59430,11 @@ _0806CF2A:
 	strh r0, [r4, #6]
 	ldr r0, _0806CF54  @ gUnknown_085DFA08
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806CF58  @ gUnknown_085DF224
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r5, #0
 	bl Proc_Break
 	pop {r4, r5}
@@ -59523,11 +59523,11 @@ _0806CFDE:
 	strh r0, [r4, #6]
 	ldr r0, _0806D008  @ gUnknown_085DFA08
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806D00C  @ gUnknown_085DE984
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r5, #0
 	bl Proc_Break
 	pop {r4, r5}
@@ -59562,11 +59562,11 @@ _0806D02A:
 	strh r0, [r4, #6]
 	ldr r0, _0806D054  @ gUnknown_085DFA08
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806D058  @ gUnknown_085DF224
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	adds r0, r5, #0
 	bl Proc_Break
 	pop {r4, r5}
@@ -59610,7 +59610,7 @@ sub_806D080: @ 0x0806D080
 	beq _0806D090
 	b _0806D192
 _0806D090:
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806D0C8  @ gUnknown_085D8F94
 	movs r1, #3
 	bl SpawnProc
@@ -59619,7 +59619,7 @@ _0806D090:
 	strh r5, [r4, #0x2c]
 	adds r0, r6, #0
 	bl GetAISSubjectId
-	ldr r1, _0806D0CC  @ gUnknown_0203E182
+	ldr r1, _0806D0CC  @ gBattleAnimAnimationIndex
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldrh r0, [r0]
@@ -59636,7 +59636,7 @@ _0806D090:
 	.align 2, 0
 _0806D0C4: .4byte gUnknown_0201774C
 _0806D0C8: .4byte gUnknown_085D8F94
-_0806D0CC: .4byte gUnknown_0203E182
+_0806D0CC: .4byte gBattleAnimAnimationIndex
 _0806D0D0: .4byte _0806D0D4
 _0806D0D4: @ jump table
 	.4byte _0806D180 @ case 0
@@ -59788,12 +59788,12 @@ _0806D23A:
 	ldr r0, _0806D278  @ gUnknown_085EE4F8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _0806D27C  @ gUnknown_085EF24C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
-	ldr r0, _0806D280  @ gUnknown_0203E120
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0806D280  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -59812,7 +59812,7 @@ _0806D270: .4byte gUnknown_080DF3C4
 _0806D274: .4byte gUnknown_085D8FDC
 _0806D278: .4byte gUnknown_085EE4F8
 _0806D27C: .4byte gUnknown_085EF24C
-_0806D280: .4byte gUnknown_0203E120
+_0806D280: .4byte gBattleAnimSceneLayoutEnum
 _0806D284:
 	movs r0, #1
 	movs r1, #0xe8
@@ -59833,13 +59833,13 @@ sub_806D294: @ 0x0806D294
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
 	blt _0806D2F6
-	ldr r0, _0806D2D0  @ gUnknown_0203E120
+	ldr r0, _0806D2D0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -59854,7 +59854,7 @@ sub_806D294: @ 0x0806D294
 	bl SetBgOffset
 	b _0806D2DE
 	.align 2, 0
-_0806D2D0: .4byte gUnknown_0203E120
+_0806D2D0: .4byte gBattleAnimSceneLayoutEnum
 _0806D2D4:
 	movs r0, #1
 	movs r1, #0xe8
@@ -59870,19 +59870,19 @@ _0806D2DE:
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806D314
 _0806D2F6:
 	movs r0, #1
 	negs r0, r0
 	cmp r1, r0
 	bne _0806D314
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806D31C  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_End
 _0806D314:
@@ -60079,19 +60079,19 @@ _0806D50C:
 	ldr r0, _0806D518  @ gUnknown_085F1640
 _0806D50E:
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	b _0806D524
 	.align 2, 0
 _0806D518: .4byte gUnknown_085F1640
 _0806D51C:
 	ldr r0, _0806D538  @ gUnknown_085F1660
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 _0806D524:
 	ldr r0, _0806D53C  @ gUnknown_085F11B0
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -60218,7 +60218,7 @@ _0806D60E:
 	ldr r0, _0806D628  @ gUnknown_08758218
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -60290,14 +60290,14 @@ sub_806D678: @ 0x0806D678
 	movs r1, #1
 	movs r2, #0x28
 	movs r3, #0
-	bl sub_80547DC
+	bl StartEfxFlashUnit
 	b _0806D6DE
 _0806D69A:
 	cmp r0, #0xa
 	bne _0806D6A8
 	adds r0, r6, #0
 	movs r1, #0x14
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0806D6DE
 _0806D6A8:
 	cmp r0, #0x2d
@@ -60365,7 +60365,7 @@ sub_806D704: @ 0x0806D704
 	bne _0806D722
 	adds r0, r6, #0
 	movs r1, #5
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	b _0806D758
 _0806D722:
 	cmp r0, #6
@@ -60428,11 +60428,11 @@ sub_806D764: @ 0x0806D764
 	str r0, [r4, #0x60]
 	ldr r0, _0806D7D0  @ gUnknown_085DCC84
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806D7D4  @ gUnknown_085DCB10
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	movs r1, #0x80
 	lsls r1, r1, #1
 	ldr r0, [r4, #0x5c]
@@ -60524,11 +60524,11 @@ sub_806D828: @ 0x0806D828
 	str r0, [r4, #0x60]
 	ldr r0, _0806D894  @ gUnknown_085DCC84
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _0806D898  @ gUnknown_085DCB10
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	movs r1, #0x80
 	lsls r1, r1, #1
 	ldr r0, [r4, #0x5c]
@@ -60602,13 +60602,13 @@ sub_806D8D0: @ 0x0806D8D0
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _0806D90C
-	ldr r0, _0806D908  @ gUnknown_0203E188
+	ldr r0, _0806D908  @ gpUnitLeft_BattleStruct
 	b _0806D90E
 	.align 2, 0
 _0806D904: .4byte gUnknown_02017768
-_0806D908: .4byte gUnknown_0203E188
+_0806D908: .4byte gpUnitLeft_BattleStruct
 _0806D90C:
-	ldr r0, _0806D94C  @ gUnknown_0203E18C
+	ldr r0, _0806D94C  @ gpUnitRight_BattleStruct
 _0806D90E:
 	ldr r0, [r0]
 	adds r0, #0x4a
@@ -60640,7 +60640,7 @@ _0806D91E:
 	strh r0, [r2, #0x10]
 	b _0806D976
 	.align 2, 0
-_0806D94C: .4byte gUnknown_0203E18C
+_0806D94C: .4byte gpUnitRight_BattleStruct
 _0806D950: .4byte gUnknown_02000000
 _0806D954:
 	ldr r0, _0806D97C  @ gUnknown_085D90DC
@@ -60679,7 +60679,7 @@ sub_806D980: @ 0x0806D980
 sub_806D98C: @ 0x0806D98C
 	push {r4, lr}
 	adds r4, r0, #0
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806D9A8  @ gUnknown_085D90F4
 	movs r1, #3
 	bl SpawnProc
@@ -60765,15 +60765,15 @@ sub_806DA1C: @ 0x0806DA1C
 	ldr r0, _0806DA5C  @ gUnknown_085E8C04
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _0806DA60  @ gUnknown_085E8CC4
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r4, #0x5c]
 	ldr r2, _0806DA64  @ gUnknown_085E8CE4
 	adds r1, r2, #0
-	bl sub_8055670
-	bl sub_80551B0
+	bl SpellFx_WriteBgMap
+	bl SpellFx_InitBg1Blend
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -60796,8 +60796,8 @@ sub_806DA68: @ 0x0806DA68
 	asrs r0, r0, #0x10
 	cmp r0, #0x3c
 	bne _0806DA88
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806DA88:
@@ -60960,7 +60960,7 @@ _0806DB92:
 sub_806DB9C: @ 0x0806DB9C
 	push {r4, lr}
 	adds r4, r0, #0
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806DBB8  @ gUnknown_085D9244
 	movs r1, #3
 	bl SpawnProc
@@ -60994,7 +60994,7 @@ sub_806DBBC: @ 0x0806DBBC
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	ldr r0, [r5, #0x5c]
 	movs r2, #2
 	ldrsh r1, [r0, r2]
@@ -61040,12 +61040,12 @@ sub_806DC08: @ 0x0806DC08
 	str r1, [r0, #0x50]
 	ldr r0, _0806DC98  @ gUnknown_085F0E04
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _0806DC9C  @ gUnknown_085F0190
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgGfx
+	bl SpellFx_InitBg1Blend
 	ldr r3, _0806DCA0  @ gDispIo
 	ldrb r2, [r3, #0xc]
 	movs r1, #4
@@ -61094,7 +61094,7 @@ sub_806DCA4: @ 0x0806DCA4
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -61107,7 +61107,7 @@ sub_806DCA4: @ 0x0806DCA4
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 _0806DCD0:
 	ldrh r0, [r4, #0x2e]
 	adds r0, #1
@@ -61140,12 +61140,12 @@ _0806DCD0:
 	movs r1, #3
 	orrs r0, r1
 	strb r0, [r3, #0x14]
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806DD30  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806DD24:
@@ -61166,7 +61166,7 @@ sub_806DD34: @ 0x0806DD34
 	sub sp, #4
 	adds r7, r0, #0
 	bl GetAISSubjectId
-	ldr r1, _0806DD60  @ gUnknown_0203E182
+	ldr r1, _0806DD60  @ gBattleAnimAnimationIndex
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	ldrh r0, [r0]
@@ -61183,7 +61183,7 @@ _0806DD56:
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_0806DD60: .4byte gUnknown_0203E182
+_0806DD60: .4byte gBattleAnimAnimationIndex
 _0806DD64: .4byte _0806DD68
 _0806DD68: @ jump table
 	.4byte _0806DF10 @ case 0
@@ -61439,11 +61439,11 @@ _0806E010: .4byte gUnknown_02000010
 
 	THUMB_FUNC_END sub_806DFD0
 
-	THUMB_FUNC_START sub_806E014
-sub_806E014: @ 0x0806E014
+	THUMB_FUNC_START StartEfxChillEffect
+StartEfxChillEffect: @ 0x0806E014
 	push {r4, lr}
 	adds r4, r0, #0
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _0806E030  @ gUnknown_085D92A4
 	movs r1, #3
 	bl SpawnProc
@@ -61456,7 +61456,7 @@ sub_806E014: @ 0x0806E014
 	.align 2, 0
 _0806E030: .4byte gUnknown_085D92A4
 
-	THUMB_FUNC_END sub_806E014
+	THUMB_FUNC_END StartEfxChillEffect
 
 	THUMB_FUNC_START sub_806E034
 sub_806E034: @ 0x0806E034
@@ -61520,7 +61520,7 @@ sub_806E078: @ 0x0806E078
 	ldr r0, _0806E0CC  @ gUnknown_0872E998
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	movs r0, #1
 	movs r1, #0
 	movs r2, #0
@@ -61545,7 +61545,7 @@ sub_806E0D0: @ 0x0806E0D0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -61558,19 +61558,19 @@ sub_806E0D0: @ 0x0806E0D0
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _0806E11C
 _0806E0FE:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _0806E11C
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	ldr r1, _0806E124  @ gUnknown_0201774C
 	ldr r0, [r1]
 	subs r0, #1
 	str r0, [r1]
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806E11C:
@@ -61616,7 +61616,7 @@ sub_806E158: @ 0x0806E158
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -61671,7 +61671,7 @@ _0806E1B4:
 	bls _0806E188
 	adds r0, r7, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0806E1E6
 _0806E1D8:
 	movs r0, #1
@@ -61688,8 +61688,8 @@ _0806E1E6:
 
 	THUMB_FUNC_END sub_806E158
 
-	THUMB_FUNC_START sub_806E1F0
-sub_806E1F0: @ 0x0806E1F0
+	THUMB_FUNC_START StartEfxChillAnime
+StartEfxChillAnime: @ 0x0806E1F0
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -61763,7 +61763,7 @@ _0806E272:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_806E1F0
+	THUMB_FUNC_END StartEfxChillAnime
 
 	THUMB_FUNC_START sub_806E290
 sub_806E290: @ 0x0806E290
@@ -61854,8 +61854,8 @@ sub_806E310: @ 0x0806E310
 	str r0, [r7, #0x54]
 	ldr r0, _0806E374  @ gUnknown_085D93B0
 	str r0, [r7, #0x58]
-	bl sub_80551B0
-	ldr r0, _0806E378  @ gUnknown_0203E120
+	bl SpellFx_InitBg1Blend
+	ldr r0, _0806E378  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -61875,7 +61875,7 @@ _0806E368: .4byte gUnknown_080DF5D6
 _0806E36C: .4byte gUnknown_085D9330
 _0806E370: .4byte gUnknown_085D9370
 _0806E374: .4byte gUnknown_085D93B0
-_0806E378: .4byte gUnknown_0203E120
+_0806E378: .4byte gBattleAnimSceneLayoutEnum
 _0806E37C:
 	movs r0, #1
 	movs r1, #0xe8
@@ -61920,7 +61920,7 @@ _0806E386:
 	orrs r0, r5
 	strh r0, [r1]
 	ldr r0, [r7, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	bl GetAISSubjectId
 	lsls r0, r0, #3
@@ -61983,7 +61983,7 @@ sub_806E444: @ 0x0806E444
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -61998,16 +61998,16 @@ sub_806E444: @ 0x0806E444
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r3, #0
 	ldr r4, _0806E4BC  @ gBg1Tm
 _0806E494:
@@ -62028,7 +62028,7 @@ _0806E494:
 	lsrs r3, r0, #0x18
 	cmp r3, #0x13
 	bls _0806E494
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	b _0806E578
 	.align 2, 0
 _0806E4BC: .4byte gBg1Tm
@@ -62037,8 +62037,8 @@ _0806E4C0:
 	negs r0, r0
 	cmp r4, r0
 	bne _0806E578
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	ldr r4, [r7, #0x5c]
 	ldr r0, _0806E584  @ gUnknown_02000000
 	mov r8, r0
@@ -62080,7 +62080,7 @@ _0806E4C0:
 	ands r0, r1
 	strh r0, [r2]
 	ldr r0, [r7, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	bl GetAISSubjectId
 	lsls r0, r0, #3
@@ -62154,11 +62154,11 @@ sub_806E58C: @ 0x0806E58C
 	str r0, [r4, #0x54]
 	ldr r0, _0806E5F8  @ gUnknown_085D93B0
 	str r0, [r4, #0x58]
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r1, r0, #0
-	ldr r0, _0806E5FC  @ gUnknown_0203E120
+	ldr r0, _0806E5FC  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
@@ -62178,7 +62178,7 @@ _0806E5EC: .4byte gUnknown_080DF5D6
 _0806E5F0: .4byte gUnknown_085D9330
 _0806E5F4: .4byte gUnknown_085D9370
 _0806E5F8: .4byte gUnknown_085D93B0
-_0806E5FC: .4byte gUnknown_0203E120
+_0806E5FC: .4byte gBattleAnimSceneLayoutEnum
 _0806E600:
 	movs r0, #1
 	movs r1, #0xe8
@@ -62218,14 +62218,14 @@ sub_806E638: @ 0x0806E638
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	ldr r0, [r6, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r7, r0, #0
 	adds r0, r6, #0
 	adds r0, #0x2c
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -62240,16 +62240,16 @@ sub_806E638: @ 0x0806E638
 	adds r2, r4, r2
 	ldr r2, [r2]
 	adds r0, r7, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r4, r4, r6
 	ldr r0, [r4]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	movs r3, #0
 	ldr r4, _0806E6B0  @ gBg1Tm
 _0806E68C:
@@ -62286,8 +62286,8 @@ _0806E6B4:
 	movs r1, #0xc
 	bl sub_8054BA4
 _0806E6CC:
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	adds r0, r6, #0
 	bl Proc_Break
 _0806E6DA:
@@ -62344,7 +62344,7 @@ sub_806E6E0: @ 0x0806E6E0
 	strh r0, [r1]
 	mov r1, sl
 	ldr r0, [r1, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	bl GetAISSubjectId
 	lsls r0, r0, #3
@@ -62440,7 +62440,7 @@ sub_806E79C: @ 0x0806E79C
 	strh r0, [r2]
 	mov r1, r9
 	ldr r0, [r1, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	bl GetAISSubjectId
 	lsls r0, r0, #3
@@ -62494,7 +62494,7 @@ _0806E864: .4byte 0x0000FFF7
 sub_806E868: @ 0x0806E868
 	push {r4, lr}
 	adds r4, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -62506,7 +62506,7 @@ sub_806E868: @ 0x0806E868
 	ldr r0, [r4, #0x5c]
 	movs r1, #1
 	negs r1, r1
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0806E89E
 _0806E88C:
 	movs r0, #0x2c
@@ -62529,9 +62529,9 @@ sub_806E8A4: @ 0x0806E8A4
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
-	bl GetAnimationStartFrameMaybe
+	bl GetSpellAnimationStartFrame
 	adds r2, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -62543,7 +62543,7 @@ sub_806E8A4: @ 0x0806E8A4
 	movs r1, #1
 	negs r1, r1
 	adds r0, r5, #0
-	bl sub_80533D0
+	bl MoveBattleCameraOnto
 	b _0806E8EA
 _0806E8D0:
 	movs r0, #0x2c
@@ -63025,7 +63025,7 @@ sub_806EC1C: @ 0x0806EC1C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -63046,7 +63046,7 @@ _0806EC48:
 	bne _0806EC60
 	ldr r0, [r4, #0x5c]
 	bl sub_806E9B4
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806EC60:
@@ -63234,7 +63234,7 @@ sub_806EDB0: @ 0x0806EDB0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r5, r0, #0x10
 	cmp r5, #0
@@ -63276,7 +63276,7 @@ _0806EE12:
 	bne _0806EE2A
 	ldr r0, [r4, #0x5c]
 	bl sub_806E9B4
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806EE2A:
@@ -63322,7 +63322,7 @@ sub_806EE68: @ 0x0806EE68
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -63533,7 +63533,7 @@ sub_806F00C: @ 0x0806F00C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -63554,7 +63554,7 @@ _0806F038:
 	bne _0806F050
 	ldr r0, [r4, #0x5c]
 	bl sub_806E9B4
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0806F050:
@@ -63599,7 +63599,7 @@ sub_806F08C: @ 0x0806F08C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -63881,7 +63881,7 @@ sub_806F2A0: @ 0x0806F2A0
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -63912,7 +63912,7 @@ _0806F2E4:
 	bne _0806F2FC
 	ldr r0, [r7, #0x5c]
 	bl sub_806E9B4
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _0806F2FC:
@@ -64042,7 +64042,7 @@ sub_806F3F8: @ 0x0806F3F8
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -64068,7 +64068,7 @@ _0806F430:
 	bne _0806F448
 	ldr r0, [r6, #0x5c]
 	bl sub_806E9B4
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r6, #0
 	bl Proc_Break
 _0806F448:
@@ -64501,7 +64501,7 @@ sub_806F75C: @ 0x0806F75C
 	adds r1, r7, #0
 	adds r1, #0x44
 	ldr r2, [r7, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -64532,7 +64532,7 @@ _0806F7A0:
 	bne _0806F7B8
 	ldr r0, [r7, #0x5c]
 	bl sub_806E9B4
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r7, #0
 	bl Proc_Break
 _0806F7B8:
@@ -64704,7 +64704,7 @@ sub_806F8F0: @ 0x0806F8F0
 	adds r1, r6, #0
 	adds r1, #0x44
 	ldr r2, [r6, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r7, r0, #0x10
 	cmp r7, #0
@@ -64726,13 +64726,13 @@ sub_806F8F0: @ 0x0806F8F0
 	bne _0806F932
 	ldr r0, _0806F940  @ gUnknown_086C792C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 _0806F932:
 	cmp r7, #0x12
 	bne _0806F960
 	ldr r0, _0806F944  @ gUnknown_086C794C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _0806F960
 	.align 2, 0
 _0806F940: .4byte gUnknown_086C792C
@@ -64744,7 +64744,7 @@ _0806F948:
 	bne _0806F960
 	ldr r0, [r6, #0x5c]
 	bl sub_806E9B4
-	bl sub_805526C
+	bl SpellFx_EndBlend
 	adds r0, r6, #0
 	bl Proc_Break
 _0806F960:
@@ -65087,7 +65087,7 @@ _0806FBB4: .4byte gBg3Tm
 	THUMB_FUNC_START sub_806FBB8
 sub_806FBB8: @ 0x0806FBB8
 	push {lr}
-	ldr r0, _0806FBD0  @ gUnknown_0203E120
+	ldr r0, _0806FBD0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -65098,7 +65098,7 @@ sub_806FBB8: @ 0x0806FBB8
 	beq _0806FBDA
 	b _0806FBF2
 	.align 2, 0
-_0806FBD0: .4byte gUnknown_0203E120
+_0806FBD0: .4byte gBattleAnimSceneLayoutEnum
 _0806FBD4:
 	cmp r0, #2
 	beq _0806FBE8
@@ -65327,7 +65327,7 @@ sub_806FD74: @ 0x0806FD74
 	push {r4, r5, r6, r7, lr}
 	sub sp, #4
 	adds r7, r0, #0
-	ldr r0, _0806FD94  @ gUnknown_0203E120
+	ldr r0, _0806FD94  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #2
@@ -65339,7 +65339,7 @@ sub_806FD74: @ 0x0806FD74
 	bl Proc_Goto
 	b _0806FE00
 	.align 2, 0
-_0806FD94: .4byte gUnknown_0203E120
+_0806FD94: .4byte gBattleAnimSceneLayoutEnum
 _0806FD98:
 	movs r2, #0x2c
 	ldrsh r0, [r7, r2]
@@ -65386,7 +65386,7 @@ _0806FDDC:
 	strh r0, [r7, #0x2c]
 	ldr r0, [r7, #0x5c]
 	movs r1, #0x10
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	movs r0, #0
 	movs r1, #0x2d
 	movs r2, #0xb
@@ -65485,14 +65485,14 @@ sub_806FEA4: @ 0x0806FEA4
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
 	bl sub_805A394
-	ldr r1, _0806FED0  @ gUnknown_0203E118
+	ldr r1, _0806FED0  @ gBattleSpellAnimationId1
 	movs r0, #0x15
 	strh r0, [r1]
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0806FED0: .4byte gUnknown_0203E118
+_0806FED0: .4byte gBattleSpellAnimationId1
 
 	THUMB_FUNC_END sub_806FEA4
 
@@ -65501,7 +65501,7 @@ sub_806FED4: @ 0x0806FED4
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	bl sub_806FA48
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
@@ -65576,7 +65576,7 @@ sub_806FF48: @ 0x0806FF48
 	movs r1, #6
 	movs r2, #1
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	movs r0, #0
 	bl sub_806FAA4
@@ -65630,8 +65630,8 @@ _0806FFC4:
 	movs r1, #6
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
-	ldr r0, _0807000C  @ gUnknown_0203E120
+	bl ApplyColorDarken_Unsure
+	ldr r0, _0807000C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -65642,7 +65642,7 @@ _0806FFC4:
 	.align 2, 0
 _08070004: .4byte gUnknown_08791D5C
 _08070008: .4byte gPal+0xC0
-_0807000C: .4byte gUnknown_0203E120
+_0807000C: .4byte gBattleAnimSceneLayoutEnum
 _08070010:
 	ldr r0, _0807002C  @ gUnknown_02020068
 	adds r1, r4, #0
@@ -65653,7 +65653,7 @@ _08070010:
 	movs r1, #4
 	movs r2, #2
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	b _08070048
 	.align 2, 0
 _0807002C: .4byte gUnknown_02020068
@@ -65667,7 +65667,7 @@ _08070030:
 	movs r1, #4
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 _08070048:
 	bl EnablePalSync
 	ldrh r0, [r6, #0x2c]
@@ -65681,7 +65681,7 @@ _08070048:
 	strh r4, [r6, #0x2c]
 	ldr r0, [r6, #0x5c]
 	bl GetAISSubjectId
-	ldr r1, _080700C0  @ gUnknown_0203E104
+	ldr r1, _080700C0  @ gBattleAnimUnitEnabledLookup
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	strh r4, [r0]
@@ -65724,7 +65724,7 @@ _080700B4:
 	bx r0
 	.align 2, 0
 _080700BC: .4byte gUnknown_02020068
-_080700C0: .4byte gUnknown_0203E104
+_080700C0: .4byte gBattleAnimUnitEnabledLookup
 _080700C4: .4byte gBg3Tm
 _080700C8: .4byte gDispIo
 
@@ -65739,7 +65739,7 @@ sub_80700CC: @ 0x080700CC
 	ldrsh r0, [r5, r1]
 	cmp r0, #0
 	bne _080700EA
-	ldr r0, _08070130  @ gRAMChapterData
+	ldr r0, _08070130  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -65769,7 +65769,7 @@ _080700EA:
 	movs r2, #0
 	bl Interpolate
 	adds r6, r0, #0
-	ldr r0, _08070134  @ gUnknown_0203E120
+	ldr r0, _08070134  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -65778,8 +65778,8 @@ _080700EA:
 	beq _0807015C
 	b _08070176
 	.align 2, 0
-_08070130: .4byte gRAMChapterData
-_08070134: .4byte gUnknown_0203E120
+_08070130: .4byte gPlaySt
+_08070134: .4byte gBattleAnimSceneLayoutEnum
 _08070138:
 	ldr r0, _08070154  @ gUnknown_02020068
 	ldr r4, _08070158  @ gPal+0x80
@@ -65791,7 +65791,7 @@ _08070138:
 	movs r1, #4
 	movs r2, #2
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	b _08070176
 	.align 2, 0
 _08070154: .4byte gUnknown_02020068
@@ -65807,7 +65807,7 @@ _0807015C:
 	movs r1, #4
 	movs r2, #1
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 _08070176:
 	ldrh r0, [r5, #0x2c]
 	adds r0, #1
@@ -66412,7 +66412,7 @@ sub_80705A8: @ 0x080705A8
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -66457,7 +66457,7 @@ sub_8070618: @ 0x08070618
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0x10
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -66511,7 +66511,7 @@ sub_8070670: @ 0x08070670
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -66685,8 +66685,8 @@ sub_80707C0: @ 0x080707C0
 	strb r0, [r1]
 	bl sub_80702D0
 	str r0, [r4, #0x34]
-	bl sub_805526C
-	bl ClearBG1
+	bl SpellFx_EndBlend
+	bl SpellFx_ClearBg1
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -66842,7 +66842,7 @@ sub_80708FC: @ 0x080708FC
 	bl sub_80589E0
 	adds r0, r5, #0
 	movs r1, #0
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	movs r0, #0xc4
 	lsls r0, r0, #5
 	adds r4, r4, r0
@@ -66895,7 +66895,7 @@ sub_807096C: @ 0x0807096C
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0xdc
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r4, r0]
 	movs r0, #0xdc
@@ -66910,7 +66910,7 @@ _08070996:
 	bne _080709C4
 	adds r1, #0xc1
 	movs r0, #0xde
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r4, r0]
 	movs r0, #0xde
@@ -66933,7 +66933,7 @@ sub_80709CC: @ 0x080709CC
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	ldr r0, [r4, #0x5c]
 	movs r1, #2
 	bl sub_806FA54
@@ -66987,7 +66987,7 @@ sub_8070A14: @ 0x08070A14
 	ldrsh r0, [r4, r2]
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	cmp r0, #0
 	bgt _08070A70
@@ -66996,7 +66996,7 @@ sub_8070A14: @ 0x08070A14
 	adds r0, r5, #0
 	movs r1, #0xc6
 	bl sub_80589E0
-	ldr r1, _08070A68  @ gUnknown_0203E118
+	ldr r1, _08070A68  @ gBattleSpellAnimationId1
 	ldr r0, _08070A6C  @ 0x0000FFFF
 	strh r0, [r1]
 	adds r0, r6, #0
@@ -67005,13 +67005,13 @@ sub_8070A14: @ 0x08070A14
 	.align 2, 0
 _08070A60: .4byte banim_data
 _08070A64: .4byte gUnknown_0203E152
-_08070A68: .4byte gUnknown_0203E118
+_08070A68: .4byte gBattleSpellAnimationId1
 _08070A6C: .4byte 0x0000FFFF
 _08070A70:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0xdd
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r5, r0]
 	movs r0, #0xdd
@@ -67022,7 +67022,7 @@ _08070A70:
 	bl sub_80589E0
 	adds r0, r5, #0
 	movs r1, #0
-	bl sub_805A07C
+	bl SwitchAISFrameDataFromBARoundType
 	adds r0, r6, #0
 	bl Proc_Break
 	movs r1, #0xc4
@@ -67113,19 +67113,19 @@ sub_8070B3C: @ 0x08070B3C
 	mov r5, r8
 	push {r5, r6, r7}
 	sub sp, #4
-	ldr r0, _08070B84  @ gUnknown_0203E188
+	ldr r0, _08070B84  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	mov sl, r0
-	ldr r0, _08070B88  @ gUnknown_0203E18C
+	ldr r0, _08070B88  @ gpUnitRight_BattleStruct
 	ldr r7, [r0]
 	mov r6, sl
 	mov r8, r7
-	ldr r0, _08070B8C  @ gUnknown_0203E104
+	ldr r0, _08070B8C  @ gBattleAnimUnitEnabledLookup
 	ldrh r1, [r0]
 	mov r9, r1
 	ldrh r0, [r0, #2]
 	str r0, [sp]
-	ldr r0, _08070B90  @ gUnknown_0203E120
+	ldr r0, _08070B90  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -67146,10 +67146,10 @@ _08070B72:
 	beq _08070B9A
 	b _08070C44
 	.align 2, 0
-_08070B84: .4byte gUnknown_0203E188
-_08070B88: .4byte gUnknown_0203E18C
-_08070B8C: .4byte gUnknown_0203E104
-_08070B90: .4byte gUnknown_0203E120
+_08070B84: .4byte gpUnitLeft_BattleStruct
+_08070B88: .4byte gpUnitRight_BattleStruct
+_08070B8C: .4byte gBattleAnimUnitEnabledLookup
+_08070B90: .4byte gBattleAnimSceneLayoutEnum
 _08070B94:
 	cmp r0, #0x66
 	beq _08070C34
@@ -67186,14 +67186,14 @@ _08070B9A:
 	beq _08070C4E
 	ldr r0, [r6]
 	ldrb r0, [r0, #4]
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	movs r5, #0xb
 	ldrsb r5, [r0, r5]
 	movs r4, #0xc0
 	ands r5, r4
 	ldr r0, [r7]
 	ldrb r0, [r0, #4]
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -67274,7 +67274,7 @@ _08070C4E:
 	beq _08070CEE
 	ldr r0, [r6]
 	ldrb r0, [r0, #4]
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	movs r5, #0xb
 	ldrsb r5, [r0, r5]
 	movs r4, #0xc0
@@ -67282,7 +67282,7 @@ _08070C4E:
 	mov r1, r8
 	ldr r0, [r1]
 	ldrb r0, [r0, #4]
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -68157,8 +68157,8 @@ _0807129E:
 
 	THUMB_FUNC_END sub_80711C0
 
-	THUMB_FUNC_START sub_80712B0
-sub_80712B0: @ 0x080712B0
+	THUMB_FUNC_START ApplyColorDarken_Unsure
+ApplyColorDarken_Unsure: @ 0x080712B0
 	push {r4, r5, r6, r7, lr}
 	mov r7, r9
 	mov r6, r8
@@ -68224,10 +68224,10 @@ _08071320:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_80712B0
+	THUMB_FUNC_END ApplyColorDarken_Unsure
 
-	THUMB_FUNC_START sub_807132C
-sub_807132C: @ 0x0807132C
+	THUMB_FUNC_START ApplyFlashingPaletteAnimation
+ApplyFlashingPaletteAnimation: @ 0x0807132C
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -68297,7 +68297,7 @@ _080713A2:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_807132C
+	THUMB_FUNC_END ApplyFlashingPaletteAnimation
 
 	THUMB_FUNC_START sub_80713B0
 sub_80713B0: @ 0x080713B0
@@ -68710,7 +68710,7 @@ sub_807168C: @ 0x0807168C
 	movs r1, #6
 	movs r2, #0xa
 	adds r3, r4, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	pop {r4}
 	pop {r0}
@@ -68720,8 +68720,8 @@ _080716AC: .4byte gPal
 
 	THUMB_FUNC_END sub_807168C
 
-	THUMB_FUNC_START sub_80716B0
-sub_80716B0: @ 0x080716B0
+	THUMB_FUNC_START AestheticRandNext_N1
+AestheticRandNext_N1: @ 0x080716B0
 	push {r4, lr}
 	adds r4, r0, #0
 	bl RandNextB
@@ -68732,10 +68732,10 @@ sub_80716B0: @ 0x080716B0
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_80716B0
+	THUMB_FUNC_END AestheticRandNext_N1
 
-	THUMB_FUNC_START sub_80716C8
-sub_80716C8: @ 0x080716C8
+	THUMB_FUNC_START StartEkrsubAnimeEmulator
+StartEkrsubAnimeEmulator: @ 0x080716C8
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -68774,7 +68774,7 @@ sub_80716C8: @ 0x080716C8
 	.align 2, 0
 _08071710: .4byte gUnknown_08758A30
 
-	THUMB_FUNC_END sub_80716C8
+	THUMB_FUNC_END StartEkrsubAnimeEmulator
 
 	THUMB_FUNC_START sub_8071714
 sub_8071714: @ 0x08071714
@@ -69111,12 +69111,12 @@ _0807198C: .4byte 0xC1FFFFFF
 
 	THUMB_FUNC_END sub_807180C
 
-	THUMB_FUNC_START SomePlaySound_8071990
-SomePlaySound_8071990: @ 0x08071990
+	THUMB_FUNC_START SomeBattlePlaySound_8071990
+SomeBattlePlaySound_8071990: @ 0x08071990
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
 	adds r5, r1, #0
-	ldr r0, _080719D0  @ gUnknown_0202BCB0
+	ldr r0, _080719D0  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x20
 	ands r0, r1
@@ -69124,13 +69124,13 @@ SomePlaySound_8071990: @ 0x08071990
 	lsrs r4, r0, #0x18
 	cmp r4, #0
 	bne _080719E6
-	bl sub_8071AA4
+	bl Get20200AC
 	cmp r0, #0
 	bne _080719D8
-	bl sub_8071A98
+	bl Set20200AC
 	adds r0, r5, #0
 	bl Sound_SetVolume8002274
-	ldr r0, _080719D4  @ gRAMChapterData
+	ldr r0, _080719D4  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -69141,8 +69141,8 @@ SomePlaySound_8071990: @ 0x08071990
 	bl m4aSongNumStart
 	b _080719E6
 	.align 2, 0
-_080719D0: .4byte gUnknown_0202BCB0
-_080719D4: .4byte gRAMChapterData
+_080719D0: .4byte gBmSt
+_080719D4: .4byte gPlaySt
 _080719D8:
 	ldr r0, _080719EC  @ gUnknown_08758A48
 	movs r1, #3
@@ -69157,7 +69157,7 @@ _080719E6:
 	.align 2, 0
 _080719EC: .4byte gUnknown_08758A48
 
-	THUMB_FUNC_END SomePlaySound_8071990
+	THUMB_FUNC_END SomeBattlePlaySound_8071990
 
 	THUMB_FUNC_START Loop6C_efxSoundSE
 Loop6C_efxSoundSE: @ 0x080719F0
@@ -69174,13 +69174,13 @@ Loop6C_efxSoundSE: @ 0x080719F0
 	bl Proc_Break
 	b _08071A38
 _08071A0A:
-	bl sub_8071AA4
+	bl Get20200AC
 	cmp r0, #0
 	bne _08071A38
-	bl sub_8071A98
+	bl Set20200AC
 	ldr r0, [r4, #0x44]
 	bl Sound_SetVolume8002274
-	ldr r0, _08071A40  @ gRAMChapterData
+	ldr r0, _08071A40  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -69198,7 +69198,7 @@ _08071A38:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08071A40: .4byte gRAMChapterData
+_08071A40: .4byte gPlaySt
 
 	THUMB_FUNC_END Loop6C_efxSoundSE
 
@@ -69213,12 +69213,12 @@ sub_8071A44: @ 0x08071A44
 
 	THUMB_FUNC_END sub_8071A44
 
-	THUMB_FUNC_START sub_8071A54
-sub_8071A54: @ 0x08071A54
+	THUMB_FUNC_START PlayBattleMusic
+PlayBattleMusic: @ 0x08071A54
 	push {r4, lr}
 	adds r4, r0, #0
 	adds r2, r1, #0
-	ldr r0, _08071A78  @ gUnknown_0202BCB0
+	ldr r0, _08071A78  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x20
 	ands r0, r1
@@ -69233,24 +69233,24 @@ _08071A72:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08071A78: .4byte gUnknown_0202BCB0
+_08071A78: .4byte gBmSt
 
-	THUMB_FUNC_END sub_8071A54
+	THUMB_FUNC_END PlayBattleMusic
 
-	THUMB_FUNC_START sub_8071A7C
-sub_8071A7C: @ 0x08071A7C
+	THUMB_FUNC_START StopBattleMusic
+StopBattleMusic: @ 0x08071A7C
 	push {lr}
-	ldr r0, _08071A88  @ gUnknown_03006440
+	ldr r0, _08071A88  @ gMpi_FightBgm
 	bl m4aMPlayStop
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08071A88: .4byte gUnknown_03006440
+_08071A88: .4byte gMpi_FightBgm
 
-	THUMB_FUNC_END sub_8071A7C
+	THUMB_FUNC_END StopBattleMusic
 
-	THUMB_FUNC_START sub_8071A8C
-sub_8071A8C: @ 0x08071A8C
+	THUMB_FUNC_START Unset20200AC
+Unset20200AC: @ 0x08071A8C
 	ldr r1, _08071A94  @ gUnknown_020200AC
 	movs r0, #0
 	str r0, [r1]
@@ -69258,10 +69258,10 @@ sub_8071A8C: @ 0x08071A8C
 	.align 2, 0
 _08071A94: .4byte gUnknown_020200AC
 
-	THUMB_FUNC_END sub_8071A8C
+	THUMB_FUNC_END Unset20200AC
 
-	THUMB_FUNC_START sub_8071A98
-sub_8071A98: @ 0x08071A98
+	THUMB_FUNC_START Set20200AC
+Set20200AC: @ 0x08071A98
 	ldr r1, _08071AA0  @ gUnknown_020200AC
 	movs r0, #1
 	str r0, [r1]
@@ -69269,24 +69269,24 @@ sub_8071A98: @ 0x08071A98
 	.align 2, 0
 _08071AA0: .4byte gUnknown_020200AC
 
-	THUMB_FUNC_END sub_8071A98
+	THUMB_FUNC_END Set20200AC
 
-	THUMB_FUNC_START sub_8071AA4
-sub_8071AA4: @ 0x08071AA4
+	THUMB_FUNC_START Get20200AC
+Get20200AC: @ 0x08071AA4
 	ldr r0, _08071AAC  @ gUnknown_020200AC
 	ldr r0, [r0]
 	bx lr
 	.align 2, 0
 _08071AAC: .4byte gUnknown_020200AC
 
-	THUMB_FUNC_END sub_8071AA4
+	THUMB_FUNC_END Get20200AC
 
 	THUMB_FUNC_START sub_8071AB0
 sub_8071AB0: @ 0x08071AB0
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r6, r1, #0
-	ldr r0, _08071ADC  @ gUnknown_0202BCB0
+	ldr r0, _08071ADC  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x20
 	ands r0, r1
@@ -69304,7 +69304,7 @@ sub_8071AB0: @ 0x08071AB0
 	subs r5, #0x78
 	b _08071AF4
 	.align 2, 0
-_08071ADC: .4byte gUnknown_0202BCB0
+_08071ADC: .4byte gBmSt
 _08071AE0:
 	movs r0, #0xf0
 	subs r0, r0, r6
@@ -69381,10 +69381,10 @@ sub_8071B6C: @ 0x08071B6C
 	sub sp, #8
 	mov r8, r0
 	mov sl, r1
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	mov r9, r0
 	mov r0, r8
-	bl sub_805A154
+	bl GetAISLayerId
 	cmp r0, #1
 	bne _08071B8E
 	b _08072246
@@ -69627,7 +69627,7 @@ _08071E0C:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #2
 	ands r1, r0
@@ -69637,7 +69637,7 @@ _08071E0C:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	mov r0, r8
 	movs r2, #2
 	ldrsh r1, [r0, r2]
@@ -69676,7 +69676,7 @@ _08071E78:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #2
 	ands r1, r0
@@ -69686,7 +69686,7 @@ _08071E78:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	mov r0, r8
 	movs r2, #2
 	ldrsh r1, [r0, r2]
@@ -69725,7 +69725,7 @@ _08071EE4:
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #2
 	ands r1, r0
@@ -69735,7 +69735,7 @@ _08071EE4:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	mov r0, r8
 	movs r2, #2
 	ldrsh r1, [r0, r2]
@@ -69820,14 +69820,14 @@ _08071FAE:
 _08071FB2:
 	cmp r6, #0
 	beq _08071FC4
-	ldr r0, _08071FC0  @ gUnknown_0203E182
+	ldr r0, _08071FC0  @ gBattleAnimAnimationIndex
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	b _08071FCA
 	.align 2, 0
-_08071FC0: .4byte gUnknown_0203E182
+_08071FC0: .4byte gBattleAnimAnimationIndex
 _08071FC4:
-	ldr r0, _08071FE0  @ gUnknown_0203E182
+	ldr r0, _08071FE0  @ gBattleAnimAnimationIndex
 	movs r1, #2
 	ldrsh r0, [r0, r1]
 _08071FCA:
@@ -69843,7 +69843,7 @@ _08071FCA:
 	lsls r0, r0, #1
 	b _08072198
 	.align 2, 0
-_08071FE0: .4byte gUnknown_0203E182
+_08071FE0: .4byte gBattleAnimAnimationIndex
 _08071FE4: .4byte gUnknown_08758D20
 _08071FE8:
 	ldr r1, _08071FF8  @ gUnknown_08758D20
@@ -70196,7 +70196,7 @@ _08072222:
 	ldr r1, [sp]
 	adds r0, r4, #0
 	str r2, [sp, #4]
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	ldr r2, [sp, #4]
 	lsls r1, r2, #0x10
 	asrs r1, r1, #0x10
@@ -70220,7 +70220,7 @@ sub_8072258: @ 0x08072258
 	push {r4, lr}
 	lsls r0, r0, #0x10
 	lsrs r4, r0, #0x10
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #1
 	bne _0807226A
 _08072266:
@@ -70405,12 +70405,12 @@ sub_8072400: @ 0x08072400
 	lsls r1, r6, #1
 	adds r6, r1, r0
 	adds r0, r6, #0
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	adds r4, r0, #0
 	lsls r4, r4, #0x10
 	asrs r4, r4, #0x10
 	adds r0, r6, #2
-	bl sub_8058A60
+	bl GetBattleAnimHpValue
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	cmp r4, r0
@@ -70437,7 +70437,7 @@ _0807244A:
 sub_8072450: @ 0x08072450
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r4, r0, #0
 	ldr r6, _080724C0  @ 0x0000FFFF
 	adds r0, r5, #0
@@ -70455,7 +70455,7 @@ sub_8072450: @ 0x08072450
 	subs r0, #1
 	lsls r0, r0, #1
 	adds r0, r0, r1
-	bl sub_8058A34
+	bl GetBattleAnimHitFlags
 	movs r1, #0x80
 	lsls r1, r1, #2
 	ands r1, r0
@@ -70465,7 +70465,7 @@ sub_8072450: @ 0x08072450
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r5, r0]
 	adds r0, r4, #0
@@ -70508,7 +70508,7 @@ _080724D8:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r5, r0]
 	adds r0, r4, #0
@@ -70527,7 +70527,7 @@ _08072500: .4byte 0x000002CE
 sub_8072504: @ 0x08072504
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	adds r0, r4, #0
 	bl sub_8072400
@@ -70544,7 +70544,7 @@ sub_8072504: @ 0x08072504
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0xd8
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #2
 	ldrsh r1, [r4, r0]
 	movs r0, #0xd8
@@ -70683,14 +70683,14 @@ _080726A6:
 
 	THUMB_FUNC_END sub_8072570
 
-	THUMB_FUNC_START sub_80726AC
-sub_80726AC: @ 0x080726AC
+	THUMB_FUNC_START InitBattleAnimMusic
+InitBattleAnimMusic: @ 0x080726AC
 	push {r4, r5, r6, r7, lr}
-	ldr r0, _080726F0  @ gUnknown_0203E188
-	ldr r1, _080726F4  @ gUnknown_0203E18C
+	ldr r0, _080726F0  @ gpUnitLeft_BattleStruct
+	ldr r1, _080726F4  @ gpUnitRight_BattleStruct
 	ldr r5, [r0]
 	ldr r7, [r1]
-	ldr r0, _080726F8  @ gUnknown_0202BCB0
+	ldr r0, _080726F8  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x20
 	ands r0, r1
@@ -70702,7 +70702,7 @@ _080726C4:
 	movs r0, #1
 	str r0, [r1]
 	ldr r1, _08072700  @ gUnknown_0203E114
-	ldr r0, _08072704  @ gUnknown_0203E100
+	ldr r0, _08072704  @ gBattleAnimInitialHitSide
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	lsls r0, r0, #1
@@ -70714,30 +70714,30 @@ _080726C4:
 	beq _080726E2
 	movs r6, #0x19
 _080726E2:
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #1
 	bne _08072708
 	bl Sound_SetDefaultMaxNumChannels
 	b _08072710
 	.align 2, 0
-_080726F0: .4byte gUnknown_0203E188
-_080726F4: .4byte gUnknown_0203E18C
-_080726F8: .4byte gUnknown_0202BCB0
+_080726F0: .4byte gpUnitLeft_BattleStruct
+_080726F4: .4byte gpUnitRight_BattleStruct
+_080726F8: .4byte gBmSt
 _080726FC: .4byte gUnknown_020200A8
 _08072700: .4byte gUnknown_0203E114
-_08072704: .4byte gUnknown_0203E100
+_08072704: .4byte gBattleAnimInitialHitSide
 _08072708:
-	bl sub_804FD54
+	bl GetBattleAnimLinkArenaFlag
 	cmp r0, #1
 	bne _0807271C
 _08072710:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x39
-	bl sub_8071A54
+	bl PlayBattleMusic
 	b _08072892
 _0807271C:
-	ldr r0, _08072734  @ gUnknown_0203E120
+	ldr r0, _08072734  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #4
@@ -70745,16 +70745,16 @@ _0807271C:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x23
-	bl sub_8071A54
+	bl PlayBattleMusic
 	b _08072892
 	.align 2, 0
-_08072734: .4byte gUnknown_0203E120
+_08072734: .4byte gBattleAnimSceneLayoutEnum
 _08072738:
 	movs r4, #0
 	adds r0, r7, #0
 	adds r0, #0x4a
 	ldrh r0, [r0]
-	bl sub_8058B08
+	bl IsHolyRenaisTwinWeapon
 	lsls r0, r0, #0x10
 	asrs r0, r0, #0x10
 	cmp r0, #1
@@ -70762,13 +70762,13 @@ _08072738:
 	movs r4, #1
 _0807274E:
 	movs r0, #1
-	bl sub_8058B24
+	bl DoesBattleAnimSideTakeAction
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _0807275C
 	movs r4, #0
 _0807275C:
-	ldr r0, _08072790  @ gUnknown_0203E104
+	ldr r0, _08072790  @ gBattleAnimUnitEnabledLookup
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -70794,14 +70794,14 @@ _0807277E:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x1f
-	bl sub_8071A54
+	bl PlayBattleMusic
 	b _08072892
 	.align 2, 0
-_08072790: .4byte gUnknown_0203E104
+_08072790: .4byte gBattleAnimUnitEnabledLookup
 _08072794:
 	cmp r0, #0xbe
 	bne _080727B4
-	bl sub_8084634
+	bl CheckFlag82
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -70809,17 +70809,17 @@ _08072794:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x55
-	bl sub_8071A54
+	bl PlayBattleMusic
 	b _08072892
 _080727B0:
-	bl sub_8084628
+	bl SetFlag82
 _080727B4:
 	adds r0, r5, #0
-	bl sub_80728D0
+	bl GetUnitSpecialBattleSong
 	adds r4, r0, #0
 	ldr r0, [r5]
 	ldrb r0, [r0, #4]
-	bl GetUnitFromCharId
+	bl GetUnitByPid
 	ldrb r0, [r0, #0xb]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -70830,7 +70830,7 @@ _080727B4:
 	movs r4, #1
 	negs r4, r4
 _080727D6:
-	ldr r0, _080727F8  @ gUnknown_0203E104
+	ldr r0, _080727F8  @ gBattleAnimUnitEnabledLookup
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
@@ -70845,10 +70845,10 @@ _080727E4:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl sub_8071A54
+	bl PlayBattleMusic
 	b _08072892
 	.align 2, 0
-_080727F8: .4byte gUnknown_0203E104
+_080727F8: .4byte gBattleAnimUnitEnabledLookup
 _080727FC:
 	movs r4, #0
 	ldr r0, [r7, #4]
@@ -70875,7 +70875,7 @@ _08072822:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x20
-	bl sub_8071A54
+	bl PlayBattleMusic
 	b _08072892
 	.align 2, 0
 _08072834: .4byte gBattleStats
@@ -70884,23 +70884,23 @@ _08072838:
 	bl sub_8072548
 	cmp r0, #1
 	bne _0807284C
-	ldr r0, _08072848  @ gBattleActor
+	ldr r0, _08072848  @ gBattleUnitA
 	b _08072858
 	.align 2, 0
-_08072848: .4byte gBattleActor
+_08072848: .4byte gBattleUnitA
 _0807284C:
 	movs r0, #1
 	bl sub_8072548
 	cmp r0, #1
 	bne _08072868
-	ldr r0, _08072864  @ gBattleTarget
+	ldr r0, _08072864  @ gBattleUnitB
 _08072858:
 	adds r0, #0x4a
 	ldrh r0, [r0]
 	bl sub_8072570
 	b _0807286A
 	.align 2, 0
-_08072864: .4byte gBattleTarget
+_08072864: .4byte gBattleUnitB
 _08072868:
 	movs r0, #0
 _0807286A:
@@ -70920,7 +70920,7 @@ _08072878:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r6, #0
-	bl sub_8071A54
+	bl PlayBattleMusic
 	b _08072892
 _0807288C:
 	ldr r1, _08072898  @ gUnknown_020200A8
@@ -70933,15 +70933,15 @@ _08072892:
 	.align 2, 0
 _08072898: .4byte gUnknown_020200A8
 
-	THUMB_FUNC_END sub_80726AC
+	THUMB_FUNC_END InitBattleAnimMusic
 
 	THUMB_FUNC_START sub_807289C
 sub_807289C: @ 0x0807289C
 	push {lr}
-	bl sub_8076310
+	bl IsBattleAnimPromotion
 	cmp r0, #1
 	beq _080728BA
-	ldr r0, _080728C0  @ gUnknown_0202BCB0
+	ldr r0, _080728C0  @ gBmSt
 	ldrb r1, [r0, #4]
 	movs r0, #0x20
 	ands r0, r1
@@ -70955,7 +70955,7 @@ _080728BA:
 	bl MakeBgmOverridePersist
 	b _080728CC
 	.align 2, 0
-_080728C0: .4byte gUnknown_0202BCB0
+_080728C0: .4byte gBmSt
 _080728C4: .4byte gUnknown_020200A8
 _080728C8:
 	bl RestoreBgm
@@ -70965,8 +70965,8 @@ _080728CC:
 
 	THUMB_FUNC_END sub_807289C
 
-	THUMB_FUNC_START sub_80728D0
-sub_80728D0: @ 0x080728D0
+	THUMB_FUNC_START GetUnitSpecialBattleSong
+GetUnitSpecialBattleSong: @ 0x080728D0
 	push {r4, r5, lr}
 	ldr r0, [r0]
 	ldrb r2, [r0, #4]
@@ -71000,7 +71000,7 @@ _080728FA:
 	.align 2, 0
 _08072908: .4byte gUnknown_08758A60
 
-	THUMB_FUNC_END sub_80728D0
+	THUMB_FUNC_END GetUnitSpecialBattleSong
 
 	THUMB_FUNC_START sub_807290C
 sub_807290C: @ 0x0807290C
@@ -71087,7 +71087,7 @@ sub_80729A4: @ 0x080729A4
 	adds r4, r0, #0
 	adds r5, r2, #0
 	adds r6, r3, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	adds r0, r4, #0
 	adds r1, r5, #0
 	adds r2, r6, #0
@@ -71103,7 +71103,7 @@ sub_80729C0: @ 0x080729C0
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	adds r4, r2, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	adds r0, r4, #0
 	bl sub_807290C
 	adds r1, r0, #0
@@ -71154,7 +71154,7 @@ _08072A10: .4byte gUnknown_020200B0
 NewEkrClassChg: @ 0x08072A14
 	push {r4, r5, lr}
 	adds r5, r0, #0
-	bl NewEfxSpellCast
+	bl StartEfxSpellCast
 	ldr r4, _08072A3C  @ gUnknown_020200B0
 	ldr r0, _08072A40  @ gUnknown_08758FC0
 	movs r1, #3
@@ -71181,7 +71181,7 @@ sub_8072A44: @ 0x08072A44
 	sub sp, #8
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -71265,7 +71265,7 @@ _08072AFE:
 	bne _08072B16
 	ldr r0, [r4, #0x5c]
 	movs r1, #0xa
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	movs r0, #1
 	movs r1, #0
 	movs r2, #8
@@ -71363,12 +71363,12 @@ _08072BC4:
 	bl sub_805A394
 	ldr r0, [r4, #0x5c]
 	movs r1, #8
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	adds r0, r5, #0
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0
-	bl sub_80547DC
+	bl StartEfxFlashUnit
 	b _08072C94
 _08072BEC:
 	movs r0, #0x9d
@@ -71383,7 +71383,7 @@ _08072BEC:
 	adds r0, r2, #0
 	orrs r1, r0
 	strh r1, [r5, #8]
-	bl sub_8055000
+	bl StartEndEfxSpellCast
 	adds r0, r5, #0
 	movs r1, #0xa
 	movs r2, #0x46
@@ -71658,7 +71658,7 @@ sub_8072DD8: @ 0x08072DD8
 	str r1, [r0, #0x54]
 	ldr r1, _08072E18  @ gUnknown_08759128
 	str r1, [r0, #0x58]
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -71691,7 +71691,7 @@ sub_8072E1C: @ 0x08072E1C
 	str r1, [r0, #0x54]
 	ldr r1, _08072E5C  @ gUnknown_08759128
 	str r1, [r0, #0x58]
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -71711,14 +71711,14 @@ sub_8072E60: @ 0x08072E60
 	push {r7}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r7, r0, #0
 	adds r0, r5, #0
 	adds r0, #0x2c
 	adds r1, r5, #0
 	adds r1, #0x44
 	ldr r2, [r5, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r4, r0, #0x10
 	cmp r4, #0
@@ -71733,25 +71733,25 @@ sub_8072E60: @ 0x08072E60
 	ldr r0, [r0]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r5, r4, r5
 	ldr r0, [r5]
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	adds r6, r4, r6
 	ldr r1, [r6]
 	add r4, r8
 	ldr r2, [r4]
 	adds r0, r7, #0
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08072ECE
 _08072EB8:
 	movs r0, #1
 	negs r0, r0
 	cmp r4, r0
 	bne _08072ECE
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	adds r0, r5, #0
 	bl Proc_End
 _08072ECE:
@@ -71884,11 +71884,11 @@ sub_8072F84: @ 0x08072F84
 	str r0, [r5, #0x60]
 	ldr r0, _08072FC8  @ gUnknown_08792194
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08072FCC  @ gUnknown_08791D9C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -71934,11 +71934,11 @@ sub_8072FE8: @ 0x08072FE8
 	str r0, [r5, #0x60]
 	ldr r0, _0807302C  @ gUnknown_08792194
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08073030  @ gUnknown_08791D9C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5}
 	pop {r0}
@@ -71984,7 +71984,7 @@ sub_807304C: @ 0x0807304C
 _08073068: .4byte gUnknown_0875922C
 _0807306C:
 	adds r0, r6, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r5, #0x5c]
 _08073074:
 	ldr r3, _080730A0  @ gUnknown_08792988
@@ -71996,11 +71996,11 @@ _08073074:
 	str r0, [r5, #0x60]
 	ldr r0, _080730A4  @ gUnknown_08792194
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080730A8  @ gUnknown_08791D9C
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r4, r5, r6}
 	pop {r0}
@@ -72046,11 +72046,11 @@ sub_80730C4: @ 0x080730C4
 	strh r4, [r0, #0x2e]
 	ldr r0, _080731B0  @ gUnknown_08791D7C
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _080731B4  @ gUnknown_086849B8
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _080731B8  @ gUnknown_08684AB8
 	ldr r1, _080731BC  @ gBg1Tm
 	movs r2, #1
@@ -72063,7 +72063,7 @@ sub_80730C4: @ 0x080730C4
 	bl sub_8070E94
 	movs r0, #2
 	bl EnableBgSync
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	movs r0, #1
 	movs r1, #0xe
 	movs r2, #8
@@ -72164,8 +72164,8 @@ sub_80731C8: @ 0x080731C8
 	ldrsh r1, [r4, r2]
 	cmp r0, r1
 	bne _0807320E
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	ldr r0, [r5, #0x1c]
 	ldr r1, _08073218  @ 0xFFFFF7FF
 	ands r0, r1
@@ -72336,7 +72336,7 @@ sub_80732E0: @ 0x080732E0
 	movs r1, #0x17
 	movs r2, #1
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	b _08073356
 	.align 2, 0
 _0807332C: .4byte gUnknown_02000054
@@ -72355,7 +72355,7 @@ _08073338:
 	movs r1, #0x19
 	movs r2, #1
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 _08073356:
 	bl EnablePalSync
 	ldrh r0, [r5, #0x2c]
@@ -72447,7 +72447,7 @@ sub_80733C0: @ 0x080733C0
 	movs r1, #0x17
 	movs r2, #1
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	b _08073436
 	.align 2, 0
 _0807340C: .4byte gUnknown_02000054
@@ -72466,7 +72466,7 @@ _08073418:
 	movs r1, #0x19
 	movs r2, #1
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 _08073436:
 	bl EnablePalSync
 	ldrh r0, [r5, #0x2c]
@@ -72612,24 +72612,24 @@ sub_807352C: @ 0x0807352C
 	ldr r0, [r2, #0x5c]
 	cmp r0, #0
 	bne _08073554
-	ldr r0, _08073548  @ gUnknown_0203E188
+	ldr r0, _08073548  @ gpUnitLeft_BattleStruct
 	ldr r4, [r0]
 	ldr r0, _0807354C  @ gUnknown_02020108
 	adds r5, r4, #0
 	str r5, [r0]
-	ldr r0, _08073550  @ gUnknown_0203E18C
+	ldr r0, _08073550  @ gpUnitRight_BattleStruct
 	b _08073560
 	.align 2, 0
-_08073548: .4byte gUnknown_0203E188
+_08073548: .4byte gpUnitLeft_BattleStruct
 _0807354C: .4byte gUnknown_02020108
-_08073550: .4byte gUnknown_0203E18C
+_08073550: .4byte gpUnitRight_BattleStruct
 _08073554:
-	ldr r0, _08073670  @ gUnknown_0203E18C
+	ldr r0, _08073670  @ gpUnitRight_BattleStruct
 	ldr r4, [r0]
 	ldr r0, _08073674  @ gUnknown_02020108
 	adds r5, r4, #0
 	str r5, [r0]
-	ldr r0, _08073678  @ gUnknown_0203E188
+	ldr r0, _08073678  @ gpUnitLeft_BattleStruct
 _08073560:
 	ldr r1, _0807367C  @ gUnknown_0202010C
 	ldr r3, [r0]
@@ -72767,9 +72767,9 @@ _08073572:
 	asrs r0, r0, #0x18
 	b _0807371A
 	.align 2, 0
-_08073670: .4byte gUnknown_0203E18C
+_08073670: .4byte gpUnitRight_BattleStruct
 _08073674: .4byte gUnknown_02020108
-_08073678: .4byte gUnknown_0203E188
+_08073678: .4byte gpUnitLeft_BattleStruct
 _0807367C: .4byte gUnknown_0202010C
 _08073680: .4byte gUnknown_02020110
 _08073684: .4byte gUnknown_02020114
@@ -72859,7 +72859,7 @@ _0807371A:
 	mov r8, r0
 _08073732:
 	adds r0, r5, #0
-	bl UnitHasMagicRank
+	bl UnitKnowsMagic
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08073760
@@ -73124,9 +73124,9 @@ NewEkrLevelup: @ 0x08073988
 	str r6, [r5]
 	str r4, [r6, #0x5c]
 	adds r0, r4, #0
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	str r0, [r6, #0x60]
-	ldr r0, _080739C0  @ gUnknown_0203E120
+	ldr r0, _080739C0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -73138,7 +73138,7 @@ NewEkrLevelup: @ 0x08073988
 	.align 2, 0
 _080739B8: .4byte gUnknown_020200B4
 _080739BC: .4byte gUnknown_0875932C
-_080739C0: .4byte gUnknown_0203E120
+_080739C0: .4byte gBattleAnimSceneLayoutEnum
 _080739C4:
 	adds r1, r6, #0
 	adds r1, #0x2a
@@ -73176,7 +73176,7 @@ _080739F4:
 	asrs r0, r0, #0x10
 	cmp r0, #1
 	bne _08073A12
-	bl NewEfxSpellCast
+	bl StartEfxSpellCast
 	ldr r0, [r4, #0x5c]
 	movs r1, #0x78
 	movs r2, #0x58
@@ -73199,7 +73199,7 @@ _08073A24:
 _08073A30:
 	cmp r0, #0x49
 	bne _08073A3A
-	bl sub_8055000
+	bl StartEndEfxSpellCast
 	b _08073A46
 _08073A3A:
 	cmp r0, #0x53
@@ -73271,7 +73271,7 @@ sub_8073A4C: @ 0x08073A4C
 	movs r0, #0xa0
 	lsls r0, r0, #1
 	strh r0, [r7, #0xa]
-	ldr r0, _08073B20  @ gUnknown_0203E120
+	ldr r0, _08073B20  @ gBattleAnimSceneLayoutEnum
 	ldrh r1, [r0]
 	strh r1, [r7, #0xc]
 	movs r0, #1
@@ -73308,7 +73308,7 @@ _08073B10: .4byte 0x06007000
 _08073B14: .4byte 0x06005000
 _08073B18: .4byte 0x06005800
 _08073B1C: .4byte gUnknown_0203E11C
-_08073B20: .4byte gUnknown_0203E120
+_08073B20: .4byte gBattleAnimSceneLayoutEnum
 _08073B24: .4byte 0x0000FFFF
 _08073B28: .4byte 0x06010000
 _08073B2C: .4byte gUnknown_020145C8
@@ -73319,7 +73319,7 @@ _08073B38:
 	orrs r0, r2
 	strh r0, [r7]
 _08073B3E:
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	bne _08073B6E
 	bl sub_806FAB0
@@ -73478,7 +73478,7 @@ _08073C24:
 	mov r1, r9
 	ldr r0, [r1, #0x60]
 	bl sub_8054B64
-	bl sub_8054EF0
+	bl PauseEfxWeaponIcon
 	bl sub_80546C4
 	ldrb r1, [r4, #1]
 	movs r0, #0x21
@@ -73519,10 +73519,10 @@ sub_8073CE8: @ 0x08073CE8
 	push {r6, r7}
 	sub sp, #0xc
 	adds r7, r0, #0
-	ldr r0, _08073D80  @ gUnknown_0203E188
+	ldr r0, _08073D80  @ gpUnitLeft_BattleStruct
 	ldr r0, [r0]
 	mov r9, r0
-	ldr r0, _08073D84  @ gUnknown_0203E18C
+	ldr r0, _08073D84  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	mov r8, r0
 	ldr r6, [r7, #0x5c]
@@ -73579,8 +73579,8 @@ sub_8073CE8: @ 0x08073CE8
 	mov r1, r9
 	b _08073DBA
 	.align 2, 0
-_08073D80: .4byte gUnknown_0203E188
-_08073D84: .4byte gUnknown_0203E18C
+_08073D80: .4byte gpUnitLeft_BattleStruct
+_08073D84: .4byte gpUnitRight_BattleStruct
 _08073D88: .4byte gUnknown_088035B0
 _08073D8C: .4byte gUnknown_02017790
 _08073D90: .4byte gUnknown_088039E8
@@ -73810,12 +73810,12 @@ _08073EE2:
 	movs r1, #2
 	movs r2, #4
 	mov r3, sl
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #0x13
 	movs r2, #0xc
 	mov r3, sl
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r0, [r7, #0x2c]
 	adds r0, #1
@@ -73895,7 +73895,7 @@ _08073FF4:
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	adds r0, r4, #0
 	movs r1, #0x38
 	movs r2, #0
@@ -74056,7 +74056,7 @@ sub_807411C: @ 0x0807411C
 	movs r1, #0x80
 	lsls r1, r1, #1
 	adds r0, r4, #0
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	adds r0, r4, #0
 	movs r1, #0x38
 	movs r2, #0
@@ -74161,7 +74161,7 @@ _080741F2:
 	movs r0, #0x76
 	movs r1, #0x80
 	lsls r1, r1, #1
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	movs r0, #0x76
 	movs r1, #0x38
 	movs r2, #0
@@ -74331,12 +74331,12 @@ sub_80742F8: @ 0x080742F8
 	movs r1, #2
 	movs r2, #4
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #0x13
 	movs r2, #0xc
 	adds r3, r6, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	movs r0, #7
 _08074384:
@@ -74374,7 +74374,7 @@ sub_80743C0: @ 0x080743C0
 	sub sp, #0x2c
 	adds r5, r0, #0
 	ldr r4, _080744DC  @ gUnknown_020200E0
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	bne _080743DE
 	bl sub_806FAB0
@@ -74416,7 +74416,7 @@ _080743DE:
 	movs r0, #5
 	strh r0, [r4, #8]
 	strh r1, [r4, #0xa]
-	ldr r0, _080744E4  @ gUnknown_0203E120
+	ldr r0, _080744E4  @ gBattleAnimSceneLayoutEnum
 	ldrh r0, [r0]
 	strh r0, [r4, #0xc]
 	movs r0, #2
@@ -74427,7 +74427,7 @@ _080743DE:
 	ldr r0, _080744EC  @ gUnknown_0203E102
 	ldrh r0, [r0]
 	strh r0, [r4, #0x10]
-	bl sub_805B028
+	bl GetBattleAnimArenaFlag
 	cmp r0, #0
 	bne _08074460
 	bl sub_806FAB0
@@ -74500,7 +74500,7 @@ _08074460:
 	.align 2, 0
 _080744DC: .4byte gUnknown_020200E0
 _080744E0: .4byte gUnknown_0203E11C
-_080744E4: .4byte gUnknown_0203E120
+_080744E4: .4byte gBattleAnimSceneLayoutEnum
 _080744E8: .4byte gUnknown_020145C8
 _080744EC: .4byte gUnknown_0203E102
 _080744F0: .4byte 0x0000F3FF
@@ -74558,7 +74558,7 @@ sub_8074544: @ 0x08074544
 	bl sub_8054B84
 	ldr r0, [r4, #0x60]
 	bl sub_8054B84
-	bl sub_8054F00
+	bl ResumeEfxWeaponIcon
 	bl sub_80546D4
 	adds r4, #0x29
 	movs r0, #1
@@ -74883,7 +74883,7 @@ sub_8074798: @ 0x08074798
 	THUMB_FUNC_START sub_80747A4
 sub_80747A4: @ 0x080747A4
 	push {lr}
-	ldr r0, _080747C8  @ gUnknown_0202BCB0
+	ldr r0, _080747C8  @ gBmSt
 	ldrb r0, [r0]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -74900,7 +74900,7 @@ sub_80747A4: @ 0x080747A4
 	ldr r0, _080747D8  @ gUnknown_0201FB38
 	b _080747E2
 	.align 2, 0
-_080747C8: .4byte gUnknown_0202BCB0
+_080747C8: .4byte gBmSt
 _080747CC: .4byte gUnknown_0201FB30
 _080747D0: .4byte gUnknown_0201FDBC
 _080747D4: .4byte gUnknown_0201FB2C
@@ -75045,8 +75045,8 @@ sub_80748C4: @ 0x080748C4
 	str r1, [r0, #0x54]
 	ldr r0, _08074908  @ gUnknown_085C48AC
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
-	bl sub_80551B0
+	bl SpellFx_RegisterBgPal
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -75067,7 +75067,7 @@ sub_807490C: @ 0x0807490C
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -75081,20 +75081,20 @@ sub_807490C: @ 0x0807490C
 	ldr r1, [r1]
 	adds r2, r4, r2
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	adds r4, r4, r5
 	ldr r0, [r4]
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	b _0807495E
 _08074948:
 	movs r0, #1
 	negs r0, r0
 	cmp r3, r0
 	bne _0807495E
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 _0807495E:
@@ -75123,10 +75123,10 @@ sub_8074964: @ 0x08074964
 	ldr r0, _080749A8  @ gUnknown_085C5994
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	ldr r0, _080749AC  @ gUnknown_085C6054
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -75147,7 +75147,7 @@ sub_80749B0: @ 0x080749B0
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -75160,7 +75160,7 @@ sub_80749B0: @ 0x080749B0
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _080749EC
 _080749DE:
 	movs r0, #1
@@ -75203,10 +75203,10 @@ sub_80749F4: @ 0x080749F4
 	ldr r0, _08074A4C  @ gUnknown_085C6730
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r0, _08074A50  @ gUnknown_085C6054
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	add sp, #4
 	pop {r3}
 	mov r8, r3
@@ -75268,7 +75268,7 @@ sub_8074A94: @ 0x08074A94
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r3, r0, #0x10
 	cmp r3, #0
@@ -75320,7 +75320,7 @@ sub_8074AFC: @ 0x08074AFC
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r1, r0, #0x10
 	cmp r1, #0
@@ -75329,7 +75329,7 @@ sub_8074AFC: @ 0x08074AFC
 	lsls r1, r1, #5
 	adds r0, r0, r1
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	b _08074B30
 _08074B22:
 	movs r0, #1
@@ -75662,7 +75662,7 @@ sub_8074D58: @ 0x08074D58
 	movs r3, #5
 	str r3, [sp, #8]
 	movs r3, #0
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	ldr r0, [sp, #0x3c]
 	cmp r0, #0
 	beq _08074E52
@@ -75682,7 +75682,7 @@ sub_8074D58: @ 0x08074D58
 	mov r0, r8
 	mov r1, r9
 	movs r3, #2
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	str r0, [r4, #0x64]
 	b _08074E2A
 	.align 2, 0
@@ -75705,7 +75705,7 @@ _08074DE4:
 	str r3, [sp, #8]
 	mov r1, r9
 	movs r3, #2
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	str r0, [r4, #0x60]
 	orrs r6, r7
 	ldr r2, _08074E68  @ gUnknown_085C92D0
@@ -75717,7 +75717,7 @@ _08074DE4:
 	mov r0, r8
 	mov r1, r9
 	movs r3, #2
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	str r0, [r4, #0x64]
 	ldr r0, [sp, #0x40]
 	ldr r1, [sp, #0x18]
@@ -75798,7 +75798,7 @@ _08074E80:
 	movs r3, #3
 	str r3, [sp, #8]
 	movs r3, #2
-	bl sub_80716C8
+	bl StartEkrsubAnimeEmulator
 	str r0, [r4, #0x60]
 	ldr r0, [r4, #0x50]
 	movs r2, #0x30
@@ -75871,8 +75871,8 @@ _08074F38: .4byte gUnknown_02020138
 
 	THUMB_FUNC_END sub_8074F14
 
-	THUMB_FUNC_START sub_8074F3C
-sub_8074F3C: @ 0x08074F3C
+	THUMB_FUNC_START HasBattleAnimTriangeAttackEnded
+HasBattleAnimTriangeAttackEnded: @ 0x08074F3C
 	push {lr}
 	ldr r0, _08074F4C  @ gUnknown_0202013C
 	ldr r0, [r0]
@@ -75888,7 +75888,7 @@ _08074F52:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8074F3C
+	THUMB_FUNC_END HasBattleAnimTriangeAttackEnded
 
 	THUMB_FUNC_START nullsub_18
 nullsub_18: @ 0x08074F58
@@ -75896,8 +75896,8 @@ nullsub_18: @ 0x08074F58
 
 	THUMB_FUNC_END nullsub_18
 
-	THUMB_FUNC_START NewEkrTriangle
-NewEkrTriangle: @ 0x08074F5C
+	THUMB_FUNC_START StartEkrTriangle
+StartEkrTriangle: @ 0x08074F5C
 	push {r4, lr}
 	adds r4, r0, #0
 	ldr r0, _08074F78  @ gUnknown_087595A4
@@ -75914,10 +75914,10 @@ NewEkrTriangle: @ 0x08074F5C
 _08074F78: .4byte gUnknown_087595A4
 _08074F7C: .4byte gUnknown_0202013C
 
-	THUMB_FUNC_END NewEkrTriangle
+	THUMB_FUNC_END StartEkrTriangle
 
-	THUMB_FUNC_START sub_8074F80
-sub_8074F80: @ 0x08074F80
+	THUMB_FUNC_START EkrTriangle_OnLoop
+EkrTriangle_OnLoop: @ 0x08074F80
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -75934,12 +75934,12 @@ sub_8074F80: @ 0x08074F80
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _08074FAC
-	ldr r0, _08074FA8  @ gUnknown_0203E188
+	ldr r0, _08074FA8  @ gpUnitLeft_BattleStruct
 	b _08074FAE
 	.align 2, 0
-_08074FA8: .4byte gUnknown_0203E188
+_08074FA8: .4byte gpUnitLeft_BattleStruct
 _08074FAC:
-	ldr r0, _08074FFC  @ gUnknown_0203E18C
+	ldr r0, _08074FFC  @ gpUnitRight_BattleStruct
 _08074FAE:
 	ldr r0, [r0]
 	ldr r0, [r0, #4]
@@ -75952,7 +75952,7 @@ _08074FBA:
 	ble _08074FC0
 	b _080750BC
 _08074FC0:
-	ldr r0, _08075000  @ gUnknown_0203E194
+	ldr r0, _08075000  @ gpBattleAnimTAUnits
 	ldr r1, [r0]
 	ldr r0, [r1, #4]
 	ldrb r0, [r0, #4]
@@ -75985,8 +75985,8 @@ _08074FE8:
 	movs r0, #1
 	b _0807500A
 	.align 2, 0
-_08074FFC: .4byte gUnknown_0203E18C
-_08075000: .4byte gUnknown_0203E194
+_08074FFC: .4byte gpUnitRight_BattleStruct
+_08075000: .4byte gpBattleAnimTAUnits
 _08075004:
 	adds r0, r4, #0
 	bl GetItemType
@@ -76010,7 +76010,7 @@ _0807501A:
 	movs r0, #2
 	mov r8, r0
 _0807502C:
-	ldr r0, _08075068  @ gUnknown_0203E194
+	ldr r0, _08075068  @ gpBattleAnimTAUnits
 	ldr r1, [r0, #4]
 	ldr r0, [r1, #4]
 	ldrb r0, [r0, #4]
@@ -76043,7 +76043,7 @@ _08075054:
 	movs r0, #1
 	b _08075072
 	.align 2, 0
-_08075068: .4byte gUnknown_0203E194
+_08075068: .4byte gpBattleAnimTAUnits
 _0807506C:
 	adds r0, r4, #0
 	bl GetItemType
@@ -76070,7 +76070,7 @@ _0807508E:
 	mov r2, sl
 	mov r3, r8
 	bl sub_8075424
-	ldr r0, _080750B4  @ gUnknown_0203E18C
+	ldr r0, _080750B4  @ gpUnitRight_BattleStruct
 	ldr r0, [r0]
 	adds r0, #0x4a
 	ldrh r0, [r0]
@@ -76081,10 +76081,10 @@ _0807508E:
 	movs r0, #0
 	b _08075168
 	.align 2, 0
-_080750B4: .4byte gUnknown_0203E18C
+_080750B4: .4byte gpUnitRight_BattleStruct
 _080750B8: .4byte gUnknown_0202013C
 _080750BC:
-	ldr r0, _080750E8  @ gUnknown_0203E194
+	ldr r0, _080750E8  @ gpBattleAnimTAUnits
 	ldr r1, [r0]
 	ldr r0, [r1, #4]
 	ldrb r0, [r0, #4]
@@ -76107,7 +76107,7 @@ _080750D4:
 	movs r0, #1
 	b _080750F6
 	.align 2, 0
-_080750E8: .4byte gUnknown_0203E194
+_080750E8: .4byte gpBattleAnimTAUnits
 _080750EC:
 	adds r0, r4, #0
 	bl GetItemType
@@ -76123,7 +76123,7 @@ _08075100:
 	movs r2, #1
 	mov r8, r2
 _08075104:
-	ldr r0, _08075130  @ gUnknown_0203E194
+	ldr r0, _08075130  @ gpBattleAnimTAUnits
 	ldr r1, [r0, #4]
 	ldr r0, [r1, #4]
 	ldrb r0, [r0, #4]
@@ -76146,7 +76146,7 @@ _0807511C:
 	movs r0, #1
 	b _0807513E
 	.align 2, 0
-_08075130: .4byte gUnknown_0203E194
+_08075130: .4byte gpBattleAnimTAUnits
 _08075134:
 	adds r0, r4, #0
 	bl GetItemType
@@ -76165,7 +76165,7 @@ _08075148:
 	mov r1, r9
 	mov r2, sl
 	mov r3, r8
-	bl sub_8075184
+	bl StartEkrPegasusKnight
 	cmp r5, #0x48
 	bne _08075164
 	ldr r1, _08075160  @ gUnknown_0202013C
@@ -76191,10 +76191,10 @@ _08075168:
 	.align 2, 0
 _08075180: .4byte gUnknown_0202013C
 
-	THUMB_FUNC_END sub_8074F80
+	THUMB_FUNC_END EkrTriangle_OnLoop
 
-	THUMB_FUNC_START sub_8075184
-sub_8075184: @ 0x08075184
+	THUMB_FUNC_START StartEkrPegasusKnight
+StartEkrPegasusKnight: @ 0x08075184
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -76222,14 +76222,14 @@ sub_8075184: @ 0x08075184
 	.align 2, 0
 _080751B8: .4byte gUnknown_087595BC
 
-	THUMB_FUNC_END sub_8075184
+	THUMB_FUNC_END StartEkrPegasusKnight
 
 	THUMB_FUNC_START sub_80751BC
 sub_80751BC: @ 0x080751BC
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	adds r5, r0, #0
 	ldrh r0, [r4, #0x2c]
 	adds r0, #1
@@ -76250,7 +76250,7 @@ _080751E2:
 	bne _080751F2
 	adds r0, r5, #0
 	movs r1, #6
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 _080751F2:
 	movs r3, #0x2c
 	ldrsh r0, [r4, r3]
@@ -76260,7 +76260,7 @@ _080751F2:
 	ldr r3, [r4, #0x4c]
 	adds r0, r5, #0
 	movs r1, #0
-	bl sub_807527C
+	bl StartEkrPegasusKnightBG
 	ldr r0, [r4, #0x5c]
 	ldr r2, [r4, #0x48]
 	ldr r3, [r4, #0x50]
@@ -76282,7 +76282,7 @@ _08075226:
 	bne _08075236
 	adds r0, r5, #0
 	movs r1, #6
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 _08075236:
 	movs r3, #0x2c
 	ldrsh r0, [r4, r3]
@@ -76292,7 +76292,7 @@ _08075236:
 	ldr r3, [r4, #0x50]
 	adds r0, r5, #0
 	movs r1, #1
-	bl sub_807527C
+	bl StartEkrPegasusKnightBG
 	movs r0, #0x9a
 	lsls r0, r0, #2
 	movs r1, #0x80
@@ -76321,8 +76321,8 @@ _08075278: .4byte gUnknown_0202013C
 
 	THUMB_FUNC_END sub_80751BC
 
-	THUMB_FUNC_START sub_807527C
-sub_807527C: @ 0x0807527C
+	THUMB_FUNC_START StartEkrPegasusKnightBG
+StartEkrPegasusKnightBG: @ 0x0807527C
 	push {r4, r5, r6, r7, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -76361,7 +76361,7 @@ _080752B6:
 	bl LZ77UnCompWram
 	adds r0, r4, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, _080752FC  @ gUnknown_080E17C0
 	cmp r6, #0
 	beq _080752DE
@@ -76372,7 +76372,7 @@ _080752B6:
 _080752DE:
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	pop {r4, r5, r6, r7}
 	pop {r0}
 	bx r0
@@ -76385,7 +76385,7 @@ _080752FC: .4byte gUnknown_080E17C0
 _08075300: .4byte gUnknown_080E2B54
 _08075304: .4byte gUnknown_080E2164
 
-	THUMB_FUNC_END sub_807527C
+	THUMB_FUNC_END StartEkrPegasusKnightBG
 
 	THUMB_FUNC_START sub_8075308
 sub_8075308: @ 0x08075308
@@ -76395,7 +76395,7 @@ sub_8075308: @ 0x08075308
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -76408,14 +76408,14 @@ sub_8075308: @ 0x08075308
 	ldr r1, [r1]
 	adds r2, r2, r3
 	ldr r2, [r2]
-	bl sub_8055670
+	bl SpellFx_WriteBgMap
 	b _08075348
 _08075336:
 	movs r0, #1
 	negs r0, r0
 	cmp r2, r0
 	bne _08075348
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	adds r0, r4, #0
 	bl Proc_Break
 _08075348:
@@ -76474,7 +76474,7 @@ _0807539A:
 	bl LZ77UnCompWram
 	adds r0, r4, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080753F0  @ gUnknown_080E3B78
 	mov r1, r8
 	cmp r1, #0
@@ -76487,7 +76487,7 @@ _0807539A:
 _080753CC:
 	movs r1, #0x80
 	lsls r1, r1, #5
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r3, r4}
 	mov r8, r3
@@ -76612,7 +76612,7 @@ _080754B8:
 	bne _080754D0
 	ldr r0, [r5, #0x5c]
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldr r0, [r5, #0x5c]
 	movs r1, #0xa
 	bl sub_807589C
@@ -76649,7 +76649,7 @@ _08075504:
 	bne _0807551C
 	ldr r0, [r5, #0x5c]
 	movs r1, #4
-	bl StartSpellBG_FLASH
+	bl StartEfxFlashBG
 	ldr r0, [r5, #0x5c]
 	movs r1, #0xa
 	bl sub_807589C
@@ -77005,11 +77005,11 @@ _080757EE:
 	bl LZ77UnCompWram
 	adds r0, r4, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	movs r1, #0x80
 	lsls r1, r1, #5
 	adds r0, r6, #0
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	add sp, #4
 	pop {r3, r4}
 	mov r8, r3
@@ -77443,7 +77443,7 @@ sub_8075B58: @ 0x08075B58
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x5a
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	pop {r0}
 	bx r0
 
@@ -77455,7 +77455,7 @@ sub_8075B68: @ 0x08075B68
 	movs r1, #0x80
 	lsls r1, r1, #1
 	movs r0, #0x5c
-	bl SomePlaySound_8071990
+	bl SomeBattlePlaySound_8071990
 	pop {r0}
 	bx r0
 
@@ -77887,10 +77887,10 @@ _08075F14: .4byte gDispIo
 
 	THUMB_FUNC_END DrawBattlePopup
 
-	THUMB_FUNC_START Battle_MakePopups
-Battle_MakePopups: @ 0x08075F18
+	THUMB_FUNC_START StartAnimsOnPopups
+StartAnimsOnPopups: @ 0x08075F18
 	push {r4, r5, lr}
-	ldr r0, _08075F6C  @ gUnknown_0203E120
+	ldr r0, _08075F6C  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #4
@@ -77908,8 +77908,8 @@ Battle_MakePopups: @ 0x08075F18
 	str r0, [r5, #0x44]
 	str r0, [r5, #0x48]
 	movs r2, #0
-	ldr r4, _08075F7C  @ gUnknown_0203E18C
-	ldr r3, _08075F80  @ gUnknown_0203E188
+	ldr r4, _08075F7C  @ gpUnitRight_BattleStruct
+	ldr r3, _08075F80  @ gpUnitLeft_BattleStruct
 _08075F44:
 	ldr r0, [r4]
 	adds r0, #0x28
@@ -77931,12 +77931,12 @@ _08075F44:
 	str r2, [r5, #0x44]
 	b _08075F86
 	.align 2, 0
-_08075F6C: .4byte gUnknown_0203E120
+_08075F6C: .4byte gBattleAnimSceneLayoutEnum
 _08075F70: .4byte gUnknown_02020140
 _08075F74: .4byte gUnknown_0878D588
 _08075F78: .4byte gUnknown_02020144
-_08075F7C: .4byte gUnknown_0203E18C
-_08075F80: .4byte gUnknown_0203E188
+_08075F7C: .4byte gpUnitRight_BattleStruct
+_08075F80: .4byte gpUnitLeft_BattleStruct
 _08075F84:
 	str r2, [r5, #0x48]
 _08075F86:
@@ -77971,7 +77971,7 @@ _08075F9E:
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	bne _08075FF4
-	ldr r4, _08076058  @ gUnknown_0203E188
+	ldr r4, _08076058  @ gpUnitLeft_BattleStruct
 	ldr r0, [r4]
 	bl HasBattleUnitGainedWeaponLevel
 	lsls r0, r0, #0x18
@@ -77999,7 +77999,7 @@ _08075FF4:
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
 	bne _0807602C
-	ldr r4, _0807605C  @ gUnknown_0203E18C
+	ldr r4, _0807605C  @ gpUnitRight_BattleStruct
 	ldr r0, [r4]
 	bl HasBattleUnitGainedWeaponLevel
 	lsls r0, r0, #0x18
@@ -78041,8 +78041,8 @@ _08076048: .4byte gUnknown_02020140
 _0807604C: .4byte gUnknown_0878D520
 _08076050: .4byte gUnknown_02020144
 _08076054: .4byte gUnknown_0203E114
-_08076058: .4byte gUnknown_0203E188
-_0807605C: .4byte gUnknown_0203E18C
+_08076058: .4byte gpUnitLeft_BattleStruct
+_0807605C: .4byte gpUnitRight_BattleStruct
 _08076060:
 	movs r0, #0x80
 	bl SetBgmVolume
@@ -78051,7 +78051,7 @@ _08076066:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END Battle_MakePopups
+	THUMB_FUNC_END StartAnimsOnPopups
 
 	THUMB_FUNC_START BattlePopup_Wait16Frames
 BattlePopup_Wait16Frames: @ 0x0807606C
@@ -78117,7 +78117,7 @@ _080760C2:
 	ble _080760E4
 	ldr r0, [r4, #0x60]
 	bl BsoRemove
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	adds r0, r4, #0
 	bl Proc_Break
 _080760E4:
@@ -78172,7 +78172,7 @@ _08076126:
 	ble _08076148
 	ldr r0, [r4, #0x60]
 	bl BsoRemove
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	adds r0, r4, #0
 	bl Proc_Break
 _08076148:
@@ -78227,7 +78227,7 @@ _0807618A:
 	ble _080761AC
 	ldr r0, [r4, #0x60]
 	bl BsoRemove
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	adds r0, r4, #0
 	bl Proc_Break
 _080761AC:
@@ -78284,7 +78284,7 @@ _080761EE:
 	strh r0, [r4, #0x2c]
 	ldr r0, [r4, #0x60]
 	bl BsoRemove
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	adds r0, r4, #0
 	bl Proc_Break
 _08076214:
@@ -78387,7 +78387,7 @@ _080762A2:
 	strh r0, [r4, #0x2c]
 	ldr r0, [r4, #0x60]
 	bl BsoRemove
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	adds r0, r4, #0
 	bl Proc_Break
 _080762C8:
@@ -78432,8 +78432,8 @@ _08076308:
 
 	THUMB_FUNC_END sub_80762D0
 
-	THUMB_FUNC_START sub_8076310
-sub_8076310: @ 0x08076310
+	THUMB_FUNC_START IsBattleAnimPromotion
+IsBattleAnimPromotion: @ 0x08076310
 	push {lr}
 	ldr r0, _08076324  @ gBattleStats
 	ldrh r1, [r0]
@@ -78452,12 +78452,12 @@ _0807632A:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8076310
+	THUMB_FUNC_END IsBattleAnimPromotion
 
 	THUMB_FUNC_START BeginAnimsOnBattle_Hensei
 BeginAnimsOnBattle_Hensei: @ 0x08076330
 	push {lr}
-	bl NewEkrBattleDeamon
+	bl StartEkrBattleDeamon
 	bl BsoInit
 	bl sub_8052184
 	ldr r1, _08076350  @ gUnknown_02017744
@@ -78507,9 +78507,9 @@ sub_8076380: @ 0x08076380
 	bl InitOam
 	bl sub_8051CC4
 	bl sub_80599E8
-	bl NewEkrGauge
-	bl NewEkrDispUP
-	bl NewEkrBattle
+	bl StartEkrGauge
+	bl StartEkrDispUP
+	bl StartEkrBattle
 	ldr r0, _080763D4  @ gUnknown_0203E0FE
 	movs r1, #0
 	ldrsh r0, [r0, r1]
@@ -78525,7 +78525,7 @@ sub_8076380: @ 0x08076380
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	adds r0, r5, #0
 	bl Proc_Break
@@ -78582,7 +78582,7 @@ sub_8076400: @ 0x08076400
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r1, [r6, #0x2c]
 	adds r1, #1
@@ -78678,7 +78678,7 @@ sub_80764B0: @ 0x080764B0
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r1, [r6, #0x2c]
 	adds r1, #1
@@ -78709,9 +78709,9 @@ sub_8076514: @ 0x08076514
 	adds r4, r0, #0
 	bl EndEkrBattleDeamon
 	bl EndEkrGauge
-	ldr r0, _08076538  @ SomeUpdateRoutine
+	ldr r0, _08076538  @ OnGameLoopMain
 	bl SetMainFunc
-	ldr r0, _0807653C  @ OnVSync
+	ldr r0, _0807653C  @ OnVBlank
 	bl SetOnVBlank
 	adds r0, r4, #0
 	bl Proc_Break
@@ -78719,8 +78719,8 @@ sub_8076514: @ 0x08076514
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08076538: .4byte SomeUpdateRoutine
-_0807653C: .4byte OnVSync
+_08076538: .4byte OnGameLoopMain
+_0807653C: .4byte OnVBlank
 
 	THUMB_FUNC_END sub_8076514
 
@@ -78777,12 +78777,12 @@ sub_807659C: @ 0x0807659C
 	bl GetAISSubjectId
 	cmp r0, #0
 	bne _080765B0
-	ldr r0, _080765AC  @ gUnknown_0203E188
+	ldr r0, _080765AC  @ gpUnitLeft_BattleStruct
 	b _080765B2
 	.align 2, 0
-_080765AC: .4byte gUnknown_0203E188
+_080765AC: .4byte gpUnitLeft_BattleStruct
 _080765B0:
-	ldr r0, _080765C0  @ gUnknown_0203E18C
+	ldr r0, _080765C0  @ gpUnitRight_BattleStruct
 _080765B2:
 	ldr r0, [r0]
 	adds r0, #0x4a
@@ -78792,7 +78792,7 @@ _080765B2:
 	movs r0, #0
 	b _080765C6
 	.align 2, 0
-_080765C0: .4byte gUnknown_0203E18C
+_080765C0: .4byte gpUnitRight_BattleStruct
 _080765C4:
 	movs r0, #1
 _080765C6:
@@ -78938,7 +78938,7 @@ _080766BC:
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
 	bl sub_805A394
-	ldr r1, _080766E0  @ gUnknown_0203E118
+	ldr r1, _080766E0  @ gBattleSpellAnimationId1
 	movs r0, #0x40
 	strh r0, [r1]
 	ldr r0, [r4, #0x5c]
@@ -78950,7 +78950,7 @@ _080766BC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080766E0: .4byte gUnknown_0203E118
+_080766E0: .4byte gBattleSpellAnimationId1
 
 	THUMB_FUNC_END sub_807669C
 
@@ -79038,7 +79038,7 @@ sub_8076798: @ 0x08076798
 	lsls r0, r0, #0x10
 	lsrs r5, r0, #0x10
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	bl sub_806FA48
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
@@ -79128,7 +79128,7 @@ sub_8076818: @ 0x08076818
 	bl sub_805A358
 	ldr r0, [r4, #0x5c]
 	bl GetAISSubjectId
-	ldr r1, _08076894  @ gUnknown_0203E104
+	ldr r1, _08076894  @ gBattleAnimUnitEnabledLookup
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	movs r1, #0
@@ -79149,7 +79149,7 @@ sub_8076818: @ 0x08076818
 	bx r0
 	.align 2, 0
 _08076890: .4byte gDispIo
-_08076894: .4byte gUnknown_0203E104
+_08076894: .4byte gBattleAnimUnitEnabledLookup
 _08076898: .4byte gBg3Tm
 _0807689C: .4byte 0x0000601F
 
@@ -79164,7 +79164,7 @@ sub_80768A0: @ 0x080768A0
 	ldrsh r0, [r4, r1]
 	cmp r0, #0
 	bne _080768BE
-	ldr r0, _080768F4  @ gRAMChapterData
+	ldr r0, _080768F4  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -79197,7 +79197,7 @@ _080768EC:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080768F4: .4byte gRAMChapterData
+_080768F4: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80768A0
 
@@ -79261,7 +79261,7 @@ sub_8076934: @ 0x08076934
 	movs r1, #4
 	movs r2, #2
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
@@ -79330,7 +79330,7 @@ sub_80769A8: @ 0x080769A8
 	movs r1, #4
 	movs r2, #2
 	movs r3, #0x10
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r5, #0
 	add sp, #4
 	pop {r4, r5}
@@ -79369,7 +79369,7 @@ sub_8076A10: @ 0x08076A10
 	movs r1, #4
 	movs r2, #2
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
@@ -79537,7 +79537,7 @@ _08076B64:
 	subs r0, r0, r1
 	ldr r1, [r3]
 	subs r4, r0, r1
-	ldr r0, _08076BC8  @ gUnknown_0203E120
+	ldr r0, _08076BC8  @ gBattleAnimSceneLayoutEnum
 	movs r6, #0
 	ldrsh r0, [r0, r6]
 	cmp r0, #0
@@ -79563,7 +79563,7 @@ _08076BB8: .4byte gUnknown_0201FB0C
 _08076BBC: .4byte gUnknown_0200002C
 _08076BC0: .4byte gUnknown_03004FA0
 _08076BC4: .4byte gUnknown_03004FA4
-_08076BC8: .4byte gUnknown_0203E120
+_08076BC8: .4byte gBattleAnimSceneLayoutEnum
 _08076BCC:
 	cmp r0, #0
 	blt _08076C00
@@ -79647,7 +79647,7 @@ sub_8076C54: @ 0x08076C54
 	adds r6, r0, #0
 	ldr r0, [r6, #0x4c]
 	ldr r0, [r0, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	movs r1, #0
 	add r0, sp, #4
 	strh r1, [r0]
@@ -80228,7 +80228,7 @@ _080770F0:
 	adds r1, r4, #0
 	adds r1, #0x44
 	ldr r2, [r4, #0x48]
-	bl sub_80558F4
+	bl SpellFx_InterpretBgAnimScript
 	lsls r0, r0, #0x10
 	asrs r2, r0, #0x10
 	cmp r2, #0
@@ -80272,7 +80272,7 @@ _0807714E:
 	cmp r0, #0
 	bne _08077168
 	ldr r0, [r4, #0x5c]
-	bl GetCoreAIStruct
+	bl GetOpponentFrontAIS
 	ldrh r1, [r0, #0x10]
 	movs r0, #8
 	ands r0, r1
@@ -80485,7 +80485,7 @@ sub_80772E4: @ 0x080772E4
 	movs r1, #4
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	pop {r4, r5}
 	pop {r0}
 	bx r0
@@ -80526,12 +80526,12 @@ sub_8077310: @ 0x08077310
 	movs r1, #6
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	adds r0, r4, #0
 	movs r1, #0x17
 	movs r2, #1
 	adds r3, r5, #0
-	bl sub_80712B0
+	bl ApplyColorDarken_Unsure
 	bl EnablePalSync
 	ldrh r0, [r6, #0x2c]
 	adds r0, #1
@@ -80593,7 +80593,7 @@ sub_80773BC: @ 0x080773BC
 	movs r0, #0
 	strb r0, [r1]
 	strh r0, [r2, #0x2c]
-	ldr r0, _080773DC  @ gUnknown_0203E120
+	ldr r0, _080773DC  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -80604,7 +80604,7 @@ _080773D6:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080773DC: .4byte gUnknown_0203E120
+_080773DC: .4byte gBattleAnimSceneLayoutEnum
 _080773E0: .4byte 0x0000FFE0
 
 	THUMB_FUNC_END sub_80773BC
@@ -80844,11 +80844,11 @@ sub_807759C: @ 0x0807759C
 	ldr r4, _080775DC  @ gUnknown_087F4184
 	ldr r0, _080775E0  @ gUnknown_088017E0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _080775E4  @ gUnknown_087FF488
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r0, [r5, #0x5c]
 	str r4, [sp]
 	adds r1, r4, #0
@@ -80912,11 +80912,11 @@ sub_8077620: @ 0x08077620
 	ldr r4, _08077660  @ gUnknown_087F4314
 	ldr r0, _08077664  @ gUnknown_088017E0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjPal
 	ldr r0, _08077668  @ gUnknown_0880064C
 	movs r1, #0x80
 	lsls r1, r1, #6
-	bl SomeImageStoringRoutine_SpellAnim
+	bl SpellFx_RegisterObjGfx
 	ldr r0, [r5, #0x5c]
 	str r4, [sp]
 	adds r1, r4, #0
@@ -81121,7 +81121,7 @@ sub_8077790: @ 0x08077790
 	strb r0, [r1]
 	movs r1, #0
 	strh r0, [r5, #0x2c]
-	ldr r0, _080777C0  @ gUnknown_0203E120
+	ldr r0, _080777C0  @ gBattleAnimSceneLayoutEnum
 	movs r2, #0
 	ldrsh r0, [r0, r2]
 	cmp r0, #0
@@ -81130,7 +81130,7 @@ sub_8077790: @ 0x08077790
 	b _080777CA
 	.align 2, 0
 _080777BC: .4byte gUnknown_087F4578
-_080777C0: .4byte gUnknown_0203E120
+_080777C0: .4byte gBattleAnimSceneLayoutEnum
 _080777C4: .4byte 0x0000FFF8
 _080777C8:
 	ldr r0, _080777DC  @ 0x0000FFE0
@@ -81548,7 +81548,7 @@ sub_8077AEC: @ 0x08077AEC
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -81593,7 +81593,7 @@ sub_8077B5C: @ 0x08077B5C
 	movs r1, #0
 	movs r2, #0x20
 	movs r3, #0x10
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -81647,7 +81647,7 @@ sub_8077BB4: @ 0x08077BB4
 	movs r1, #0
 	movs r2, #0x20
 	adds r3, r6, #0
-	bl sub_807132C
+	bl ApplyFlashingPaletteAnimation
 	movs r1, #0xa0
 	lsls r1, r1, #0x13
 	adds r0, r4, #0
@@ -82002,7 +82002,7 @@ _08077E96:
 	THUMB_FUNC_START sub_8077E9C
 sub_8077E9C: @ 0x08077E9C
 	push {lr}
-	bl ClearBG1
+	bl SpellFx_ClearBg1
 	movs r0, #2
 	bl EnableBgSync
 	pop {r0}
@@ -82015,7 +82015,7 @@ sub_8077EAC: @ 0x08077EAC
 	push {lr}
 	adds r3, r0, #0
 	adds r2, r1, #0
-	ldr r0, _08077EC8  @ gUnknown_0203E120
+	ldr r0, _08077EC8  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #1
@@ -82026,7 +82026,7 @@ sub_8077EAC: @ 0x08077EAC
 	beq _08077ED2
 	b _08077ED8
 	.align 2, 0
-_08077EC8: .4byte gUnknown_0203E120
+_08077EC8: .4byte gBattleAnimSceneLayoutEnum
 _08077ECC:
 	cmp r0, #2
 	beq _08077ED6
@@ -82259,7 +82259,7 @@ sub_8078044: @ 0x08078044
 	movs r2, #0x78
 	movs r3, #0
 	bl sub_80729A4
-	bl ClearBG1Setup
+	bl SpellFx_ResetBg1Offset
 	ldr r0, _08078074  @ gUnknown_08801868
 	movs r1, #3
 	bl SpawnProc
@@ -82308,7 +82308,7 @@ sub_80780A4: @ 0x080780A4
 	sub sp, #8
 	adds r4, r0, #0
 	adds r3, r1, #0
-	ldr r0, _080780C0  @ gUnknown_0203E120
+	ldr r0, _080780C0  @ gBattleAnimSceneLayoutEnum
 	movs r1, #0
 	ldrsh r0, [r0, r1]
 	cmp r0, #0
@@ -82318,7 +82318,7 @@ sub_80780A4: @ 0x080780A4
 	bl LZ77UnCompWram
 	b _080780D0
 	.align 2, 0
-_080780C0: .4byte gUnknown_0203E120
+_080780C0: .4byte gBattleAnimSceneLayoutEnum
 _080780C4: .4byte gUnknown_02019790
 _080780C8:
 	ldr r1, _080780F4  @ gUnknown_02019790
@@ -82373,7 +82373,7 @@ sub_8078124: @ 0x08078124
 	movs r1, #3
 	bl SpawnProc
 	str r4, [r0, #0x5c]
-	bl sub_80551B0
+	bl SpellFx_InitBg1Blend
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -82394,10 +82394,10 @@ sub_8078140: @ 0x08078140
 	ldr r4, [sp, #0x14]
 	movs r1, #0xc0
 	lsls r1, r1, #4
-	bl SomeImageStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgGfx
 	adds r0, r4, #0
 	movs r1, #0x20
-	bl SomePaletteStoringRoutine_SpellAnim2
+	bl SpellFx_RegisterBgPal
 	ldr r0, [r5, #0x5c]
 	adds r1, r6, #0
 	mov r2, r8
@@ -82459,8 +82459,8 @@ sub_807819C: @ 0x0807819C
 	negs r1, r1
 	cmp r0, r1
 	bne _080781E0
-	bl ClearBG1
-	bl sub_805526C
+	bl SpellFx_ClearBg1
+	bl SpellFx_EndBlend
 	adds r0, r4, #0
 	bl Proc_Break
 	b _0807820C
@@ -82497,8 +82497,8 @@ _0807820C:
 
 	THUMB_FUNC_END sub_807819C
 
-	THUMB_FUNC_START GetSpellAssocStructPtr
-GetSpellAssocStructPtr: @ 0x08078214
+	THUMB_FUNC_START GetSpellAssocData
+GetSpellAssocData: @ 0x08078214
 	push {r4, lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
@@ -82526,14 +82526,14 @@ _08078238:
 _08078240: .4byte gUnknown_088AFBD8
 _08078244: .4byte 0x0000FFFF
 
-	THUMB_FUNC_END GetSpellAssocStructPtr
+	THUMB_FUNC_END GetSpellAssocData
 
 	THUMB_FUNC_START GetSpellAssocCharCount
 GetSpellAssocCharCount: @ 0x08078248
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	bl GetSpellAssocStructPtr
+	bl GetSpellAssocData
 	ldrb r0, [r0, #2]
 	pop {r1}
 	bx r1
@@ -82545,31 +82545,31 @@ sub_8078258: @ 0x08078258
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	bl GetSpellAssocStructPtr
+	bl GetSpellAssocData
 	ldrh r0, [r0, #4]
 	pop {r1}
 	bx r1
 
 	THUMB_FUNC_END sub_8078258
 
-	THUMB_FUNC_START GetSpellAssocAlt6CPointer
-GetSpellAssocAlt6CPointer: @ 0x08078268
+	THUMB_FUNC_START GetSpellAssocMapAnimProcScript
+GetSpellAssocMapAnimProcScript: @ 0x08078268
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	bl GetSpellAssocStructPtr
+	bl GetSpellAssocData
 	ldr r0, [r0, #8]
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END GetSpellAssocAlt6CPointer
+	THUMB_FUNC_END GetSpellAssocMapAnimProcScript
 
 	THUMB_FUNC_START GetSpellAssocReturnBool
 GetSpellAssocReturnBool: @ 0x08078278
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	bl GetSpellAssocStructPtr
+	bl GetSpellAssocData
 	ldrb r0, [r0, #0xc]
 	pop {r1}
 	bx r1
@@ -82581,7 +82581,7 @@ GetSpellAssocFacing: @ 0x08078288
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	bl GetSpellAssocStructPtr
+	bl GetSpellAssocData
 	ldrb r0, [r0, #0xd]
 	pop {r1}
 	bx r1
@@ -82593,7 +82593,7 @@ GetSpellAssocFlashColor: @ 0x08078298
 	push {lr}
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	bl GetSpellAssocStructPtr
+	bl GetSpellAssocData
 	ldrb r0, [r0, #0xe]
 	pop {r1}
 	bx r1

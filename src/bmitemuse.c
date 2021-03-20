@@ -9,7 +9,7 @@
 #include "text.h"
 #include "ap.h"
 #include "bmitem.h"
-#include "bmunit.h"
+#include "unit.h"
 #include "bmmap.h"
 #include "bmbattle.h"
 #include "bmtrick.h"
@@ -17,8 +17,8 @@
 #include "uimenu.h"
 #include "mapselect.h"
 
-#include "constants/characters.h"
-#include "constants/items.h"
+#include "constants/pids.h"
+#include "constants/iids.h"
 #include "constants/terrains.h"
 
 #include "bmitemuse.h"
@@ -42,15 +42,15 @@ void sub_803511C(struct Unit* unit, int number);
 void NewUnitInfoWindow_WithAllLines(ProcPtr proc);
 void DrawHammerneUnitInfoWindow(struct Unit* unit);
 
-void NewBottomHelpText(ProcPtr parent, const char* string);
-void DeleteEach6CBB(void);
+void StartBottomHelpText(ProcPtr parent, const char* string);
+void EndBottomHelpText(void);
 
-ProcPtr NewTargetSelection_Specialized(const struct SelectInfo* selectInfo, int(*onSelect)(ProcPtr, struct SelectTarget*));
-ProcPtr NewTargetSelection(const struct SelectInfo* selectInfo);
+ProcPtr StartTargetSelectionExt(const struct SelectInfo* selectInfo, int(*onSelect)(ProcPtr, struct SelectTarget*));
+ProcPtr StartTargetSelection(const struct SelectInfo* selectInfo);
 void EndTargetSelection(ProcPtr proc);
 
-void sub_801E684(ProcPtr parent, struct Unit* unit, int x, int y);
-void sub_801E748(int number);
+void ForceMenuItemPanel(ProcPtr parent, struct Unit* unit, int x, int y);
+void UpdateMenuItemPanel(int number);
 
 void EnsureCameraOntoPosition(ProcPtr parent, int x, int y);
 void FillWarpRangeMap(struct Unit* caster, struct Unit* target);
@@ -118,7 +118,7 @@ struct ProcScr CONST_DATA gProcScr_SquareSelectWarp[] =
 {
     PROC_ONEND(WarpSelect_OnEnd),
 
-    PROC_CALL(AddSkipThread2),
+    PROC_CALL(LockGameLogic),
 
     PROC_WHILE_EXISTS(gUnknown_0859A548),
 
@@ -130,7 +130,7 @@ struct ProcScr CONST_DATA gProcScr_SquareSelectWarp[] =
     PROC_CALL(WarpSelect_OnConfirm),
     PROC_SLEEP(0),
 
-    PROC_CALL(SubSkipThread2),
+    PROC_CALL(UnlockGameLogic),
 
     PROC_GOTO(100),
 
@@ -138,7 +138,7 @@ PROC_LABEL(99),
     PROC_CALL(WarpSelect_OnCancel),
     PROC_SLEEP(0),
 
-    PROC_CALL(SubSkipThread2),
+    PROC_CALL(UnlockGameLogic),
 
 PROC_LABEL(100),
     PROC_END,
@@ -146,7 +146,7 @@ PROC_LABEL(100),
 
 struct ProcScr CONST_DATA gProcScr_SquareSelectTorch[] =
 {
-    PROC_CALL(AddSkipThread2),
+    PROC_CALL(LockGameLogic),
 
     PROC_CALL(TorchSelect_OnInit),
     PROC_WHILE_EXISTS(gUnknown_0859A548),
@@ -161,7 +161,7 @@ PROC_LABEL(99),
     PROC_CALL(WarpSelect_OnCancel),
 
 PROC_LABEL(100),
-    PROC_CALL(SubSkipThread2),
+    PROC_CALL(UnlockGameLogic),
 
     PROC_END,
 };
@@ -174,118 +174,118 @@ s8 CanUnitUseItem(struct Unit* unit, int item)
     switch (GetItemIndex(item))
     {
 
-    case ITEM_STAFF_HEAL:
-    case ITEM_STAFF_MEND:
-    case ITEM_STAFF_RECOVER:
+    case IID_HEAL_STAFF:
+    case IID_MEND_STAFF:
+    case IID_RECOVER_STAFF:
         return HasSelectTarget(unit, MakeTargetListForAdjacentHeal);
 
-    case ITEM_STAFF_PHYSIC:
+    case IID_PHYSIC_STAFF:
         return HasSelectTarget(unit, MakeTargetListForRangedHeal);
 
-    case ITEM_STAFF_FORTIFY:
+    case IID_FORTIFY_STAFF:
         return HasSelectTarget(unit, MakeTargetListForRangedHeal);
 
-    case ITEM_STAFF_RESTORE:
+    case IID_RESTORE_STAFF:
         return HasSelectTarget(unit, MakeTargetListForRestore);
 
-    case ITEM_STAFF_RESCUE:
+    case IID_RESCUE_STAFF:
         return HasSelectTarget(unit, MakeTargetListForRescueStaff);
 
-    case ITEM_STAFF_BARRIER:
+    case IID_BARRIER_STAFF:
         return HasSelectTarget(unit, MakeTargetListForBarrier);
 
-    case ITEM_STAFF_SILENCE:
+    case IID_SILENCE_STAFF:
         return HasSelectTarget(unit, MakeTargetListForSilence);
 
-    case ITEM_STAFF_SLEEP:
+    case IID_SLEEP_STAFF:
         return HasSelectTarget(unit, MakeTargetListForSleep);
 
-    case ITEM_STAFF_BERSERK:
+    case IID_BERSERK_STAFF:
         return HasSelectTarget(unit, MakeTargetListForBerserk);
 
-    case ITEM_STAFF_WARP:
+    case IID_WARP_STAFF:
         return HasSelectTarget(unit, MakeTargetListForWarp);
 
-    case ITEM_STAFF_REPAIR:
+    case IID_REPAIR_STAFF:
         return HasSelectTarget(unit, MakeTargetListForHammerne);
 
-    case ITEM_STAFF_UNLOCK:
+    case IID_UNLOCK_STAFF:
         return HasSelectTarget(unit, MakeTargetListForUnlock);
 
-    case ITEM_BOOSTER_HP:
-    case ITEM_BOOSTER_POW:
-    case ITEM_BOOSTER_SKL:
-    case ITEM_BOOSTER_SPD:
-    case ITEM_BOOSTER_LCK:
-    case ITEM_BOOSTER_DEF:
-    case ITEM_BOOSTER_RES:
-    case ITEM_BOOSTER_MOV:
-    case ITEM_BOOSTER_CON:
-        return CanUnitUseStatGainItem(unit, item);
+    case IID_BOOSTER_HP:
+    case IID_BOOSTER_POW:
+    case IID_BOOSTER_SKL:
+    case IID_BOOSTER_SPD:
+    case IID_BOOSTER_LCK:
+    case IID_BOOSTER_DEF:
+    case IID_BOOSTER_RES:
+    case IID_BOOSTER_MOV:
+    case IID_BOOSTER_CON:
+        return CanUseStatBooster(unit, item);
 
-    case ITEM_HEROCREST:
-    case ITEM_KNIGHTCREST:
-    case ITEM_ORIONSBOLT:
-    case ITEM_ELYSIANWHIP:
-    case ITEM_GUIDINGRING:
-    case ITEM_MASTERSEAL:
-    case ITEM_HEAVENSEAL:
-    case ITEM_OCEANSEAL:
-    case ITEM_LUNARBRACE:
-    case ITEM_SOLARBRACE:
-    case ITEM_UNK_C1:
-        return CanUnitUsePromotionItem(unit, item);
+    case IID_HEROCREST:
+    case IID_KNIGHTCREST:
+    case IID_ORIONSBOLT:
+    case IID_ELYSIANWHIP:
+    case IID_GUIDINGRING:
+    case IID_MASTERSEAL:
+    case IID_HEAVENSEAL:
+    case IID_OCEANSEAL:
+    case IID_LUNARBRACE:
+    case IID_SOLARBRACE:
+    case IID_UNK_C1:
+        return CanUsePromotionItem(unit, item);
 
-    case ITEM_VULNERARY:
-    case ITEM_ELIXIR:
-    case ITEM_VULNERARY_2:
-        return CanUnitUseHealItem(unit);
+    case IID_VULNERARY:
+    case IID_ELIXIR:
+    case IID_VULNERARY_2:
+        return CanUseHealingItem(unit);
 
-    case ITEM_PUREWATER:
-        return CanUnitUsePureWaterItem(unit);
+    case IID_PUREWATER:
+        return CanUsePureWater(unit);
 
-    case ITEM_TORCH:
-        return CanUnitUseTorchItem(unit);
+    case IID_TORCH:
+        return CanUseTorch(unit);
 
-    case ITEM_ANTITOXIN:
-        return CanUnitUseAntitoxinItem(unit);
+    case IID_ANTITOXIN:
+        return CanUseAntidote(unit);
 
-    case ITEM_CHESTKEY:
-    case ITEM_CHESTKEY_BUNDLE:
-        return CanUnitUseChestKeyItem(unit);
+    case IID_CHESTKEY:
+    case IID_CHESTKEY_BUNDLE:
+        return CanUseChestKey(unit);
 
-    case ITEM_DOORKEY:
-        return CanUnitUseDoorKeyItem(unit);
+    case IID_DOORKEY:
+        return CanUseDoorKey(unit);
 
-    case ITEM_LOCKPICK:
-        return CanUnitUseLockpickItem(unit);
+    case IID_LOCKPICK:
+        return CanUseLockpick(unit);
 
-    case ITEM_STAFF_LATONA:
+    case IID_LATONA_STAFF:
         return HasSelectTarget(unit, MakeTargetListForLatona);
 
-    case ITEM_MINE:
+    case IID_MINE:
         return HasSelectTarget(unit, MakeTargetListForMine);
 
-    case ITEM_LIGHTRUNE:
+    case IID_LIGHTRUNE:
         return HasSelectTarget(unit, MakeTargetListForLightRune);
 
-    case ITEM_STAFF_TORCH:
-        return gRAMChapterData.chapterVisionRange != 0;
+    case IID_TORCH_STAFF:
+        return gPlaySt.chapterVisionRange != 0;
 
-    case ITEM_FILLAS_MIGHT:
-    case ITEM_NINISS_GRACE:
-    case ITEM_THORS_IRE:
-    case ITEM_SETS_LITANY:
+    case IID_FILLAS_MIGHT:
+    case IID_NINISS_GRACE:
+    case IID_THORS_IRE:
+    case IID_SETS_LITANY:
         return HasSelectTarget(unit, MakeTargetListForDanceRing);
 
-    case ITEM_METISSTOME:
-        if (unit->state & US_GROWTH_BOOST)
+    case IID_METISSTOME:
+        if (unit->flags & UNIT_FLAG_GROWTH_BOOST)
             return FALSE;
 
         return TRUE;
 
-    case ITEM_JUNAFRUIT:
-        return CanUnitUseFruitItem(unit);
+    case IID_JUNAFRUIT:
+        return CanUseJunaFruit(unit);
 
     default:
         return FALSE;
@@ -298,54 +298,54 @@ int GetItemCantUseMsgid(struct Unit* unit, int item)
     switch (GetItemIndex(item))
     {
 
-    case ITEM_STAFF_TORCH:
-    case ITEM_BOOSTER_HP:
-    case ITEM_BOOSTER_POW:
-    case ITEM_BOOSTER_SKL:
-    case ITEM_BOOSTER_SPD:
-    case ITEM_BOOSTER_LCK:
-    case ITEM_BOOSTER_DEF:
-    case ITEM_BOOSTER_RES:
-    case ITEM_BOOSTER_MOV:
-    case ITEM_BOOSTER_CON:
-    case ITEM_VULNERARY:
-    case ITEM_ELIXIR:
-    case ITEM_PUREWATER:
-    case ITEM_ANTITOXIN:
-    case ITEM_TORCH:
-    case ITEM_VULNERARY_2:
+    case IID_TORCH_STAFF:
+    case IID_BOOSTER_HP:
+    case IID_BOOSTER_POW:
+    case IID_BOOSTER_SKL:
+    case IID_BOOSTER_SPD:
+    case IID_BOOSTER_LCK:
+    case IID_BOOSTER_DEF:
+    case IID_BOOSTER_RES:
+    case IID_BOOSTER_MOV:
+    case IID_BOOSTER_CON:
+    case IID_VULNERARY:
+    case IID_ELIXIR:
+    case IID_PUREWATER:
+    case IID_ANTITOXIN:
+    case IID_TORCH:
+    case IID_VULNERARY_2:
         return 0x859; // TODO: msgid "There's no need for that."
 
-    case ITEM_CHESTKEY:
-    case ITEM_CHESTKEY_BUNDLE:
+    case IID_CHESTKEY:
+    case IID_CHESTKEY_BUNDLE:
         return 0x85E; // TODO: msgid "There's no chest."
 
-    case ITEM_DOORKEY:
+    case IID_DOORKEY:
         return 0x85D; // TODO: msgid "There's no door."
 
-    case ITEM_LOCKPICK:
-        if (UNIT_CATTRIBUTES(gActiveUnit) & CA_THIEF)
+    case IID_LOCKPICK:
+        if (UNIT_ATTRIBUTES(gActiveUnit) & UNIT_ATTR_THIEF)
             return 0x861; // TODO: msgid "No doors or chests."
 
         return 0x85F; // TODO: msgid "For thieves only."
 
-    case ITEM_HEROCREST:
-    case ITEM_KNIGHTCREST:
-    case ITEM_ORIONSBOLT:
-    case ITEM_ELYSIANWHIP:
-    case ITEM_GUIDINGRING:
-    case ITEM_MASTERSEAL:
-    case ITEM_HEAVENSEAL:
-    case ITEM_OCEANSEAL:
-    case ITEM_LUNARBRACE:
-    case ITEM_SOLARBRACE:
-    case ITEM_UNK_C1:
+    case IID_HEROCREST:
+    case IID_KNIGHTCREST:
+    case IID_ORIONSBOLT:
+    case IID_ELYSIANWHIP:
+    case IID_GUIDINGRING:
+    case IID_MASTERSEAL:
+    case IID_HEAVENSEAL:
+    case IID_OCEANSEAL:
+    case IID_LUNARBRACE:
+    case IID_SOLARBRACE:
+    case IID_UNK_C1:
     {
         int level = gActiveUnit->level;
         s8 boolval;
 
         gActiveUnit->level = 10;
-        boolval = CanUnitUsePromotionItem(gActiveUnit, item);
+        boolval = CanUsePromotionItem(gActiveUnit, item);
         gActiveUnit->level = level;
 
         if (boolval)
@@ -354,7 +354,7 @@ int GetItemCantUseMsgid(struct Unit* unit, int item)
         return 0x85A; // TODO: msgid "This can't be used."
     }
 
-    case ITEM_JUNAFRUIT:
+    case IID_JUNAFRUIT:
         return 0x85C; // TODO: msgid "Must be above level 10."
 
     default:
@@ -363,7 +363,7 @@ int GetItemCantUseMsgid(struct Unit* unit, int item)
     }
 }
 
-void DoItemUse(struct Unit* unit, int item)
+void ItemEffect_Call(struct Unit* unit, int item)
 {
     ClearBg0Bg1();
     EndFaceById(0);
@@ -371,73 +371,73 @@ void DoItemUse(struct Unit* unit, int item)
     switch (GetItemIndex(item))
     {
 
-    case ITEM_STAFF_HEAL:
-    case ITEM_STAFF_MEND:
-    case ITEM_STAFF_RECOVER:
+    case IID_HEAL_STAFF:
+    case IID_MEND_STAFF:
+    case IID_RECOVER_STAFF:
         DoUseHealStaff(unit, MakeTargetListForAdjacentHeal);
         break;
 
-    case ITEM_STAFF_PHYSIC:
+    case IID_PHYSIC_STAFF:
         DoUseHealStaff(unit, MakeTargetListForRangedHeal);
         break;
 
-    case ITEM_STAFF_RESCUE:
+    case IID_RESCUE_STAFF:
         DoUseRescueStaff(unit, MakeTargetListForRescueStaff);
         break;
 
-    case ITEM_STAFF_RESTORE:
+    case IID_RESTORE_STAFF:
         DoUseRestoreStaff(unit, MakeTargetListForRestore);
         break;
 
-    case ITEM_STAFF_SILENCE:
+    case IID_SILENCE_STAFF:
         DoUseAttackStaff(unit, MakeTargetListForSilence);
         break;
 
-    case ITEM_STAFF_SLEEP:
+    case IID_SLEEP_STAFF:
         DoUseAttackStaff(unit, MakeTargetListForSleep);
         break;
 
-    case ITEM_STAFF_BERSERK:
+    case IID_BERSERK_STAFF:
         DoUseAttackStaff(unit, MakeTargetListForBerserk);
         break;
 
-    case ITEM_STAFF_BARRIER:
+    case IID_BARRIER_STAFF:
         DoUseBarrierStaff(unit);
         break;
 
-    case ITEM_STAFF_UNLOCK:
+    case IID_UNLOCK_STAFF:
         DoUsePutTrap(unit, MakeTargetListForUnlock, 0x87A); // TODO: msgid "Select a door to open."
         break;
 
-    case ITEM_STAFF_WARP:
+    case IID_WARP_STAFF:
         DoUseWarpStaff(unit);
         break;
 
-    case ITEM_STAFF_REPAIR:
+    case IID_REPAIR_STAFF:
         DoUseRepairStaff(unit);
         break;
 
-    case ITEM_STAFF_FORTIFY:
-    case ITEM_STAFF_LATONA:
+    case IID_FORTIFY_STAFF:
+    case IID_LATONA_STAFF:
         SetStaffUseAction(unit);
         break;
 
-    case ITEM_MINE:
+    case IID_MINE:
         DoUsePutTrap(unit, MakeTargetListForMine, 0x87D); // TODO: msgid "Select an area to trap."
         break;
 
-    case ITEM_LIGHTRUNE:
+    case IID_LIGHTRUNE:
         DoUsePutTrap(unit, MakeTargetListForLightRune, 0x87E); // TODO: msgid "Select an area to trap."
         break;
 
-    case ITEM_STAFF_TORCH:
+    case IID_TORCH_STAFF:
         DoUseTorchStaff(unit);
         break;
 
-    case ITEM_FILLAS_MIGHT:
-    case ITEM_NINISS_GRACE:
-    case ITEM_THORS_IRE:
-    case ITEM_SETS_LITANY:
+    case IID_FILLAS_MIGHT:
+    case IID_NINISS_GRACE:
+    case IID_THORS_IRE:
+    case IID_SETS_LITANY:
         DoUseSpecialDance(unit, MakeTargetListForDanceRing, 0x87F); // TODO: msgid "Select a character to bless."
         break;
 
@@ -452,10 +452,10 @@ s8 HasSelectTarget(struct Unit* unit, void(*func)(struct Unit*))
 {
     func(unit);
 
-    return sub_804FD28() != 0;
+    return GetTargetListSize() != 0;
 }
 
-s8 CanUnitUseHealItem(struct Unit* unit)
+s8 CanUseHealingItem(struct Unit* unit)
 {
     if (GetUnitCurrentHp(unit) == GetUnitMaxHp(unit))
         return FALSE;
@@ -468,7 +468,7 @@ s8 sub_802909C(struct Unit* unit)
     return FALSE;
 }
 
-s8 CanUnitUsePureWaterItem(struct Unit* unit)
+s8 CanUsePureWater(struct Unit* unit)
 {
     if (unit->barrierDuration == 7)
         return FALSE;
@@ -476,78 +476,78 @@ s8 CanUnitUsePureWaterItem(struct Unit* unit)
     return TRUE;
 }
 
-s8 CanUnitUseTorchItem(struct Unit* unit)
+s8 CanUseTorch(struct Unit* unit)
 {
-    if (gRAMChapterData.chapterVisionRange != 0 && unit->torchDuration != 4)
+    if (gPlaySt.chapterVisionRange != 0 && unit->torchDuration != 4)
         return TRUE;
 
     return FALSE;
 }
 
-s8 CanUnitUseAntitoxinItem(struct Unit* unit)
+s8 CanUseAntidote(struct Unit* unit)
 {
-    if (unit->statusIndex != UNIT_STATUS_POISON)
+    if (unit->statusId != UNIT_STATUS_POISON)
         return FALSE;
 
     return TRUE;
 }
 
-s8 CanUnitUseChestKeyItem(struct Unit* unit)
+s8 CanUseChestKey(struct Unit* unit)
 {
-    if (gBmMapTerrain[unit->yPos][unit->xPos] != TERRAIN_CHEST_21)
+    if (gMapTerrain[unit->y][unit->x] != TERRAIN_CHEST_21)
         return FALSE;
 
-    if (!IsThereClosedChestAt(unit->xPos, unit->yPos))
+    if (!IsThereClosedChestAt(unit->x, unit->y))
         return FALSE;
 
     return TRUE;
 }
 
-s8 CanUnitUseDoorKeyItem(struct Unit* unit)
+s8 CanUseDoorKey(struct Unit* unit)
 {
     MakeTargetListForDoorAndBridges(unit, TERRAIN_DOOR);
-    return sub_804FD28();
+    return GetTargetListSize();
 }
 
-s8 CanUnitOpenBridge(struct Unit* unit)
+s8 CanOpenBridge(struct Unit* unit)
 {
     MakeTargetListForDoorAndBridges(unit, TERRAIN_BRIDGE_14);
-    return sub_804FD28();
+    return GetTargetListSize();
 }
 
-s8 CanUnitUseLockpickItem(struct Unit* unit)
+s8 CanUseLockpick(struct Unit* unit)
 {
-    if (!(UNIT_CATTRIBUTES(unit) & CA_THIEF))
+    if (!(UNIT_ATTRIBUTES(unit) & UNIT_ATTR_THIEF))
         return FALSE;
 
-    if (!CanUnitUseChestKeyItem(unit) && !CanUnitUseDoorKeyItem(unit) && !CanUnitOpenBridge(unit))
+    if (!CanUseChestKey(unit) && !CanUseDoorKey(unit) && !CanOpenBridge(unit))
         return FALSE;
 
     return TRUE;
 }
 
-s8 CanUnitUsePromotionItem(struct Unit* unit, int item)
+s8 CanUsePromotionItem(struct Unit* unit, int item)
 {
-    #define CHECK_LIST(it)                       \
-        while (*it)                              \
-        {                                        \
-            if (unit->pClassData->number == *it) \
-                return TRUE;                     \
-            it++;                                \
-        }                                        \
+    #define CHECK_LIST(it)              \
+        while (*it)                     \
+        {                               \
+            if (unit->jinfo->id == *it) \
+                return TRUE;            \
+            it++;                       \
+        }                               \
 
     const u8* classList = NULL;
 
-    if (unit->pCharacterData->number == CHARACTER_EIRIKA || unit->pCharacterData->number == CHARACTER_EPHRAIM)
+    if (unit->pinfo->id == PID_EIRIKA || unit->pinfo->id == PID_EPHRAIM)
     {
         switch (GetItemIndex(item))
         {
 
-        case ITEM_LUNARBRACE:
+        case IID_LUNARBRACE:
             classList = gUnknown_088ADFA4;
             break;
 
-        case ITEM_SOLARBRACE:
+        case IID_SOLARBRACE:
             classList = gUnknown_088ADFA6;
             break;
 
@@ -563,47 +563,47 @@ s8 CanUnitUsePromotionItem(struct Unit* unit, int item)
     switch (GetItemIndex(item))
     {
 
-    case ITEM_HEROCREST:
+    case IID_HEROCREST:
         classList = gUnknown_088ADF57;
         break;
 
-    case ITEM_KNIGHTCREST:
+    case IID_KNIGHTCREST:
         classList = gUnknown_088ADF5E;
         break;
 
-    case ITEM_ORIONSBOLT:
+    case IID_ORIONSBOLT:
         classList = gUnknown_088ADF64;
         break;
 
-    case ITEM_ELYSIANWHIP:
+    case IID_ELYSIANWHIP:
         classList = gUnknown_088ADF67;
         break;
 
-    case ITEM_GUIDINGRING:
+    case IID_GUIDINGRING:
         classList = gUnknown_088ADF6B;
         break;
 
-    case ITEM_MASTERSEAL:
+    case IID_MASTERSEAL:
         classList = gUnknown_088ADF76;
         break;
 
-    case ITEM_LUNARBRACE:
+    case IID_LUNARBRACE:
         classList = gUnknown_088ADFA4;
         break;
 
-    case ITEM_SOLARBRACE:
+    case IID_SOLARBRACE:
         classList = gUnknown_088ADFA6;
         break;
 
-    case ITEM_HEAVENSEAL:
+    case IID_HEAVENSEAL:
         classList = gUnknown_088ADF96;
         break;
 
-    case ITEM_UNK_C1:
+    case IID_UNK_C1:
         classList = gUnknown_088ADFA3;
         break;
 
-    case ITEM_OCEANSEAL:
+    case IID_OCEANSEAL:
         classList = gUnknown_088ADF9E;
         break;
 
@@ -616,7 +616,7 @@ s8 CanUnitUsePromotionItem(struct Unit* unit, int item)
     #undef CHECK_LIST
 }
 
-s8 CanUnitUseStatGainItem(struct Unit* unit, int item)
+s8 CanUseStatBooster(struct Unit* unit, int item)
 {
     s8 result;
 
@@ -624,8 +624,8 @@ s8 CanUnitUseStatGainItem(struct Unit* unit, int item)
 
     ClearUnit(&gStatGainSimUnit);
 
-    gStatGainSimUnit.pCharacterData = unit->pCharacterData;
-    gStatGainSimUnit.pClassData     = unit->pClassData;
+    gStatGainSimUnit.pinfo = unit->pinfo;
+    gStatGainSimUnit.jinfo     = unit->jinfo;
 
     gStatGainSimUnit.maxHP = unit->maxHP + bonuses->hpBonus;
     gStatGainSimUnit.pow = unit->pow + bonuses->powBonus;
@@ -637,7 +637,7 @@ s8 CanUnitUseStatGainItem(struct Unit* unit, int item)
     gStatGainSimUnit.movBonus = unit->movBonus + bonuses->movBonus;
     gStatGainSimUnit.conBonus = unit->conBonus + bonuses->conBonus;
 
-    UnitCheckStatCaps(&gStatGainSimUnit);
+    UnitCheckStatOverflow(&gStatGainSimUnit);
 
     result = gStatGainSimUnit.maxHP != unit->maxHP;
 
@@ -668,7 +668,7 @@ s8 CanUnitUseStatGainItem(struct Unit* unit, int item)
     return result;
 }
 
-s8 CanUnitUseFruitItem(struct Unit* unit)
+s8 CanUseJunaFruit(struct Unit* unit)
 {
     return (unit->level >= 10)
         ? TRUE
@@ -682,17 +682,17 @@ void SetStaffUseAction(struct Unit* unit)
     TmFill(gBg2Tm, 0);
     EnableBgSync(BG2_SYNC_BIT);
 
-    gActionData.unitActionType = UNIT_ACTION_STAFF;
+    gAction.unitActionType = UNIT_ACTION_STAFF;
 }
 
 void SetItemUseAction(struct Unit* unit)
 {
-    gActionData.unitActionType = UNIT_ACTION_USE_ITEM;
+    gAction.unitActionType = UNIT_ACTION_USE_ITEM;
 }
 
 static int StaffSelectOnSelect(ProcPtr proc, struct SelectTarget* target)
 {
-    gActionData.targetIndex = target->uid;
+    gAction.targetIndex = target->uid;
     SetStaffUseAction(NULL);
 
     return 0x17; // TODO: Select Return Constants
@@ -702,10 +702,10 @@ void DoUseRescueStaff(struct Unit* unit, void(*func)(struct Unit*))
 {
     func(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
+    StartBottomHelpText(
+        StartTargetSelectionExt(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
         GetMsg(0x876)); // TODO: msgid "Select which character to bring next to you."
 }
 
@@ -713,10 +713,10 @@ void DoUseSpecialDance(struct Unit* unit, void(*func)(struct Unit*), int msgHelp
 {
     func(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
+    StartBottomHelpText(
+        StartTargetSelectionExt(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
         GetMsg(msgHelp));
 }
 
@@ -724,23 +724,23 @@ void WarpSelect_OnInit(struct WarpSelectProc* proc)
 {
     struct APHandle* ap;
 
-    NewBottomHelpText(proc, GetMsg(0x871)); // TODO: msgid "Select warp point."
+    StartBottomHelpText(proc, GetMsg(0x871)); // TODO: msgid "Select warp point."
 
     EnsureCameraOntoPosition(proc,
-        GetUnit(gActionData.targetIndex)->xPos,
-        GetUnit(gActionData.targetIndex)->yPos);
+        GetUnit(gAction.targetIndex)->x,
+        GetUnit(gAction.targetIndex)->y);
 
     HideMoveRangeGraphics();
 
-    FillWarpRangeMap(gActiveUnit, GetUnit(gActionData.targetIndex));
+    FillWarpRangeMap(gActiveUnit, GetUnit(gAction.targetIndex));
 
-    gUnknown_0202BCB0.gameStateBits &= ~GMAP_STATE_BIT1;
+    gBmSt.gameStateBits &= ~GMAP_STATE_BIT1;
 
     DisplayMoveRangeGraphics(1);
 
     SetCursorMapPosition(
-        GetUnit(gActionData.targetIndex)->xPos,
-        GetUnit(gActionData.targetIndex)->yPos);
+        GetUnit(gAction.targetIndex)->x,
+        GetUnit(gAction.targetIndex)->y);
 
     ap = StartAnim(gUnknown_085A0EA0, 0);
 
@@ -753,7 +753,7 @@ void WarpSelect_OnInit(struct WarpSelectProc* proc)
 
 void WarpSelect_OnIdle(struct WarpSelectProc* proc)
 {
-    s8 warpAllowed = ((s8**) gBmMapMovement)[gUnknown_0202BCB0.playerCursor.y][gUnknown_0202BCB0.playerCursor.x] != -1;
+    s8 warpAllowed = ((s8**) gMapMovement)[gBmSt.playerCursor.y][gBmSt.playerCursor.x] != -1;
 
     HandlePlayerCursorMovement();
 
@@ -763,8 +763,8 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
         {
             Proc_Break(proc);
 
-            gActionData.xOther = gUnknown_0202BCB0.playerCursor.x;
-            gActionData.yOther = gUnknown_0202BCB0.playerCursor.y;
+            gAction.xOther = gBmSt.playerCursor.x;
+            gAction.yOther = gBmSt.playerCursor.y;
 
             SetStaffUseAction(gActiveUnit);
 
@@ -797,8 +797,8 @@ void WarpSelect_OnIdle(struct WarpSelectProc* proc)
     }
 
     Anim_Display(proc->ap,
-        gUnknown_0202BCB0.playerCursorDisplay.x - gUnknown_0202BCB0.camera.x,
-        gUnknown_0202BCB0.playerCursorDisplay.y - gUnknown_0202BCB0.camera.y);
+        gBmSt.playerCursorDisplay.x - gBmSt.camera.x,
+        gBmSt.playerCursorDisplay.y - gBmSt.camera.y);
 
     proc->prevWarpAllowed = warpAllowed;
 }
@@ -807,26 +807,26 @@ void WarpSelect_OnConfirm(struct WarpSelectProc* proc)
 {
     ResetTextFont();
     HideMoveRangeGraphics();
-    DeleteEach6CBB();
+    EndBottomHelpText();
 
     SetCursorMapPosition(
-        gActiveUnit->xPos,
-        gActiveUnit->yPos);
+        gActiveUnit->x,
+        gActiveUnit->y);
 
     EnsureCameraOntoPosition(proc,
-        gActiveUnit->xPos,
-        gActiveUnit->yPos);
+        gActiveUnit->x,
+        gActiveUnit->y);
 }
 
 void WarpSelect_OnCancel(struct WarpSelectProc* proc)
 {
     ResetTextFont();
     HideMoveRangeGraphics();
-    DeleteEach6CBB();
+    EndBottomHelpText();
 
     SetCursorMapPosition(
-        gActiveUnit->xPos,
-        gActiveUnit->yPos);
+        gActiveUnit->x,
+        gActiveUnit->y);
 
     SpawnProc(gProcScr_0859B600, PROC_TREE_3);
 }
@@ -841,7 +841,7 @@ static int WarpOnSelectTarget(ProcPtr proc, struct SelectTarget* target)
 {
     EndTargetSelection(proc);
 
-    gActionData.targetIndex = target->uid;
+    gAction.targetIndex = target->uid;
 
     SpawnProc(gProcScr_SquareSelectWarp, PROC_TREE_3);
 
@@ -852,10 +852,10 @@ void DoUseWarpStaff(struct Unit* unit)
 {
     MakeTargetListForWarp(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, WarpOnSelectTarget),
+    StartBottomHelpText(
+        StartTargetSelectionExt(&gSelectInfo_0859D2F8, WarpOnSelectTarget),
         GetMsg(0x875)); // TODO: msgid "Select character to warp."
 
     PlaySe(0x6A); // TODO: song ids
@@ -863,8 +863,8 @@ void DoUseWarpStaff(struct Unit* unit)
 
 static int OnSelectPutTrap(ProcPtr proc, struct SelectTarget* target)
 {
-    gActionData.xOther = target->x;
-    gActionData.yOther = target->y;
+    gAction.xOther = target->x;
+    gAction.yOther = target->y;
 
     SetStaffUseAction(NULL);
 
@@ -875,31 +875,31 @@ void DoUsePutTrap(struct Unit* unit, void(*func)(struct Unit*), int msgHelp)
 {
     func(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection_Specialized(&gSelectInfo_PutTrap, OnSelectPutTrap),
+    StartBottomHelpText(
+        StartTargetSelectionExt(&gSelectInfo_PutTrap, OnSelectPutTrap),
         GetMsg(msgHelp));
 
     PlaySe(0x6A); // TODO: song ids
 }
 
-int RepairSelectOnSelect(ProcPtr proc, struct SelectTarget* target)
+int HammerneTargetSelection_OnSelect(ProcPtr proc, struct SelectTarget* target)
 {
     ResetTextFont();
 
-    gActionData.targetIndex = target->uid;
+    gAction.targetIndex = target->uid;
 
-    sub_801E684(
-        StartOrphanMenu(&gMenuInfo_RepairItems),
-        GetUnit(gActionData.targetIndex),
+    ForceMenuItemPanel(
+        StartMenu(&gMenuInfo_RepairItems),
+        GetUnit(gAction.targetIndex),
         16, 11);
 
     // TODO: UNIT_HAS_PORTRAIT macro?
-    if (GetFaceInfo(GetUnitPortraitId(GetUnit(gActionData.targetIndex)))->img)
+    if (GetFaceInfo(GetUnitFid(GetUnit(gAction.targetIndex)))->img)
     {
-        StartFace(0, GetUnitPortraitId(GetUnit(gActionData.targetIndex)), 184, 12, 2);
-        sub_8006458(0, 5);
+        StartFace(0, GetUnitFid(GetUnit(gAction.targetIndex)), 184, 12, 2);
+        SetFaceBlinkControlById(0, 5);
     }
 
     return 0x17; // TODO: Map Select Return Constants
@@ -909,38 +909,38 @@ void DoUseRepairStaff(struct Unit* unit)
 {
     MakeTargetListForHammerne(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection(&gSelectInfo_Repair),
+    StartBottomHelpText(
+        StartTargetSelection(&gSelectInfo_Repair),
         GetMsg(0x878)); // TODO: msgid "Select the character whose weapon needs repair."
 
     PlaySe(0x6A); // TODO: song ids
 }
 
-int RepairSelectOnChange(ProcPtr proc, struct SelectTarget* target)
+int HammerneTargetSelection_OnChange(ProcPtr proc, struct SelectTarget* target)
 {
     ChangeActiveUnitFacing(target->x, target->y);
     DrawHammerneUnitInfoWindow(GetUnit(target->uid));
 }
 
-void RepairSelectOnInit(ProcPtr proc)
+void HammerneTargetSelection_OnInit(ProcPtr proc)
 {
     NewUnitInfoWindow_WithAllLines(proc);
 }
 
 int RepairMenuItemOnChange(struct MenuProc* menu, struct MenuItemProc* item)
 {
-    sub_801E748(item->itemNumber);
+    UpdateMenuItemPanel(item->itemNumber);
 }
 
-int RepairMenuItemOnChangeOut(struct MenuProc* menu, struct MenuItemProc* item)
+int nullsub_24(struct MenuProc* menu, struct MenuItemProc* item)
 {
 }
 
 u8 RepairMenuItemIsAvailable(const struct MenuItemDef* def, int number)
 {
-    int item = GetUnit(gActionData.targetIndex)->items[number];
+    int item = GetUnit(gAction.targetIndex)->items[number];
 
     if (!item)
         return MENU_NOTSHOWN;
@@ -953,7 +953,7 @@ u8 RepairMenuItemIsAvailable(const struct MenuItemDef* def, int number)
 
 int RepairMenuItemDraw(struct MenuProc* menu, struct MenuItemProc* menuItem)
 {
-    int item = GetUnit(gActionData.targetIndex)->items[menuItem->itemNumber];
+    int item = GetUnit(gAction.targetIndex)->items[menuItem->itemNumber];
     int isRepairable = IsItemHammernable(item);
 
     DrawItemMenuLineLong(
@@ -971,7 +971,7 @@ u8 RepairMenuItemSelect(struct MenuProc* menu, struct MenuItemProc* menuItem)
     {
         int msgId = 0;
 
-        int item = GetUnit(gActionData.targetIndex)->items[menuItem->itemNumber];
+        int item = GetUnit(gAction.targetIndex)->items[menuItem->itemNumber];
 
         if (GetItemAttributes(item) & (IA_UNBREAKABLE | IA_HAMMERNE | IA_LOCK_3))
             msgId = 0x863; // TODO: msgid "Item cannot be repaired."
@@ -981,12 +981,12 @@ u8 RepairMenuItemSelect(struct MenuProc* menu, struct MenuItemProc* menuItem)
             msgId = 0x856; // TODO: msgid "There's nothing to repair."
 
         if (msgId != 0)
-            MenuFrozenHelpBox(menu, msgId);
+            MenuCallHelpBox(menu, msgId);
 
         return MENU_ACT_SND6B;
     }
 
-    gActionData.trapType = menuItem->itemNumber;
+    gAction.trapType = menuItem->itemNumber;
     SetStaffUseAction(gActiveUnit);
 
     return MENU_ACT_SKIPCURSOR + MENU_ACT_END + MENU_ACT_SND6A + MENU_ACT_CLEAR + MENU_ACT_ENDFACE;
@@ -996,10 +996,10 @@ void DoUseHealStaff(struct Unit* unit, void(*func)(struct Unit*))
 {
     func(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection(&gSelectInfo_Heal),
+    StartBottomHelpText(
+        StartTargetSelection(&gSelectInfo_Heal),
         GetMsg(0x874)); // TODO: msgid "Select a character to restore HP to."
 }
 
@@ -1007,10 +1007,10 @@ void DoUseRestoreStaff(struct Unit* unit, void(*func)(struct Unit*))
 {
     func(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection(&gSelectInfo_Restore),
+    StartBottomHelpText(
+        StartTargetSelection(&gSelectInfo_Restore),
         GetMsg(0x877)); // TODO: msgid "Select a character to restore to normal."
 }
 
@@ -1029,10 +1029,10 @@ void DoUseBarrierStaff(struct Unit* unit)
 {
     MakeTargetListForBarrier(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection(&gSelectInfo_Barrier),
+    StartBottomHelpText(
+        StartTargetSelection(&gSelectInfo_Barrier),
         GetMsg(0x879)); // TODO: msgid "Select a character to restore to normal."
 }
 
@@ -1051,10 +1051,10 @@ void DoUseAttackStaff(struct Unit* unit, void(*func)(struct Unit*))
 {
     func(unit);
 
-    BmMapFill(gBmMapMovement, -1);
+    BmMapFill(gMapMovement, -1);
 
-    NewBottomHelpText(
-        NewTargetSelection(&gSelectInfo_OffensiveStaff),
+    StartBottomHelpText(
+        StartTargetSelection(&gSelectInfo_OffensiveStaff),
         GetMsg(0x87B)); // TODO: msgid "Select a unit to use the staff on."
 }
 
@@ -1072,15 +1072,15 @@ int sub_8029CE8(ProcPtr proc, struct SelectTarget* target)
         GetOffensiveStaffAccuracy(gActiveUnit, GetUnit(target->uid)));
 }
 
-void sub_8029D28(ProcPtr proc)
+void GenericSelection_DeleteBBAndBG(ProcPtr proc)
 {
-    DeleteEach6CBB();
+    EndBottomHelpText();
     ClearBg0Bg1();
 }
 
 int sub_8029D38(struct Unit* unit)
 {
-    if ((UNIT_CATTRIBUTES(unit) & CA_ASSASSIN) && GetTrapAt(unit->xPos, unit->yPos) == NULL)
+    if ((UNIT_ATTRIBUTES(unit) & UNIT_ATTR_ASSASSIN) && GetTrapAt(unit->x, unit->y) == NULL)
         return TRUE;
 
     return FALSE;
@@ -1088,28 +1088,28 @@ int sub_8029D38(struct Unit* unit)
 
 void sub_8029D6C(void)
 {
-    NewBottomHelpText(
-        NewTargetSelection_Specialized(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
+    StartBottomHelpText(
+        StartTargetSelectionExt(&gSelectInfo_0859D2F8, StaffSelectOnSelect),
         GetMsg(0x876)); // TODO: msgid "Select which character to bring next to you."
 }
 
 void TorchSelect_OnInit(struct WarpSelectProc* proc)
 {
-    gUnknown_0202BCB0.gameStateBits |= GMAP_STATE_BIT0;
+    gBmSt.gameStateBits |= GMAP_STATE_BIT0;
 
-    NewBottomHelpText(proc,
+    StartBottomHelpText(proc,
         GetMsg(0x87C)); // TODO: msgid "Select an area to light up."
 
-    if (ShouldMoveCameraPosSomething(gActiveUnit->xPos, gActiveUnit->yPos))
-        EnsureCameraOntoPosition(proc, gActiveUnit->xPos, gActiveUnit->yPos);
+    if (ShouldMoveCameraPosSomething(gActiveUnit->x, gActiveUnit->y))
+        EnsureCameraOntoPosition(proc, gActiveUnit->x, gActiveUnit->y);
 }
 
 void TorchSelect_OnIdle(struct WarpSelectProc* proc)
 {
-    int xTorch = gUnknown_0202BCB0.playerCursor.x;
-    int yTorch = gUnknown_0202BCB0.playerCursor.y;
+    int xTorch = gBmSt.playerCursor.x;
+    int yTorch = gBmSt.playerCursor.y;
 
-    s8 canTorch = ((s8**) gBmMapRange)[yTorch][xTorch];
+    s8 canTorch = ((s8**) gMapRange)[yTorch][xTorch];
 
     HandlePlayerCursorMovement();
 
@@ -1121,8 +1121,8 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
 
             Proc_Break(proc);
 
-            gActionData.xOther = gUnknown_0202BCB0.playerCursor.x;
-            gActionData.yOther = gUnknown_0202BCB0.playerCursor.y;
+            gAction.xOther = gBmSt.playerCursor.x;
+            gAction.yOther = gBmSt.playerCursor.y;
 
             SetStaffUseAction(gActiveUnit);
 
@@ -1145,8 +1145,8 @@ void TorchSelect_OnIdle(struct WarpSelectProc* proc)
     }
 
     DisplayCursor(
-        gUnknown_0202BCB0.playerCursorDisplay.x,
-        gUnknown_0202BCB0.playerCursorDisplay.y,
+        gBmSt.playerCursorDisplay.x,
+        gBmSt.playerCursorDisplay.y,
         TRUE);
 }
 
@@ -1164,38 +1164,38 @@ s8 CanUnitUseItemPrepScreen(struct Unit* unit, int item)
     switch (GetItemIndex(item))
     {
 
-    case ITEM_BOOSTER_HP:
-    case ITEM_BOOSTER_POW:
-    case ITEM_BOOSTER_SKL:
-    case ITEM_BOOSTER_SPD:
-    case ITEM_BOOSTER_LCK:
-    case ITEM_BOOSTER_DEF:
-    case ITEM_BOOSTER_RES:
-    case ITEM_BOOSTER_MOV:
-    case ITEM_BOOSTER_CON:
-        return CanUnitUseStatGainItem(unit, item);
+    case IID_BOOSTER_HP:
+    case IID_BOOSTER_POW:
+    case IID_BOOSTER_SKL:
+    case IID_BOOSTER_SPD:
+    case IID_BOOSTER_LCK:
+    case IID_BOOSTER_DEF:
+    case IID_BOOSTER_RES:
+    case IID_BOOSTER_MOV:
+    case IID_BOOSTER_CON:
+        return CanUseStatBooster(unit, item);
 
-    case ITEM_HEROCREST:
-    case ITEM_KNIGHTCREST:
-    case ITEM_ORIONSBOLT:
-    case ITEM_ELYSIANWHIP:
-    case ITEM_GUIDINGRING:
-    case ITEM_MASTERSEAL:
-    case ITEM_HEAVENSEAL:
-    case ITEM_OCEANSEAL:
-    case ITEM_LUNARBRACE:
-    case ITEM_SOLARBRACE:
-    case ITEM_UNK_C1:
-        return CanUnitUsePromotionItem(unit, item);
+    case IID_HEROCREST:
+    case IID_KNIGHTCREST:
+    case IID_ORIONSBOLT:
+    case IID_ELYSIANWHIP:
+    case IID_GUIDINGRING:
+    case IID_MASTERSEAL:
+    case IID_HEAVENSEAL:
+    case IID_OCEANSEAL:
+    case IID_LUNARBRACE:
+    case IID_SOLARBRACE:
+    case IID_UNK_C1:
+        return CanUsePromotionItem(unit, item);
 
-    case ITEM_METISSTOME:
-        if (unit->state & US_GROWTH_BOOST)
+    case IID_METISSTOME:
+        if (unit->flags & UNIT_FLAG_GROWTH_BOOST)
             return FALSE;
 
         return TRUE;
 
-    case ITEM_JUNAFRUIT:
-        return CanUnitUseFruitItem(unit);
+    case IID_JUNAFRUIT:
+        return CanUseJunaFruit(unit);
 
     default:
         return FALSE;
@@ -1209,7 +1209,7 @@ s8 sub_802A108(struct Unit* unit)
 
     for (i = 0; i < count; ++i)
     {
-        if (GetItemIndex(unit->items[i]) == ITEM_UNK_CC)
+        if (GetItemIndex(unit->items[i]) == IID_UNK_CC)
             return TRUE;
     }
 

@@ -16,8 +16,8 @@ struct ItemStatBonuses
 
 struct ItemData
 {
-    /* 00 */ u16 nameTextId;
-    /* 02 */ u16 descTextId;
+    /* 00 */ u16 msgName;
+    /* 02 */ u16 msgDesc;
     /* 04 */ u16 useDescTextId;
 
     /* 06 */ u8  number;
@@ -172,7 +172,7 @@ s8 IsUnitEffectiveAgainst(struct Unit* actor, struct Unit* target);
 char* GetItemDisplayRangeString(int item);
 int GetWeaponLevelFromExp(int wexp);
 char* GetItemDisplayRankString(int item);
-int GetDisplayRankStringFromExp(int wexp);
+int GetDisplayRankSpecialCharFromExp(int wexp);
 char* GetWeaponTypeDisplayString(int wpnType);
 void GetWeaponExpProgressState(int wexp, int* outValue, int* outMax);
 s8 IsItemDanceRing(int item);

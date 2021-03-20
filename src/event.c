@@ -6,7 +6,7 @@
 #include "uiutils.h"
 #include "mu.h"
 #include "bmio.h"
-#include "bmunit.h"
+#include "unit.h"
 #include "bmmap.h"
 #include "uimenu.h"
 
@@ -146,18 +146,18 @@ extern const u16 gEvent_SuspendPrompt[]; /*
 
 extern const u16 gEvent_GameOver[]; /* Game Over Events?
     1020 0004           | EVBIT_MODIFY 4
-    0D40 0000 08085375  | ASMC sub_8085374 // game over
+    0D40 0000 08085375  | ASMC StartGameOver // game over
     0120 0000           | ENDA
 */
 
 extern const struct ProcScr gUnknown_08591540[]; // extern
 
 void _MarkSomethingInMenu(void) {
-    FreezeMenu();
+    MarkSomethingInMenu();
 }
 
 void EventEngine_OnUpdate(struct EventEngineProc* proc) {
-    if (DoesBMXFADEExist())
+    if (BMXFADEExists())
         return;
     
     if (EventEngine_CanStartSkip(proc) && (gKeySt->pressed & START_BUTTON)) {
@@ -222,13 +222,13 @@ void EventEngine_OnEnd(struct EventEngineProc* proc) {
 
         if (proc->evStateBits & EV_STATE_CHANGEGM) {
             MU_EndAll();
-            EndBMapMain();
+            EndMapMain();
             memset((u8*)(gEventCallQueue), 0, 0x80);
         }
 
     case EV_EXEC_GAMEPLAY:
-        SubSkipThread2();
-        ResumeMenu();
+        UnlockGameLogic();
+        UnMarkSomethingInMenu();
         sub_800BB98();
         ClearCutsceneUnits();
 
@@ -236,7 +236,7 @@ void EventEngine_OnEnd(struct EventEngineProc* proc) {
     }
 
     if (proc->execType != EV_EXEC_QUIET) {
-        sub_8006A7C(); // EndDialogueInterpreter
+        EndTalk(); // EndDialogueInterpreter
         sub_808F270(); // End some thing
         sub_808BB74(); // End some more things
 
@@ -310,7 +310,7 @@ struct EventEngineProc* EventEngine_Create(const u16* events, u8 execType) {
     proc->overwrittenTextSpeed = -1;
     proc->execType       = execType;
     proc->activeTextType = 0;
-    proc->chapterIndex   = -1;
+    proc->chapter   = -1;
 
     proc->mapSpritePalIdOverride = 0x000;
 
@@ -327,8 +327,8 @@ struct EventEngineProc* EventEngine_Create(const u16* events, u8 execType) {
 
     case EV_EXEC_CUTSCENE:
     case EV_EXEC_GAMEPLAY:
-        proc->chapterIndex = gRAMChapterData.chapterIndex;
-        AddSkipThread2();
+        proc->chapter = gPlaySt.chapter;
+        LockGameLogic();
         break;
     }
 
@@ -466,7 +466,7 @@ void CallRetreatPromptEvent(void) {
     // Calls Retreat events
     CallEvent(gEvent_SkirmishRetreat, EV_EXEC_CUTSCENE);
     
-    gEventSlots[0x2] = gRAMChapterData.chapterIndex;
+    gEventSlots[0x2] = gPlaySt.chapter;
 }
 
 void CallSuspendPromptEvent(void) {
@@ -519,7 +519,7 @@ void EventEngine_StartSkip(struct EventEngineProc* proc) {
             if (proc->evStateBits & EV_STATE_FADEDIN)
                 sub_800D488(proc);
             else
-                sub_8013D08(0x40, (struct Proc*)(proc));
+                StartBlockingFadeInBlack(0x40, (struct Proc*)(proc));
             
             proc->evStateBits |= EV_STATE_FADEDIN;
         }
@@ -532,19 +532,19 @@ void EventEngine_StartSkip(struct EventEngineProc* proc) {
 }
 
 void sub_800D488(struct EventEngineProc* unused) {
-    sub_80141B0(); // disables layers
+    BlackenScreen(); // disables layers
     EndEachProc(gUnknown_08591540);
 }
 
 void SetEventTriggerState(u16 triggerId, bool value) {
     if (!value)
-        UnsetEventId(triggerId);
+        ClearFlag(triggerId);
     else
-        SetEventId(triggerId);
+        SetFlag(triggerId);
 }
 
 int GetEventTriggerState(u16 triggerId) {
-    if (!CheckEventId(triggerId))
+    if (!CheckFlag(triggerId))
         return FALSE;
     return TRUE;
 }
@@ -582,10 +582,10 @@ unsigned SlotQueuePop(void) {
     return result;
 }
 
-void SetEventSlotCounter(unsigned value) {
+void SetEventCounter(unsigned value) {
     gEventSlotCounter = value;
 }
 
-unsigned GetEventSlotCounter(void) {
+unsigned GetEventCounter(void) {
     return gEventSlotCounter;
 }

@@ -24,7 +24,7 @@ enum
     SUPPORT_EXP_A = 241,
 };
 
-struct SupportData
+struct SupportInfo
 {
     /* 00 */ u8 characters[UNIT_SUPPORT_MAX_COUNT];
     /* 07 */ u8 supportExpBase[UNIT_SUPPORT_MAX_COUNT];
@@ -53,8 +53,8 @@ void UnitGainSupportExp(struct Unit* unit, int num);
 void UnitGainSupportLevel(struct Unit* unit, int num);
 s8 CanUnitSupportNow(struct Unit* unit, int num);
 int GetUnitSupporterInitialExp(struct Unit* unit, int num);
-int GetUnitSupporterNum(struct Unit* unit, u8 charId);
-void ClearUnitSupports(struct Unit* unit);
+int GetUnitSupporterNum(struct Unit* unit, u8 pid);
+void UnitClearSupports(struct Unit* unit);
 void ProcessTurnSupportExp(void);
 int GetUnitSupportBonuses(struct Unit* unit, struct SupportBonuses* bonuses);
 int GetUnitAffinityIcon(struct Unit* unit);

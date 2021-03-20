@@ -2,11 +2,11 @@
 #include "global.h"
 
 #include "proc.h"
-#include "bmunit.h"
+#include "unit.h"
 #include "bmmap.h"
 #include "bmtrick.h"
 
-#include "constants/classes.h"
+#include "constants/jids.h"
 
 #include "cp_common.h"
 
@@ -56,9 +56,9 @@ PROC_LABEL(0),
 void CpDecide_Suspend(ProcPtr proc)
 {
     if (UNIT_FACTION(gActiveUnit) == FACTION_BLUE)
-        gActionData.suspendPointType = SUSPEND_POINT_BSKPHASE;
+        gAction.suspendPointType = SUSPEND_POINT_BSKPHASE;
     else
-        gActionData.suspendPointType = SUSPEND_POINT_CPPHASE;
+        gAction.suspendPointType = SUSPEND_POINT_CPPHASE;
 
     SaveSuspendedGame(SAVE_BLOCK_SUSPEND_BASE);
 }
@@ -68,48 +68,48 @@ void CpDecide_Suspend(ProcPtr proc)
 void CpDecide_Main(ProcPtr proc)
 {
 next_unit:
-    gAiState.decideState = 0;
+    gAiSt.decideState = 0;
 
-    if (*gAiState.unitIt)
+    if (*gAiSt.unitIt)
     {
-        gAiState.unk7C = 0;
+        gAiSt.unk7C = 0;
 
-        gActiveUnitId = *gAiState.unitIt;
+        gActiveUnitId = *gAiSt.unitIt;
         gActiveUnit = GetUnit(gActiveUnitId);
 
-        if (gActiveUnit->state & (US_DEAD | US_UNSELECTABLE) || !gActiveUnit->pCharacterData)
+        if (gActiveUnit->flags & (UNIT_FLAG_DEAD | UNIT_FLAG_TURN_ENDED) || !gActiveUnit->pinfo)
         {
-            gAiState.unitIt++;
+            gAiSt.unitIt++;
             goto next_unit;
         }
 
         RefreshEntityBmMaps();
         RenderBmMap();
-        SMS_UpdateFromGameData();
+        RefreshUnitSprites();
 
         AiUpdateNoMoveFlag(gActiveUnit);
 
-        gAiState.combatWeightTableId = (gActiveUnit->ai3And4 & 0xF8) >> 3;
+        gAiSt.combatWeightTableId = (gActiveUnit->aiConfig & 0xF8) >> 3;
 
-        gAiState.dangerMapFilled = FALSE;
-        AiInitDangerMap();
+        gAiSt.dangerMapFilled = FALSE;
+        SetupAiDangerMap();
 
-        AiClearDecision();
+        ClearAiDecision();
         AiDecideMainFunc();
 
-        gActiveUnit->state |= US_HAS_MOVED_AI;
+        gActiveUnit->flags |= UNIT_FLAG_AI_PROCESSED;
 
         if (!gAiDecision.actionPerformed ||
-            (gActiveUnit->xPos == gAiDecision.xMove && gActiveUnit->yPos == gAiDecision.yMove && gAiDecision.actionId == AI_ACTION_NONE))
+            (gActiveUnit->x == gAiDecision.xMove && gActiveUnit->y == gAiDecision.yMove && gAiDecision.actionId == AI_ACTION_NONE))
         {
             // Ignoring actions that are just moving to the same square
 
-            gAiState.unitIt++;
+            gAiSt.unitIt++;
             Proc_Goto(proc, 0);
         }
         else
         {
-            gAiState.unitIt++;
+            gAiSt.unitIt++;
             SpawnProcLocking(gProcScr_CpPerform, proc);
         }
     }
@@ -129,7 +129,7 @@ void CpDecide_Main(ProcPtr proc)
         push {r4, r5, r6, r7, lr}\n\
         adds r7, r0, #0\n\
     _08039B04:\n\
-        ldr r4, _08039B48  @ gAiState\n\
+        ldr r4, _08039B48  @ gAiSt\n\
         adds r0, r4, #0\n\
         adds r0, #0x79\n\
         movs r1, #0\n\
@@ -163,13 +163,13 @@ void CpDecide_Main(ProcPtr proc)
         str r0, [r4, #0x74]\n\
         b _08039B04\n\
         .align 2, 0\n\
-    _08039B48: .4byte gAiState\n\
+    _08039B48: .4byte gAiSt\n\
     _08039B4C: .4byte gActiveUnitId\n\
     _08039B50: .4byte gActiveUnit\n\
     _08039B54:\n\
         bl RefreshEntityBmMaps\n\
         bl RenderBmMap\n\
-        bl SMS_UpdateFromGameData\n\
+        bl RefreshUnitSprites\n\
         ldr r0, [r6]\n\
         bl AiUpdateNoMoveFlag\n\
         ldr r0, [r6]\n\
@@ -184,8 +184,8 @@ void CpDecide_Main(ProcPtr proc)
         adds r0, r4, #0\n\
         adds r0, #0x7a\n\
         strb r5, [r0]\n\
-        bl AiInitDangerMap\n\
-        bl AiClearDecision\n\
+        bl SetupAiDangerMap\n\
+        bl ClearAiDecision\n\
         ldr r0, _08039BD0  @ AiDecideMainFunc\n\
         ldr r0, [r0]\n\
         bl _call_via_r0\n\
@@ -225,7 +225,7 @@ void CpDecide_Main(ProcPtr proc)
     _08039BD0: .4byte AiDecideMainFunc\n\
     _08039BD4: .4byte gAiDecision\n\
     _08039BD8:\n\
-        ldr r0, _08039BEC  @ gAiState\n\
+        ldr r0, _08039BEC  @ gAiSt\n\
         ldr r1, [r0, #0x74]\n\
         adds r1, #1\n\
         str r1, [r0, #0x74]\n\
@@ -234,7 +234,7 @@ void CpDecide_Main(ProcPtr proc)
         bl SpawnProcLocking\n\
         b _08039BFA\n\
         .align 2, 0\n\
-    _08039BEC: .4byte gAiState\n\
+    _08039BEC: .4byte gAiSt\n\
     _08039BF0: .4byte gProcScr_CpPerform\n\
     _08039BF4:\n\
         adds r0, r7, #0\n\
@@ -249,7 +249,7 @@ void CpDecide_Main(ProcPtr proc)
 
 #endif // NONMATCHING
 
-void AiClearDecision(void)
+void ClearAiDecision(void)
 {
     gAiDecision.actionId = 0;
 
@@ -302,29 +302,29 @@ void AiUpdateDecision(u8 actionId, u8 targetId, u8 itemSlot, u8 xTarget, u8 yTar
     gAiDecision.actionPerformed = TRUE;
 }
 
-void AiDecideMain(void)
+void AiMasterDecisionMaker(void)
 {
-    while (sDecideFuncList[gAiState.decideState] && !gAiDecision.actionPerformed)
+    while (sDecideFuncList[gAiSt.decideState] && !gAiDecision.actionPerformed)
     {
-        sDecideFuncList[gAiState.decideState++]();
+        sDecideFuncList[gAiSt.decideState++]();
     }
 }
 
 void DecideHealOrEscape(void)
 {
-    if (gAiState.flags & AI_FLAG_BERSERKED)
+    if (gAiSt.flags & AI_FLAG_BERSERKED)
         return;
 
-    if (AiUpdateGetUnitIsHealing(gActiveUnit) == TRUE)
+    if (AiUnitUpdateGetHealMode(gActiveUnit) == TRUE)
     {
         struct Vec2 vec2;
 
-        if (AiTryHealSelf() == TRUE)
+        if (AiUnitTryHealSelf() == TRUE)
             return;
 
-        if ((gActiveUnit->aiFlags & AI_UNIT_FLAG_3) && (AiTryMoveTowardsEscape() == TRUE))
+        if ((gActiveUnit->aiFlags & AI_UNIT_FLAG_3) && (AiUnitTryMoveTowardsEscapePoint() == TRUE))
         {
-            AiTryDanceOrStealAfterMove();
+            AiTryDanceOrStealInPlace();
             return;
         }
 
@@ -338,14 +338,14 @@ void DecideHealOrEscape(void)
     }
     else
     {
-        if ((gActiveUnit->aiFlags & AI_UNIT_FLAG_3) && (AiTryMoveTowardsEscape() == TRUE))
-            AiTryDanceOrStealAfterMove();
+        if ((gActiveUnit->aiFlags & AI_UNIT_FLAG_3) && (AiUnitTryMoveTowardsEscapePoint() == TRUE))
+            AiTryDanceOrStealInPlace();
     }
 }
 
 void DecideSpecialItems(void)
 {
-    if (gAiState.flags & AI_FLAG_BERSERKED)
+    if (gAiSt.flags & AI_FLAG_BERSERKED)
         return;
 
     AiTryDoSpecialItems();
@@ -358,7 +358,7 @@ void DecideScriptA(void)
     if (UNIT_IS_GORGON_EGG(gActiveUnit))
         return;
 
-    if (gAiState.flags & AI_FLAG_BERSERKED)
+    if (gAiSt.flags & AI_FLAG_BERSERKED)
     {
         AiDoBerserkAction();
         return;
@@ -366,21 +366,21 @@ void DecideScriptA(void)
 
     for (i = 0; i < 0x100; ++i)
     {
-        if (AiTryExecScriptA() == TRUE)
+        if (AiExecAi1() == TRUE)
             return;
     }
 
-    AiExecFallbackScriptA();
+    AiExecFallbackAi1();
 }
 
 void DecideScriptB(void)
 {
     int i = 0;
 
-    if ((gActiveUnit->state & US_IN_BALLISTA) && (GetRiddenBallistaAt(gActiveUnit->xPos, gActiveUnit->yPos) != NULL))
+    if ((gActiveUnit->flags & UNIT_FLAG_IN_BALLISTA) && (GetNonEmptyBallistaAt(gActiveUnit->x, gActiveUnit->y) != NULL))
         return;
 
-    if (gAiState.flags & AI_FLAG_BERSERKED)
+    if (gAiSt.flags & AI_FLAG_BERSERKED)
     {
         AiDoBerserkMove();
         return;
@@ -388,9 +388,9 @@ void DecideScriptB(void)
 
     for (i = 0; i < 0x100; ++i)
     {
-        if (AiTryExecScriptB() == TRUE)
+        if (AiExecAi2() == TRUE)
             return;
     }
 
-    AiExecFallbackScriptB();
+    AiExecFallbackAi2();
 }

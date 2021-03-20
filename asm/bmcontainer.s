@@ -6,10 +6,10 @@
 
 	THUMB_FUNC_START GetConvoyItemArray
 GetConvoyItemArray: @ 0x08031500
-	ldr r0, _08031504  @ gUnknown_0203A81C
+	ldr r0, _08031504  @ gConvoyItemArray
 	bx lr
 	.align 2, 0
-_08031504: .4byte gUnknown_0203A81C
+_08031504: .4byte gConvoyItemArray
 
 	THUMB_FUNC_END GetConvoyItemArray
 
@@ -20,7 +20,7 @@ ClearConvoyItems: @ 0x08031508
 	mov r1, sp
 	movs r0, #0
 	strh r0, [r1]
-	ldr r1, _08031524  @ gUnknown_0203A81C
+	ldr r1, _08031524  @ gConvoyItemArray
 	ldr r2, _08031528  @ 0x01000064
 	mov r0, sp
 	bl CpuSet
@@ -28,7 +28,7 @@ ClearConvoyItems: @ 0x08031508
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08031524: .4byte gUnknown_0203A81C
+_08031524: .4byte gConvoyItemArray
 _08031528: .4byte 0x01000064
 
 	THUMB_FUNC_END ClearConvoyItems
@@ -74,7 +74,7 @@ _0803156C: .4byte gBuf
 GetConvoyItemCount: @ 0x08031570
 	push {lr}
 	movs r3, #0
-	ldr r2, _08031590  @ gUnknown_0203A81C
+	ldr r2, _08031590  @ gConvoyItemArray
 	movs r1, #0x63
 _08031578:
 	ldrh r0, [r2]
@@ -90,7 +90,7 @@ _08031580:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08031590: .4byte gUnknown_0203A81C
+_08031590: .4byte gConvoyItemArray
 
 	THUMB_FUNC_END GetConvoyItemCount
 
@@ -98,11 +98,11 @@ _08031590: .4byte gUnknown_0203A81C
 AddItemToConvoy: @ 0x08031594
 	push {r4, lr}
 	adds r4, r0, #0
-	ldr r1, _080315B0  @ gUnknown_0202BCB0
+	ldr r1, _080315B0  @ gBmSt
 	movs r0, #0
 	strh r0, [r1, #0x2e]
 	movs r3, #0
-	ldr r2, _080315B4  @ gUnknown_0203A81C
+	ldr r2, _080315B4  @ gConvoyItemArray
 _080315A2:
 	ldrh r0, [r2]
 	cmp r0, #0
@@ -111,8 +111,8 @@ _080315A2:
 	adds r0, r3, #0
 	b _080315C6
 	.align 2, 0
-_080315B0: .4byte gUnknown_0202BCB0
-_080315B4: .4byte gUnknown_0203A81C
+_080315B0: .4byte gBmSt
+_080315B4: .4byte gConvoyItemArray
 _080315B8:
 	adds r2, #2
 	adds r3, #1
@@ -131,7 +131,7 @@ _080315C6:
 	THUMB_FUNC_START sub_80315CC
 sub_80315CC: @ 0x080315CC
 	push {lr}
-	ldr r1, _080315E0  @ gUnknown_0203A81C
+	ldr r1, _080315E0  @ gConvoyItemArray
 	lsls r0, r0, #1
 	adds r0, r0, r1
 	movs r1, #0
@@ -140,7 +140,7 @@ sub_80315CC: @ 0x080315CC
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080315E0: .4byte gUnknown_0203A81C
+_080315E0: .4byte gConvoyItemArray
 
 	THUMB_FUNC_END sub_80315CC
 
@@ -152,7 +152,7 @@ GetConvoyItemSlot: @ 0x080315E4
 	adds r3, r0, #0
 	movs r2, #0
 	movs r5, #0xff
-	ldr r4, _08031604  @ gUnknown_0203A81C
+	ldr r4, _08031604  @ gConvoyItemArray
 _080315F4:
 	ldrh r1, [r4]
 	adds r0, r5, #0
@@ -162,7 +162,7 @@ _080315F4:
 	adds r0, r2, #0
 	b _08031614
 	.align 2, 0
-_08031604: .4byte gUnknown_0203A81C
+_08031604: .4byte gConvoyItemArray
 _08031608:
 	adds r4, #2
 	adds r2, #1
@@ -180,7 +180,7 @@ _08031614:
 	THUMB_FUNC_START HasConvoyAccess
 HasConvoyAccess: @ 0x0803161C
 	push {lr}
-	ldr r0, _08031638  @ gUnknown_03005280
+	ldr r0, _08031638  @ gGmData
 	ldrb r1, [r0]
 	movs r0, #1
 	ands r0, r1
@@ -193,9 +193,9 @@ HasConvoyAccess: @ 0x0803161C
 	beq _08031650
 	b _08031658
 	.align 2, 0
-_08031638: .4byte gUnknown_03005280
+_08031638: .4byte gGmData
 _0803163C:
-	ldr r0, _08031654  @ gRAMChapterData
+	ldr r0, _08031654  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
@@ -209,7 +209,7 @@ _08031650:
 	movs r0, #0
 	b _0803165A
 	.align 2, 0
-_08031654: .4byte gRAMChapterData
+_08031654: .4byte gPlaySt
 _08031658:
 	movs r0, #1
 _0803165A:
@@ -221,11 +221,11 @@ _0803165A:
 	THUMB_FUNC_START sub_8031660
 sub_8031660: @ 0x08031660
 	push {lr}
-	ldr r0, _0803167C  @ gRAMChapterData
+	ldr r0, _0803167C  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
-	bl GetROMChapterStruct
+	bl GetChapterInfo
 	adds r0, #0x82
 	ldrb r0, [r0]
 	cmp r0, #0xff
@@ -233,7 +233,7 @@ sub_8031660: @ 0x08031660
 	movs r0, #1
 	b _08031682
 	.align 2, 0
-_0803167C: .4byte gRAMChapterData
+_0803167C: .4byte gPlaySt
 _08031680:
 	movs r0, #0
 _08031682:

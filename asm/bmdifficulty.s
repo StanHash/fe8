@@ -8,7 +8,7 @@
 	THUMB_FUNC_START GetCurrentPromotedLevelBonus
 GetCurrentPromotedLevelBonus: @ 0x08037B44
 	push {lr}
-	ldr r0, _08037B58  @ gRAMChapterData
+	ldr r0, _08037B58  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #0x40
 	ands r0, r1
@@ -17,7 +17,7 @@ GetCurrentPromotedLevelBonus: @ 0x08037B44
 	movs r0, #9
 	b _08037B5E
 	.align 2, 0
-_08037B58: .4byte gRAMChapterData
+_08037B58: .4byte gPlaySt
 _08037B5C:
 	movs r0, #0x13
 _08037B5E:
@@ -30,7 +30,7 @@ _08037B5E:
 CanUnitSeize: @ 0x08037B64
 	push {lr}
 	adds r3, r0, #0
-	ldr r0, _08037B7C  @ gRAMChapterData
+	ldr r0, _08037B7C  @ gPlaySt
 	ldrb r1, [r0, #0x1b]
 	cmp r1, #2
 	beq _08037B86
@@ -40,7 +40,7 @@ CanUnitSeize: @ 0x08037B64
 	beq _08037B86
 	b _08037B8C
 	.align 2, 0
-_08037B7C: .4byte gRAMChapterData
+_08037B7C: .4byte gPlaySt
 _08037B80:
 	cmp r1, #3
 	beq _08037B8A
@@ -156,7 +156,7 @@ _08037C3C: .4byte gUnknown_02003B48
 
 	THUMB_FUNC_START sub_8037C40
 sub_8037C40: @ 0x08037C40
-	ldr r1, _08037C90  @ gUnknown_030017A0
+	ldr r1, _08037C90  @ gDungeonState
 	adds r2, r1, #0
 	adds r2, #0x24
 	movs r3, #0
@@ -197,7 +197,7 @@ sub_8037C40: @ 0x08037C40
 	str r0, [r1, #4]
 	bx lr
 	.align 2, 0
-_08037C90: .4byte gUnknown_030017A0
+_08037C90: .4byte gDungeonState
 _08037C94: .4byte 0xFFFFFC07
 _08037C98: .4byte 0xFFF003FF
 _08037C9C: .4byte 0xFFF80001
@@ -207,10 +207,10 @@ _08037C9C: .4byte 0xFFF80001
 	THUMB_FUNC_START sub_8037CA0
 sub_8037CA0: @ 0x08037CA0
 	push {r4, lr}
-	ldr r4, _08037CF0  @ gUnknown_030017A0
+	ldr r4, _08037CF0  @ gDungeonState
 	adds r0, r4, #0
 	bl sub_8037EB0
-	ldr r0, _08037CF4  @ gRAMChapterData
+	ldr r0, _08037CF4  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #4
 	ands r0, r1
@@ -227,9 +227,9 @@ sub_8037CA0: @ 0x08037CA0
 	cmp r0, #0xc7
 	ble _08037CD0
 	movs r0, #0x6b
-	bl SetEventId
+	bl SetFlag
 _08037CD0:
-	ldr r0, _08037CF0  @ gUnknown_030017A0
+	ldr r0, _08037CF0  @ gDungeonState
 	adds r0, #0x24
 	ldrb r0, [r0]
 	cmp r0, #1
@@ -240,14 +240,14 @@ _08037CD0:
 	cmp r0, #0xc7
 	ble _08037CEA
 	movs r0, #0x6c
-	bl SetEventId
+	bl SetFlag
 _08037CEA:
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08037CF0: .4byte gUnknown_030017A0
-_08037CF4: .4byte gRAMChapterData
+_08037CF0: .4byte gDungeonState
+_08037CF4: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8037CA0
 
@@ -256,13 +256,13 @@ sub_8037CF8: @ 0x08037CF8
 	push {r4, lr}
 	bl sub_8037CA0
 	bl sub_8037FCC
-	ldr r0, _08037D50  @ gRAMChapterData
+	ldr r0, _08037D50  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #4
 	ands r0, r1
 	cmp r0, #0
 	beq _08037D4A
-	ldr r1, _08037D54  @ gUnknown_030017A0
+	ldr r1, _08037D54  @ gDungeonState
 	adds r0, r1, #0
 	adds r0, #0x24
 	ldrb r2, [r0]
@@ -278,9 +278,9 @@ sub_8037CF8: @ 0x08037CF8
 	cmp r0, #2
 	ble _08037D32
 	movs r0, #0x6f
-	bl SetEventId
+	bl SetFlag
 _08037D32:
-	ldr r0, _08037D54  @ gUnknown_030017A0
+	ldr r0, _08037D54  @ gDungeonState
 	adds r0, #0x24
 	ldrb r0, [r0]
 	cmp r0, #1
@@ -290,14 +290,14 @@ _08037D32:
 	cmp r0, #2
 	ble _08037D4A
 	movs r0, #0x70
-	bl SetEventId
+	bl SetFlag
 _08037D4A:
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08037D50: .4byte gRAMChapterData
-_08037D54: .4byte gUnknown_030017A0
+_08037D50: .4byte gPlaySt
+_08037D54: .4byte gDungeonState
 
 	THUMB_FUNC_END sub_8037CF8
 
@@ -311,8 +311,8 @@ sub_8037D58: @ 0x08037D58
 
 	THUMB_FUNC_END sub_8037D58
 
-	THUMB_FUNC_START sub_8037D68
-sub_8037D68: @ 0x08037D68
+	THUMB_FUNC_START PrepScreenProc_AddPostgameUnits
+PrepScreenProc_AddPostgameUnits: @ 0x08037D68
 	push {r4, r5, r6, lr}
 	sub sp, #0x58
 	adds r6, r0, #0
@@ -320,7 +320,7 @@ sub_8037D68: @ 0x08037D68
 	mov r0, sp
 	movs r2, #0x58
 	bl memcpy
-	ldr r0, _08037D8C  @ gRAMChapterData
+	ldr r0, _08037D8C  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #4
 	ands r0, r1
@@ -329,7 +329,7 @@ sub_8037D68: @ 0x08037D68
 	b _08037DD2
 	.align 2, 0
 _08037D88: .4byte gUnknown_080D8018
-_08037D8C: .4byte gRAMChapterData
+_08037D8C: .4byte gPlaySt
 _08037D90:
 	movs r0, #1
 	b _08037DD4
@@ -342,7 +342,7 @@ _08037D9A:
 	mov r1, sp
 	adds r0, r1, r4
 	ldrh r0, [r0]
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -351,7 +351,7 @@ _08037D9A:
 	adds r0, r0, r4
 	ldr r1, [r0]
 	adds r0, r6, #0
-	bl sub_8037DDC
+	bl PrepScreenProc_TryAddUnit
 	lsls r0, r0, #0x18
 	asrs r0, r0, #0x18
 	cmp r0, #1
@@ -374,38 +374,38 @@ _08037DD4:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8037D68
+	THUMB_FUNC_END PrepScreenProc_AddPostgameUnits
 
-	THUMB_FUNC_START sub_8037DDC
-sub_8037DDC: @ 0x08037DDC
+	THUMB_FUNC_START PrepScreenProc_TryAddUnit
+PrepScreenProc_TryAddUnit: @ 0x08037DDC
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
 	ldrb r0, [r4]
 	movs r1, #0
-	bl GetUnitFromCharIdAndFaction
+	bl GetUnitByPidAndFaction
 	cmp r0, #0
 	beq _08037DF2
 	movs r0, #0
 	b _08037E02
 _08037DF2:
 	adds r0, r4, #0
-	bl LoadUnit
+	bl CreateUnit
 	ldrb r1, [r4]
 	adds r0, r5, #0
-	bl sub_8011728
+	bl CreateNewUnitPopup
 	movs r0, #1
 _08037E02:
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END sub_8037DDC
+	THUMB_FUNC_END PrepScreenProc_TryAddUnit
 
 	THUMB_FUNC_START sub_8037E08
 sub_8037E08: @ 0x08037E08
 	push {r4, r5, lr}
-	ldr r3, _08037E2C  @ gUnknown_030017A0
+	ldr r3, _08037E2C  @ gDungeonState
 	adds r1, r3, #0
 	ldm r1!, {r2, r4, r5}
 	stm r0!, {r2, r4, r5}
@@ -422,14 +422,14 @@ sub_8037E08: @ 0x08037E08
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08037E2C: .4byte gUnknown_030017A0
+_08037E2C: .4byte gDungeonState
 
 	THUMB_FUNC_END sub_8037E08
 
 	THUMB_FUNC_START sub_8037E30
 sub_8037E30: @ 0x08037E30
 	push {r4, r5, lr}
-	ldr r2, _08037E48  @ gUnknown_030017A0
+	ldr r2, _08037E48  @ gDungeonState
 	adds r1, r2, #0
 	ldm r0!, {r3, r4, r5}
 	stm r1!, {r3, r4, r5}
@@ -441,7 +441,7 @@ sub_8037E30: @ 0x08037E30
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08037E48: .4byte gUnknown_030017A0
+_08037E48: .4byte gDungeonState
 
 	THUMB_FUNC_END sub_8037E30
 
@@ -484,7 +484,7 @@ sub_8037E7C: @ 0x08037E7C
 	lsls r0, r0, #0xd
 	lsrs r4, r0, #0xe
 	bl GetGameTime
-	ldr r1, _08037EA8  @ gRAMChapterData
+	ldr r1, _08037EA8  @ gPlaySt
 	ldr r1, [r1, #4]
 	subs r0, r0, r1
 	movs r1, #0x3c
@@ -500,7 +500,7 @@ _08037E9E:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08037EA8: .4byte gRAMChapterData
+_08037EA8: .4byte gPlaySt
 _08037EAC: .4byte 0x00034BC0
 
 	THUMB_FUNC_END sub_8037E7C
@@ -510,8 +510,8 @@ sub_8037EB0: @ 0x08037EB0
 	push {r4, r5, r6, r7, lr}
 	adds r6, r0, #0
 	ldrh r4, [r6]
-	bl sub_80A49A4
-	ldr r1, _08037FAC  @ gRAMChapterData
+	bl BWL_GetTotalExpGained
+	ldr r1, _08037FAC  @ gPlaySt
 	ldr r1, [r1, #0x38]
 	lsls r1, r1, #4
 	lsrs r1, r1, #0xc
@@ -551,7 +551,7 @@ _08037EF2:
 	ands r1, r2
 	lsls r4, r1, #8
 	orrs r4, r0
-	ldr r5, _08037FAC  @ gRAMChapterData
+	ldr r5, _08037FAC  @ gPlaySt
 	ldrh r0, [r5, #0x10]
 	adds r4, r4, r0
 	movs r0, #0xfa
@@ -638,7 +638,7 @@ _08037FA6:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08037FAC: .4byte gRAMChapterData
+_08037FAC: .4byte gPlaySt
 _08037FB0: .4byte 0x0000C350
 _08037FB4: .4byte 0x0001000C
 _08037FB8: .4byte 0x0003FFFF
@@ -652,7 +652,7 @@ _08037FC8: .4byte 0xFFF003FF
 	THUMB_FUNC_START sub_8037FCC
 sub_8037FCC: @ 0x08037FCC
 	push {r4, r5, r6, lr}
-	ldr r0, _08038054  @ gUnknown_030017A0
+	ldr r0, _08038054  @ gDungeonState
 	mov ip, r0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -722,7 +722,7 @@ _08038036:
 	orrs r0, r1
 	b _08038094
 	.align 2, 0
-_08038054: .4byte gUnknown_030017A0
+_08038054: .4byte gDungeonState
 _08038058: .4byte 0xFFF80001
 _0803805C:
 	mov r1, ip
@@ -805,7 +805,7 @@ _080380BC:
 	orrs r1, r0
 	strh r1, [r3, #8]
 _080380F4:
-	ldr r0, _08038130  @ gRAMChapterData
+	ldr r0, _08038130  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #4
 	ands r0, r1
@@ -831,14 +831,14 @@ _08038120: .4byte 0xFFF80001
 _08038124: .4byte 0x0000C350
 _08038128: .4byte 0x00001FFF
 _0803812C: .4byte 0xFFFFFC07
-_08038130: .4byte gRAMChapterData
+_08038130: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8037FCC
 
 	THUMB_FUNC_START sub_8038134
 sub_8038134: @ 0x08038134
 	push {r4, r5, r6, lr}
-	ldr r0, _080381C8  @ gUnknown_030017A0
+	ldr r0, _080381C8  @ gDungeonState
 	mov ip, r0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -883,7 +883,7 @@ _08038170:
 	ands r0, r2
 	orrs r0, r1
 	strb r0, [r3, #8]
-	ldr r0, _080381D4  @ gRAMChapterData
+	ldr r0, _080381D4  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #4
 	ands r0, r1
@@ -915,10 +915,10 @@ _080381C2:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_080381C8: .4byte gUnknown_030017A0
+_080381C8: .4byte gDungeonState
 _080381CC: .4byte 0x0000C350
 _080381D0: .4byte 0x00001FFF
-_080381D4: .4byte gRAMChapterData
+_080381D4: .4byte gPlaySt
 _080381D8: .4byte 0x000003FF
 _080381DC: .4byte 0xFFF003FF
 
@@ -2140,7 +2140,7 @@ sub_8038BA4: @ 0x08038BA4
 	push {r5, r6, r7}
 	sub sp, #0x28
 	adds r6, r0, #0
-	ldr r4, _08038E18  @ gUnknown_030017A0
+	ldr r4, _08038E18  @ gDungeonState
 	ldr r5, _08038E1C  @ 0x04000003
 	adds r0, r4, #0
 	add r1, sp, #8
@@ -2423,7 +2423,7 @@ sub_8038BA4: @ 0x08038BA4
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08038E18: .4byte gUnknown_030017A0
+_08038E18: .4byte gDungeonState
 _08038E1C: .4byte 0x04000003
 _08038E20: .4byte gUnknown_020038C4
 _08038E24: .4byte gUnknown_020038AC
@@ -2438,7 +2438,7 @@ _08038E34: .4byte gUnknown_020038C8
 sub_8038E38: @ 0x08038E38
 	push {r4, r5, lr}
 	sub sp, #0x14
-	ldr r0, _08038E94  @ gUnknown_030017A0
+	ldr r0, _08038E94  @ gDungeonState
 	ldr r2, _08038E98  @ 0x04000003
 	add r1, sp, #8
 	bl CpuSet
@@ -2446,7 +2446,7 @@ sub_8038E38: @ 0x08038E38
 	bl sub_8037E7C
 	adds r5, r0, #0
 	bl GetGameTime
-	ldr r1, _08038E9C  @ gRAMChapterData
+	ldr r1, _08038E9C  @ gPlaySt
 	ldr r1, [r1, #4]
 	subs r0, r0, r1
 	movs r1, #0x3c
@@ -2478,9 +2478,9 @@ _08038E66:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08038E94: .4byte gUnknown_030017A0
+_08038E94: .4byte gDungeonState
 _08038E98: .4byte 0x04000003
-_08038E9C: .4byte gRAMChapterData
+_08038E9C: .4byte gPlaySt
 _08038EA0: .4byte gUnknown_020039C8
 _08038EA4: .4byte gUnknown_080D7FD0
 
@@ -2731,7 +2731,7 @@ _0803905A:
 	movs r0, #0
 	mov r1, r9
 	str r0, [r1, #0x34]
-	ldr r0, _080390D0  @ gRAMChapterData
+	ldr r0, _080390D0  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -2754,7 +2754,7 @@ _080390C0: .4byte gUnknown_02003B88
 _080390C4: .4byte gUnknown_02003BA8
 _080390C8: .4byte gUnknown_0859E7C8
 _080390CC: .4byte gUnknown_0859E7D4
-_080390D0: .4byte gRAMChapterData
+_080390D0: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_803901C
 
@@ -2853,7 +2853,7 @@ _08039164:
 	str r4, [sp, #4]
 	bl sub_8038588
 _0803919C:
-	ldr r0, _080391CC  @ gRAMChapterData
+	ldr r0, _080391CC  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -2874,7 +2874,7 @@ _080391BA:
 	.align 2, 0
 _080391C4: .4byte gUnknown_080D7FD0
 _080391C8: .4byte gUnknown_02003A08
-_080391CC: .4byte gRAMChapterData
+_080391CC: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80390D4
 
@@ -2911,7 +2911,7 @@ sub_8039200: @ 0x08039200
 	push {r4, r5, lr}
 	sub sp, #0xc
 	adds r5, r0, #0
-	ldr r0, _08039238  @ gUnknown_030017A0
+	ldr r0, _08039238  @ gDungeonState
 	ldr r2, _0803923C  @ 0x04000003
 	mov r1, sp
 	bl CpuSet
@@ -2932,7 +2932,7 @@ sub_8039200: @ 0x08039200
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_08039238: .4byte gUnknown_030017A0
+_08039238: .4byte gDungeonState
 _0803923C: .4byte 0x04000003
 _08039240: .4byte gUnknown_020038C4
 _08039244: .4byte _08039248
@@ -3003,7 +3003,7 @@ _080392B0: @ jump table
 	.4byte _08039318 @ case 3
 	.4byte _0803933C @ case 4
 _080392C4:
-	ldr r2, _080392E4  @ gUnknown_030017A0
+	ldr r2, _080392E4  @ gDungeonState
 	adds r0, r2, #0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -3020,9 +3020,9 @@ _080392C4:
 	orrs r0, r2
 	b _0803935A
 	.align 2, 0
-_080392E4: .4byte gUnknown_030017A0
+_080392E4: .4byte gDungeonState
 _080392E8:
-	ldr r2, _080392FC  @ gUnknown_030017A0
+	ldr r2, _080392FC  @ gDungeonState
 	adds r0, r2, #0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -3033,9 +3033,9 @@ _080392E8:
 	ldrh r0, [r0, #0xc]
 	b _0803935A
 	.align 2, 0
-_080392FC: .4byte gUnknown_030017A0
+_080392FC: .4byte gDungeonState
 _08039300:
-	ldr r2, _08039314  @ gUnknown_030017A0
+	ldr r2, _08039314  @ gDungeonState
 	adds r0, r2, #0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -3046,9 +3046,9 @@ _08039300:
 	ldrb r0, [r0, #0xe]
 	b _0803935A
 	.align 2, 0
-_08039314: .4byte gUnknown_030017A0
+_08039314: .4byte gDungeonState
 _08039318:
-	ldr r2, _08039338  @ gUnknown_030017A0
+	ldr r2, _08039338  @ gDungeonState
 	adds r0, r2, #0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -3064,9 +3064,9 @@ _08039318:
 	orrs r0, r2
 	b _0803935A
 	.align 2, 0
-_08039338: .4byte gUnknown_030017A0
+_08039338: .4byte gDungeonState
 _0803933C:
-	ldr r2, _08039354  @ gUnknown_030017A0
+	ldr r2, _08039354  @ gDungeonState
 	adds r0, r2, #0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -3079,7 +3079,7 @@ _0803933C:
 	lsrs r0, r0, #0xe
 	b _0803935A
 	.align 2, 0
-_08039354: .4byte gUnknown_030017A0
+_08039354: .4byte gDungeonState
 _08039358:
 	movs r0, #0
 _0803935A:
@@ -3093,7 +3093,7 @@ sub_8039360: @ 0x08039360
 	push {r4, r5, r6, lr}
 	sub sp, #0xc
 	adds r6, r0, #0
-	ldr r4, _080393AC  @ gUnknown_030017A0
+	ldr r4, _080393AC  @ gDungeonState
 	ldr r2, _080393B0  @ 0x04000003
 	adds r0, r4, #0
 	mov r1, sp
@@ -3123,7 +3123,7 @@ sub_8039360: @ 0x08039360
 	ldr r0, [r0]
 	mov pc, r0
 	.align 2, 0
-_080393AC: .4byte gUnknown_030017A0
+_080393AC: .4byte gDungeonState
 _080393B0: .4byte 0x04000003
 _080393B4: .4byte gUnknown_020038C4
 _080393B8: .4byte _080393BC
@@ -3217,7 +3217,7 @@ sub_803943C: @ 0x0803943C
 	str r2, [r1, #0xc]
 	str r2, [r1, #0x10]
 	str r2, [r4, #0x38]
-	ldr r0, _08039488  @ gRAMChapterData
+	ldr r0, _08039488  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -3234,7 +3234,7 @@ _08039478: .4byte gUnknown_02003B48
 _0803947C: .4byte gUnknown_02003BE8
 _08039480: .4byte gUnknown_0859E82C
 _08039484: .4byte gUnknown_0859E838
-_08039488: .4byte gRAMChapterData
+_08039488: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_803943C
 
@@ -3286,7 +3286,7 @@ sub_80394A8: @ 0x080394A8
 _080394E0: .4byte gUnknown_02003BE8
 _080394E4: .4byte gUnknown_0859E79C
 _080394E8:
-	ldr r2, _08039548  @ gUnknown_030017A0
+	ldr r2, _08039548  @ gDungeonState
 	adds r0, r2, #0
 	adds r0, #0x24
 	ldrb r1, [r0]
@@ -3316,7 +3316,7 @@ _0803950E:
 	bl sub_8038588
 	movs r0, #1
 	bl EnableBgSync
-	ldr r0, _08039550  @ gRAMChapterData
+	ldr r0, _08039550  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -3333,9 +3333,9 @@ _0803953E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08039548: .4byte gUnknown_030017A0
+_08039548: .4byte gDungeonState
 _0803954C: .4byte gUnknown_02003B70
-_08039550: .4byte gRAMChapterData
+_08039550: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_80394A8
 
@@ -3353,7 +3353,7 @@ sub_8039554: @ 0x08039554
 	str r0, [r4, #0x34]
 	movs r0, #2
 	str r0, [r4, #0x3c]
-	ldr r0, _08039588  @ gRAMChapterData
+	ldr r0, _08039588  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -3366,7 +3366,7 @@ _08039582:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08039588: .4byte gRAMChapterData
+_08039588: .4byte gPlaySt
 
 	THUMB_FUNC_END sub_8039554
 

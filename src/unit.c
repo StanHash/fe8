@@ -2,13 +2,13 @@
 
 #include <string.h>
 
-#include "constants/items.h"
-#include "constants/classes.h"
-#include "constants/characters.h"
+#include "constants/iids.h"
+#include "constants/jids.h"
+#include "constants/pids.h"
 #include "constants/terrains.h"
 
 #include "bmitem.h"
-#include "bmunit.h"
+#include "unit.h"
 #include "bmmap.h"
 #include "bmidoten.h"
 #include "bmbattle.h"
@@ -23,7 +23,8 @@ EWRAM_DATA struct Unit gUnitArrayRed[50]   = {}; // Red units
 EWRAM_DATA struct Unit gUnitArrayGreen[20] = {}; // Green units
 EWRAM_DATA struct Unit gUnitArrayPurple[5] = {}; // Purple units
 
-CONST_DATA static int sStatusNameTextIdLookup[] = {
+CONST_DATA static int sStatusNameTextIdLookup[] =
+{
     // TODO: TEXT ID DEFINITIONS
 
     [UNIT_STATUS_NONE]     = 0x536,
@@ -39,10 +40,11 @@ CONST_DATA static int sStatusNameTextIdLookup[] = {
     [UNIT_STATUS_RECOVER]  = 0x519,
     [UNIT_STATUS_PETRIFY]  = 0x51A,
     [UNIT_STATUS_12]       = 0,
-    [UNIT_STATUS_13]       = 0x51A,
+    [UNIT_STATUS_PETRIFY_2]       = 0x51A,
 };
 
-struct Unit* CONST_DATA gUnitLookup[0x100] = { // unit lookup
+struct Unit* CONST_DATA gUnitLookup[0x100] =
+{
     [FACTION_BLUE + 0x01] = gUnitArrayBlue + 0,
     [FACTION_BLUE + 0x02] = gUnitArrayBlue + 1,
     [FACTION_BLUE + 0x03] = gUnitArrayBlue + 2,
@@ -185,165 +187,194 @@ struct Unit* CONST_DATA gUnitLookup[0x100] = { // unit lookup
     [FACTION_PURPLE + 0x05] = gUnitArrayPurple + 4,
 };
 
-inline struct Unit* GetUnit(int id) {
+inline struct Unit* GetUnit(int id)
+{
     return gUnitLookup[id & 0xFF];
 }
 
-inline const struct ClassData* GetClassData(int classId) {
-    if (classId < 1)
+inline const struct JInfo* GetJInfo(int jid)
+{
+    if (jid < 1)
         return NULL;
 
-    return gClassData + (classId - 1);
+    return gClassData + (jid - 1);
 }
 
-inline const struct CharacterData* GetCharacterData(int charId) {
-    if (charId < 1)
+inline const struct PInfo* GetPInfo(int pid)
+{
+    if (pid < 1)
         return NULL;
 
-    return gCharacterData + (charId - 1);
+    return gCharacterData + (pid - 1);
 }
 
-void ClearUnits(void) {
+void InitUnits(void)
+{
     int i;
 
-    for (i = 0; i < 0x100; ++i) {
+    for (i = 0; i < 0x100; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
-        if (unit) {
+        if (unit)
+        {
             ClearUnit(unit);
-            unit->index = i;
+            unit->id = i;
         }
     }
 }
 
-void ClearUnit(struct Unit* unit) {
-    u8 id = unit->index;
+void ClearUnit(struct Unit* unit)
+{
+    u8 id = unit->id;
     CpuFill16(0, unit, sizeof(struct Unit));
-    unit->index = id;
+    unit->id = id;
 }
 
-void CopyUnit(struct Unit* from, struct Unit* to) {
-    u8 id = to->index;
+void CopyUnit(struct Unit* from, struct Unit* to)
+{
+    u8 id = to->id;
     memcpy(to, from, sizeof(struct Unit));
-    to->index = id;
+    to->id = id;
 }
 
-struct Unit* GetFreeUnit(int faction) {
+struct Unit* GetFreeUnit(int faction)
+{
     int i, last = (faction + 0x40);
 
-    for (i = faction + 1; i < last; ++i) {
+    for (i = faction + 1; i < last; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
-        if (unit->pCharacterData == NULL)
+        if (unit->pinfo == NULL)
             return unit;
     }
 
     return NULL;
 }
 
-struct Unit* GetFreeBlueUnit(const struct UnitDefinition* uDef) {
-    int i, last = 0x40;
+struct Unit* GetFreeBlueUnit(const struct UnitInfo* info)
+{
+    int i = 1, last = 0x40;
 
+#ifndef BUGFIX
     // This is ?? and is completely useless but it's required to produce matching asm
-    if (uDef->charIndex == GetPlayerLeaderUnitId())
+    if (info->pid == GetPlayerLeaderPid())
         ++i;
+#endif // BUGFIX
 
-    for (i = 1; i < last; ++i) {
+    for (i = 1; i < last; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
-        if (unit->pCharacterData == NULL)
+        if (unit->pinfo == NULL)
             return unit;
     }
 
     return NULL;
 }
 
-inline int GetUnitMaxHp(struct Unit* unit) {
+inline int GetUnitMaxHp(struct Unit* unit)
+{
     return unit->maxHP + GetItemHpBonus(GetUnitEquippedWeapon(unit));
 }
 
-inline int GetUnitCurrentHp(struct Unit* unit) {
+inline int GetUnitCurrentHp(struct Unit* unit)
+{
     if (unit->curHP > GetUnitMaxHp(unit))
         unit->curHP = GetUnitMaxHp(unit);
 
     return unit->curHP;
 }
 
-inline int GetUnitPower(struct Unit* unit) {
+inline int GetUnitPower(struct Unit* unit)
+{
     return unit->pow + GetItemPowBonus(GetUnitEquippedWeapon(unit));
 }
 
-inline int GetUnitSkill(struct Unit* unit) {
+inline int GetUnitSkill(struct Unit* unit)
+{
     int item = GetUnitEquippedWeapon(unit);
 
-    if (unit->state & US_RESCUING)
+    if (unit->flags & UNIT_FLAG_RESCUING)
         return unit->skl / 2 + GetItemSklBonus(item);
 
     return unit->skl + GetItemSklBonus(item);
 }
 
-inline int GetUnitSpeed(struct Unit* unit) {
+inline int GetUnitSpeed(struct Unit* unit)
+{
     int item = GetUnitEquippedWeapon(unit);
 
-    if (unit->state & US_RESCUING)
+    if (unit->flags & UNIT_FLAG_RESCUING)
         return unit->spd / 2 + GetItemSpdBonus(item);
 
     return unit->spd + GetItemSpdBonus(item);
 }
 
-inline int GetUnitDefense(struct Unit* unit) {
+inline int GetUnitDefense(struct Unit* unit)
+{
     return unit->def + GetItemDefBonus(GetUnitEquippedWeapon(unit));
 }
 
-inline int GetUnitResistance(struct Unit* unit) {
+inline int GetUnitResistance(struct Unit* unit)
+{
     return unit->res + GetItemResBonus(GetUnitEquippedWeapon(unit)) + unit->barrierDuration;
 }
 
-inline int GetUnitLuck(struct Unit* unit) {
+inline int GetUnitLuck(struct Unit* unit)
+{
     return unit->lck + GetItemLckBonus(GetUnitEquippedWeapon(unit));
 }
 
-inline int GetUnitPortraitId(struct Unit* unit) {
-    if (unit->pCharacterData->portraitId) {
+inline int GetUnitFid(struct Unit* unit)
+{
+    if (unit->pinfo->fid)
+    {
         // TODO: PORTRAIT_LYON?, CHAPTER definitions
-        if (gRAMChapterData.chapterIndex == 0x22 && unit->pCharacterData->portraitId == 0x4A)
+        if (gPlaySt.chapter == 0x22 && unit->pinfo->fid == 0x4A)
             return 0x46;
 
-        return unit->pCharacterData->portraitId;
+        return unit->pinfo->fid;
     }
 
-    if (unit->pClassData->defaultPortraitId)
-        return unit->pClassData->defaultPortraitId;
+    if (unit->jinfo->fidDefault)
+        return unit->jinfo->fidDefault;
 
     return 0;
 }
 
-inline int GetUnitMiniPortraitId(struct Unit* unit) {
-    if (unit->pCharacterData->miniPortrait)
-        return 0x7F00 + unit->pCharacterData->miniPortrait;
+inline int GetUnitChibiFid(struct Unit* unit)
+{
+    if (unit->pinfo->fidMini)
+        return 0x7F00 + unit->pinfo->fidMini;
 
-    return GetUnitPortraitId(unit);
+    return GetUnitFid(unit);
 }
 
-inline int GetUnitLeaderCharId(struct Unit* unit) {
-    if (!(unit->index & 0xC0))
+inline int GetUnitLeaderPid(struct Unit* unit)
+{
+    if (UNIT_FACTION(unit) == FACTION_BLUE)
         return 0;
 
     return UNIT_LEADER_CHARACTER(unit);
 }
 
-inline void SetUnitLeaderCharId(struct Unit* unit, int charId) {
-    UNIT_LEADER_CHARACTER(unit) = charId;
+inline void SetUnitLeaderPid(struct Unit* unit, int pid)
+{
+    UNIT_LEADER_CHARACTER(unit) = pid;
 }
 
-inline void SetUnitHp(struct Unit* unit, int value) {
+inline void SetUnitHp(struct Unit* unit, int value)
+{
     unit->curHP = value;
 
     if (unit->curHP > GetUnitMaxHp(unit))
         unit->curHP = GetUnitMaxHp(unit);
 }
 
-inline void AddUnitHp(struct Unit* unit, int amount) {
+inline void AddUnitHp(struct Unit* unit, int amount)
+{
     int hp = unit->curHP;
 
     hp += amount;
@@ -357,62 +388,73 @@ inline void AddUnitHp(struct Unit* unit, int amount) {
     unit->curHP = hp;
 }
 
-int GetUnitFogViewRange(struct Unit* unit) {
-    int result = gRAMChapterData.chapterVisionRange;
+int GetUnitVision(struct Unit* unit)
+{
+    int result = gPlaySt.chapterVisionRange;
 
-    if (UNIT_CATTRIBUTES(unit) & CA_THIEF)
+    if (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_THIEF)
         result += 5;
 
     return result + unit->torchDuration;
 }
 
-void SetUnitStatus(struct Unit* unit, int status) {
-    if (status == 0) {
-        unit->statusIndex    = 0;
+void SetUnitStatus(struct Unit* unit, int status)
+{
+    if (status == 0)
+    {
+        unit->statusId    = 0;
         unit->statusDuration = 0;
-    } else {
-        unit->statusIndex    = status;
+    }
+    else
+    {
+        unit->statusId    = status;
         unit->statusDuration = 5;
     }
 }
 
-void SetUnitStatusExt(struct Unit* unit, int status, int duration) {
-    unit->statusIndex    = status;
+void SetUnitStatusExt(struct Unit* unit, int status, int duration)
+{
+    unit->statusId    = status;
     unit->statusDuration = duration;
 }
 
-inline char* GetUnitStatusName(struct Unit* unit) {
-    return GetMsg(sStatusNameTextIdLookup[unit->statusIndex]);
+inline char const* GetUnitStatusName(struct Unit* unit)
+{
+    return GetMsg(sStatusNameTextIdLookup[unit->statusId]);
 }
 
-int GetUnitSMSId(struct Unit* unit) {
-    if (!(unit->state & US_IN_BALLISTA))
-        return unit->pClassData->SMSId;
+int GetUnitSpriteId(struct Unit* unit)
+{
+    if (!(unit->flags & UNIT_FLAG_IN_BALLISTA))
+        return unit->jinfo->mapSprite;
 
-    switch (GetTrap(unit->ballistaIndex)->extra) {
-
+    switch (GetTrap(unit->ballistaId)->extra)
+    {
         // TODO: SMS id definitions
 
-    case ITEM_BALLISTA_REGULAR:
+    case IID_BALLISTA:
         return 0x58;
 
-    case ITEM_BALLISTA_LONG:
+    case IID_BALLISTA_LONG:
         return 0x59;
 
-    case ITEM_BALLISTA_KILLER:
+    case IID_BALLISTA_KILLER:
         return 0x5A;
 
     default:
         return 0;
 
-    } // switch (GetTrap(unit->ballistaIndex)->data[TRAP_EXTDATA_BLST_ITEMID])
+    } // switch (GetTrap(unit->ballistaId)->data[TRAP_EXTDATA_BLST_ITEMID])
 }
 
-s8 UnitAddItem(struct Unit* unit, int item) {
+s8 UnitAddItem(struct Unit* unit, int item)
+{
     int i;
 
-    for (i = 0; i < UNIT_ITEM_COUNT; ++i) {
-        if (unit->items[i] == 0) {
+    for (i = 0; i < UNIT_ITEM_COUNT; ++i)
+    {
+        if (unit->items[i] == 0)
+        {
             unit->items[i] = item;
             return TRUE;
         }
@@ -421,25 +463,29 @@ s8 UnitAddItem(struct Unit* unit, int item) {
     return FALSE;
 }
 
-inline void UnitRemoveItem(struct Unit* unit, int slot) {
+inline void UnitRemoveItem(struct Unit* unit, int slot)
+{
     unit->items[slot] = 0;
     UnitRemoveInvalidItems(unit);
 }
 
-void UnitClearInventory(struct Unit* unit) {
+void ClearUnitInventory(struct Unit* unit)
+{
     int i;
 
     for (i = 0; i < UNIT_ITEM_COUNT; ++i)
         unit->items[i] = 0;
 }
 
-void UnitRemoveInvalidItems(struct Unit* unit) {
+void UnitRemoveInvalidItems(struct Unit* unit)
+{
     u16 items[UNIT_ITEM_COUNT + 1], i;
     u16* it = items;
 
     // Build item buffer by iterating through unit's items and skipping blanks
 
-    for (i = 0; i < UNIT_ITEM_COUNT; ++i) {
+    for (i = 0; i < UNIT_ITEM_COUNT; ++i)
+    {
         if (unit->items[i])
             *it++ = unit->items[i];
 
@@ -450,7 +496,8 @@ void UnitRemoveInvalidItems(struct Unit* unit) {
 
     // Write buffered items
 
-    for (i = 0; i < UNIT_ITEM_COUNT; ++i) {
+    for (i = 0; i < UNIT_ITEM_COUNT; ++i)
+    {
         if (!items[i])
             return; // Stop now if we reached end of buffer
 
@@ -458,7 +505,8 @@ void UnitRemoveInvalidItems(struct Unit* unit) {
     }
 }
 
-int GetUnitItemCount(struct Unit* unit) {
+int GetUnitItemCount(struct Unit* unit)
+{
     int i;
 
     for (i = (UNIT_ITEM_COUNT - 1); i >= 0; --i)
@@ -468,7 +516,8 @@ int GetUnitItemCount(struct Unit* unit) {
     return 0;
 }
 
-s8 UnitHasItem(struct Unit* unit, int item) {
+s8 UnitHasItem(struct Unit* unit, int item)
+{
     int i;
 
     item = GetItemIndex(item);
@@ -480,20 +529,23 @@ s8 UnitHasItem(struct Unit* unit, int item) {
     return FALSE;
 }
 
-int LoadUnits(const struct UnitDefinition* uDef) {
+int BatchCreateUnits(const struct UnitInfo* info)
+{
     int count = 0;
 
-    while (uDef->charIndex) {
-        LoadUnit(uDef);
+    while (info->pid)
+    {
+        CreateUnit(info);
 
-        uDef++;
+        info++;
         count++;
     }
 
     return count;
 }
 
-void sub_8017A54(struct Unit* unit) { // unused
+void sub_8017A54(struct Unit* unit)
+{
     if (unit->pow >= 4)
         unit->pow /= 2;
 
@@ -504,29 +556,32 @@ void sub_8017A54(struct Unit* unit) { // unused
         unit->res /= 2;
 }
 
-s8 CanClassWieldWeaponType(u8 classId, u8 wpnType) {
-    if (GetClassData(classId)->baseRanks[wpnType])
+s8 CanClassWieldWeaponType(u8 jid, u8 wpnType)
+{
+    if (GetJInfo(jid)->baseWexp[wpnType])
         return TRUE;
     else
         return FALSE;
 }
 
-struct Unit* LoadUnit(const struct UnitDefinition* uDef) {
-    struct UnitDefinition buf;
+struct Unit* CreateUnit(const struct UnitInfo* info)
+{
+    struct UnitInfo buf;
 
     struct Unit* unit = NULL;
 
-    if (uDef->genMonster) {
+    if (info->genMonster)
+    {
         u32 packedItems;
         u16 item1, item2;
 
-        u16 monsterClass = GenerateMonsterClass(uDef->classIndex);
+        u16 monsterClass = GenerateMonsterClass(info->jid);
 
-        buf = *uDef;
+        buf = *info;
 
         buf.autolevel = TRUE;
-        buf.classIndex = monsterClass;
-        buf.level = GenerateMonsterLevel(uDef->level);
+        buf.jid = monsterClass;
+        buf.level = GenerateMonsterLevel(info->level);
 
         packedItems = GenerateMonsterItems(monsterClass);
 
@@ -544,42 +599,46 @@ struct Unit* LoadUnit(const struct UnitDefinition* uDef) {
         else
             buf.itemDrop = TRUE;
 
-        if (item1 == ITEM_MONSTER_SHADOWSHT || item1 == ITEM_MONSTER_STONE) {
+        if (item1 == IID_MONSTER_SHADOWSHT || item1 == IID_MONSTER_STONE)
+        {
             // Add another weapon item if weapon is either Shadowshot or Stone
 
             buf.items[2] = buf.items[1];
 
-            switch (monsterClass) {
+            switch (monsterClass)
+            {
 
-            case CLASS_MOGALL:
-                buf.items[1] = ITEM_MONSTER_EVILEYE;
+            case JID_MOGALL:
+                buf.items[1] = IID_MONSTER_EVILEYE;
                 break;
 
-            case CLASS_ARCH_MOGALL:
-                buf.items[1] = ITEM_MONSTER_CRIMSNEYE;
+            case JID_ARCH_MOGALL:
+                buf.items[1] = IID_MONSTER_CRIMSNEYE;
                 break;
 
-            case CLASS_GORGON:
-                buf.items[1] = ITEM_MONSTER_DEMONSURG;
+            case JID_GORGON:
+                buf.items[1] = IID_MONSTER_DEMONSURG;
 
             } // switch (monsterClass)
         }
 
-        if (CanClassWieldWeaponType(monsterClass, ITYPE_BOW) == TRUE) {
+        if (CanClassWieldWeaponType(monsterClass, ITYPE_BOW) == TRUE)
+        {
             // TODO: AI BIT DEFINITIONS
-            buf.ai.ai3 = buf.ai.ai3 & (1 | 2 | 4);
-            buf.ai.ai3 = buf.ai.ai3 | (8 | 32);
+            buf.ai[2] = buf.ai[2] & (1 | 2 | 4);
+            buf.ai[2] = buf.ai[2] | (8 | 32);
         }
 
-        uDef = &buf;
-    } // (uDef->genMonster)
+        info = &buf;
+    } // (info->genMonster)
 
-    switch (uDef->allegiance) {
+    switch (info->allegiance)
+    {
 
         // TODO: unit definition faction constants
 
     case 0:
-        unit = GetFreeBlueUnit(uDef);
+        unit = GetFreeBlueUnit(info);
         break;
 
     case 2:
@@ -590,26 +649,31 @@ struct Unit* LoadUnit(const struct UnitDefinition* uDef) {
         unit = GetFreeUnit(FACTION_GREEN);
         break;
 
-    } // switch (uDef->allegiance)
+    } // switch (info->allegiance)
 
     if (!unit)
         return NULL;
 
     ClearUnit(unit);
 
-    UnitInitFromDefinition(unit, uDef);
-    UnitLoadStatsFromChracter(unit, unit->pCharacterData);
-    UnitHideIfUnderRoof(unit);
+    UnitInitFromInfo(unit, info);
+    UnitInitStats(unit, unit->pinfo);
+    HideIfUnderRoof(unit);
 
     if (UNIT_IS_GORGON_EGG(unit))
         SetUnitStatus(unit, UNIT_STATUS_RECOVER);
 
-    if (uDef->autolevel) {
-        if (UNIT_FACTION(unit) == FACTION_BLUE) {
+    if (info->autolevel)
+    {
+        if (UNIT_FACTION(unit) == FACTION_BLUE)
+        {
             UnitAutolevelRealistic(unit);
-            UnitAutolevelWExp(unit, uDef);
-        } else {
-            if ((UNIT_CATTRIBUTES(unit) & CA_BOSS) || (unit->pCharacterData->number < 0x40)) {
+            UnitAutolevelWeaponExp(unit, info);
+        }
+        else
+        {
+            if ((UNIT_ATTRIBUTES(unit) & UNIT_ATTR_BOSS) || (unit->pinfo->id < 0x40))
+            {
                 struct Unit* unit2 = GetFreeUnit(0);
 
                 CopyUnit(unit, unit2);
@@ -623,25 +687,28 @@ struct Unit* LoadUnit(const struct UnitDefinition* uDef) {
                 ClearUnit(unit2);
 
                 unit->exp   = UNIT_EXP_DISABLED;
-                unit->level = uDef->level;
-            } else
+                unit->level = info->level;
+            }
+            else
+            {
                 UnitAutolevel(unit);
+            }
 
-            UnitAutolevelWExp(unit, uDef);
-            SetUnitLeaderCharId(unit, uDef->leaderCharIndex);
+            UnitAutolevelWeaponExp(unit, info);
+            SetUnitLeaderPid(unit, info->pidLead);
         }
 
         if (UNIT_IS_GORGON_EGG(unit))
             unit->maxHP = (unit->level + 1) * 5;
-    } // if (uDef->autolevel)
+    } // if (info->autolevel)
 
-    FixROMUnitStructPtr(unit);
-    UnitLoadSupports(unit);
+    sub_08017EBC(unit);
+    UnitInitSupports(unit);
 
-    if (uDef->itemDrop)
-        unit->state |= US_DROP_ITEM;
+    if (info->itemDrop)
+        unit->flags |= UNIT_FLAG_DROPS_ITEM;
 
-    UnitCheckStatCaps(unit);
+    UnitCheckStatOverflow(unit);
 
     unit->curHP = GetUnitMaxHp(unit);
 
@@ -651,19 +718,21 @@ struct Unit* LoadUnit(const struct UnitDefinition* uDef) {
     return unit;
 }
 
-void UnitInitFromDefinition(struct Unit* unit, const struct UnitDefinition* uDef) {
-    unit->pCharacterData = GetCharacterData(uDef->charIndex);
+void UnitInitFromInfo(struct Unit* unit, const struct UnitInfo* info)
+{
+    unit->pinfo = GetPInfo(info->pid);
 
-    if (uDef->classIndex)
-        unit->pClassData = GetClassData(uDef->classIndex);
+    if (info->jid)
+        unit->jinfo = GetJInfo(info->jid);
     else // such an overlooked feature
-        unit->pClassData = GetClassData(unit->pCharacterData->defaultClass);
+        unit->jinfo = GetJInfo(unit->pinfo->jidDefault);
 
-    unit->level = uDef->level;
+    unit->level = info->level;
 
-    GetPreferredPositionForUNIT(uDef, &unit->xPos, &unit->yPos, FALSE);
+    GenUnitDefinitionFinalPosition(info, &unit->x, &unit->y, FALSE);
 
-    if (UNIT_IS_GORGON_EGG(unit)) {
+    if (UNIT_IS_GORGON_EGG(unit))
+    {
         int i;
 
         // For gorgon eggs, set first item to zero
@@ -672,44 +741,49 @@ void UnitInitFromDefinition(struct Unit* unit, const struct UnitDefinition* uDef
         unit->items[0] = 0;
 
         for (i = 0; i < UNIT_DEFINITION_ITEM_COUNT; ++i)
-            unit->items[i + 1] = uDef->items[i];
-    } else {
+            unit->items[i + 1] = info->items[i];
+    }
+    else
+    {
         int i;
 
-        for (i = 0; (i < UNIT_DEFINITION_ITEM_COUNT) && (uDef->items[i]); ++i)
-            UnitAddItem(unit, MakeNewItem(uDef->items[i]));
+        for (i = 0; (i < UNIT_DEFINITION_ITEM_COUNT) && (info->items[i]); ++i)
+            UnitAddItem(unit, MakeNewItem(info->items[i]));
     }
 
-    CharStoreAI(unit, uDef);
+    SetUnitAiFromDefinition(unit, info);
 }
 
-void UnitLoadItemsFromDefinition(struct Unit* unit, const struct UnitDefinition* uDef) {
+void UnitInitItemsFromInfo(struct Unit* unit, const struct UnitInfo* info)
+{
     int i;
 
-    UnitClearInventory(unit);
+    ClearUnitInventory(unit);
 
-    for (i = 0; (i < UNIT_DEFINITION_ITEM_COUNT) && (uDef->items[i]); ++i)
-        UnitAddItem(unit, MakeNewItem(uDef->items[i]));
+    for (i = 0; (i < UNIT_DEFINITION_ITEM_COUNT) && (info->items[i]); ++i)
+        UnitAddItem(unit, MakeNewItem(info->items[i]));
 }
 
-void UnitLoadStatsFromChracter(struct Unit* unit, const struct CharacterData* character) {
+void UnitInitStats(struct Unit* unit, const struct PInfo* character)
+{
     int i;
 
-    unit->maxHP = character->baseHP + unit->pClassData->baseHP;
-    unit->pow   = character->basePow + unit->pClassData->basePow;
-    unit->skl   = character->baseSkl + unit->pClassData->baseSkl;
-    unit->spd   = character->baseSpd + unit->pClassData->baseSpd;
-    unit->def   = character->baseDef + unit->pClassData->baseDef;
-    unit->res   = character->baseRes + unit->pClassData->baseRes;
+    unit->maxHP = character->baseHP + unit->jinfo->baseHP;
+    unit->pow   = character->basePow + unit->jinfo->basePow;
+    unit->skl   = character->baseSkl + unit->jinfo->baseSkl;
+    unit->spd   = character->baseSpd + unit->jinfo->baseSpd;
+    unit->def   = character->baseDef + unit->jinfo->baseDef;
+    unit->res   = character->baseRes + unit->jinfo->baseRes;
     unit->lck   = character->baseLck;
 
     unit->conBonus = 0;
 
-    for (i = 0; i < 8; ++i) {
-        unit->ranks[i] = unit->pClassData->baseRanks[i];
+    for (i = 0; i < 8; ++i)
+    {
+        unit->wexp[i] = unit->jinfo->baseWexp[i];
 
-        if (unit->pCharacterData->baseRanks[i])
-            unit->ranks[i] = unit->pCharacterData->baseRanks[i];
+        if (unit->pinfo->baseWexp[i])
+            unit->wexp[i] = unit->pinfo->baseWexp[i];
     }
 
     if (UNIT_FACTION(unit) == FACTION_BLUE && (unit->level != UNIT_LEVEL_MAX))
@@ -718,25 +792,30 @@ void UnitLoadStatsFromChracter(struct Unit* unit, const struct CharacterData* ch
         unit->exp = UNIT_EXP_DISABLED;
 }
 
-void FixROMUnitStructPtr(struct Unit* unit) {
+void sub_08017EBC(struct Unit* unit)
+{
     // TODO: investigate why
 
-    if (UNIT_CATTRIBUTES(unit) & CA_BIT_23)
-        unit->pCharacterData = GetCharacterData(unit->pCharacterData->number - 1);
+    if (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_23)
+        unit->pinfo = GetPInfo(unit->pinfo->id - 1);
 }
 
-void UnitLoadSupports(struct Unit* unit) {
+void UnitInitSupports(struct Unit* unit)
+{
     int i, count = GetUnitSupporterCount(unit);
 
     for (i = 0; i < count; ++i)
         unit->supports[i] = GetUnitSupporterInitialExp(unit, i);
 }
 
-void UnitAutolevelWExp(struct Unit* unit, const struct UnitDefinition* uDef) {
-    if (uDef->autolevel) {
+void UnitAutolevelWeaponExp(struct Unit* unit, const struct UnitInfo* info)
+{
+    if (info->autolevel)
+    {
         int i;
 
-        for (i = 0; i < GetUnitItemCount(unit); ++i) {
+        for (i = 0; i < GetUnitItemCount(unit); ++i)
+        {
             int wType, item = unit->items[i];
 
             if (!(GetItemAttributes(item) & IA_REQUIRES_WEXP))
@@ -755,41 +834,46 @@ void UnitAutolevelWExp(struct Unit* unit, const struct UnitDefinition* uDef) {
 
             wType = GetItemType(item);
 
-            if (unit->ranks[wType] == 0)
+            if (unit->wexp[wType] == 0)
                 item = 0;
 
-            unit->ranks[wType] = GetItemRequiredExp(item);
+            unit->wexp[wType] = GetItemRequiredExp(item);
         }
     }
 }
 
-void UnitAutolevelCore(struct Unit* unit, u8 classId, int levelCount) {
-    if (levelCount) {
-        unit->maxHP += GetAutoleveledStatIncrease(unit->pClassData->growthHP,  levelCount);
-        unit->pow   += GetAutoleveledStatIncrease(unit->pClassData->growthPow, levelCount);
-        unit->skl   += GetAutoleveledStatIncrease(unit->pClassData->growthSkl, levelCount);
-        unit->spd   += GetAutoleveledStatIncrease(unit->pClassData->growthSpd, levelCount);
-        unit->def   += GetAutoleveledStatIncrease(unit->pClassData->growthDef, levelCount);
-        unit->res   += GetAutoleveledStatIncrease(unit->pClassData->growthRes, levelCount);
-        unit->lck   += GetAutoleveledStatIncrease(unit->pClassData->growthLck, levelCount);
+void UnitAutolevelCore(struct Unit* unit, u8 jid, int levelCount)
+{
+    if (levelCount)
+    {
+        unit->maxHP += GetAutoleveledStatIncrease(unit->jinfo->growthHP,  levelCount);
+        unit->pow   += GetAutoleveledStatIncrease(unit->jinfo->growthPow, levelCount);
+        unit->skl   += GetAutoleveledStatIncrease(unit->jinfo->growthSkl, levelCount);
+        unit->spd   += GetAutoleveledStatIncrease(unit->jinfo->growthSpd, levelCount);
+        unit->def   += GetAutoleveledStatIncrease(unit->jinfo->growthDef, levelCount);
+        unit->res   += GetAutoleveledStatIncrease(unit->jinfo->growthRes, levelCount);
+        unit->lck   += GetAutoleveledStatIncrease(unit->jinfo->growthLck, levelCount);
     }
 }
 
-void UnitAutolevelPenalty(struct Unit* unit, u8 classId, int levelCount) {
+void UnitAutolevelPenalty(struct Unit* unit, u8 jid, int levelCount)
+{
     int level = unit->level;
 
-    if (levelCount && level > unit->pCharacterData->baseLevel) {
+    if (levelCount && level > unit->pinfo->baseLevel)
+    {
         levelCount = level - levelCount;
 
-        unit->maxHP = unit->pCharacterData->baseHP  + unit->pClassData->baseHP;
-        unit->pow   = unit->pCharacterData->basePow + unit->pClassData->basePow;
-        unit->skl   = unit->pCharacterData->baseSkl + unit->pClassData->baseSkl;
-        unit->spd   = unit->pCharacterData->baseSpd + unit->pClassData->baseSpd;
-        unit->def   = unit->pCharacterData->baseDef + unit->pClassData->baseDef;
-        unit->res   = unit->pCharacterData->baseRes + unit->pClassData->baseRes;
-        unit->lck   = unit->pCharacterData->baseLck;
+        unit->maxHP = unit->pinfo->baseHP  + unit->jinfo->baseHP;
+        unit->pow   = unit->pinfo->basePow + unit->jinfo->basePow;
+        unit->skl   = unit->pinfo->baseSkl + unit->jinfo->baseSkl;
+        unit->spd   = unit->pinfo->baseSpd + unit->jinfo->baseSpd;
+        unit->def   = unit->pinfo->baseDef + unit->jinfo->baseDef;
+        unit->res   = unit->pinfo->baseRes + unit->jinfo->baseRes;
+        unit->lck   = unit->pinfo->baseLck;
 
-        if (levelCount > unit->pCharacterData->baseLevel) {
+        if (levelCount > unit->pinfo->baseLevel)
+        {
             unit->level = levelCount;
             UnitAutolevel(unit);
             unit->level = level;
@@ -797,36 +881,42 @@ void UnitAutolevelPenalty(struct Unit* unit, u8 classId, int levelCount) {
     }
 }
 
-void UnitApplyBonusLevels(struct Unit* unit, int levelCount) {
-    if (levelCount && !UNIT_IS_GORGON_EGG(unit)) {
+void UnitApplyBonusLevels(struct Unit* unit, int levelCount)
+{
+    if (levelCount && !UNIT_IS_GORGON_EGG(unit))
+    {
         if (levelCount > 0)
-            UnitAutolevelCore(unit, unit->pClassData->number, levelCount);
+            UnitAutolevelCore(unit, unit->jinfo->id, levelCount);
         else if (levelCount < 0)
-            UnitAutolevelPenalty(unit, unit->pClassData->number, -levelCount);
+            UnitAutolevelPenalty(unit, unit->jinfo->id, -levelCount);
 
-        UnitCheckStatCaps(unit);
+        UnitCheckStatOverflow(unit);
 
         unit->curHP = GetUnitMaxHp(unit);
     }
 }
 
-void UnitAutolevel(struct Unit* unit) {
-    if (UNIT_CATTRIBUTES(unit) & CA_PROMOTED)
-        UnitAutolevelCore(unit, unit->pClassData->promotion, GetCurrentPromotedLevelBonus());
+void UnitAutolevel(struct Unit* unit)
+{
+    if (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_PROMOTED)
+        UnitAutolevelCore(unit, unit->jinfo->jidPromotion, GetCurrentPromotedLevelBonus());
 
-    UnitAutolevelCore(unit, unit->pClassData->number, unit->level - 1);
+    UnitAutolevelCore(unit, unit->jinfo->id, unit->level - 1);
 }
 
-void UnitAutolevelRealistic(struct Unit* unit) {
+void UnitAutolevelRealistic(struct Unit* unit)
+{
     struct BattleUnit tmpBattleUnit;
     short levelsLeft;
 
     tmpBattleUnit.expGain = 0;
 
-    levelsLeft = (unit->level - unit->pCharacterData->baseLevel);
+    levelsLeft = (unit->level - unit->pinfo->baseLevel);
 
-    if (levelsLeft) {
-        for (unit->level -= levelsLeft; levelsLeft > 0; --levelsLeft) {
+    if (levelsLeft)
+    {
+        for (unit->level -= levelsLeft; levelsLeft > 0; --levelsLeft)
+        {
             InitBattleUnit(&tmpBattleUnit, unit);
 
             tmpBattleUnit.unit.exp += 100;
@@ -837,7 +927,8 @@ void UnitAutolevelRealistic(struct Unit* unit) {
     }
 }
 
-void UnitCheckStatCaps(struct Unit* unit) {
+void UnitCheckStatOverflow(struct Unit* unit)
+{
     if (unit->maxHP > UNIT_MHP_MAX(unit))
         unit->maxHP = UNIT_MHP_MAX(unit);
 
@@ -866,98 +957,116 @@ void UnitCheckStatCaps(struct Unit* unit) {
         unit->movBonus = (UNIT_MOV_MAX(unit) - UNIT_MOV_BASE(unit));
 }
 
-struct Unit* GetUnitFromCharId(int charId) {
+struct Unit* GetUnitByPid(int pid)
+{
     int i;
 
-    for (i = 1; i < 0x100; ++i) {
+    for (i = 1; i < 0x100; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
-        if (UNIT_IS_VALID(unit) && unit->pCharacterData->number == charId)
+        if (UNIT_IS_VALID(unit) && unit->pinfo->id == pid)
             return unit;
     }
 
     return NULL;
 }
 
-struct Unit* GetUnitFromCharIdAndFaction(int charId, int faction) {
+struct Unit* GetUnitByPidAndFaction(int pid, int faction)
+{
     int i, last = faction + 0x40;
 
-    for (i = faction + 1; i < last; ++i) {
+    for (i = faction + 1; i < last; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
-        if (UNIT_IS_VALID(unit) && unit->pCharacterData->number == charId)
+        if (UNIT_IS_VALID(unit) && unit->pinfo->id == pid)
             return unit;
     }
 
     return NULL;
 }
 
-s8 CanUnitRescue(struct Unit* actor, struct Unit* target) {
-    int actorAid  = GetUnitAid(actor);
+s8 CanUnitCarry(struct Unit* actor, struct Unit* target)
+{
+    int actorAid = GetUnitAid(actor);
     int targetCon = UNIT_CON(target);
 
     return (actorAid >= targetCon) ? TRUE : FALSE;
 }
 
-void UnitRescue(struct Unit* actor, struct Unit* target) {
-    actor->state  |= US_RESCUING;
-    target->state |= US_RESCUED | US_HIDDEN;
+void UnitRescue(struct Unit* actor, struct Unit* target)
+{
+    actor->flags  |= UNIT_FLAG_RESCUING;
+    target->flags |= UNIT_FLAG_RESCUED | UNIT_FLAG_HIDDEN;
 
-    actor->rescueOtherUnit = target->index;
-    target->rescueOtherUnit = actor->index;
+    actor->rescue = target->id;
+    target->rescue = actor->id;
 
-    target->xPos = actor->xPos;
-    target->yPos = actor->yPos;
+    target->x = actor->x;
+    target->y = actor->y;
 }
 
-void UnitDrop(struct Unit* actor, int xTarget, int yTarget) {
-    struct Unit* target = GetUnit(actor->rescueOtherUnit);
+void UnitDropRescue(struct Unit* actor, int xTarget, int yTarget)
+{
+    struct Unit* target = GetUnit(actor->rescue);
 
-    actor->state = actor->state &~ (US_RESCUING | US_RESCUED);
-    target->state = target->state &~ (US_RESCUING | US_RESCUED | US_HIDDEN);
+    actor->flags = actor->flags &~ (UNIT_FLAG_RESCUING | UNIT_FLAG_RESCUED);
+    target->flags = target->flags &~ (UNIT_FLAG_RESCUING | UNIT_FLAG_RESCUED | UNIT_FLAG_HIDDEN);
 
-    if (UNIT_FACTION(target) == gRAMChapterData.chapterPhaseIndex)
-        target->state |= US_UNSELECTABLE; // TODO: US_GRAYED
+    if (UNIT_FACTION(target) == gPlaySt.chapterPhaseIndex)
+        target->flags |= UNIT_FLAG_TURN_ENDED; // TODO: US_GRAYED
 
-    actor->rescueOtherUnit = 0;
-    target->rescueOtherUnit = 0;
+    actor->rescue = 0;
+    target->rescue = 0;
 
-    target->xPos = xTarget;
-    target->yPos = yTarget;
+    target->x = xTarget;
+    target->y = yTarget;
 }
 
-s8 UnitGive(struct Unit* actor, struct Unit* target) {
-    struct Unit* rescuee = GetUnit(actor->rescueOtherUnit);
+s8 UnitGiveRescue(struct Unit* actor, struct Unit* target)
+{
+    struct Unit* rescuee = GetUnit(actor->rescue);
 
     // no used be needed to match etc
-    int couldGive = CanUnitRescue(target, rescuee);
+    int couldGive = CanUnitCarry(target, rescuee);
 
-    UnitDrop(actor, 0, 0);
+    UnitDropRescue(actor, 0, 0);
     UnitRescue(target, rescuee);
 
     // return couldGive; // devs probably forgot to add this
 }
 
-inline char* GetUnitRescueName(struct Unit* unit) {
-    if (!unit->rescueOtherUnit)
+inline char const* GetUnitRescueName(struct Unit* unit)
+{
+    if (!unit->rescue)
         return GetMsg(sStatusNameTextIdLookup[0]);
 
-    return GetMsg(GetUnit(unit->rescueOtherUnit)->pCharacterData->nameTextId);
+    return GetMsg(GetUnit(unit->rescue)->pinfo->msgName);
 }
 
-void UnitKill(struct Unit* unit) {
-    if (UNIT_FACTION(unit) == FACTION_BLUE) {
+void KillUnit(struct Unit* unit)
+{
+    if (UNIT_FACTION(unit) == FACTION_BLUE)
+    {
         if (UNIT_IS_PHANTOM(unit))
-            unit->pCharacterData = NULL;
-        else {
-            unit->state |= US_DEAD | US_HIDDEN;
-            ClearUnitSupports(unit);
+        {
+            unit->pinfo = NULL;
         }
-    } else
-        unit->pCharacterData = NULL;
+        else
+        {
+            unit->flags |= UNIT_FLAG_DEAD | UNIT_FLAG_HIDDEN;
+            UnitClearSupports(unit);
+        }
+    }
+    else
+    {
+        unit->pinfo = NULL;
+    }
 }
 
-void UnitChangeFaction(struct Unit* unit, int faction) {
+void UnitChangeFaction(struct Unit* unit, int faction)
+{
     struct Unit* newUnit = GetFreeUnit(faction);
 
     if (gActiveUnit == unit)
@@ -966,72 +1075,81 @@ void UnitChangeFaction(struct Unit* unit, int faction) {
     CopyUnit(unit, newUnit);
     ClearUnit(unit);
 
-    if (newUnit->exp == UNIT_EXP_DISABLED) {
+    if (newUnit->exp == UNIT_EXP_DISABLED)
+    {
         if ((faction == FACTION_BLUE) && (newUnit->level != UNIT_LEVEL_MAX))
             newUnit->exp = 0;
         else
             newUnit->exp = UNIT_EXP_DISABLED;
     }
 
-    newUnit->state = newUnit->state &~ US_DROP_ITEM;
+    newUnit->flags = newUnit->flags &~ UNIT_FLAG_DROPS_ITEM;
 
-    if (newUnit->rescueOtherUnit)
-        GetUnit(newUnit->rescueOtherUnit)->rescueOtherUnit = newUnit->index;
+    if (newUnit->rescue)
+        GetUnit(newUnit->rescue)->rescue = newUnit->id;
 }
 
-inline s8 CanUnitCrossTerrain(struct Unit* unit, int terrain) {
+inline s8 CanUnitCrossTerrain(struct Unit* unit, int terrain)
+{
     const s8* lookup = GetUnitMovementCost(unit);
     return (lookup[terrain] > 0) ? TRUE : FALSE;
 }
 
-void UnitFinalizeMovement(struct Unit* unit) {
-    if (unit->state & US_RESCUING) {
-        struct Unit* rescuee = GetUnit(unit->rescueOtherUnit);
+void UnitSyncMovement(struct Unit* unit)
+{
+    if (unit->flags & UNIT_FLAG_RESCUING)
+    {
+        struct Unit* rescuee = GetUnit(unit->rescue);
 
-        rescuee->xPos = unit->xPos;
-        rescuee->yPos = unit->yPos;
+        rescuee->x = unit->x;
+        rescuee->y = unit->y;
     }
 
-    if (unit->state & US_IN_BALLISTA) {
-        struct Trap* trap = GetTrap(unit->ballistaIndex);
+    if (unit->flags & UNIT_FLAG_IN_BALLISTA)
+    {
+        struct Trap* trap = GetTrap(unit->ballistaId);
 
-        trap->xPos = unit->xPos;
-        trap->yPos = unit->yPos;
+        trap->x = unit->x;
+        trap->y = unit->y;
     }
 }
 
-void UnitGetDeathDropLocation(struct Unit* unit, int* xOut, int* yOut) {
+void UnitGetDropPositionOnDeath(struct Unit* unit, int* xOut, int* yOut)
+{
     int iy, ix, minDistance = 9999;
-    struct Unit* rescuee = GetUnit(unit->rescueOtherUnit);
+    struct Unit* rescuee = GetUnit(unit->rescue);
 
     // Fill the movement map
-    GenerateExtendedMovementMap(unit->xPos, unit->yPos, gUnknown_0880BB96);
+    MapMovementFillMovementFromPosition(unit->x, unit->y, gUnknown_0880BB96);
 
     // Put the active unit on the unit map (kinda, just marking its spot)
-    gBmMapUnit[gActiveUnit->yPos][gActiveUnit->xPos] = 0xFF;
+    gMapUnit[gActiveUnit->y][gActiveUnit->x] = 0xFF;
 
     // Remove the actor unit from the unit map (why?)
-    gBmMapUnit[unit->yPos][unit->xPos] = 0;
+    gMapUnit[unit->y][unit->x] = 0;
 
-    for (iy = gBmMapSize.y - 1; iy >= 0; --iy) {
-        for (ix = gBmMapSize.x - 1; ix >= 0; --ix) {
+    for (iy = gMapSize.y - 1; iy >= 0; --iy)
+    {
+        for (ix = gMapSize.x - 1; ix >= 0; --ix)
+        {
             int distance;
 
-            if (gBmMapMovement[iy][ix] > MAP_MOVEMENT_MAX)
+            if (gMapMovement[iy][ix] > MAP_MOVEMENT_MAX)
                 continue;
 
-            if (gBmMapUnit[iy][ix] != 0)
+            if (gMapUnit[iy][ix] != 0)
                 continue;
 
-            if (gBmMapHidden[iy][ix] & HIDDEN_BIT_UNIT)
+            if (gMapHidden[iy][ix] & HIDDEN_BIT_UNIT)
                 continue;
 
-            if (!CanUnitCrossTerrain(rescuee, gBmMapTerrain[iy][ix]))
+            if (!CanUnitCrossTerrain(rescuee, gMapTerrain[iy][ix]))
                 continue;
 
-            distance = RECT_DISTANCE(ix, iy, unit->xPos, unit->yPos);
+            distance = RECT_DISTANCE(ix, iy, unit->x, unit->y);
 
-            if (minDistance >= distance) {
+            if (minDistance >= distance)
+            {
                 minDistance = distance;
 
                 *xOut = ix;
@@ -1041,162 +1159,183 @@ void UnitGetDeathDropLocation(struct Unit* unit, int* xOut, int* yOut) {
     }
 
     // Remove the active unit from the unit map again
-    gBmMapUnit[gActiveUnit->yPos][gActiveUnit->xPos] = 0;
+    gMapUnit[gActiveUnit->y][gActiveUnit->x] = 0;
 }
 
-void UnitBeginAction(struct Unit* unit) {
+void UnitBeginAction(struct Unit* unit)
+{
     gActiveUnit = unit;
-    gActiveUnitId = unit->index;
+    gActiveUnitId = unit->id;
 
-    gActiveUnitMoveOrigin.x = unit->xPos;
-    gActiveUnitMoveOrigin.y = unit->yPos;
+    gActiveUnitMoveOrigin.x = unit->x;
+    gActiveUnitMoveOrigin.y = unit->y;
 
-    gActionData.subjectIndex = unit->index;
-    gActionData.unitActionType = 0;
-    gActionData.moveCount = 0;
+    gAction.subjectIndex = unit->id;
+    gAction.unitActionType = 0;
+    gAction.moveCount = 0;
 
-    gUnknown_0202BCB0.unk3D = 0;
-    gUnknown_0202BCB0.unk3F = 0xFF;
+    gBmSt.unk3D = 0;
+    gBmSt.unk3F = 0xFF;
 
     sub_802C334();
 
-    gActiveUnit->state |= US_HIDDEN;
-    gBmMapUnit[unit->yPos][unit->xPos] = 0;
+    gActiveUnit->flags |= UNIT_FLAG_HIDDEN;
+    gMapUnit[unit->y][unit->x] = 0;
 }
 
-void UnitBeginCantoAction(struct Unit* unit) {
+void UnitBeginCantoAction(struct Unit* unit)
+{
     gActiveUnit = unit;
-    gActiveUnitId = unit->index;
+    gActiveUnitId = unit->id;
 
-    gActiveUnitMoveOrigin.x = unit->xPos;
-    gActiveUnitMoveOrigin.y = unit->yPos;
+    gActiveUnitMoveOrigin.x = unit->x;
+    gActiveUnitMoveOrigin.y = unit->y;
 
-    gActionData.unitActionType = 0;
+    gAction.unitActionType = 0;
 
-    gUnknown_0202BCB0.unk3D = 0;
+    gBmSt.unk3D = 0;
 
     sub_802C334();
 
-    gActiveUnit->state |= US_HIDDEN;
-    gBmMapUnit[unit->yPos][unit->xPos] = 0;
+    gActiveUnit->flags |= UNIT_FLAG_HIDDEN;
+    gMapUnit[unit->y][unit->x] = 0;
 }
 
-void MoveActiveUnit(int x, int y) {
-    gActiveUnit->xPos = x;
-    gActiveUnit->yPos = y;
+void MoveActiveUnit(int x, int y)
+{
+    gActiveUnit->x = x;
+    gActiveUnit->y = y;
 
-    gActiveUnit->state |= US_UNSELECTABLE;
+    gActiveUnit->flags |= UNIT_FLAG_TURN_ENDED;
 
-    BWL_AddTilesMoved(gActiveUnit->pCharacterData->number, gActionData.moveCount);
+    BWL_AddTilesMoved(gActiveUnit->pinfo->id, gAction.moveCount);
 
     if (GetUnitCurrentHp(gActiveUnit) != 0)
-        gActiveUnit->state = gActiveUnit->state &~ US_HIDDEN;
+        gActiveUnit->flags = gActiveUnit->flags &~ UNIT_FLAG_HIDDEN;
 
-    UnitFinalizeMovement(gActiveUnit);
+    UnitSyncMovement(gActiveUnit);
 }
 
-void ClearActiveFactionGrayedStates(void) {
+void ClearActiveFactionGrayedStates(void)
+{
     int i;
 
-    if (gRAMChapterData.chapterPhaseIndex == FACTION_BLUE) {
+    if (gPlaySt.chapterPhaseIndex == FACTION_BLUE)
+    {
         int i;
 
-        for (i = 1; i < 0x40; ++i) {
+        for (i = 1; i < 0x40; ++i)
+        {
             struct Unit* unit = GetUnit(i);
 
             if (!UNIT_IS_VALID(unit))
                 continue;
 
-            if (UNIT_CATTRIBUTES(unit) & CA_SUPPLY)
+            if (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_SUPPLY)
                 continue;
 
-            if (unit->state & (US_UNAVAILABLE | US_UNSELECTABLE))
+            if (unit->flags & (UNIT_FLAGS_UNAVAILABLE | UNIT_FLAG_TURN_ENDED))
                 continue;
 
-            StoreSomeUnitSetFlags(unit->pCharacterData->number);
+            StoreSomeUnitSetFlags(unit->pinfo->id);
         }
     }
 
-    for (i = gRAMChapterData.chapterPhaseIndex + 1; i < gRAMChapterData.chapterPhaseIndex + 0x40; ++i) {
+    for (i = gPlaySt.chapterPhaseIndex + 1; i < gPlaySt.chapterPhaseIndex + 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (UNIT_IS_VALID(unit))
-            unit->state = unit->state &~ (US_UNSELECTABLE | US_HAS_MOVED | US_HAS_MOVED_AI);
+            unit->flags = unit->flags &~ (UNIT_FLAG_TURN_ENDED | UNIT_FLAG_HAD_ACTION | UNIT_FLAG_AI_PROCESSED);
     }
 }
 
-void TickActiveFactionTurn(void) {
+void TickActiveFactionTurn(void)
+{
     int i, displayMapChange = FALSE;
 
     InitTargets(0, 0);
 
-    for (i = gRAMChapterData.chapterPhaseIndex + 1; i < gRAMChapterData.chapterPhaseIndex + 0x40; ++i) {
+    for (i = gPlaySt.chapterPhaseIndex + 1; i < gPlaySt.chapterPhaseIndex + 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & (US_UNAVAILABLE | US_RESCUED))
+        if (unit->flags & (UNIT_FLAGS_UNAVAILABLE | UNIT_FLAG_RESCUED))
             continue;
 
         if (unit->barrierDuration != 0)
             unit->barrierDuration--;
 
-        if (unit->torchDuration != 0) {
+        if (unit->torchDuration != 0)
+        {
             unit->torchDuration--;
             displayMapChange = TRUE;
         }
 
-        if (unit->statusDuration != 0) {
-            if (unit->statusIndex != UNIT_STATUS_RECOVER)
+        if (unit->statusDuration != 0)
+        {
+            if (unit->statusId != UNIT_STATUS_RECOVER)
                 unit->statusDuration--;
 
             if (unit->statusDuration == 0)
-                AddTarget(unit->xPos, unit->yPos, unit->index, 0);
+                AddTarget(unit->x, unit->y, unit->id, 0);
         }
     }
 
-    if (displayMapChange) {
+    if (displayMapChange)
+    {
         RenderBmMapOnBg2();
         RefreshEntityBmMaps();
         RenderBmMap();
-        NewBMXFADE(TRUE);
-        SMS_UpdateFromGameData();
+        StartBMXFADE(TRUE);
+        RefreshUnitSprites();
     }
 }
 
-void SetAllUnitNotBackSprite(void) {
+void ClearUnitsSeenFlag(void)
+{
     int i;
 
-    for (i = 1; i < 0xC0; ++i) {
+    for (i = 1; i < 0xC0; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (UNIT_IS_VALID(unit))
-            unit->state = unit->state &~ US_BIT8;
+            unit->flags = unit->flags &~ UNIT_FLAG_SEEN;
     }
 }
 
-void UnitUpdateUsedItem(struct Unit* unit, int itemSlot) {
-    if (unit->items[itemSlot]) {
+void UnitUpdateUsedItem(struct Unit* unit, int itemSlot)
+{
+    if (unit->items[itemSlot])
+    {
         unit->items[itemSlot] = GetItemAfterUse(unit->items[itemSlot]);
         UnitRemoveInvalidItems(unit);
     }
 }
 
-int GetUnitAid(struct Unit* unit) {
-    if (!(UNIT_CATTRIBUTES(unit) & CA_MOUNTEDAID))
+int GetUnitAid(struct Unit* unit)
+{
+    if (!(UNIT_ATTRIBUTES(unit) & UNIT_ATTR_MOUNTED))
         return UNIT_CON(unit) - 1;
 
-    if (UNIT_CATTRIBUTES(unit) & CA_FEMALE)
+    if (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_FEMALE)
         return 20 - UNIT_CON(unit);
     else
         return 25 - UNIT_CON(unit);
 }
 
-int GetUnitMagBy2Range(struct Unit* unit) {
-    if (unit->pCharacterData->number == CHARACTER_FOMORTIIS) {
-        return GetItemMaxRange(ITEM_NIGHTMARE);
-    } else {
+int GetUnitMagRange(struct Unit* unit)
+{
+    if (unit->pinfo->id == PID_FOMORTIIS)
+    {
+        return GetItemMaxRange(IID_NIGHTMARE);
+    }
+    else
+    {
         int result = GetUnitPower(unit) / 2;
 
         if (result < 5)
@@ -1206,48 +1345,54 @@ int GetUnitMagBy2Range(struct Unit* unit) {
     }
 }
 
-s8 UnitHasMagicRank(struct Unit* unit) {
+s8 UnitKnowsMagic(struct Unit* unit)
+{
     u8 combinedRanks = 0; 
 
-    combinedRanks |= unit->ranks[ITYPE_STAFF];
-    combinedRanks |= unit->ranks[ITYPE_ANIMA];
-    combinedRanks |= unit->ranks[ITYPE_LIGHT];
-    combinedRanks |= unit->ranks[ITYPE_DARK];
+    combinedRanks |= unit->wexp[ITYPE_STAFF];
+    combinedRanks |= unit->wexp[ITYPE_ANIMA];
+    combinedRanks |= unit->wexp[ITYPE_LIGHT];
+    combinedRanks |= unit->wexp[ITYPE_DARK];
 
     return combinedRanks ? TRUE : FALSE;
 }
 
-void sub_8018A7C(struct Unit* unit, int x, int y) {
-    if (!(unit->state & US_UNDER_A_ROOF)) {
-        unit->state = unit->state &~ (US_HIDDEN | US_NOT_DEPLOYED);
+void sub_8018A7C(struct Unit* unit, int x, int y)
+{
+    if (!(unit->flags & UNIT_FLAG_UNDER_ROOF))
+    {
+        unit->flags = unit->flags &~ (UNIT_FLAG_HIDDEN | UNIT_FLAG_UNDEPLOYED);
 
-        unit->xPos = x;
-        unit->yPos = y;
+        unit->x = x;
+        unit->y = y;
     }
 }
 
-int GetUnitKeyItemSlotForTerrain(struct Unit* unit, int terrain) {
+int GetUnitKeyItemSlotForTerrain(struct Unit* unit, int terrain)
+{
     int slot, item = 0;
 
-    if (UNIT_CATTRIBUTES(unit) & CA_THIEF) {
-        int slot = GetUnitItemSlot(unit, ITEM_LOCKPICK);
+    if (UNIT_ATTRIBUTES(unit) & UNIT_ATTR_THIEF)
+    {
+        int slot = GetUnitItemSlot(unit, IID_LOCKPICK);
 
         if (slot >= 0)
             return slot;
     }
 
-    switch (terrain) {
+    switch (terrain)
+    {
 
     case TERRAIN_CHEST_21:
-        slot = GetUnitItemSlot(unit, ITEM_CHESTKEY);
+        slot = GetUnitItemSlot(unit, IID_CHESTKEY);
 
         if (slot < 0)
-            slot = GetUnitItemSlot(unit, ITEM_CHESTKEY_BUNDLE);
+            slot = GetUnitItemSlot(unit, IID_CHESTKEY_BUNDLE);
 
         return slot;
 
     case TERRAIN_DOOR:
-        item = ITEM_DOORKEY;
+        item = IID_DOORKEY;
         break;
 
     } // switch (terrain)
@@ -1255,25 +1400,28 @@ int GetUnitKeyItemSlotForTerrain(struct Unit* unit, int terrain) {
     return GetUnitItemSlot(unit, item);
 }
 
-int GetUnitAidIconId(u32 attributes) {
+int GetUnitAidIconId(u32 attributes)
+{
     // TODO: use icon id constants
 
-    if (attributes & CA_MOUNTED)
+    if (attributes & UNIT_ATTR_HORSE)
         return 0x81;
 
-    if (attributes & CA_PEGASUS)
+    if (attributes & UNIT_ATTR_PEGASUS)
         return 0x82;
 
-    if (attributes & CA_WYVERN)
+    if (attributes & UNIT_ATTR_WYVERN)
         return 0x83;
 
     return (-1);
 }
 
-int GetUnitWeaponUsabilityBits(struct Unit* unit) {
+int GetUnitWeaponUsabilityBits(struct Unit* unit)
+{
     int i, item, result = 0;
 
-    for (i = 0; (i < UNIT_ITEM_COUNT) && (item = unit->items[i]); ++i) {
+    for (i = 0; (i < UNIT_ITEM_COUNT) && (item = unit->items[i]); ++i)
+    {
         if ((GetItemAttributes(item) & IA_WEAPON) && CanUnitUseWeapon(unit, item))
             result |= UNIT_USEBIT_WEAPON;
 
@@ -1284,10 +1432,12 @@ int GetUnitWeaponUsabilityBits(struct Unit* unit) {
     return result;
 }
 
-int GetCombinedEnemyWeaponUsabilityBits(void) {
+int GetCombinedEnemyWeaponUsabilityBits(void)
+{
     int i, result = 0;
 
-    for (i = 0x81; i < 0xC0; ++i) {
+    for (i = 0x81; i < 0xC0; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (UNIT_IS_VALID(unit))
@@ -1297,31 +1447,34 @@ int GetCombinedEnemyWeaponUsabilityBits(void) {
     return result;
 }
 
-s8 CanUnitMove(void) {
-    s8 adjLookup[4 * 2] = {
-        -1, 0,
-        0, -1,
-        +1, 0,
-        0, +1,
+s8 CanUnitMove(void)
+{
+    s8 adjLookup[4 * 2] =
+    {
+        -1,  0,
+         0, -1,
+        +1,  0,
+         0, +1,
     };
 
-    int move = UNIT_MOV(gActiveUnit) - gActionData.moveCount;
+    int move = UNIT_MOV(gActiveUnit) - gAction.moveCount;
 
-    int xUnit = gActiveUnit->xPos;
-    int yUnit = gActiveUnit->yPos;
+    int xUnit = gActiveUnit->x;
+    int yUnit = gActiveUnit->y;
 
     int i;
 
-    for (i = 0; i < 4; ++i) {
+    for (i = 0; i < 4; ++i)
+    {
         int xLocal = xUnit + adjLookup[i*2 + 0];
         int yLocal = yUnit + adjLookup[i*2 + 1];
 
         int cost;
 
-        if (gBmMapUnit[yLocal][xLocal] & FACTION_RED)
+        if (gMapUnit[yLocal][xLocal] & FACTION_RED)
             continue;
 
-        cost = GetUnitMovementCost(gActiveUnit)[gBmMapTerrain[yLocal][xLocal]];
+        cost = GetUnitMovementCost(gActiveUnit)[gMapTerrain[yLocal][xLocal]];
 
         if ((cost < 0) || (cost > move))
             continue;
@@ -1332,135 +1485,149 @@ s8 CanUnitMove(void) {
     return FALSE;
 }
 
-s8 IsPositionMagicSealed(int x, int y) {
+s8 IsPositionMagicSealed(int x, int y)
+{
     int i;
 
-    for (i = 0x81; i < 0xC0; ++i) {
+    for (i = 0x81; i < 0xC0; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (!(UNIT_CATTRIBUTES(unit) & CA_MAGICSEAL))
+        if (!(UNIT_ATTRIBUTES(unit) & UNIT_ATTR_MAGICSEAL))
             continue;
 
-        if (RECT_DISTANCE(unit->xPos, unit->yPos, x, y) <= 10)
+        if (RECT_DISTANCE(unit->x, unit->y, x, y) <= 10)
             return TRUE;
     }
 
     return FALSE;
 }
 
-s8 IsUnitMagicSealed(struct Unit* unit) {
-    if (unit->statusIndex == UNIT_STATUS_SILENCED)
+s8 IsUnitMagicSealed(struct Unit* unit)
+{
+    if (unit->statusId == UNIT_STATUS_SILENCED)
         return TRUE;
 
-    if (IsPositionMagicSealed(unit->xPos, unit->yPos))
+    if (IsPositionMagicSealed(unit->x, unit->y))
         return TRUE;
 
     return FALSE;
 }
 
-int GetUnitLastItem(struct Unit* unit) {
+int GetUnitLastItem(struct Unit* unit)
+{
     return unit->items[GetUnitItemCount(unit) - 1];
 }
 
-const s8* GetUnitMovementCost(struct Unit* unit) {
-    if (unit->state & US_IN_BALLISTA)
+const s8* GetUnitMovementCost(struct Unit* unit)
+{
+    if (unit->flags & UNIT_FLAG_IN_BALLISTA)
         return gUnknown_0880BC18;
 
-    switch (gRAMChapterData.chapterWeatherId) {
+    switch (gPlaySt.chapterWeatherId)
+    {
 
     case WEATHER_RAIN:
-        return unit->pClassData->pMovCostTable[1];
+        return unit->jinfo->moveTable[1];
 
     case WEATHER_SNOW:
     case WEATHER_SNOWSTORM:
-        return unit->pClassData->pMovCostTable[2];
+        return unit->jinfo->moveTable[2];
 
     default:
-        return unit->pClassData->pMovCostTable[0];
+        return unit->jinfo->moveTable[0];
 
-    } // switch (gRAMChapterData.chapterWeatherId)
+    } // switch (gPlaySt.chapterWeatherId)
 }
 
-int GetClassSMSId(int classId) {
-    return GetClassData(classId)->SMSId;
+int GetUnitSpriteByJid(int jid)
+{
+    return GetJInfo(jid)->mapSprite;
 }
 
-void UpdatePrevDeployStates(void) {
+void UpdatePrevDeployStates(void)
+{
     int i;
 
-    for (i = 1; i < 0x40; ++i) {
+    for (i = 1; i < 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_NOT_DEPLOYED)
-            unit->state = unit->state | US_BIT21;
+        if (unit->flags & UNIT_FLAG_UNDEPLOYED)
+            unit->flags = unit->flags | UNIT_FLAG_WAS_UNDEPLOYED;
         else
-            unit->state = unit->state &~ US_BIT21;
+            unit->flags = unit->flags &~ UNIT_FLAG_WAS_UNDEPLOYED;
 
-        if (unit->state & US_BIT16)
-            unit->state = unit->state | US_BIT26;
+        if (unit->flags & UNIT_FLAG_AWAY)
+            unit->flags = unit->flags | UNIT_FLAG_WAS_AWAY;
         else
-            unit->state = unit->state &~ US_BIT26;
+            unit->flags = unit->flags &~ UNIT_FLAG_WAS_AWAY;
     }
 
-    if (gRAMChapterData.chapterStateBits & CHAPTER_FLAG_PREPSCREEN)
+    if (gPlaySt.chapterStateBits & CHAPTER_FLAG_PREPSCREEN)
         StoreUnitWordStructs();
 
     ResetAllPlayerUnitState();
 }
 
-void LoadUnitPrepScreenPositions(void) {
+void LoadUnitPrepScreenPositions(void)
+{
     int i;
 
     ResetAllPlayerUnitState();
     ClearCutsceneUnits();
 
-    for (i = 1; i < 0x40; ++i) {
+    for (i = 1; i < 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_BIT21)
-            unit->state = unit->state | US_NOT_DEPLOYED;
+        if (unit->flags & UNIT_FLAG_WAS_UNDEPLOYED)
+            unit->flags = unit->flags | UNIT_FLAG_UNDEPLOYED;
         else
-            unit->state = unit->state &~ US_NOT_DEPLOYED;
+            unit->flags = unit->flags &~ UNIT_FLAG_UNDEPLOYED;
 
-        if (unit->state & US_BIT26)
-            unit->state = unit->state | US_BIT16;
+        if (unit->flags & UNIT_FLAG_WAS_AWAY)
+            unit->flags = unit->flags | UNIT_FLAG_AWAY;
         else
-            unit->state = unit->state &~ US_BIT16;
+            unit->flags = unit->flags &~ UNIT_FLAG_AWAY;
 
-        unit->state |= US_HIDDEN;
+        unit->flags |= UNIT_FLAG_HIDDEN;
     }
 
-    if (gRAMChapterData.chapterStateBits & CHAPTER_FLAG_PREPSCREEN)
+    if (gPlaySt.chapterStateBits & CHAPTER_FLAG_PREPSCREEN)
         LoadUnitWordStructs();
 }
 
-void ClearTemporaryUnits(void) {
+void ClearTemporaryUnits(void)
+{
     int i;
 
     // player units
-    for (i = 1; i < 0x40; ++i) {
+    for (i = 1; i < 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        unit->state |= US_HIDDEN;
+        unit->flags |= UNIT_FLAG_HIDDEN;
 
         if (UNIT_IS_PHANTOM(unit))
             ClearUnit(unit);
     }
 
     // red units
-    for (i = 0x81; i < 0xC0; ++i) {
+    for (i = 0x81; i < 0xC0; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (UNIT_IS_VALID(unit))
@@ -1468,7 +1635,8 @@ void ClearTemporaryUnits(void) {
     }
 
     // green units
-    for (i = 0x41; i < 0x80; ++i) {
+    for (i = 0x41; i < 0x80; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (UNIT_IS_VALID(unit))
@@ -1476,39 +1644,44 @@ void ClearTemporaryUnits(void) {
     }
 
     RefreshEntityBmMaps();
-    SMS_UpdateFromGameData();
+    RefreshUnitSprites();
 }
 
-s8 IsUnitSlotAvailable(int faction) {
+s8 IsUnitSlotAvailable(int faction)
+{
     int i;
 
     for (i = faction + 1; i < faction + 0x40; ++i)
-        if (GetUnit(i)->pCharacterData == NULL)
+        if (GetUnit(i)->pinfo == NULL)
             return TRUE;
 
     return FALSE;
 }
 
-void sub_8018F80(void) {
+void sub_8018F80(void)
+{
     int i;
 
-    for (i = 1; i < 0x40; ++i) {
+    for (i = 1; i < 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_DEAD)
+        if (unit->flags & UNIT_FLAG_DEAD)
             continue;
 
-        unit->state |= US_HIDDEN;
+        unit->flags |= UNIT_FLAG_HIDDEN;
     }
 }
 
-void sub_8018FC0(void) {
+void sub_8018FC0(void)
+{
     int i;
 
-    for (i = 0x41; i < 0xC0; ++i) {
+    for (i = 0x41; i < 0xC0; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
@@ -1518,18 +1691,20 @@ void sub_8018FC0(void) {
     }
 }
 
-u16 CountAvailableBlueUnits(void) {
+u16 CountAvailableBlueUnits(void)
+{
     int i;
 
     u16 result = 0;
 
-    for (i = 1; i < 0x40; ++i) {
+    for (i = 1; i < 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_UNAVAILABLE)
+        if (unit->flags & UNIT_FLAGS_UNAVAILABLE)
             continue;
 
         ++result;
@@ -1538,18 +1713,20 @@ u16 CountAvailableBlueUnits(void) {
     return result;
 }
 
-int CountRedUnits(void) {
+int CountRedUnits(void)
+{
     int i;
 
     u16 result = 0;
 
-    for (i = 0x81; i < 0xC0; ++i) {
+    for (i = 0x81; i < 0xC0; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_DEAD)
+        if (unit->flags & UNIT_FLAG_DEAD)
             continue;
 
         ++result;
@@ -1558,18 +1735,20 @@ int CountRedUnits(void) {
     return result;
 }
 
-int CountGreenUnits(void) {
+int CountGreenUnits(void)
+{
     int i;
 
     u16 result = 0;
 
-    for (i = 0x41; i < 0x80; ++i) {
+    for (i = 0x41; i < 0x80; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_DEAD)
+        if (unit->flags & UNIT_FLAG_DEAD)
             continue;
 
         ++result;
@@ -1578,39 +1757,44 @@ int CountGreenUnits(void) {
     return result;
 }
 
-void ClearCutsceneUnits(void) {
+void ClearCutsceneUnits(void)
+{
     int i;
 
-    for (i = 1; i < 0x40; ++i) {
+    for (i = 1; i < 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_BIT22) {
-            if (unit->state & US_DEAD)
-                unit->state = unit->state &~ US_BIT22;
+        if (unit->flags & UNIT_FLAG_CUTSCENE)
+        {
+            if (unit->flags & UNIT_FLAG_DEAD)
+                unit->flags = unit->flags &~ UNIT_FLAG_CUTSCENE;
             else
                 ClearUnit(unit);
         }
     }
 }
 
-void sub_8019108(void) {
+void sub_8019108(void)
+{
     int i;
 
-    for (i = 1; i < 0x40; ++i) {
+    for (i = 1; i < 0x40; ++i)
+    {
         struct Unit* unit = GetUnit(i);
 
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        unit->state = unit->state &~ (US_UNSELECTABLE | US_RESCUING | US_RESCUED);
-        unit->rescueOtherUnit = 0;
+        unit->flags = unit->flags &~ (UNIT_FLAG_TURN_ENDED | UNIT_FLAG_RESCUING | UNIT_FLAG_RESCUED);
+        unit->rescue = 0;
 
         SetUnitStatus(unit, 0);
     }
 
     RefreshEntityBmMaps();
-    SMS_UpdateFromGameData();
+    RefreshUnitSprites();
 }

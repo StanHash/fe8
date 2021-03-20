@@ -1,11 +1,11 @@
 #include "global.h"
 
-#include "bmunit.h"
+#include "unit.h"
 
 #include "bmreliance.h"
 
-CONST_DATA
-static int sSupportMaxExpLookup[] = {
+static int CONST_DATA sSupportMaxExpLookup[] =
+{
     [SUPPORT_LEVEL_NONE] = SUPPORT_EXP_C-1,
     [SUPPORT_LEVEL_C]    = SUPPORT_EXP_B-1,
     [SUPPORT_LEVEL_B]    = SUPPORT_EXP_A-1,
@@ -21,23 +21,23 @@ static s8 HasUnitGainedSupportLevel(struct Unit* unit, int num);
 
 int GetUnitSupporterCount(struct Unit* unit)
 {
-    if (!UNIT_SUPPORT_DATA(unit))
+    if (!UNIT_SUPPORT_INFO(unit))
         return 0;
 
-    return UNIT_SUPPORT_DATA(unit)->supportCount;
+    return UNIT_SUPPORT_INFO(unit)->supportCount;
 }
 
 u8 GetUnitSupporterCharacter(struct Unit* unit, int num)
 {
-    if (!UNIT_SUPPORT_DATA(unit))
+    if (!UNIT_SUPPORT_INFO(unit))
         return 0;
 
-    return UNIT_SUPPORT_DATA(unit)->characters[num];
+    return UNIT_SUPPORT_INFO(unit)->characters[num];
 }
 
 struct Unit* GetUnitSupporterUnit(struct Unit* unit, int num)
 {
-    u8 charId = GetUnitSupporterCharacter(unit, num);
+    u8 pid = GetUnitSupporterCharacter(unit, num);
 
     int i, last;
 
@@ -48,7 +48,7 @@ struct Unit* GetUnitSupporterUnit(struct Unit* unit, int num)
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->pCharacterData->number == charId)
+        if (unit->pinfo->id == pid)
             return unit;
     }
 
@@ -87,9 +87,9 @@ int GetUnitTotalSupportLevel(struct Unit* unit)
 
 void UnitGainSupportExp(struct Unit* unit, int num)
 {
-    if (UNIT_SUPPORT_DATA(unit))
+    if (UNIT_SUPPORT_INFO(unit))
     {
-        int gain = UNIT_SUPPORT_DATA(unit)->supportExpGrowth[num];
+        int gain = UNIT_SUPPORT_INFO(unit)->supportExpGrowth[num];
         int currentExp = unit->supports[num];
         int maxExp = sSupportMaxExpLookup[GetUnitSupportLevel(unit, num)];
 
@@ -97,26 +97,26 @@ void UnitGainSupportExp(struct Unit* unit, int num)
             gain = maxExp - currentExp;
 
         unit->supports[num] = currentExp + gain;
-        gRAMChapterData.chapterTotalSupportGain += gain;
+        gPlaySt.chapterTotalSupportGain += gain;
     }
 }
 
 void UnitGainSupportLevel(struct Unit* unit, int num)
 {
     unit->supports[num]++;
-    gRAMChapterData.chapterTotalSupportGain++;
+    gPlaySt.chapterTotalSupportGain++;
 
-    SetSupportLevelGained(unit->pCharacterData->number, GetUnitSupporterCharacter(unit, num));
+    SetSupportLevelGained(unit->pinfo->id, GetUnitSupporterCharacter(unit, num));
 }
 
 s8 CanUnitSupportNow(struct Unit* unit, int num)
 {
     int exp, maxExp;
 
-    if (gRAMChapterData.chapterStateBits & CHAPTER_FLAG_7)
+    if (gPlaySt.chapterStateBits & CHAPTER_FLAG_7)
         return FALSE;
 
-    if (gRAMChapterData.chapterStateBits & CHAPTER_FLAG_3)
+    if (gPlaySt.chapterStateBits & CHAPTER_FLAG_3)
         return FALSE;
 
     if (HasUnitGainedSupportLevel(unit, num))
@@ -139,26 +139,26 @@ s8 CanUnitSupportNow(struct Unit* unit, int num)
 
 int GetUnitSupporterInitialExp(struct Unit* unit, int num)
 {
-    if (!UNIT_SUPPORT_DATA(unit))
+    if (!UNIT_SUPPORT_INFO(unit))
         return -1;
 
-    return UNIT_SUPPORT_DATA(unit)->supportExpBase[num];
+    return UNIT_SUPPORT_INFO(unit)->supportExpBase[num];
 }
 
-int GetUnitSupporterNum(struct Unit* unit, u8 charId)
+int GetUnitSupporterNum(struct Unit* unit, u8 pid)
 {
     int i, count = GetUnitSupporterCount(unit);
 
     for (i = 0; i < count; ++i)
     {
-        if (GetUnitSupporterCharacter(unit, i) == charId)
+        if (GetUnitSupporterCharacter(unit, i) == pid)
             return i;
     }
 
     return -1;
 }
 
-void ClearUnitSupports(struct Unit* unit)
+void UnitClearSupports(struct Unit* unit)
 {
     int i, count = GetUnitSupporterCount(unit);
 
@@ -169,7 +169,7 @@ void ClearUnitSupports(struct Unit* unit)
         if (!other)
             continue;
 
-        other->supports[GetUnitSupporterNum(other, unit->pCharacterData->number)] = 0;
+        other->supports[GetUnitSupporterNum(other, unit->pinfo->id)] = 0;
         unit->supports[i] = 0;
     }
 }
@@ -178,10 +178,10 @@ void ProcessTurnSupportExp(void)
 {
     int i, j, jMax;
 
-    if (gRAMChapterData.chapterTurnNumber == 1)
+    if (gPlaySt.chapterTurnNumber == 1)
         return;
 
-    if (gRAMChapterData.chapterStateBits & CHAPTER_FLAG_7)
+    if (gPlaySt.chapterStateBits & CHAPTER_FLAG_7)
         return;
 
     for (i = 1; i < 0x40; ++i)
@@ -191,7 +191,7 @@ void ProcessTurnSupportExp(void)
         if (!UNIT_IS_VALID(unit))
             continue;
 
-        if (unit->state & US_UNAVAILABLE)
+        if (unit->flags & UNIT_FLAGS_UNAVAILABLE)
             continue;
 
         if (GetUnitTotalSupportLevel(unit) >= MAX_SIMULTANEOUS_SUPPORT_COUNT)
@@ -206,23 +206,23 @@ void ProcessTurnSupportExp(void)
             if (!other)
                 continue;
 
-            if (other->state & US_UNAVAILABLE)
+            if (other->flags & UNIT_FLAGS_UNAVAILABLE)
                 continue;
 
             if (UNIT_FACTION(other) != FACTION_BLUE)
                 continue;
 
-            switch (RECT_DISTANCE(unit->xPos, unit->yPos, other->xPos, other->yPos))
+            switch (RECT_DISTANCE(unit->x, unit->y, other->x, other->y))
             {
 
             case 0:
-                if (!(unit->rescueOtherUnit == other->index))
+                if (!(unit->rescue == other->id))
                     break;
 
                 goto add_support_points;
 
             case 1:
-                if ((unit->state & US_RESCUED) || (other->state & US_RESCUED))
+                if ((unit->flags & UNIT_FLAG_RESCUED) || (other->flags & UNIT_FLAG_RESCUED))
                     break;
 
             add_support_points:
@@ -292,20 +292,20 @@ int GetUnitSupportBonuses(struct Unit* unit, struct SupportBonuses* bonuses)
             continue;
 
         // TODO: gameStateBits constants
-        if (!(gUnknown_0202BCB0.gameStateBits & 0x40))
+        if (!(gBmSt.gameStateBits & 0x40))
         {
-            if (RECT_DISTANCE(unit->xPos, unit->yPos, other->xPos, other->yPos) > SUPPORT_BONUSES_MAX_DISTANCE)
+            if (RECT_DISTANCE(unit->x, unit->y, other->x, other->y) > SUPPORT_BONUSES_MAX_DISTANCE)
                 continue;
         }
 
-        if (other->state & (US_UNAVAILABLE | US_RESCUED))
+        if (other->flags & (UNIT_FLAGS_UNAVAILABLE | UNIT_FLAG_RESCUED))
             continue;
 
-        level1 = GetUnitSupportLevel(other, GetUnitSupporterNum(other, unit->pCharacterData->number));
-        ApplyAffinitySupportBonuses(bonuses, other->pCharacterData->affinity, level1);
+        level1 = GetUnitSupportLevel(other, GetUnitSupporterNum(other, unit->pinfo->id));
+        ApplyAffinitySupportBonuses(bonuses, other->pinfo->affinity, level1);
 
         level2 = GetUnitSupportLevel(unit, i);
-        ApplyAffinitySupportBonuses(bonuses, unit->pCharacterData->affinity, level2);
+        ApplyAffinitySupportBonuses(bonuses, unit->pinfo->affinity, level2);
 
         if (level1 != 0 && level2 != 0)
             result += 1 << (count - 1);
@@ -323,7 +323,7 @@ int GetUnitSupportBonuses(struct Unit* unit, struct SupportBonuses* bonuses)
 
 int GetUnitAffinityIcon(struct Unit* unit)
 {
-    int affinity = unit->pCharacterData->affinity;
+    int affinity = unit->pinfo->affinity;
 
     if (!affinity)
         return -1;
@@ -333,7 +333,7 @@ int GetUnitAffinityIcon(struct Unit* unit)
 
 int GetCharacterAffinityIcon(int characterId)
 {
-    int affinity = GetCharacterData(characterId)->affinity;
+    int affinity = GetPInfo(characterId)->affinity;
 
     if (!affinity)
         return -1;
@@ -363,12 +363,12 @@ char* GetAffinityName(int affinity)
 
 static void SetSupportLevelGained(u8 charA, u8 charB)
 {
-    struct Unit* unit = GetUnitFromCharId(charA);
+    struct Unit* unit = GetUnitByPid(charA);
     int num = GetUnitSupporterNum(unit, charB);
 
     unit->supportBits |= (1 << num);
 
-    unit = GetUnitFromCharId(charB);
+    unit = GetUnitByPid(charB);
     num = GetUnitSupporterNum(unit, charA);
 
     unit->supportBits |= (1 << num);
@@ -382,7 +382,7 @@ static s8 HasUnitGainedSupportLevel(struct Unit* unit, int num)
 
 s8 HaveCharactersMaxSupport(u8 charA, u8 charB)
 {
-    struct Unit* unit = GetUnitFromCharId(charA);
+    struct Unit* unit = GetUnitByPid(charA);
 
     if (GetUnitSupportLevel(unit, GetUnitSupporterNum(unit, charB)) > SUPPORT_LEVEL_B)
         return TRUE;

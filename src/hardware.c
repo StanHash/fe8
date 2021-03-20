@@ -1077,7 +1077,7 @@ void SetupBackgrounds(u16 const* config)
         CpuFastFill16(0, (void *)(VRAM + GetBgChrOffset(i)), 64);
     }
 
-    InitBmBgLayers();
+    ResetHLayers();
 
     EnableBgSync(BG0_SYNC_BIT + BG1_SYNC_BIT + BG2_SYNC_BIT + BG3_SYNC_BIT);
 

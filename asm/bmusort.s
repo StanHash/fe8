@@ -6,18 +6,18 @@
 
 	THUMB_FUNC_START InitUnitStack
 InitUnitStack: @ 0x080316C4
-	ldr r2, _080316D4  @ gUnknown_0203A8E4
-	ldr r1, _080316D8  @ gUnknown_0203A8E8
+	ldr r2, _080316D4  @ gpSomeUnitPool
+	ldr r1, _080316D8  @ gpSomeUnitIt
 	str r0, [r1]
 	str r0, [r2]
-	ldr r1, _080316DC  @ gUnknown_0203A8EC
+	ldr r1, _080316DC  @ gSomeUnitCounter
 	movs r0, #1
 	strb r0, [r1]
 	bx lr
 	.align 2, 0
-_080316D4: .4byte gUnknown_0203A8E4
-_080316D8: .4byte gUnknown_0203A8E8
-_080316DC: .4byte gUnknown_0203A8EC
+_080316D4: .4byte gpSomeUnitPool
+_080316D8: .4byte gpSomeUnitIt
+_080316DC: .4byte gSomeUnitCounter
 
 	THUMB_FUNC_END InitUnitStack
 
@@ -25,13 +25,13 @@ _080316DC: .4byte gUnknown_0203A8EC
 PushUnit: @ 0x080316E0
 	push {r4, r5, r6, lr}
 	adds r6, r0, #0
-	ldr r4, _0803170C  @ gUnknown_0203A8E8
+	ldr r4, _0803170C  @ gpSomeUnitIt
 	ldr r1, [r4]
 	movs r5, #0
 	str r5, [r1]
 	bl CopyUnit
 	ldr r2, [r4]
-	ldr r1, _08031710  @ gUnknown_0203A8EC
+	ldr r1, _08031710  @ gSomeUnitCounter
 	ldrb r0, [r1]
 	strb r0, [r2, #0xb]
 	strb r5, [r6, #0x12]
@@ -45,8 +45,8 @@ PushUnit: @ 0x080316E0
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0803170C: .4byte gUnknown_0203A8E8
-_08031710: .4byte gUnknown_0203A8EC
+_0803170C: .4byte gpSomeUnitIt
+_08031710: .4byte gSomeUnitCounter
 
 	THUMB_FUNC_END PushUnit
 
@@ -62,10 +62,10 @@ _0803171A:
 	subs r4, #1
 	cmp r4, #0
 	bge _0803171A
-	ldr r0, _0803174C  @ gUnknown_0203A8E4
+	ldr r0, _0803174C  @ gpSomeUnitPool
 	ldr r0, [r0]
 	ldr r1, _08031748  @ gUnitArrayBlue
-	ldr r2, _08031750  @ gUnknown_0203A8E8
+	ldr r2, _08031750  @ gpSomeUnitIt
 	ldr r2, [r2]
 	subs r2, r2, r0
 	lsrs r3, r2, #0x1f
@@ -78,8 +78,8 @@ _0803171A:
 	bx r0
 	.align 2, 0
 _08031748: .4byte gUnitArrayBlue
-_0803174C: .4byte gUnknown_0203A8E4
-_08031750: .4byte gUnknown_0203A8E8
+_0803174C: .4byte gpSomeUnitPool
+_08031750: .4byte gpSomeUnitIt
 
 	THUMB_FUNC_END LoadPlayerUnitsFromUnitStack
 
@@ -95,10 +95,10 @@ _0803175A:
 	subs r4, #1
 	cmp r4, #0
 	bge _0803175A
-	ldr r0, _0803178C  @ gUnknown_0203A8E4
+	ldr r0, _0803178C  @ gpSomeUnitPool
 	ldr r0, [r0]
 	ldr r1, _08031788  @ gUnitArrayBlue
-	ldr r2, _08031790  @ gUnknown_0203A8E8
+	ldr r2, _08031790  @ gpSomeUnitIt
 	ldr r2, [r2]
 	subs r2, r2, r0
 	lsrs r3, r2, #0x1f
@@ -111,8 +111,8 @@ _0803175A:
 	bx r0
 	.align 2, 0
 _08031788: .4byte gUnitArrayBlue
-_0803178C: .4byte gUnknown_0203A8E4
-_08031790: .4byte gUnknown_0203A8E8
+_0803178C: .4byte gpSomeUnitPool
+_08031790: .4byte gpSomeUnitIt
 
 	THUMB_FUNC_END LoadPlayerUnitsFromUnitStack2
 

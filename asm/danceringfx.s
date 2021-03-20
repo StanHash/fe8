@@ -173,7 +173,7 @@ sub_8021B30: @ 0x08021B30
 	ands r0, r1
 	cmp r0, #0
 	beq _08021B86
-	ldr r0, _08021B90  @ gActionData
+	ldr r0, _08021B90  @ gAction
 	ldrb r0, [r0, #0xd]
 	bl GetUnit
 	movs r4, #0x10
@@ -184,7 +184,7 @@ sub_8021B30: @ 0x08021B30
 	adds r1, r6, #0
 	bl SpawnProcLocking
 	lsls r0, r4, #4
-	ldr r2, _08021B98  @ gUnknown_0202BCB0
+	ldr r2, _08021B98  @ gBmSt
 	movs r3, #0xc
 	ldrsh r1, [r2, r3]
 	subs r0, r0, r1
@@ -210,9 +210,9 @@ _08021B86:
 	bx r0
 	.align 2, 0
 _08021B8C: .4byte gBattleStats
-_08021B90: .4byte gActionData
+_08021B90: .4byte gAction
 _08021B94: .4byte gUnknown_0859B410
-_08021B98: .4byte gUnknown_0202BCB0
+_08021B98: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8021B30
 

@@ -4,8 +4,8 @@
 
 	@ Various Graphical Effects related to activating traps
 
-	THUMB_FUNC_START sub_801F540
-sub_801F540: @ 0x0801F540
+	THUMB_FUNC_START GasTrapEffectGfx_Setup
+GasTrapEffectGfx_Setup: @ 0x0801F540
 	push {r4, r5, r6, r7, lr}
 	sub sp, #8
 	adds r5, r0, #0
@@ -63,7 +63,7 @@ _0801F59C:
 	bl ApplyPaletteExt
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
-	ldr r1, _0801F5FC  @ gUnknown_0202BCB0
+	ldr r1, _0801F5FC  @ gBmSt
 	movs r3, #0xc
 	ldrsh r0, [r1, r3]
 	subs r0, #8
@@ -85,7 +85,7 @@ _0801F59C:
 	adds r4, #8
 	movs r0, #0xba
 	adds r1, r4, #0
-	bl PlaySpacialSoundMaybe
+	bl PlaySpacialSong
 	add sp, #8
 	pop {r4, r5, r6, r7}
 	pop {r0}
@@ -95,12 +95,12 @@ _0801F5EC: .4byte gUnknown_085A1AF8
 _0801F5F0: .4byte gUnknown_085A129C
 _0801F5F4: .4byte 0x06014800
 _0801F5F8: .4byte gUnknown_085A206C
-_0801F5FC: .4byte gUnknown_0202BCB0
+_0801F5FC: .4byte gBmSt
 
-	THUMB_FUNC_END sub_801F540
+	THUMB_FUNC_END GasTrapEffectGfx_Setup
 
-	THUMB_FUNC_START sub_801F600
-sub_801F600: @ 0x0801F600
+	THUMB_FUNC_START StartGasTrapEffectGfxMaybe
+StartGasTrapEffectGfxMaybe: @ 0x0801F600
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
@@ -124,10 +124,10 @@ sub_801F600: @ 0x0801F600
 	.align 2, 0
 _0801F62C: .4byte gUnknown_0859AFC8
 
-	THUMB_FUNC_END sub_801F600
+	THUMB_FUNC_END StartGasTrapEffectGfxMaybe
 
-	THUMB_FUNC_START sub_801F630
-sub_801F630: @ 0x0801F630
+	THUMB_FUNC_START MineFireEffectGfx_Setup
+MineFireEffectGfx_Setup: @ 0x0801F630
 	push {r4, r5, lr}
 	sub sp, #8
 	adds r5, r0, #0
@@ -136,7 +136,7 @@ sub_801F630: @ 0x0801F630
 	bl Decompress
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
-	ldr r1, _0801F684  @ gUnknown_0202BCB0
+	ldr r1, _0801F684  @ gBmSt
 	movs r2, #0xc
 	ldrsh r0, [r1, r2]
 	subs r0, #8
@@ -158,7 +158,7 @@ sub_801F630: @ 0x0801F630
 	adds r4, #8
 	movs r0, #0xbf
 	adds r1, r4, #0
-	bl PlaySpacialSoundMaybe
+	bl PlaySpacialSong
 	add sp, #8
 	pop {r4, r5}
 	pop {r0}
@@ -166,13 +166,13 @@ sub_801F630: @ 0x0801F630
 	.align 2, 0
 _0801F67C: .4byte gUnknown_085A2940
 _0801F680: .4byte 0x06014800
-_0801F684: .4byte gUnknown_0202BCB0
+_0801F684: .4byte gBmSt
 _0801F688: .4byte gUnknown_085A2DFC
 
-	THUMB_FUNC_END sub_801F630
+	THUMB_FUNC_END MineFireEffectGfx_Setup
 
-	THUMB_FUNC_START sub_801F68C
-sub_801F68C: @ 0x0801F68C
+	THUMB_FUNC_START NewFireTrapEffectGfx
+NewFireTrapEffectGfx: @ 0x0801F68C
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -194,10 +194,10 @@ sub_801F68C: @ 0x0801F68C
 _0801F6B4: .4byte gUnknown_085A2DDC
 _0801F6B8: .4byte gUnknown_0859AFE8
 
-	THUMB_FUNC_END sub_801F68C
+	THUMB_FUNC_END NewFireTrapEffectGfx
 
-	THUMB_FUNC_START sub_801F6BC
-sub_801F6BC: @ 0x0801F6BC
+	THUMB_FUNC_START NewMineTrapEffectGfx
+NewMineTrapEffectGfx: @ 0x0801F6BC
 	push {r4, r5, r6, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
@@ -219,7 +219,7 @@ sub_801F6BC: @ 0x0801F6BC
 _0801F6E4: .4byte gUnknown_085A3490
 _0801F6E8: .4byte gUnknown_0859AFE8
 
-	THUMB_FUNC_END sub_801F6BC
+	THUMB_FUNC_END NewMineTrapEffectGfx
 
 	THUMB_FUNC_START sub_801F6EC
 sub_801F6EC: @ 0x0801F6EC
@@ -228,7 +228,7 @@ sub_801F6EC: @ 0x0801F6EC
 	adds r5, r0, #0
 	ldr r1, [r5, #0x2c]
 	lsls r1, r1, #4
-	ldr r3, _0801F748  @ gUnknown_0202BCB0
+	ldr r3, _0801F748  @ gBmSt
 	movs r2, #0xc
 	ldrsh r0, [r3, r2]
 	subs r0, #8
@@ -268,7 +268,7 @@ _0801F736:
 	beq _0801F76C
 	b _0801F778
 	.align 2, 0
-_0801F748: .4byte gUnknown_0202BCB0
+_0801F748: .4byte gBmSt
 _0801F74C: .4byte 0x000001FF
 _0801F750: .4byte gUnknown_089A6FD8
 _0801F754:
@@ -359,7 +359,7 @@ sub_801F7D8: @ 0x0801F7D8
 	bl ApplyPaletteExt
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
-	ldr r0, _0801F83C  @ gUnknown_0202BCB0
+	ldr r0, _0801F83C  @ gBmSt
 	movs r1, #0xc
 	ldrsh r0, [r0, r1]
 	subs r0, #8
@@ -376,7 +376,7 @@ sub_801F7D8: @ 0x0801F7D8
 	adds r4, #8
 	movs r0, #0xbc
 	adds r1, r4, #0
-	bl PlaySpacialSoundMaybe
+	bl PlaySpacialSong
 	ldr r1, [r5, #0x2c]
 	adds r0, r5, #0
 	movs r2, #0x1f
@@ -389,13 +389,13 @@ sub_801F7D8: @ 0x0801F7D8
 _0801F830: .4byte gUnknown_085A20AC
 _0801F834: .4byte 0x06014800
 _0801F838: .4byte gUnknown_085A208C
-_0801F83C: .4byte gUnknown_0202BCB0
+_0801F83C: .4byte gBmSt
 _0801F840: .4byte gUnknown_085A2384
 
 	THUMB_FUNC_END sub_801F7D8
 
-	THUMB_FUNC_START sub_801F844
-sub_801F844: @ 0x0801F844
+	THUMB_FUNC_START StartLightArrowTrapGfx
+StartLightArrowTrapGfx: @ 0x0801F844
 	push {r4, lr}
 	adds r2, r0, #0
 	adds r4, r1, #0
@@ -409,14 +409,14 @@ sub_801F844: @ 0x0801F844
 	.align 2, 0
 _0801F85C: .4byte gUnknown_0859B048
 
-	THUMB_FUNC_END sub_801F844
+	THUMB_FUNC_END StartLightArrowTrapGfx
 
 	THUMB_FUNC_START sub_801F860
 sub_801F860: @ 0x0801F860
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	ldr r0, [r5, #0x2c]
-	bl GetMapChange
+	bl GetMapChangesPointerById
 	ldrb r4, [r0, #3]
 	lsrs r4, r4, #1
 	ldrb r1, [r0, #1]
@@ -443,25 +443,25 @@ sub_801F88C: @ 0x0801F88C
 	bl sub_8019778
 	bl RenderBmMap
 	movs r0, #0
-	bl NewBMXFADE
+	bl StartBMXFADE
 	ldr r0, [r4, #0x30]
 	movs r2, #0xbd
 	cmp r0, #0
 	beq _0801F8AC
 	movs r2, #0xbe
 _0801F8AC:
-	ldr r0, _0801F8C4  @ gUnknown_0202BCB0
+	ldr r0, _0801F8C4  @ gBmSt
 	movs r1, #0xc
 	ldrsh r0, [r0, r1]
 	ldr r1, [r4, #0x34]
 	subs r1, r1, r0
 	adds r0, r2, #0
-	bl PlaySpacialSoundMaybe
+	bl PlaySpacialSong
 	pop {r4}
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0801F8C4: .4byte gUnknown_0202BCB0
+_0801F8C4: .4byte gBmSt
 
 	THUMB_FUNC_END sub_801F88C
 
@@ -513,7 +513,7 @@ sub_801F904: @ 0x0801F904
 	bl ApplyPaletteExt
 	ldr r4, [r5, #0x2c]
 	lsls r4, r4, #4
-	ldr r1, _0801F970  @ gUnknown_0202BCB0
+	ldr r1, _0801F970  @ gBmSt
 	movs r2, #0xc
 	ldrsh r0, [r1, r2]
 	subs r0, #8
@@ -538,7 +538,7 @@ sub_801F904: @ 0x0801F904
 	adds r4, #8
 	movs r0, #0xbb
 	adds r1, r4, #0
-	bl PlaySpacialSoundMaybe
+	bl PlaySpacialSong
 	add sp, #8
 	pop {r4, r5, r6}
 	pop {r0}
@@ -547,7 +547,7 @@ sub_801F904: @ 0x0801F904
 _0801F964: .4byte gUnknown_085A34B0
 _0801F968: .4byte 0x06014800
 _0801F96C: .4byte gUnknown_085A3944
-_0801F970: .4byte gUnknown_0202BCB0
+_0801F970: .4byte gBmSt
 _0801F974: .4byte gUnknown_085A3730
 
 	THUMB_FUNC_END sub_801F904

@@ -15,7 +15,7 @@ sub_80225AC: @ 0x080225AC
 	THUMB_FUNC_START MapMenu_IsSuspendCommandAvailable
 MapMenu_IsSuspendCommandAvailable: @ 0x080225B0
 	push {lr}
-	ldr r0, _080225C4  @ gRAMChapterData
+	ldr r0, _080225C4  @ gPlaySt
 	ldrb r1, [r0, #0x14]
 	movs r0, #8
 	ands r0, r1
@@ -24,7 +24,7 @@ MapMenu_IsSuspendCommandAvailable: @ 0x080225B0
 	movs r0, #1
 	b _080225CA
 	.align 2, 0
-_080225C4: .4byte gRAMChapterData
+_080225C4: .4byte gPlaySt
 _080225C8:
 	movs r0, #2
 _080225CA:
@@ -47,7 +47,7 @@ MapMenu_SuspendCommand: @ 0x080225D0
 _080225E4:
 	ldr r1, _080225F4  @ 0x00000864
 	adds r0, r2, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _080225EE:
 	pop {r1}
@@ -57,8 +57,8 @@ _080225F4: .4byte 0x00000864
 
 	THUMB_FUNC_END MapMenu_SuspendCommand
 
-	THUMB_FUNC_START CommandEffectEndPlayerPhase
-CommandEffectEndPlayerPhase: @ 0x080225F8
+	THUMB_FUNC_START MapMenuCommnd_EndEffect
+MapMenuCommnd_EndEffect: @ 0x080225F8
 	push {lr}
 	ldr r0, _08022608  @ gUnknown_0859AAD8
 	bl EndEachProc
@@ -68,23 +68,23 @@ CommandEffectEndPlayerPhase: @ 0x080225F8
 	.align 2, 0
 _08022608: .4byte gUnknown_0859AAD8
 
-	THUMB_FUNC_END CommandEffectEndPlayerPhase
+	THUMB_FUNC_END MapMenuCommnd_EndEffect
 
-	THUMB_FUNC_START MapMenu_UnitCommand
-MapMenu_UnitCommand: @ 0x0802260C
+	THUMB_FUNC_START MapMenuCommand_UnitEffect
+MapMenuCommand_UnitEffect: @ 0x0802260C
 	push {lr}
 	ldr r0, _08022624  @ gUnknown_0859AAD8
 	bl FindProc
 	movs r1, #0xa
 	bl Proc_Goto
-	bl sub_80920C4
+	bl StartUnitListMenu
 	movs r0, #0x17
 	pop {r1}
 	bx r1
 	.align 2, 0
 _08022624: .4byte gUnknown_0859AAD8
 
-	THUMB_FUNC_END MapMenu_UnitCommand
+	THUMB_FUNC_END MapMenuCommand_UnitEffect
 
 	THUMB_FUNC_START MapMenu_OptionsCommand
 MapMenu_OptionsCommand: @ 0x08022628
@@ -103,7 +103,7 @@ _08022638: .4byte gUnknown_08A2ECE0
 	THUMB_FUNC_START sub_802263C
 sub_802263C: @ 0x0802263C
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #1
 	beq _0802264A
 	movs r0, #1
@@ -116,21 +116,21 @@ _0802264C:
 
 	THUMB_FUNC_END sub_802263C
 
-	THUMB_FUNC_START MapMenu_StatusCommand
-MapMenu_StatusCommand: @ 0x08022650
+	THUMB_FUNC_START MapMenuCommnd_StatusEffect
+MapMenuCommnd_StatusEffect: @ 0x08022650
 	push {lr}
 	movs r0, #0
-	bl NewChapterStatusScreen
+	bl StartChapterStatusScreen
 	movs r0, #0x17
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END MapMenu_StatusCommand
+	THUMB_FUNC_END MapMenuCommnd_StatusEffect
 
 	THUMB_FUNC_START MapMenu_IsGuideCommandAvailable
 MapMenu_IsGuideCommandAvailable: @ 0x08022660
 	push {lr}
-	bl sub_80CDF4C
+	bl IsGuideLocked
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08022670
@@ -198,8 +198,8 @@ _080226A8:
 
 	THUMB_FUNC_END MapMenu_GuideCommandDraw
 
-	THUMB_FUNC_START Make6CE_Guide
-Make6CE_Guide: @ 0x080226E4
+	THUMB_FUNC_START MapMenuCommnd_GuideEffect
+MapMenuCommnd_GuideEffect: @ 0x080226E4
 	push {lr}
 	ldr r0, _080226F4  @ gUnknown_08B12C64
 	movs r1, #3
@@ -210,15 +210,15 @@ Make6CE_Guide: @ 0x080226E4
 	.align 2, 0
 _080226F4: .4byte gUnknown_08B12C64
 
-	THUMB_FUNC_END Make6CE_Guide
+	THUMB_FUNC_END MapMenuCommnd_GuideEffect
 
-	THUMB_FUNC_START sub_80226F8
-sub_80226F8: @ 0x080226F8
+	THUMB_FUNC_START MapMenuCommand_DangerZoneUnusedEffect
+MapMenuCommand_DangerZoneUnusedEffect: @ 0x080226F8
 	push {lr}
 	ldr r0, _08022718  @ gActiveUnit
 	movs r1, #0
 	str r1, [r0]
-	ldr r0, _0802271C  @ gUnknown_0202BCB0
+	ldr r0, _0802271C  @ gBmSt
 	adds r0, #0x3e
 	strb r1, [r0]
 	ldr r0, _08022720  @ gUnknown_0859AAD8
@@ -230,16 +230,16 @@ sub_80226F8: @ 0x080226F8
 	bx r1
 	.align 2, 0
 _08022718: .4byte gActiveUnit
-_0802271C: .4byte gUnknown_0202BCB0
+_0802271C: .4byte gBmSt
 _08022720: .4byte gUnknown_0859AAD8
 
-	THUMB_FUNC_END sub_80226F8
+	THUMB_FUNC_END MapMenuCommand_DangerZoneUnusedEffect
 
 	THUMB_FUNC_START sub_8022724
 sub_8022724: @ 0x08022724
 	push {lr}
 	movs r0, #3
-	bl Make6C_savemenu2
+	bl Start_savemenu2
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -255,13 +255,13 @@ sub_8022734: @ 0x08022734
 
 	THUMB_FUNC_START EffectWait
 EffectWait: @ 0x08022738
-	ldr r1, _08022744  @ gActionData
+	ldr r1, _08022744  @ gAction
 	movs r0, #1
 	strb r0, [r1, #0x11]
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_08022744: .4byte gActionData
+_08022744: .4byte gAction
 
 	THUMB_FUNC_END EffectWait
 
@@ -277,7 +277,7 @@ GenericSelection_BackToUM: @ 0x08022748
 	bl ResetTextFont
 	bl HideMoveRangeGraphics
 	ldr r0, _08022798  @ gUnitActionMenuDef
-	ldr r2, _0802279C  @ gUnknown_0202BCB0
+	ldr r2, _0802279C  @ gBmSt
 	movs r3, #0x1c
 	ldrsh r1, [r2, r3]
 	movs r3, #0xc
@@ -285,7 +285,7 @@ GenericSelection_BackToUM: @ 0x08022748
 	subs r1, r1, r2
 	movs r2, #1
 	movs r3, #0x16
-	bl StartSemiCenteredOrphanMenu
+	bl StartMenu_AndDoSomethingCommands
 	ldr r1, _080227A0  @ gActiveUnit
 	ldr r2, [r1]
 	movs r1, #0x10
@@ -300,7 +300,7 @@ GenericSelection_BackToUM: @ 0x08022748
 	.align 2, 0
 _08022794: .4byte gBg2Tm
 _08022798: .4byte gUnitActionMenuDef
-_0802279C: .4byte gUnknown_0202BCB0
+_0802279C: .4byte gBmSt
 _080227A0: .4byte gActiveUnit
 
 	THUMB_FUNC_END GenericSelection_BackToUM
@@ -329,7 +329,7 @@ sub_80227A4: @ 0x080227A4
 	bl GetSomeAdjustedCameraY
 	lsls r0, r0, #0x10
 	lsrs r0, r0, #0x10
-	ldr r2, _08022804  @ gUnknown_0202BCB0
+	ldr r2, _08022804  @ gBmSt
 	movs r3, #0x2a
 	ldrsh r1, [r2, r3]
 	cmp r0, r1
@@ -352,7 +352,7 @@ _080227F6:
 	.align 2, 0
 _080227FC: .4byte gActiveUnit
 _08022800: .4byte gUnknown_0859A548
-_08022804: .4byte gUnknown_0202BCB0
+_08022804: .4byte gBmSt
 
 	THUMB_FUNC_END sub_80227A4
 
@@ -360,7 +360,7 @@ _08022804: .4byte gUnknown_0202BCB0
 sub_8022808: @ 0x08022808
 	push {lr}
 	ldr r0, _08022824  @ gUnitActionMenuDef
-	ldr r2, _08022828  @ gUnknown_0202BCB0
+	ldr r2, _08022828  @ gBmSt
 	movs r3, #0x1c
 	ldrsh r1, [r2, r3]
 	movs r3, #0xc
@@ -368,12 +368,12 @@ sub_8022808: @ 0x08022808
 	subs r1, r1, r2
 	movs r2, #1
 	movs r3, #0x16
-	bl StartSemiCenteredOrphanMenu
+	bl StartMenu_AndDoSomethingCommands
 	pop {r0}
 	bx r0
 	.align 2, 0
 _08022824: .4byte gUnitActionMenuDef
-_08022828: .4byte gUnknown_0202BCB0
+_08022828: .4byte gBmSt
 
 	THUMB_FUNC_END sub_8022808
 
@@ -410,7 +410,7 @@ ItemMenu_ButtonBPressed: @ 0x08022860
 	bl EnableBgSync
 	bl ResetTextFont
 	ldr r0, _08022898  @ gUnitActionMenuDef
-	ldr r2, _0802289C  @ gUnknown_0202BCB0
+	ldr r2, _0802289C  @ gBmSt
 	movs r3, #0x1c
 	ldrsh r1, [r2, r3]
 	movs r3, #0xc
@@ -418,7 +418,7 @@ ItemMenu_ButtonBPressed: @ 0x08022860
 	subs r1, r1, r2
 	movs r2, #1
 	movs r3, #0x16
-	bl StartSemiCenteredOrphanMenu
+	bl StartMenu_AndDoSomethingCommands
 	bl HideMoveRangeGraphics
 	movs r0, #0x3b
 	pop {r1}
@@ -426,7 +426,7 @@ ItemMenu_ButtonBPressed: @ 0x08022860
 	.align 2, 0
 _08022894: .4byte gBg2Tm
 _08022898: .4byte gUnitActionMenuDef
-_0802289C: .4byte gUnknown_0202BCB0
+_0802289C: .4byte gBmSt
 
 	THUMB_FUNC_END ItemMenu_ButtonBPressed
 
@@ -454,7 +454,7 @@ RescueUsability: @ 0x080228A4
 	bne _080228D4
 	adds r0, r2, #0
 	bl MakeRescueTargetList
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _080228D4
 	movs r0, #1
@@ -476,7 +476,7 @@ RescueEffect: @ 0x080228DC
 	ldr r0, [r0]
 	bl MakeRescueTargetList
 	ldr r0, _080228F8  @ gUnknown_0859D478
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	pop {r1}
 	bx r1
@@ -488,7 +488,7 @@ _080228F8: .4byte gUnknown_0859D478
 
 	THUMB_FUNC_START RescueSelection_OnSelect
 RescueSelection_OnSelect: @ 0x080228FC
-	ldr r2, _0802290C  @ gActionData
+	ldr r2, _0802290C  @ gAction
 	ldrb r0, [r1, #2]
 	strb r0, [r2, #0xd]
 	movs r0, #9
@@ -496,7 +496,7 @@ RescueSelection_OnSelect: @ 0x080228FC
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_0802290C: .4byte gActionData
+_0802290C: .4byte gAction
 
 	THUMB_FUNC_END RescueSelection_OnSelect
 
@@ -516,7 +516,7 @@ DropUsability: @ 0x08022910
 	beq _08022940
 	adds r0, r2, #0
 	bl MakeDropTargetList
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08022940
 	movs r0, #1
@@ -538,7 +538,7 @@ DropEffect: @ 0x08022948
 	ldr r0, [r0]
 	bl MakeDropTargetList
 	ldr r0, _08022964  @ gUnknown_0859D458
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -550,7 +550,7 @@ _08022964: .4byte gUnknown_0859D458
 
 	THUMB_FUNC_START DropSelection_OnSelect
 DropSelection_OnSelect: @ 0x08022968
-	ldr r2, _08022984  @ gActionData
+	ldr r2, _08022984  @ gAction
 	movs r0, #0xa
 	strb r0, [r2, #0x11]
 	ldr r0, _08022988  @ gActiveUnit
@@ -564,7 +564,7 @@ DropSelection_OnSelect: @ 0x08022968
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_08022984: .4byte gActionData
+_08022984: .4byte gAction
 _08022988: .4byte gActiveUnit
 
 	THUMB_FUNC_END DropSelection_OnSelect
@@ -579,7 +579,7 @@ TakeUsability: @ 0x0802298C
 	ands r0, r2
 	cmp r0, #0
 	bne _080229CC
-	ldr r0, _080229C8  @ gUnknown_0202BCB0
+	ldr r0, _080229C8  @ gBmSt
 	adds r0, #0x3d
 	ldrb r1, [r0]
 	movs r0, #1
@@ -592,14 +592,14 @@ TakeUsability: @ 0x0802298C
 	bne _080229CC
 	adds r0, r3, #0
 	bl MakeTakeTargetList
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _080229CC
 	movs r0, #1
 	b _080229CE
 	.align 2, 0
 _080229C4: .4byte gActiveUnit
-_080229C8: .4byte gUnknown_0202BCB0
+_080229C8: .4byte gBmSt
 _080229CC:
 	movs r0, #3
 _080229CE:
@@ -615,7 +615,7 @@ TakeEffect: @ 0x080229D4
 	ldr r0, [r0]
 	bl MakeTakeTargetList
 	ldr r0, _080229F0  @ gUnknown_0859D438
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	pop {r1}
 	bx r1
@@ -635,7 +635,7 @@ GiveUsability: @ 0x080229F4
 	ands r0, r2
 	cmp r0, #0
 	bne _08022A34
-	ldr r0, _08022A30  @ gUnknown_0202BCB0
+	ldr r0, _08022A30  @ gBmSt
 	adds r0, #0x3d
 	ldrb r1, [r0]
 	movs r0, #1
@@ -648,14 +648,14 @@ GiveUsability: @ 0x080229F4
 	beq _08022A34
 	adds r0, r3, #0
 	bl sub_8025594
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08022A34
 	movs r0, #1
 	b _08022A36
 	.align 2, 0
 _08022A2C: .4byte gActiveUnit
-_08022A30: .4byte gUnknown_0202BCB0
+_08022A30: .4byte gBmSt
 _08022A34:
 	movs r0, #3
 _08022A36:
@@ -671,7 +671,7 @@ GiveEffect: @ 0x08022A3C
 	ldr r0, [r0]
 	bl sub_8025594
 	ldr r0, _08022A58  @ gUnknown_0859D418
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	pop {r1}
 	bx r1
@@ -689,7 +689,7 @@ MakeUnitRescueTransferGraphics: @ 0x08022A5C
 	ldrb r0, [r4, #0x1b]
 	bl GetUnit
 	adds r6, r0, #0
-	bl DeleteEach6CBB
+	bl EndBottomHelpText
 	movs r0, #0x10
 	ldrsb r0, [r5, r0]
 	movs r1, #0x11
@@ -711,14 +711,14 @@ MakeUnitRescueTransferGraphics: @ 0x08022A5C
 	THUMB_FUNC_START TakeSelection_OnSelect
 TakeSelection_OnSelect: @ 0x08022A90
 	push {r4, r5, lr}
-	ldr r4, _08022ADC  @ gActionData
+	ldr r4, _08022ADC  @ gAction
 	movs r0, #0xb
 	strb r0, [r4, #0x11]
 	ldrb r0, [r1, #2]
 	strb r0, [r4, #0xd]
 	ldrb r0, [r4, #0xd]
 	bl GetUnit
-	bl UnitFinalizeMovement
+	bl UnitSyncMovement
 	ldrb r0, [r4, #0xd]
 	bl GetUnit
 	adds r5, r0, #0
@@ -734,27 +734,27 @@ TakeSelection_OnSelect: @ 0x08022A90
 	bl GetUnit
 	adds r1, r0, #0
 	adds r0, r5, #0
-	bl UnitGive
+	bl UnitGiveRescue
 	movs r0, #0x17
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022ADC: .4byte gActionData
+_08022ADC: .4byte gAction
 
 	THUMB_FUNC_END TakeSelection_OnSelect
 
 	THUMB_FUNC_START GiveSelection_OnSelect
 GiveSelection_OnSelect: @ 0x08022AE0
 	push {r4, r5, lr}
-	ldr r4, _08022B2C  @ gActionData
+	ldr r4, _08022B2C  @ gAction
 	movs r0, #0xc
 	strb r0, [r4, #0x11]
 	ldrb r0, [r1, #2]
 	strb r0, [r4, #0xd]
 	ldrb r0, [r4, #0xc]
 	bl GetUnit
-	bl UnitFinalizeMovement
+	bl UnitSyncMovement
 	ldrb r0, [r4, #0xc]
 	bl GetUnit
 	adds r5, r0, #0
@@ -770,18 +770,18 @@ GiveSelection_OnSelect: @ 0x08022AE0
 	bl GetUnit
 	adds r1, r0, #0
 	adds r0, r5, #0
-	bl UnitGive
+	bl UnitGiveRescue
 	movs r0, #0x17
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022B2C: .4byte gActionData
+_08022B2C: .4byte gAction
 
 	THUMB_FUNC_END GiveSelection_OnSelect
 
-	THUMB_FUNC_START UnitActionMenu_Attack
-UnitActionMenu_Attack: @ 0x08022B30
+	THUMB_FUNC_START AttackCommandEffect
+AttackCommandEffect: @ 0x08022B30
 	push {r4, r5, lr}
 	adds r5, r0, #0
 	adds r4, r1, #0
@@ -792,7 +792,7 @@ UnitActionMenu_Attack: @ 0x08022B30
 	bne _08022B50
 	ldr r1, _08022B4C  @ 0x00000858
 	adds r0, r5, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 	b _08022B84
 	.align 2, 0
@@ -827,18 +827,18 @@ _08022B84:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END UnitActionMenu_Attack
+	THUMB_FUNC_END AttackCommandEffect
 
 	THUMB_FUNC_START sub_8022B8C
 sub_8022B8C: @ 0x08022B8C
 	push {r4, r5, lr}
 	sub sp, #4
 	ldr r0, _08022BD0  @ gBallistaRangeMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r5, r0, #0
 	ldr r4, _08022BD4  @ gActiveUnit
 	ldr r0, [r4]
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -848,12 +848,12 @@ sub_8022B8C: @ 0x08022B8C
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 	ldr r1, [r4]
 	adds r0, r5, #0
 	movs r2, #0xf
 	movs r3, #0xb
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	movs r0, #0x17
 	add sp, #4
 	pop {r4, r5}
@@ -870,7 +870,7 @@ sub_8022BD8: @ 0x08022BD8
 	push {r4, r5, lr}
 	sub sp, #4
 	ldr r0, _08022C28  @ gUnknownMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r4, r0, #0
 	ldr r5, _08022C2C  @ gActiveUnit
 	ldr r1, [r5]
@@ -879,7 +879,7 @@ sub_8022BD8: @ 0x08022BD8
 	cmp r0, #0x51
 	beq _08022C0E
 	adds r0, r1, #0
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -889,13 +889,13 @@ sub_8022BD8: @ 0x08022BD8
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 _08022C0E:
 	ldr r1, [r5]
 	adds r0, r4, #0
 	movs r2, #0xf
 	movs r3, #0xb
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	bl sub_80832C4
 	movs r0, #0x17
 	add sp, #4
@@ -911,13 +911,13 @@ _08022C2C: .4byte gActiveUnit
 	THUMB_FUNC_START DisplayUnitStandingAttackRange
 DisplayUnitStandingAttackRange: @ 0x08022C30
 	push {r4, r5, lr}
-	ldr r0, _08022C6C  @ gBmMapMovement
+	ldr r0, _08022C6C  @ gMapMovement
 	ldr r0, [r0]
 	movs r5, #1
 	negs r5, r5
 	adds r1, r5, #0
 	bl BmMapFill
-	ldr r0, _08022C70  @ gBmMapRange
+	ldr r0, _08022C70  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -935,11 +935,11 @@ DisplayUnitStandingAttackRange: @ 0x08022C30
 	ldrsb r1, [r2, r1]
 	movs r2, #1
 	movs r3, #0xa
-	bl MapAddInBoundedRange
+	bl MapIncInBoundedRange
 	b _08022C88
 	.align 2, 0
-_08022C6C: .4byte gBmMapMovement
-_08022C70: .4byte gBmMapRange
+_08022C6C: .4byte gMapMovement
+_08022C70: .4byte gMapRange
 _08022C74: .4byte gActiveUnit
 _08022C78:
 	adds r0, r2, #0
@@ -947,7 +947,7 @@ _08022C78:
 	bl GetUnitWeaponReachBits
 	adds r1, r0, #0
 	ldr r0, [r4]
-	bl GenerateUnitStandingReachRange
+	bl FillRangeMapByRangeMask
 _08022C88:
 	movs r0, #3
 	bl DisplayMoveRangeGraphics
@@ -992,7 +992,7 @@ UnknownMenu_IsAvailable: @ 0x08022CA4
 	ldr r0, [r5]
 	adds r1, r4, #0
 	bl MakeTargetListForWeapon
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08022CE8
 	movs r0, #1
@@ -1018,7 +1018,7 @@ UnknownMenu_Selected: @ 0x08022CF0
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
 	bl EquipUnitItemSlot
-	ldr r1, _08022D2C  @ gActionData
+	ldr r1, _08022D2C  @ gAction
 	movs r0, #0
 	strb r0, [r1, #0x12]
 	bl ClearBg0Bg1
@@ -1026,7 +1026,7 @@ UnknownMenu_Selected: @ 0x08022CF0
 	ldrh r1, [r0, #0x1e]
 	bl MakeTargetListForWeapon
 	ldr r0, _08022D30  @ gUnknown_0859D3F8
-	bl NewTargetSelection
+	bl StartTargetSelection
 	bl sub_80832C8
 	movs r0, #0x27
 	pop {r4}
@@ -1034,7 +1034,7 @@ UnknownMenu_Selected: @ 0x08022CF0
 	bx r1
 	.align 2, 0
 _08022D28: .4byte gActiveUnit
-_08022D2C: .4byte gActionData
+_08022D2C: .4byte gAction
 _08022D30: .4byte gUnknown_0859D3F8
 
 	THUMB_FUNC_END UnknownMenu_Selected
@@ -1081,20 +1081,20 @@ _08022D80: .4byte gBg0Tm
 
 	THUMB_FUNC_END UnknownMenu_Draw
 
-	THUMB_FUNC_START UnknownMenu_SwitchIn
-UnknownMenu_SwitchIn: @ 0x08022D84
+	THUMB_FUNC_START AttackWeaponSelect_ItemOnSwitchIn
+AttackWeaponSelect_ItemOnSwitchIn: @ 0x08022D84
 	push {r4, r5, lr}
 	adds r5, r1, #0
 	adds r5, #0x3c
 	movs r0, #0
 	ldrsb r0, [r5, r0]
-	bl sub_801E748
-	ldr r0, _08022DCC  @ gBmMapMovement
+	bl UpdateMenuItemPanel
+	ldr r0, _08022DCC  @ gMapMovement
 	ldr r0, [r0]
 	movs r1, #1
 	negs r1, r1
 	bl BmMapFill
-	ldr r0, _08022DD0  @ gBmMapRange
+	ldr r0, _08022DD0  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
@@ -1105,7 +1105,7 @@ UnknownMenu_SwitchIn: @ 0x08022D84
 	bl GetUnitWeaponReachBits
 	adds r1, r0, #0
 	ldr r0, [r4]
-	bl GenerateUnitStandingReachRange
+	bl FillRangeMapByRangeMask
 	movs r0, #2
 	bl DisplayMoveRangeGraphics
 	movs r0, #0
@@ -1113,14 +1113,14 @@ UnknownMenu_SwitchIn: @ 0x08022D84
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022DCC: .4byte gBmMapMovement
-_08022DD0: .4byte gBmMapRange
+_08022DCC: .4byte gMapMovement
+_08022DD0: .4byte gMapRange
 _08022DD4: .4byte gActiveUnit
 
-	THUMB_FUNC_END UnknownMenu_SwitchIn
+	THUMB_FUNC_END AttackWeaponSelect_ItemOnSwitchIn
 
-	THUMB_FUNC_START BallistaRangeMenu_SwitchOut
-BallistaRangeMenu_SwitchOut: @ 0x08022DD8
+	THUMB_FUNC_START AttackWeaponSelect_ItemOnSwitchOut
+AttackWeaponSelect_ItemOnSwitchOut: @ 0x08022DD8
 	push {lr}
 	adds r0, #0x63
 	ldrb r1, [r0]
@@ -1134,7 +1134,7 @@ _08022DEA:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END BallistaRangeMenu_SwitchOut
+	THUMB_FUNC_END AttackWeaponSelect_ItemOnSwitchOut
 
 	THUMB_FUNC_START sub_8022DF0
 sub_8022DF0: @ 0x08022DF0
@@ -1148,7 +1148,7 @@ sub_8022DF0: @ 0x08022DF0
 	movs r0, #0
 	b _08022E2A
 _08022E04:
-	ldr r1, _08022E30  @ gActionData
+	ldr r1, _08022E30  @ gAction
 	movs r0, #2
 	strb r0, [r1, #0x11]
 	ldrb r0, [r4, #2]
@@ -1172,7 +1172,7 @@ _08022E2A:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022E30: .4byte gActionData
+_08022E30: .4byte gAction
 _08022E34: .4byte gUnknown_0859E520
 
 	THUMB_FUNC_END sub_8022DF0
@@ -1200,7 +1200,7 @@ sub_8022E54: @ 0x08022E54
 	push {lr}
 	movs r0, #0
 	movs r1, #0
-	bl UnitActionMenu_Attack
+	bl AttackCommandEffect
 	pop {r0}
 	bx r0
 
@@ -1247,7 +1247,7 @@ sub_8022E8C: @ 0x08022E8C
 	ldrsb r0, [r4, r0]
 	cmp r0, #0
 	bne _08022EC2
-	ldr r1, _08022EE0  @ gActionData
+	ldr r1, _08022EE0  @ gAction
 	ldrb r0, [r4]
 	strb r0, [r1, #0x13]
 	ldrb r0, [r4, #1]
@@ -1256,7 +1256,7 @@ sub_8022E8C: @ 0x08022E8C
 	strb r0, [r1, #0x15]
 	bl InitObstacleBattleUnit
 _08022EC2:
-	ldr r1, _08022EE0  @ gActionData
+	ldr r1, _08022EE0  @ gAction
 	ldrb r0, [r1, #0x12]
 	cmp r0, #8
 	bne _08022EE8
@@ -1270,7 +1270,7 @@ _08022EC2:
 	bl BattleGenerateBallistaSimulation
 	b _08022EFC
 	.align 2, 0
-_08022EE0: .4byte gActionData
+_08022EE0: .4byte gAction
 _08022EE4: .4byte gActiveUnit
 _08022EE8:
 	ldr r0, _08022F0C  @ gActiveUnit
@@ -1322,7 +1322,7 @@ ItemSubMenu_IsTradeAvailable: @ 0x08022F34
 	ands r0, r1
 	cmp r0, #0
 	bne _08022F80
-	ldr r0, _08022F7C  @ gUnknown_0202BCB0
+	ldr r0, _08022F7C  @ gBmSt
 	adds r0, #0x3d
 	ldrb r1, [r0]
 	movs r0, #2
@@ -1341,14 +1341,14 @@ ItemSubMenu_IsTradeAvailable: @ 0x08022F34
 	bne _08022F80
 	adds r0, r2, #0
 	bl MakeTradeTargetList
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08022F80
 	movs r0, #1
 	b _08022F82
 	.align 2, 0
 _08022F78: .4byte gActiveUnit
-_08022F7C: .4byte gUnknown_0202BCB0
+_08022F7C: .4byte gBmSt
 _08022F80:
 	movs r0, #3
 _08022F82:
@@ -1365,7 +1365,7 @@ TradeCommandEffect: @ 0x08022F88
 	ldr r0, [r0]
 	bl MakeTradeTargetList
 	ldr r0, _08022FA8  @ gUnknown_0859D3D8
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	pop {r1}
 	bx r1
@@ -1378,7 +1378,7 @@ _08022FA8: .4byte gUnknown_0859D3D8
 	THUMB_FUNC_START sub_8022FAC
 sub_8022FAC: @ 0x08022FAC
 	push {r4, lr}
-	ldr r2, _08022FD4  @ gActionData
+	ldr r2, _08022FD4  @ gAction
 	movs r0, #0x1d
 	strb r0, [r2, #0x11]
 	ldr r0, _08022FD8  @ gActiveUnit
@@ -1395,7 +1395,7 @@ sub_8022FAC: @ 0x08022FAC
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08022FD4: .4byte gActionData
+_08022FD4: .4byte gAction
 _08022FD8: .4byte gActiveUnit
 
 	THUMB_FUNC_END sub_8022FAC
@@ -1427,7 +1427,7 @@ _08023000:
 	ldrb r1, [r1, #0x11]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	movs r1, #3
 	cmp r0, #0x11
 	bne _08023018
@@ -1443,7 +1443,7 @@ _0802301A:
 
 	THUMB_FUNC_START UnitActionMenu_Seize
 UnitActionMenu_Seize: @ 0x08023020
-	ldr r1, _08023038  @ gActionData
+	ldr r1, _08023038  @ gAction
 	movs r0, #0x11
 	strb r0, [r1, #0x11]
 	ldr r0, _0802303C  @ gActiveUnit
@@ -1455,7 +1455,7 @@ UnitActionMenu_Seize: @ 0x08023020
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_08023038: .4byte gActionData
+_08023038: .4byte gAction
 _0802303C: .4byte gActiveUnit
 
 	THUMB_FUNC_END UnitActionMenu_Seize
@@ -1477,7 +1477,7 @@ VisitCommandUsability: @ 0x08023040
 	bne _080230B8
 	movs r0, #0x11
 	ldrsb r0, [r2, r0]
-	ldr r1, _08023084  @ gBmMapTerrain
+	ldr r1, _08023084  @ gMapTerrain
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -1495,7 +1495,7 @@ VisitCommandUsability: @ 0x08023040
 	b _080230B8
 	.align 2, 0
 _08023080: .4byte gActiveUnit
-_08023084: .4byte gBmMapTerrain
+_08023084: .4byte gMapTerrain
 _08023088:
 	cmp r0, #0x38
 	bgt _080230B8
@@ -1508,7 +1508,7 @@ _08023090:
 	ldrb r1, [r1, #0x11]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	cmp r0, #0x10
 	bne _080230B8
 	ldr r0, [r4]
@@ -1538,17 +1538,17 @@ VisitCommandEffect: @ 0x080230C0
 	ldrb r0, [r1]
 	cmp r0, #2
 	beq _080230DC
-	ldr r1, _080230D8  @ gActionData
+	ldr r1, _080230D8  @ gAction
 	movs r0, #0x10
 	strb r0, [r1, #0x11]
 	movs r0, #0x17
 	b _080230E6
 	.align 2, 0
-_080230D8: .4byte gActionData
+_080230D8: .4byte gAction
 _080230DC:
 	ldr r1, _080230EC  @ 0x0000084C
 	adds r0, r2, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _080230E6:
 	pop {r1}
@@ -1570,7 +1570,7 @@ sub_80230F0: @ 0x080230F0
 	bne _0802314E
 	adds r0, r2, #0
 	bl sub_8025B6C
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08023118
 _0802310E:
@@ -1630,7 +1630,7 @@ PlayCommandUsability: @ 0x08023158
 	ands r0, r1
 	cmp r0, #0
 	beq _0802318C
-	ldr r1, _08023188  @ gUnknown_0202BCB0
+	ldr r1, _08023188  @ gBmSt
 	movs r0, #0xcd
 	strh r0, [r1, #0x2c]
 	adds r0, r3, #0
@@ -1640,7 +1640,7 @@ PlayCommandUsability: @ 0x08023158
 	b _0802318E
 	.align 2, 0
 _08023184: .4byte gActiveUnit
-_08023188: .4byte gUnknown_0202BCB0
+_08023188: .4byte gBmSt
 _0802318C:
 	movs r0, #3
 _0802318E:
@@ -1664,7 +1664,7 @@ DanceCommandUsability: @ 0x08023194
 	ands r0, r1
 	cmp r0, #0
 	beq _080231C8
-	ldr r1, _080231C4  @ gUnknown_0202BCB0
+	ldr r1, _080231C4  @ gBmSt
 	movs r0, #0xa5
 	strh r0, [r1, #0x2c]
 	adds r0, r3, #0
@@ -1674,7 +1674,7 @@ DanceCommandUsability: @ 0x08023194
 	b _080231CA
 	.align 2, 0
 _080231C0: .4byte gActiveUnit
-_080231C4: .4byte gUnknown_0202BCB0
+_080231C4: .4byte gBmSt
 _080231C8:
 	movs r0, #3
 _080231CA:
@@ -1697,7 +1697,7 @@ PlayCommandEffect: @ 0x080231D0
 	ldr r6, _08023248  @ gActiveUnit
 	ldr r0, [r6]
 	bl sub_8025B6C
-	bl sub_804FD28
+	bl GetTargetListSize
 	negs r1, r0
 	orrs r1, r0
 	lsrs r1, r1, #0x1f
@@ -1746,11 +1746,11 @@ _0802322E:
 _08023248: .4byte gActiveUnit
 _0802324C:
 	ldr r0, _0802329C  @ gItemMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r5, r0, #0
 	ldr r4, _080232A0  @ gActiveUnit
 	ldr r0, [r4]
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -1760,12 +1760,12 @@ _0802324C:
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 	ldr r1, [r4]
 	adds r0, r5, #0
 	movs r2, #0xf
 	movs r3, #0xb
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	bl ClearIcons
 	movs r0, #4
 	bl ApplyIconPalettes
@@ -1787,7 +1787,7 @@ _080232A0: .4byte gActiveUnit
 
 	THUMB_FUNC_START sub_80232A4
 sub_80232A4: @ 0x080232A4
-	ldr r2, _080232B4  @ gActionData
+	ldr r2, _080232B4  @ gAction
 	movs r0, #4
 	strb r0, [r2, #0x11]
 	ldrb r0, [r1, #2]
@@ -1795,7 +1795,7 @@ sub_80232A4: @ 0x080232A4
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_080232B4: .4byte gActionData
+_080232B4: .4byte gAction
 
 	THUMB_FUNC_END sub_80232A4
 
@@ -1841,11 +1841,11 @@ ItemCommandEffect: @ 0x080232E8
 	bl ApplyIconPalettes
 	bl ResetTextFont
 	ldr r0, _0802333C  @ gItemSelectMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r5, r0, #0
 	ldr r4, _08023340  @ gActiveUnit
 	ldr r0, [r4]
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -1855,12 +1855,12 @@ ItemCommandEffect: @ 0x080232E8
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 	ldr r1, [r4]
 	adds r0, r5, #0
 	movs r2, #0xf
 	movs r3, #0xb
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	movs r0, #0x17
 	b _08023346
 	.align 2, 0
@@ -1994,7 +1994,7 @@ _08023422:
 ItemSelectMenu_Effect: @ 0x08023428
 	push {r4, r5, lr}
 	adds r4, r0, #0
-	ldr r2, _08023480  @ gActionData
+	ldr r2, _08023480  @ gAction
 	adds r0, r1, #0
 	adds r0, #0x3c
 	ldrb r0, [r0]
@@ -2034,7 +2034,7 @@ ItemSelectMenu_Effect: @ 0x08023428
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08023480: .4byte gActionData
+_08023480: .4byte gAction
 _08023484: .4byte 0xFFFFFF00
 _08023488: .4byte 0xFFFF00FF
 _0802348C: .4byte 0xFF00FFFF
@@ -2049,17 +2049,17 @@ Menu_SwitchIn: @ 0x08023498
 	adds r1, #0x3c
 	movs r0, #0
 	ldrsb r0, [r1, r0]
-	bl sub_801E748
+	bl UpdateMenuItemPanel
 	pop {r1}
 	bx r1
 
 	THUMB_FUNC_END Menu_SwitchIn
 
-	THUMB_FUNC_START Menu_SwitchOut_DoNothing
-Menu_SwitchOut_DoNothing: @ 0x080234A8
+	THUMB_FUNC_START nullsub_25
+nullsub_25: @ 0x080234A8
 	bx lr
 
-	THUMB_FUNC_END Menu_SwitchOut_DoNothing
+	THUMB_FUNC_END nullsub_25
 
 	THUMB_FUNC_START sub_80234AC
 sub_80234AC: @ 0x080234AC
@@ -2152,11 +2152,11 @@ sub_8023550: @ 0x08023550
 	adds r0, r4, #0
 	bl MenuCommand_SelectNo
 	ldr r0, _080235A0  @ gItemSelectMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r5, r0, #0
 	ldr r4, _080235A4  @ gActiveUnit
 	ldr r0, [r4]
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -2166,12 +2166,12 @@ sub_8023550: @ 0x08023550
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 	ldr r1, [r4]
 	adds r0, r5, #0
 	movs r2, #0xf
 	movs r3, #0xb
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	movs r0, #1
 	add sp, #4
 	pop {r4, r5}
@@ -2220,10 +2220,10 @@ sub_80235A8: @ 0x080235A8
 	movs r0, #3
 	bl EnableBgSync
 	ldr r0, _08023644  @ gItemSelectMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r4, r0, #0
 	ldr r0, [r6]
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -2233,12 +2233,12 @@ sub_80235A8: @ 0x080235A8
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 	ldr r1, [r6]
 	adds r0, r4, #0
 	movs r2, #0xf
 	movs r3, #0xb
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	movs r0, #1
 	b _0802366A
 	.align 2, 0
@@ -2253,7 +2253,7 @@ _08023648:
 	movs r0, #0
 	bl EndFaceById
 	ldr r0, _08023674  @ gUnitActionMenuDef
-	ldr r2, _08023678  @ gUnknown_0202BCB0
+	ldr r2, _08023678  @ gBmSt
 	movs r3, #0x1c
 	ldrsh r1, [r2, r3]
 	movs r3, #0xc
@@ -2261,7 +2261,7 @@ _08023648:
 	subs r1, r1, r2
 	movs r2, #1
 	movs r3, #0x16
-	bl StartSemiCenteredOrphanMenu
+	bl StartMenu_AndDoSomethingCommands
 	movs r0, #0x1b
 _0802366A:
 	add sp, #4
@@ -2270,7 +2270,7 @@ _0802366A:
 	bx r1
 	.align 2, 0
 _08023674: .4byte gUnitActionMenuDef
-_08023678: .4byte gUnknown_0202BCB0
+_08023678: .4byte gBmSt
 
 	THUMB_FUNC_END sub_80235A8
 
@@ -2279,7 +2279,7 @@ ItemSubMenu_IsUseAvailable: @ 0x0802367C
 	push {r4, r5, lr}
 	ldr r5, _080236CC  @ gActiveUnit
 	ldr r1, [r5]
-	ldr r0, _080236D0  @ gActionData
+	ldr r0, _080236D0  @ gAction
 	ldrb r0, [r0, #0x12]
 	lsls r0, r0, #1
 	adds r1, #0x1e
@@ -2314,7 +2314,7 @@ _080236C8:
 	b _080236EA
 	.align 2, 0
 _080236CC: .4byte gActiveUnit
-_080236D0: .4byte gActionData
+_080236D0: .4byte gAction
 _080236D4:
 	ldr r0, _080236F0  @ gActiveUnit
 	ldr r0, [r0]
@@ -2341,7 +2341,7 @@ ItemSubMenu_IsEquipAvailable: @ 0x080236F4
 	push {r4, r5, lr}
 	ldr r5, _08023718  @ gActiveUnit
 	ldr r1, [r5]
-	ldr r0, _0802371C  @ gActionData
+	ldr r0, _0802371C  @ gAction
 	ldrb r0, [r0, #0x12]
 	lsls r0, r0, #1
 	adds r1, #0x1e
@@ -2357,7 +2357,7 @@ ItemSubMenu_IsEquipAvailable: @ 0x080236F4
 	b _08023734
 	.align 2, 0
 _08023718: .4byte gActiveUnit
-_0802371C: .4byte gActionData
+_0802371C: .4byte gAction
 _08023720:
 	ldr r0, [r5]
 	adds r1, r4, #0
@@ -2381,7 +2381,7 @@ ItemSubMenu_IsDiscardAvailable: @ 0x0802373C
 	push {lr}
 	ldr r0, _08023760  @ gActiveUnit
 	ldr r1, [r0]
-	ldr r0, _08023764  @ gActionData
+	ldr r0, _08023764  @ gAction
 	ldrb r0, [r0, #0x12]
 	lsls r0, r0, #1
 	adds r1, #0x1e
@@ -2396,7 +2396,7 @@ ItemSubMenu_IsDiscardAvailable: @ 0x0802373C
 	b _0802376A
 	.align 2, 0
 _08023760: .4byte gActiveUnit
-_08023764: .4byte gActionData
+_08023764: .4byte gAction
 _08023768:
 	movs r0, #2
 _0802376A:
@@ -2415,7 +2415,7 @@ ItemSubMenu_UseItem: @ 0x08023770
 	bne _080237A8
 	ldr r0, _080237A0  @ gActiveUnit
 	ldr r0, [r0]
-	ldr r1, _080237A4  @ gActionData
+	ldr r1, _080237A4  @ gAction
 	ldrb r2, [r1, #0x12]
 	lsls r2, r2, #1
 	adds r1, r0, #0
@@ -2425,25 +2425,25 @@ ItemSubMenu_UseItem: @ 0x08023770
 	bl GetItemCantUseMsgid
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 	b _080237E4
 	.align 2, 0
 _080237A0: .4byte gActiveUnit
-_080237A4: .4byte gActionData
+_080237A4: .4byte gAction
 _080237A8:
 	bl ClearBg0Bg1
 	ldr r0, _080237EC  @ gActiveUnit
 	ldr r0, [r0]
-	ldr r1, _080237F0  @ gActionData
+	ldr r1, _080237F0  @ gAction
 	ldrb r2, [r1, #0x12]
 	lsls r2, r2, #1
 	adds r1, r0, #0
 	adds r1, #0x1e
 	adds r1, r1, r2
 	ldrh r1, [r1]
-	bl DoItemUse
-	ldr r0, _080237F4  @ gRAMChapterData
+	bl ItemEffect_Call
+	ldr r0, _080237F4  @ gPlaySt
 	adds r0, #0x41
 	ldrb r0, [r0]
 	lsls r0, r0, #0x1e
@@ -2463,8 +2463,8 @@ _080237E4:
 	bx r1
 	.align 2, 0
 _080237EC: .4byte gActiveUnit
-_080237F0: .4byte gActionData
-_080237F4: .4byte gRAMChapterData
+_080237F0: .4byte gAction
+_080237F4: .4byte gPlaySt
 
 	THUMB_FUNC_END ItemSubMenu_UseItem
 
@@ -2478,7 +2478,7 @@ ItemSubMenu_EquipItem: @ 0x080237F8
 	beq _08023824
 	ldr r0, _0802381C  @ gActiveUnit
 	ldr r0, [r0]
-	ldr r1, _08023820  @ gActionData
+	ldr r1, _08023820  @ gAction
 	ldrb r1, [r1, #0x12]
 	bl EquipUnitItemSlot
 	adds r0, r4, #0
@@ -2488,11 +2488,11 @@ ItemSubMenu_EquipItem: @ 0x080237F8
 	b _0802382E
 	.align 2, 0
 _0802381C: .4byte gActiveUnit
-_08023820: .4byte gActionData
+_08023820: .4byte gAction
 _08023824:
 	ldr r1, _08023834  @ 0x0000084D
 	adds r0, r4, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _0802382E:
 	pop {r4}
@@ -2508,8 +2508,8 @@ ItemSubMenu_TradeItem: @ 0x08023838
 	push {r4, r5, lr}
 	adds r4, r0, #0
 	adds r5, r1, #0
-	ldr r0, _08023864  @ gUnknown_0202BCB0
-	ldr r1, _08023868  @ gActionData
+	ldr r0, _08023864  @ gBmSt
+	ldr r1, _08023868  @ gAction
 	ldrb r1, [r1, #0x12]
 	adds r0, #0x3f
 	strb r1, [r0]
@@ -2525,8 +2525,8 @@ ItemSubMenu_TradeItem: @ 0x08023838
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08023864: .4byte gUnknown_0202BCB0
-_08023868: .4byte gActionData
+_08023864: .4byte gBmSt
+_08023868: .4byte gAction
 
 	THUMB_FUNC_END ItemSubMenu_TradeItem
 
@@ -2578,7 +2578,7 @@ _080238C8: .4byte gYesNoSelectionMenuDef
 _080238CC:
 	ldr r1, _080238DC  @ 0x0000084F
 	adds r0, r4, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _080238D6:
 	pop {r4}
@@ -2595,7 +2595,7 @@ MenuCommand_SelectYes: @ 0x080238E0
 	adds r5, r0, #0
 	ldr r0, _0802390C  @ gActiveUnit
 	ldr r0, [r0]
-	ldr r4, _08023910  @ gActionData
+	ldr r4, _08023910  @ gAction
 	ldrb r1, [r4, #0x12]
 	bl UnitRemoveItem
 	ldrb r0, [r4, #0x12]
@@ -2613,7 +2613,7 @@ _080238FE:
 	bx r1
 	.align 2, 0
 _0802390C: .4byte gActiveUnit
-_08023910: .4byte gActionData
+_08023910: .4byte gAction
 _08023914: .4byte gBg0Tm
 
 	THUMB_FUNC_END MenuCommand_SelectYes
@@ -2700,19 +2700,19 @@ _0802399C: .4byte gBg0Tm
 BallistaRangeMenu_Select: @ 0x080239A0
 	push {lr}
 	bl ClearBg0Bg1
-	ldr r1, _080239C0  @ gActionData
+	ldr r1, _080239C0  @ gAction
 	movs r0, #8
 	strb r0, [r1, #0x12]
 	ldr r0, _080239C4  @ gActiveUnit
 	ldr r0, [r0]
 	bl FillBallistaRangeMaybe
 	ldr r0, _080239C8  @ gUnknown_0859D3F8
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #0x26
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080239C0: .4byte gActionData
+_080239C0: .4byte gAction
 _080239C4: .4byte gActiveUnit
 _080239C8: .4byte gUnknown_0859D3F8
 
@@ -2723,17 +2723,17 @@ FillBallistaRange: @ 0x080239CC
 	push {r4, r5, r6, lr}
 	mov r6, r8
 	push {r6}
-	ldr r0, _08023A48  @ gBmMapMovement
+	ldr r0, _08023A48  @ gMapMovement
 	ldr r0, [r0]
 	movs r1, #1
 	negs r1, r1
 	bl BmMapFill
-	ldr r4, _08023A4C  @ gBmMapRange
+	ldr r4, _08023A4C  @ gMapRange
 	ldr r0, [r4]
 	movs r1, #0
 	bl BmMapFill
 	ldr r0, [r4]
-	bl SetWorkingBmMap
+	bl SetSubjectMap
 	ldr r4, _08023A50  @ gActiveUnit
 	ldr r1, [r4]
 	movs r0, #0x10
@@ -2743,7 +2743,7 @@ FillBallistaRange: @ 0x080239CC
 	asrs r1, r1, #0x18
 	bl GetBallistaItemAt
 	adds r5, r0, #0
-	bl sub_801E748
+	bl UpdateMenuItemPanel
 	ldr r0, [r4]
 	movs r6, #0x10
 	ldrsb r6, [r0, r6]
@@ -2764,7 +2764,7 @@ FillBallistaRange: @ 0x080239CC
 	adds r0, r6, #0
 	mov r1, r8
 	adds r2, r4, #0
-	bl MapAddInBoundedRange
+	bl MapIncInBoundedRange
 	movs r0, #2
 	bl DisplayMoveRangeGraphics
 	movs r0, #0
@@ -2774,8 +2774,8 @@ FillBallistaRange: @ 0x080239CC
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08023A48: .4byte gBmMapMovement
-_08023A4C: .4byte gBmMapRange
+_08023A48: .4byte gMapMovement
+_08023A4C: .4byte gMapRange
 _08023A50: .4byte gActiveUnit
 
 	THUMB_FUNC_END FillBallistaRange
@@ -2858,11 +2858,11 @@ StaffCommandEffect: @ 0x08023ACC
 	movs r0, #4
 	bl ApplyIconPalettes
 	ldr r0, _08023B1C  @ gStaffItemSelectMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r5, r0, #0
 	ldr r4, _08023B20  @ gActiveUnit
 	ldr r0, [r4]
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r0, #2
 	str r0, [sp]
@@ -2872,12 +2872,12 @@ StaffCommandEffect: @ 0x08023ACC
 	bl StartFace
 	movs r0, #0
 	movs r1, #5
-	bl sub_8006458
+	bl SetFaceBlinkControlById
 	ldr r1, [r4]
 	adds r0, r5, #0
 	movs r2, #0xf
 	movs r3, #0xb
-	bl sub_801E684
+	bl ForceMenuItemPanel
 	movs r0, #0x17
 	b _08023B2E
 	.align 2, 0
@@ -2886,7 +2886,7 @@ _08023B20: .4byte gActiveUnit
 _08023B24:
 	ldr r1, _08023B38  @ 0x00000851
 	adds r0, r2, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _08023B2E:
 	add sp, #4
@@ -2908,17 +2908,17 @@ StaffCommandRange: @ 0x08023B3C
 	adds r1, r4, #0
 	bl GetUnitItemUseReachBits
 	adds r6, r0, #0
-	ldr r0, _08023B7C  @ gBmMapMovement
+	ldr r0, _08023B7C  @ gMapMovement
 	ldr r0, [r0]
 	adds r1, r4, #0
 	bl BmMapFill
-	ldr r0, _08023B80  @ gBmMapRange
+	ldr r0, _08023B80  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
 	ldr r0, [r5]
 	adds r1, r6, #0
-	bl GenerateUnitStandingReachRange
+	bl FillRangeMapByRangeMask
 	movs r0, #5
 	bl DisplayMoveRangeGraphics
 	movs r0, #0
@@ -2927,8 +2927,8 @@ StaffCommandRange: @ 0x08023B3C
 	bx r1
 	.align 2, 0
 _08023B78: .4byte gActiveUnit
-_08023B7C: .4byte gBmMapMovement
-_08023B80: .4byte gBmMapRange
+_08023B7C: .4byte gMapMovement
+_08023B80: .4byte gMapRange
 
 	THUMB_FUNC_END StaffCommandRange
 
@@ -2984,7 +2984,7 @@ StaffItemSelect_Effect: @ 0x08023BC8
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
 	bl EquipUnitItemSlot
-	ldr r4, _08023C04  @ gActionData
+	ldr r4, _08023C04  @ gAction
 	movs r0, #0
 	strb r0, [r4, #0x12]
 	bl ClearBg0Bg1
@@ -2995,14 +2995,14 @@ StaffItemSelect_Effect: @ 0x08023BC8
 	adds r1, #0x1e
 	adds r1, r1, r2
 	ldrh r1, [r1]
-	bl DoItemUse
+	bl ItemEffect_Call
 	movs r0, #7
 	pop {r4, r5}
 	pop {r1}
 	bx r1
 	.align 2, 0
 _08023C00: .4byte gActiveUnit
-_08023C04: .4byte gActionData
+_08023C04: .4byte gAction
 
 	THUMB_FUNC_END StaffItemSelect_Effect
 
@@ -3028,19 +3028,19 @@ StaffItemSelect_OnHover: @ 0x08023C14
 	adds r6, r0, #0
 	movs r0, #0
 	ldrsb r0, [r4, r0]
-	bl sub_801E748
-	ldr r0, _08023C60  @ gBmMapMovement
+	bl UpdateMenuItemPanel
+	ldr r0, _08023C60  @ gMapMovement
 	ldr r0, [r0]
 	movs r1, #1
 	negs r1, r1
 	bl BmMapFill
-	ldr r0, _08023C64  @ gBmMapRange
+	ldr r0, _08023C64  @ gMapRange
 	ldr r0, [r0]
 	movs r1, #0
 	bl BmMapFill
 	ldr r0, [r5]
 	adds r1, r6, #0
-	bl GenerateUnitStandingReachRange
+	bl FillRangeMapByRangeMask
 	movs r0, #4
 	bl DisplayMoveRangeGraphics
 	movs r0, #0
@@ -3049,8 +3049,8 @@ StaffItemSelect_OnHover: @ 0x08023C14
 	bx r1
 	.align 2, 0
 _08023C5C: .4byte gActiveUnit
-_08023C60: .4byte gBmMapMovement
-_08023C64: .4byte gBmMapRange
+_08023C60: .4byte gMapMovement
+_08023C64: .4byte gMapRange
 
 	THUMB_FUNC_END StaffItemSelect_OnHover
 
@@ -3082,8 +3082,8 @@ TalkCommandUsability: @ 0x08023C80
 	cmp r0, #0
 	bne _08023C9E
 	adds r0, r2, #0
-	bl sub_8025610
-	bl sub_804FD28
+	bl MakeTargetsForTalk
+	bl GetTargetListSize
 	cmp r0, #0
 	bne _08023CA8
 _08023C9E:
@@ -3120,9 +3120,9 @@ TalkCommandEffect: @ 0x08023CC4
 	beq _08023CEC
 	ldr r0, _08023CE4  @ gActiveUnit
 	ldr r0, [r0]
-	bl sub_8025610
+	bl MakeTargetsForTalk
 	ldr r0, _08023CE8  @ gUnknown_0859D398
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	b _08023CF6
 	.align 2, 0
@@ -3131,7 +3131,7 @@ _08023CE8: .4byte gUnknown_0859D398
 _08023CEC:
 	ldr r1, _08023CFC  @ 0x00000852
 	adds r0, r2, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _08023CF6:
 	pop {r1}
@@ -3143,7 +3143,7 @@ _08023CFC: .4byte 0x00000852
 
 	THUMB_FUNC_START sub_8023D00
 sub_8023D00: @ 0x08023D00
-	ldr r2, _08023D10  @ gActionData
+	ldr r2, _08023D10  @ gAction
 	movs r0, #0xe
 	strb r0, [r2, #0x11]
 	ldrb r0, [r1, #2]
@@ -3151,7 +3151,7 @@ sub_8023D00: @ 0x08023D00
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_08023D10: .4byte gActionData
+_08023D10: .4byte gAction
 
 	THUMB_FUNC_END sub_8023D00
 
@@ -3167,12 +3167,12 @@ SupportCommandUsability: @ 0x08023D14
 	bne _08023D40
 	adds r0, r2, #0
 	bl MakeTargetListForSupport
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08023D40
 	ldr r0, [r4]
-	bl sub_8025610
-	bl sub_804FD28
+	bl MakeTargetsForTalk
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08023D48
 _08023D40:
@@ -3211,7 +3211,7 @@ SupportCommandEffect: @ 0x08023D64
 	ldr r0, [r0]
 	bl MakeTargetListForSupport
 	ldr r0, _08023D88  @ gUnknown_0859D378
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	b _08023D96
 	.align 2, 0
@@ -3220,7 +3220,7 @@ _08023D88: .4byte gUnknown_0859D378
 _08023D8C:
 	ldr r1, _08023D9C  @ 0x00000852
 	adds r0, r2, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _08023D96:
 	pop {r1}
@@ -3232,7 +3232,7 @@ _08023D9C: .4byte 0x00000852
 
 	THUMB_FUNC_START sub_8023DA0
 sub_8023DA0: @ 0x08023DA0
-	ldr r2, _08023DB0  @ gActionData
+	ldr r2, _08023DB0  @ gAction
 	movs r0, #0xf
 	strb r0, [r2, #0x11]
 	ldrb r0, [r1, #2]
@@ -3240,7 +3240,7 @@ sub_8023DA0: @ 0x08023DA0
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_08023DB0: .4byte gActionData
+_08023DB0: .4byte gAction
 
 	THUMB_FUNC_END sub_8023DA0
 
@@ -3268,7 +3268,7 @@ _08023DD8:
 	ldr r0, [r4]
 	movs r1, #0x1e
 	bl MakeTargetListForDoorAndBridges
-	bl sub_804FD28
+	bl GetTargetListSize
 	movs r1, #3
 	cmp r0, #0
 	beq _08023DEC
@@ -3285,7 +3285,7 @@ _08023DEE:
 	THUMB_FUNC_START DoorCommandEffect
 DoorCommandEffect: @ 0x08023DF4
 	push {r4, lr}
-	ldr r4, _08023E14  @ gActionData
+	ldr r4, _08023E14  @ gAction
 	movs r0, #0x12
 	strb r0, [r4, #0x11]
 	ldr r0, _08023E18  @ gActiveUnit
@@ -3300,7 +3300,7 @@ DoorCommandEffect: @ 0x08023DF4
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08023E14: .4byte gActionData
+_08023E14: .4byte gAction
 _08023E18: .4byte gActiveUnit
 
 	THUMB_FUNC_END DoorCommandEffect
@@ -3327,7 +3327,7 @@ _08023E38:
 _08023E3C: .4byte gActiveUnit
 _08023E40:
 	ldr r0, [r4]
-	bl CanUnitUseChestKeyItem
+	bl CanUseChestKey
 	lsls r0, r0, #0x18
 	movs r1, #3
 	cmp r0, #0
@@ -3345,7 +3345,7 @@ _08023E52:
 	THUMB_FUNC_START ChestCommandEffect
 ChestCommandEffect: @ 0x08023E58
 	push {r4, lr}
-	ldr r4, _08023E74  @ gActionData
+	ldr r4, _08023E74  @ gAction
 	movs r0, #0x14
 	strb r0, [r4, #0x11]
 	ldr r0, _08023E78  @ gActiveUnit
@@ -3358,7 +3358,7 @@ ChestCommandEffect: @ 0x08023E58
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08023E74: .4byte gActionData
+_08023E74: .4byte gAction
 _08023E78: .4byte gActiveUnit
 
 	THUMB_FUNC_END ChestCommandEffect
@@ -3384,8 +3384,8 @@ _08023E94:
 _08023E98: .4byte gActiveUnit
 _08023E9C:
 	adds r0, r2, #0
-	bl sub_80258A4
-	bl sub_804FD28
+	bl MakeTargetListForPick
+	bl GetTargetListSize
 	movs r1, #3
 	cmp r0, #0
 	beq _08023EAE
@@ -3401,24 +3401,24 @@ _08023EB0:
 	THUMB_FUNC_START PickCommandEffect
 PickCommandEffect: @ 0x08023EB4
 	push {lr}
-	ldr r0, _08023ED0  @ gActionData
+	ldr r0, _08023ED0  @ gAction
 	ldrb r0, [r0, #0xc]
 	bl GetUnit
-	bl sub_80258A4
+	bl MakeTargetListForPick
 	ldr r0, _08023ED4  @ gUnknown_0859D358
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #0x17
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08023ED0: .4byte gActionData
+_08023ED0: .4byte gAction
 _08023ED4: .4byte gUnknown_0859D358
 
 	THUMB_FUNC_END PickCommandEffect
 
 	THUMB_FUNC_START sub_8023ED8
 sub_8023ED8: @ 0x08023ED8
-	ldr r2, _08023EEC  @ gActionData
+	ldr r2, _08023EEC  @ gAction
 	ldrb r0, [r1]
 	strb r0, [r2, #0x13]
 	ldrb r0, [r1, #1]
@@ -3428,7 +3428,7 @@ sub_8023ED8: @ 0x08023ED8
 	movs r0, #0x17
 	bx lr
 	.align 2, 0
-_08023EEC: .4byte gActionData
+_08023EEC: .4byte gAction
 
 	THUMB_FUNC_END sub_8023ED8
 
@@ -3455,7 +3455,7 @@ _08023F0C:
 	movs r0, #1
 	ldrsb r0, [r4, r0]
 	adds r0, r6, r0
-	ldr r1, _08023F4C  @ gBmMapUnit
+	ldr r1, _08023F4C  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -3479,7 +3479,7 @@ _08023F0C:
 	.align 2, 0
 _08023F44: .4byte gActiveUnit
 _08023F48: .4byte gUnknown_080D7C04
-_08023F4C: .4byte gBmMapUnit
+_08023F4C: .4byte gMapUnit
 _08023F50:
 	adds r4, #2
 	adds r5, #1
@@ -3508,7 +3508,7 @@ SupplyUsability: @ 0x08023F64
 	ldrb r0, [r0, #4]
 	cmp r0, #0x51
 	beq _08023FAC
-	ldr r0, _08023F90  @ gRAMChapterData
+	ldr r0, _08023F90  @ gPlaySt
 	ldrb r0, [r0, #0x1b]
 	cmp r0, #2
 	beq _08023F88
@@ -3519,7 +3519,7 @@ _08023F88:
 	b _08023F96
 	.align 2, 0
 _08023F8C: .4byte gActiveUnit
-_08023F90: .4byte gRAMChapterData
+_08023F90: .4byte gPlaySt
 _08023F94:
 	movs r2, #0xf
 _08023F96:
@@ -3547,7 +3547,7 @@ _08023FB2:
 	THUMB_FUNC_START SupplyCommandEffect
 SupplyCommandEffect: @ 0x08023FB8
 	push {lr}
-	ldr r1, _08023FD0  @ gActionData
+	ldr r1, _08023FD0  @ gAction
 	movs r0, #0x1d
 	strb r0, [r1, #0x11]
 	ldr r0, _08023FD4  @ gActiveUnit
@@ -3558,7 +3558,7 @@ SupplyCommandEffect: @ 0x08023FB8
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08023FD0: .4byte gActionData
+_08023FD0: .4byte gAction
 _08023FD4: .4byte gActiveUnit
 
 	THUMB_FUNC_END SupplyCommandEffect
@@ -3587,7 +3587,7 @@ _08023FF8:
 	ldrsb r0, [r2, r0]
 	movs r1, #0x11
 	ldrsb r1, [r2, r1]
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	movs r1, #3
 	cmp r0, #0x16
 	bne _0802400C
@@ -3610,7 +3610,7 @@ ArmoryCommandEffect: @ 0x08024014
 	ldrb r1, [r1, #0x11]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_80840C4
+	bl RunLocationEvents
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -3643,7 +3643,7 @@ _08024054:
 	ldrsb r0, [r2, r0]
 	movs r1, #0x11
 	ldrsb r1, [r2, r1]
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	movs r1, #3
 	cmp r0, #0x17
 	bne _08024068
@@ -3666,7 +3666,7 @@ VendorCommandEffect: @ 0x08024070
 	ldrb r1, [r1, #0x11]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_80840C4
+	bl RunLocationEvents
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -3699,7 +3699,7 @@ _080240B0:
 	ldrsb r0, [r2, r0]
 	movs r1, #0x11
 	ldrsb r1, [r2, r1]
-	bl GetAvailableLocaCommandAt
+	bl GetLocationEventCommandAt
 	movs r1, #3
 	cmp r0, #0x18
 	bne _080240C4
@@ -3722,7 +3722,7 @@ SecretShopCommandEffect: @ 0x080240CC
 	ldrb r1, [r1, #0x11]
 	lsls r1, r1, #0x18
 	asrs r1, r1, #0x18
-	bl sub_80840C4
+	bl RunLocationEvents
 	movs r0, #0x17
 	pop {r1}
 	bx r1
@@ -3747,7 +3747,7 @@ ArenaCommandUsability: @ 0x080240EC
 	bne _0802411E
 	movs r0, #0x11
 	ldrsb r0, [r2, r0]
-	ldr r1, _08024128  @ gBmMapTerrain
+	ldr r1, _08024128  @ gMapTerrain
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -3763,10 +3763,10 @@ _0802411E:
 	b _0802413E
 	.align 2, 0
 _08024124: .4byte gActiveUnit
-_08024128: .4byte gBmMapTerrain
+_08024128: .4byte gMapTerrain
 _0802412C:
 	adds r0, r2, #0
-	bl sub_8031F50
+	bl CouldUnitUseAnyWeapon
 	lsls r0, r0, #0x18
 	movs r1, #2
 	cmp r0, #0
@@ -3796,7 +3796,7 @@ ArenaCommandEffect: @ 0x08024144
 	beq _08024170
 	ldr r1, _0802416C  @ 0x00000853
 	adds r0, r4, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	b _08024178
 	.align 2, 0
 _08024168: .4byte gActiveUnit
@@ -3804,7 +3804,7 @@ _0802416C: .4byte 0x00000853
 _08024170:
 	ldr r1, _0802417C  @ 0x00000854
 	adds r0, r4, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 _08024178:
 	movs r0, #8
 	b _08024186
@@ -3841,7 +3841,7 @@ StealCommandUsability: @ 0x0802418C
 	bne _080241BC
 	adds r0, r2, #0
 	bl MakeTargetListForSteal
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	bne _080241C4
 _080241BC:
@@ -3878,7 +3878,7 @@ StealCommandEffect: @ 0x080241DC
 	ldr r0, [r0]
 	bl MakeTargetListForSteal
 	ldr r0, _08024204  @ gUnknown_0859D318
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	b _08024212
 	.align 2, 0
@@ -3887,7 +3887,7 @@ _08024204: .4byte gUnknown_0859D318
 _08024208:
 	ldr r1, _08024218  @ 0x00000862
 	adds r0, r2, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _08024212:
 	pop {r1}
@@ -3906,7 +3906,7 @@ StealTargetSelection_OnInit: @ 0x0802421C
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -3939,14 +3939,14 @@ sub_8024260: @ 0x08024260
 	push {r4, r5, r6, lr}
 	sub sp, #8
 	adds r4, r0, #0
-	ldr r6, _080242F0  @ gActionData
+	ldr r6, _080242F0  @ gAction
 	ldrb r0, [r1, #2]
 	strb r0, [r6, #0xd]
 	bl ClearIcons
 	movs r0, #4
 	bl ApplyIconPalettes
 	ldr r0, _080242F4  @ gStealItemMenuDef
-	bl StartOrphanMenu
+	bl StartMenu
 	adds r0, r4, #0
 	bl EndTargetSelection
 	ldr r0, _080242F8  @ gBg1Tm+0x84
@@ -3982,20 +3982,20 @@ sub_8024260: @ 0x08024260
 	adds r5, #0x80
 	ldrb r0, [r6, #0xd]
 	bl GetUnit
-	bl GetUnitPortraitId
+	bl GetUnitFid
 	adds r1, r0, #0
 	movs r2, #0x80
 	lsls r2, r2, #2
 	adds r0, r5, #0
 	movs r3, #5
-	bl sub_8005CA4
+	bl PutFace80x72_Core
 	movs r0, #0
 	add sp, #8
 	pop {r4, r5, r6}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080242F0: .4byte gActionData
+_080242F0: .4byte gAction
 _080242F4: .4byte gStealItemMenuDef
 _080242F8: .4byte gBg1Tm+0x84
 _080242FC: .4byte gUnknown_085A0D4C
@@ -4007,7 +4007,7 @@ _08024300: .4byte gBg0Tm+0xC6
 StealItemMenuCommand_Usability: @ 0x08024304
 	push {r4, r5, lr}
 	adds r4, r1, #0
-	ldr r5, _08024320  @ gActionData
+	ldr r5, _08024320  @ gAction
 	ldrb r0, [r5, #0xd]
 	bl GetUnit
 	lsls r4, r4, #1
@@ -4019,7 +4019,7 @@ StealItemMenuCommand_Usability: @ 0x08024304
 	movs r0, #3
 	b _08024340
 	.align 2, 0
-_08024320: .4byte gActionData
+_08024320: .4byte gAction
 _08024324:
 	ldrb r0, [r5, #0xd]
 	bl GetUnit
@@ -4045,7 +4045,7 @@ _08024340:
 StealItemMenuCommand_Draw: @ 0x08024348
 	push {r4, r5, r6, lr}
 	adds r5, r1, #0
-	ldr r0, _08024394  @ gActionData
+	ldr r0, _08024394  @ gAction
 	ldrb r0, [r0, #0xd]
 	bl GetUnit
 	adds r1, r5, #0
@@ -4079,7 +4079,7 @@ StealItemMenuCommand_Draw: @ 0x08024348
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08024394: .4byte gActionData
+_08024394: .4byte gAction
 _08024398: .4byte gBg0Tm
 
 	THUMB_FUNC_END StealItemMenuCommand_Draw
@@ -4094,7 +4094,7 @@ StealItemMenuCommand_Effect: @ 0x0802439C
 	ldrb r0, [r0]
 	cmp r0, #2
 	beq _080243C4
-	ldr r1, _080243C0  @ gActionData
+	ldr r1, _080243C0  @ gAction
 	adds r0, r2, #0
 	adds r0, #0x3c
 	ldrb r0, [r0]
@@ -4104,11 +4104,11 @@ StealItemMenuCommand_Effect: @ 0x0802439C
 	movs r0, #0x17
 	b _080243CE
 	.align 2, 0
-_080243C0: .4byte gActionData
+_080243C0: .4byte gAction
 _080243C4:
 	ldr r1, _080243D4  @ 0x00000855
 	adds r0, r3, #0
-	bl MenuFrozenHelpBox
+	bl MenuCallHelpBox
 	movs r0, #8
 _080243CE:
 	pop {r1}
@@ -4139,8 +4139,8 @@ SummonCommandUsability: @ 0x080243D8
 	cmp r0, #0
 	bne _0802445A
 	adds r0, r2, #0
-	bl sub_8025CA4
-	bl sub_804FD28
+	bl ListSummonTargets
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _0802445A
 	ldr r4, _08024428  @ 0x0000FFFF
@@ -4239,9 +4239,9 @@ SummonCommandEffect: @ 0x080244B8
 	push {lr}
 	ldr r0, _080244D0  @ gActiveUnit
 	ldr r0, [r0]
-	bl sub_8025CA4
+	bl ListSummonTargets
 	ldr r0, _080244D4  @ gUnknown_0859D338
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #7
 	pop {r1}
 	bx r1
@@ -4255,7 +4255,7 @@ _080244D4: .4byte gUnknown_0859D338
 sub_80244D8: @ 0x080244D8
 	push {r4, r5, lr}
 	adds r5, r1, #0
-	ldr r4, _080244F8  @ gActionData
+	ldr r4, _080244F8  @ gAction
 	ldrb r0, [r4, #0xc]
 	bl GetUnit
 	movs r0, #7
@@ -4269,7 +4269,7 @@ sub_80244D8: @ 0x080244D8
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080244F8: .4byte gActionData
+_080244F8: .4byte gAction
 
 	THUMB_FUNC_END sub_80244D8
 
@@ -4323,7 +4323,7 @@ _08024542:
 	THUMB_FUNC_START YobimaCommandEffect
 YobimaCommandEffect: @ 0x08024548
 	push {r4, lr}
-	ldr r4, _08024560  @ gActionData
+	ldr r4, _08024560  @ gAction
 	ldrb r0, [r4, #0xc]
 	bl GetUnit
 	movs r0, #8
@@ -4333,7 +4333,7 @@ YobimaCommandEffect: @ 0x08024548
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08024560: .4byte gActionData
+_08024560: .4byte gAction
 
 	THUMB_FUNC_END YobimaCommandEffect
 
@@ -4341,7 +4341,7 @@ _08024560: .4byte gActionData
 sub_8024564: @ 0x08024564
 	push {r4, r5, lr}
 	adds r5, r1, #0
-	ldr r4, _08024584  @ gActionData
+	ldr r4, _08024584  @ gAction
 	ldrb r0, [r4, #0xc]
 	bl GetUnit
 	movs r0, #8
@@ -4355,7 +4355,7 @@ sub_8024564: @ 0x08024564
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08024584: .4byte gActionData
+_08024584: .4byte gAction
 
 	THUMB_FUNC_END sub_8024564
 
@@ -4374,13 +4374,13 @@ ConvoyMenu_HelpBox: @ 0x08024588
 	movs r2, #0x2c
 	ldrsh r1, [r1, r2]
 	lsls r1, r1, #3
-	ldr r2, _080245B0  @ gUnknown_0202BCB0
+	ldr r2, _080245B0  @ gBmSt
 	ldrh r2, [r2, #0x2c]
-	bl StartItemHelpBox
+	bl ShowItemHelpBox
 	movs r0, #0
 	b _080245D4
 	.align 2, 0
-_080245B0: .4byte gUnknown_0202BCB0
+_080245B0: .4byte gBmSt
 _080245B4:
 	movs r2, #0x2a
 	ldrsh r0, [r1, r2]
@@ -4396,7 +4396,7 @@ _080245B4:
 	adds r3, #0x1e
 	adds r3, r3, r2
 	ldrh r2, [r3]
-	bl StartItemHelpBox
+	bl ShowItemHelpBox
 _080245D4:
 	pop {r4}
 	pop {r1}
@@ -4410,7 +4410,7 @@ _080245DC: .4byte gActiveUnit
 ItemMenu_HelpBox: @ 0x080245E0
 	push {r4, lr}
 	adds r4, r1, #0
-	ldr r0, _08024614  @ gActionData
+	ldr r0, _08024614  @ gAction
 	ldrb r0, [r0, #0xd]
 	bl GetUnit
 	movs r1, #0x2a
@@ -4427,12 +4427,12 @@ ItemMenu_HelpBox: @ 0x080245E0
 	adds r0, r0, r2
 	ldrh r2, [r0]
 	adds r0, r3, #0
-	bl StartItemHelpBox
+	bl ShowItemHelpBox
 	pop {r4}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08024614: .4byte gActionData
+_08024614: .4byte gAction
 
 	THUMB_FUNC_END ItemMenu_HelpBox
 
@@ -4456,7 +4456,7 @@ BallistaRangeMenuHelpBox: @ 0x08024618
 	adds r2, r0, #0
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl StartItemHelpBox
+	bl ShowItemHelpBox
 	pop {r4, r5}
 	pop {r1}
 	bx r1
@@ -4502,7 +4502,7 @@ RescueSelection_OnConstruction: @ 0x0802467C
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4538,7 +4538,7 @@ DropSelection_OnConstruction: @ 0x080246C0
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4562,7 +4562,7 @@ sub_80246E0: @ 0x080246E0
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4599,7 +4599,7 @@ sub_8024724: @ 0x08024724
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4636,7 +4636,7 @@ TradeTargetSelection_OnInit: @ 0x08024768
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4674,7 +4674,7 @@ sub_80247B0: @ 0x080247B0
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4712,7 +4712,7 @@ sub_80247F4: @ 0x080247F4
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4775,7 +4775,7 @@ sub_8024868: @ 0x08024868
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4797,7 +4797,7 @@ sub_8024888: @ 0x08024888
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4818,7 +4818,7 @@ sub_80248A8: @ 0x080248A8
 	bl GetMsg
 	adds r1, r0, #0
 	adds r0, r4, #0
-	bl NewBottomHelpText
+	bl StartBottomHelpText
 	pop {r4}
 	pop {r0}
 	bx r0
@@ -4847,7 +4847,7 @@ RideCommandUsability: @ 0x080248C4
 	ands r0, r1
 	cmp r0, #0
 	bne _08024918
-	ldr r0, _08024914  @ gUnknown_0202BCB0
+	ldr r0, _08024914  @ gBmSt
 	adds r0, #0x3d
 	ldrb r1, [r0]
 	movs r0, #8
@@ -4868,7 +4868,7 @@ RideCommandUsability: @ 0x080248C4
 	b _0802491A
 	.align 2, 0
 _08024910: .4byte gActiveUnit
-_08024914: .4byte gUnknown_0202BCB0
+_08024914: .4byte gBmSt
 _08024918:
 	movs r0, #3
 _0802491A:
@@ -4880,7 +4880,7 @@ _0802491A:
 	THUMB_FUNC_START RideCommandEffect
 RideCommandEffect: @ 0x08024920
 	push {r4, lr}
-	ldr r1, _08024944  @ gActionData
+	ldr r1, _08024944  @ gAction
 	movs r0, #0x21
 	strb r0, [r1, #0x11]
 	ldr r4, _08024948  @ gActiveUnit
@@ -4894,7 +4894,7 @@ RideCommandEffect: @ 0x08024920
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08024944: .4byte gActionData
+_08024944: .4byte gAction
 _08024948: .4byte gActiveUnit
 
 	THUMB_FUNC_END RideCommandEffect
@@ -4910,7 +4910,7 @@ ExitCommandUsability: @ 0x0802494C
 	ands r0, r1
 	cmp r0, #0
 	beq _08024978
-	ldr r0, _08024974  @ gUnknown_0202BCB0
+	ldr r0, _08024974  @ gBmSt
 	adds r0, #0x3d
 	ldrb r1, [r0]
 	movs r0, #8
@@ -4921,7 +4921,7 @@ ExitCommandUsability: @ 0x0802494C
 	b _0802497A
 	.align 2, 0
 _08024970: .4byte gActiveUnit
-_08024974: .4byte gUnknown_0202BCB0
+_08024974: .4byte gBmSt
 _08024978:
 	movs r0, #3
 _0802497A:
@@ -4933,7 +4933,7 @@ _0802497A:
 	THUMB_FUNC_START ExitCommandEffect
 ExitCommandEffect: @ 0x08024980
 	push {r4, lr}
-	ldr r1, _080249A4  @ gActionData
+	ldr r1, _080249A4  @ gAction
 	movs r0, #0x22
 	strb r0, [r1, #0x11]
 	ldr r4, _080249A8  @ gActiveUnit
@@ -4947,7 +4947,7 @@ ExitCommandEffect: @ 0x08024980
 	pop {r1}
 	bx r1
 	.align 2, 0
-_080249A4: .4byte gActionData
+_080249A4: .4byte gAction
 _080249A8: .4byte gActiveUnit
 
 	THUMB_FUNC_END ExitCommandEffect
@@ -4995,7 +4995,7 @@ _080249D8:
 	ldr r0, [r5]
 	adds r1, r4, #0
 	bl MakeTargetListForWeapon
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	bne _080249CC
 _08024A06:
@@ -5047,7 +5047,7 @@ AttackBallistaCommandUsability: @ 0x08024A28
 	lsls r2, r2, #1
 	adds r1, r1, r2
 	bl MakeTargetListForWeapon
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	bne _08024A70
 _08024A66:
@@ -5077,7 +5077,7 @@ ItemMenu_Is1stCommandAvailable: @ 0x08024A88
 	ldr r0, _08024AA0  @ gActiveUnit
 	ldr r0, [r0]
 	bl sub_8025B6C
-	bl sub_804FD28
+	bl GetTargetListSize
 	cmp r0, #0
 	beq _08024AA4
 	movs r0, #1
@@ -5098,7 +5098,7 @@ ItemMenu_Draw1stCommand: @ 0x08024AAC
 	adds r4, r1, #0
 	adds r5, r4, #0
 	adds r5, #0x34
-	ldr r0, _08024AE8  @ gUnknown_0202BCB0
+	ldr r0, _08024AE8  @ gBmSt
 	ldrh r0, [r0, #0x2c]
 	bl GetItemName
 	adds r3, r0, #0
@@ -5122,7 +5122,7 @@ ItemMenu_Draw1stCommand: @ 0x08024AAC
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08024AE8: .4byte gUnknown_0202BCB0
+_08024AE8: .4byte gBmSt
 _08024AEC: .4byte gBg0Tm
 
 	THUMB_FUNC_END ItemMenu_Draw1stCommand
@@ -5138,7 +5138,7 @@ ItemMenu_Select1stCommand: @ 0x08024AF0
 	ldr r0, [r0]
 	bl sub_8025B6C
 	ldr r0, _08024B10  @ gSelectInfo_Dance
-	bl NewTargetSelection
+	bl StartTargetSelection
 	movs r0, #0x27
 	b _08024B16
 	.align 2, 0
@@ -5227,7 +5227,7 @@ _08024B98: .4byte gBg0Tm
 	THUMB_FUNC_START ItemMenu_SelectOtherCommands
 ItemMenu_SelectOtherCommands: @ 0x08024B9C
 	push {r4, lr}
-	ldr r4, _08024BC8  @ gActionData
+	ldr r4, _08024BC8  @ gAction
 	adds r1, #0x3c
 	ldrb r0, [r1]
 	subs r0, #1
@@ -5241,13 +5241,13 @@ ItemMenu_SelectOtherCommands: @ 0x08024B9C
 	adds r1, #0x1e
 	adds r1, r1, r2
 	ldrh r1, [r1]
-	bl DoItemUse
+	bl ItemEffect_Call
 	movs r0, #7
 	pop {r4}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_08024BC8: .4byte gActionData
+_08024BC8: .4byte gAction
 _08024BCC: .4byte gActiveUnit
 
 	THUMB_FUNC_END ItemMenu_SelectOtherCommands
@@ -5261,24 +5261,24 @@ ItemMenu_SwitchIn: @ 0x08024BD0
 	cmp r0, #0
 	bne _08024BE4
 	movs r0, #5
-	bl sub_801E748
+	bl UpdateMenuItemPanel
 	b _08024BEE
 _08024BE4:
 	movs r0, #0
 	ldrsb r0, [r1, r0]
 	subs r0, #1
-	bl sub_801E748
+	bl UpdateMenuItemPanel
 _08024BEE:
 	pop {r1}
 	bx r1
 
 	THUMB_FUNC_END ItemMenu_SwitchIn
 
-	THUMB_FUNC_START ItemMenu_SwitchOut_DoNothing
-ItemMenu_SwitchOut_DoNothing: @ 0x08024BF4
+	THUMB_FUNC_START nullsub_26
+nullsub_26: @ 0x08024BF4
 	bx lr
 
-	THUMB_FUNC_END ItemMenu_SwitchOut_DoNothing
+	THUMB_FUNC_END nullsub_26
 
 	THUMB_FUNC_START ItemMenuHelpBox
 ItemMenuHelpBox: @ 0x08024BF8
@@ -5290,11 +5290,11 @@ ItemMenuHelpBox: @ 0x08024BF8
 	ldrsb r0, [r2, r0]
 	cmp r0, #0
 	bne _08024C14
-	ldr r0, _08024C10  @ gUnknown_0202BCB0
+	ldr r0, _08024C10  @ gBmSt
 	ldrh r2, [r0, #0x2c]
 	b _08024C26
 	.align 2, 0
-_08024C10: .4byte gUnknown_0202BCB0
+_08024C10: .4byte gBmSt
 _08024C14:
 	ldr r0, _08024C3C  @ gActiveUnit
 	ldr r1, [r0]
@@ -5312,7 +5312,7 @@ _08024C26:
 	movs r4, #0x2c
 	ldrsh r1, [r3, r4]
 	lsls r1, r1, #3
-	bl StartItemHelpBox
+	bl ShowItemHelpBox
 	pop {r4}
 	pop {r1}
 	bx r1
@@ -5324,10 +5324,10 @@ _08024C3C: .4byte gActiveUnit
 	THUMB_FUNC_START MapMenu_IsRecordsCommandAvailable
 MapMenu_IsRecordsCommandAvailable: @ 0x08024C40
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #1
 	bne _08024CAC
-	ldr r0, _08024CB0  @ gRAMChapterData
+	ldr r0, _08024CB0  @ gPlaySt
 	ldrb r0, [r0, #0xe]
 	subs r0, #0x24
 	lsls r0, r0, #0x18
@@ -5335,37 +5335,37 @@ MapMenu_IsRecordsCommandAvailable: @ 0x08024C40
 	cmp r0, #9
 	bhi _08024CB4
 	movs r0, #0x71
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08024CAC
 	movs r0, #0x72
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08024CAC
 	movs r0, #0x73
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08024CAC
 	movs r0, #0x74
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08024CAC
 	movs r0, #0x75
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08024CAC
 	movs r0, #0x76
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	beq _08024CAC
 	movs r0, #0x77
-	bl CheckEventId
+	bl CheckFlag
 	lsls r0, r0, #0x18
 	cmp r0, #0
 	bne _08024CB4
@@ -5373,7 +5373,7 @@ _08024CAC:
 	movs r0, #3
 	b _08024CB6
 	.align 2, 0
-_08024CB0: .4byte gRAMChapterData
+_08024CB0: .4byte gPlaySt
 _08024CB4:
 	movs r0, #1
 _08024CB6:
@@ -5396,7 +5396,7 @@ MapMenu_RecordsCommand: @ 0x08024CBC
 	THUMB_FUNC_START MapMenu_IsRetreatCommandAvailable
 MapMenu_IsRetreatCommandAvailable: @ 0x08024CCC
 	push {lr}
-	bl GetChapterThing
+	bl GetBattleMapKind
 	cmp r0, #0
 	beq _08024CDA
 	movs r0, #1

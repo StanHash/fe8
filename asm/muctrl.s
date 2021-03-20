@@ -14,7 +14,7 @@ CopyEventMoveToBuffer: @ 0x08079CD8
 	lsls r1, r1, #0x18
 	lsrs r2, r1, #0x18
 	movs r4, #0
-	ldr r6, _08079D28  @ gUnknown_03001A30
+	ldr r6, _08079D28  @ gUsedBuffersBitfield
 	movs r1, #1
 	mov ip, r1
 	adds r3, r6, #4
@@ -50,7 +50,7 @@ _08079D16:
 	adds r0, r5, r3
 	b _08079D36
 	.align 2, 0
-_08079D28: .4byte gUnknown_03001A30
+_08079D28: .4byte gUsedBuffersBitfield
 _08079D2C:
 	adds r1, r4, #1
 	lsls r1, r1, #0x18
@@ -71,7 +71,7 @@ ClearEventMoveBuffer: @ 0x08079D40
 	push {r4, r5, lr}
 	adds r1, r0, #0
 	movs r2, #0
-	ldr r3, _08079D60  @ gUnknown_03001A34
+	ldr r3, _08079D60  @ gExtraLongEventMoveBuffer
 	subs r4, r3, #4
 	movs r5, #1
 _08079D4C:
@@ -86,7 +86,7 @@ _08079D4C:
 	strb r0, [r4]
 	b _08079D6E
 	.align 2, 0
-_08079D60: .4byte gUnknown_03001A34
+_08079D60: .4byte gExtraLongEventMoveBuffer
 _08079D64:
 	adds r0, r2, #1
 	lsls r0, r0, #0x18
@@ -100,8 +100,8 @@ _08079D6E:
 
 	THUMB_FUNC_END ClearEventMoveBuffer
 
-	THUMB_FUNC_START sub_8079D74
-sub_8079D74: @ 0x08079D74
+	THUMB_FUNC_START MuCtr_StartDefinedMove
+MuCtr_StartDefinedMove: @ 0x08079D74
 	push {r4, r5, r6, r7, lr}
 	mov r7, r8
 	push {r7}
@@ -147,7 +147,7 @@ _08079DC0:
 	adds r0, r5, #0
 	mov r1, r8
 	adds r2, r4, #0
-	bl MuCtr_SetupWithEventMoveBuffer
+	bl MuCtr_InitDefinedMove
 	add sp, #4
 	pop {r3}
 	mov r8, r3
@@ -155,10 +155,10 @@ _08079DC0:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END sub_8079D74
+	THUMB_FUNC_END MuCtr_StartDefinedMove
 
-	THUMB_FUNC_START sub_8079DDC
-sub_8079DDC: @ 0x08079DDC
+	THUMB_FUNC_START MuCtr_StartMoveTowards
+MuCtr_StartMoveTowards: @ 0x08079DDC
 	push {r4, r5, r6, lr}
 	mov r6, r9
 	mov r5, r8
@@ -221,7 +221,7 @@ sub_8079DDC: @ 0x08079DDC
 	str r1, [sp]
 	mov r1, r9
 	movs r3, #1
-	bl MuCtr_SetupWithEventMoveBuffer
+	bl MuCtr_InitDefinedMove
 	add sp, #4
 	pop {r3, r4}
 	mov r8, r3
@@ -234,10 +234,10 @@ _08079E6C: .4byte gUnknown_089A2DB0
 _08079E70: .4byte 0xFFFFF03F
 _08079E74: .4byte 0xFFFC0FFF
 
-	THUMB_FUNC_END sub_8079DDC
+	THUMB_FUNC_END MuCtr_StartMoveTowards
 
-	THUMB_FUNC_START MuCtr_SetupWithEventMoveBuffer
-MuCtr_SetupWithEventMoveBuffer: @ 0x08079E78
+	THUMB_FUNC_START MuCtr_InitDefinedMove
+MuCtr_InitDefinedMove: @ 0x08079E78
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -273,7 +273,7 @@ MuCtr_SetupWithEventMoveBuffer: @ 0x08079E78
 	adds r0, r7, #0
 	mov r1, sp
 	adds r2, r4, #0
-	bl GetAdjustedPositionForNewUnit
+	bl AdjustNewUnitPosition
 	mov r1, r8
 	str r7, [r1, #0x2c]
 	adds r0, r7, #0
@@ -306,14 +306,14 @@ MuCtr_SetupWithEventMoveBuffer: @ 0x08079E78
 	mov r2, sl
 	strb r2, [r0]
 	adds r0, r7, #0
-	bl HideUnitSMS
+	bl HideUnitSprite
 	ldr r0, [r7, #0xc]
 	movs r1, #1
 	orrs r0, r1
 	str r0, [r7, #0xc]
 	movs r0, #0x11
 	ldrsb r0, [r7, r0]
-	ldr r1, _08079F7C  @ gBmMapUnit
+	ldr r1, _08079F7C  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -330,7 +330,7 @@ MuCtr_SetupWithEventMoveBuffer: @ 0x08079E78
 _08079F30:
 	mov r1, sl
 	lsls r0, r1, #0x18
-	ldr r2, _08079F80  @ gBmMapUnk
+	ldr r2, _08079F80  @ gMapMovement2
 	ldr r1, [r2]
 	asrs r0, r0, #0x16
 	adds r0, r0, r1
@@ -366,13 +366,13 @@ _08079F30:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_08079F7C: .4byte gBmMapUnit
-_08079F80: .4byte gBmMapUnk
+_08079F7C: .4byte gMapUnit
+_08079F80: .4byte gMapMovement2
 
-	THUMB_FUNC_END MuCtr_SetupWithEventMoveBuffer
+	THUMB_FUNC_END MuCtr_InitDefinedMove
 
-	THUMB_FUNC_START MuCtrExists
-MuCtrExists: @ 0x08079F84
+	THUMB_FUNC_START MuCtr_Exists
+MuCtr_Exists: @ 0x08079F84
 	push {lr}
 	ldr r0, _08079F98  @ gUnknown_089A2DB0
 	bl FindProc
@@ -385,16 +385,16 @@ _08079F92:
 	.align 2, 0
 _08079F98: .4byte gUnknown_089A2DB0
 
-	THUMB_FUNC_END MuCtrExists
+	THUMB_FUNC_END MuCtr_Exists
 
-	THUMB_FUNC_START SetAllMOVEUNITField44To1_
-SetAllMOVEUNITField44To1_: @ 0x08079F9C
+	THUMB_FUNC_START MU_AllForceSetMaxMoveSpeed_
+MU_AllForceSetMaxMoveSpeed_: @ 0x08079F9C
 	push {lr}
 	bl MU_AllForceSetMaxMoveSpeed
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END SetAllMOVEUNITField44To1_
+	THUMB_FUNC_END MU_AllForceSetMaxMoveSpeed_
 
 	THUMB_FUNC_START sub_8079FA8
 sub_8079FA8: @ 0x08079FA8
@@ -425,14 +425,14 @@ sub_8079FA8: @ 0x08079FA8
 	adds r0, r5, #0
 	mov r1, sp
 	adds r2, r3, #0
-	bl GetAdjustedPositionForNewUnit
+	bl AdjustNewUnitPosition
 	mov r0, sp
 	ldrh r0, [r0]
 	strb r0, [r5, #0x10]
 	ldrh r0, [r4, #2]
 	strb r0, [r5, #0x11]
 	adds r0, r5, #0
-	bl UnitFinalizeMovement
+	bl UnitSyncMovement
 	ldr r1, [r5, #0xc]
 	movs r0, #0x80
 	ands r0, r1
@@ -443,7 +443,7 @@ sub_8079FA8: @ 0x08079FA8
 	ands r1, r0
 	str r1, [r5, #0xc]
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _0807A00C:
 	add sp, #4
 	pop {r4, r5}
@@ -487,8 +487,8 @@ _0807A050: .4byte 0xFFFFF03F
 
 	THUMB_FUNC_END MoveUnit_
 
-	THUMB_FUNC_START GetPreferredPositionForUNIT
-GetPreferredPositionForUNIT: @ 0x0807A054
+	THUMB_FUNC_START GenUnitDefinitionFinalPosition
+GenUnitDefinitionFinalPosition: @ 0x0807A054
 	push {r4, r5, r6, r7, lr}
 	sub sp, #4
 	adds r4, r0, #0
@@ -538,7 +538,7 @@ _0807A080:
 	mov r4, sp
 	mov r1, sp
 	adds r2, r5, #0
-	bl GetAdjustedPositionForNewUnit
+	bl AdjustNewUnitPosition
 	mov r0, sp
 	ldrh r0, [r0]
 	strb r0, [r6]
@@ -562,7 +562,7 @@ _0807A0DA:
 	pop {r0}
 	bx r0
 
-	THUMB_FUNC_END GetPreferredPositionForUNIT
+	THUMB_FUNC_END GenUnitDefinitionFinalPosition
 
 	THUMB_FUNC_START sub_807A0E4
 sub_807A0E4: @ 0x0807A0E4
@@ -613,7 +613,7 @@ _0807A138:
 	cmp r0, #0
 	bgt _0807A14C
 	adds r0, r5, #0
-	bl sub_807A358
+	bl MuCtr_ExecREDA_807A358
 	movs r0, #0
 	b _0807A188
 _0807A14C:
@@ -622,7 +622,7 @@ _0807A14C:
 	beq _0807A186
 	ldr r4, [r5, #0x2c]
 	adds r0, r4, #0
-	bl ShowUnitSMS
+	bl ShowUnitSprite
 	ldr r0, [r4, #0xc]
 	movs r1, #2
 	negs r1, r1
@@ -632,7 +632,7 @@ _0807A14C:
 	bl MU_Hide
 	movs r0, #0x11
 	ldrsb r0, [r4, r0]
-	ldr r1, _0807A190  @ gBmMapUnit
+	ldr r1, _0807A190  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -642,7 +642,7 @@ _0807A14C:
 	adds r0, r0, r1
 	ldrb r1, [r4, #0xb]
 	strb r1, [r0]
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _0807A186:
 	movs r0, #1
 _0807A188:
@@ -650,7 +650,7 @@ _0807A188:
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0807A190: .4byte gBmMapUnit
+_0807A190: .4byte gMapUnit
 
 	THUMB_FUNC_END sub_807A0E4
 
@@ -710,8 +710,8 @@ _0807A1F4:
 
 	THUMB_FUNC_END sub_807A194
 
-	THUMB_FUNC_START sub_807A1FC
-sub_807A1FC: @ 0x0807A1FC
+	THUMB_FUNC_START MuCtr_OnEnd
+MuCtr_OnEnd: @ 0x0807A1FC
 	push {r4, r5, r6, lr}
 	adds r5, r0, #0
 	ldr r6, [r5, #0x30]
@@ -749,9 +749,9 @@ _0807A234:
 	ldrb r0, [r0]
 	strb r0, [r4, #0x11]
 	adds r0, r4, #0
-	bl UnitFinalizeMovement
+	bl UnitSyncMovement
 	adds r0, r4, #0
-	bl ShowUnitSMS
+	bl ShowUnitSprite
 	ldr r0, [r4, #0xc]
 	movs r1, #2
 	negs r1, r1
@@ -759,7 +759,7 @@ _0807A234:
 	str r0, [r4, #0xc]
 	movs r0, #0x11
 	ldrsb r0, [r4, r0]
-	ldr r1, _0807A290  @ gBmMapUnit
+	ldr r1, _0807A290  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -770,7 +770,7 @@ _0807A234:
 	ldrb r1, [r4, #0xb]
 	strb r1, [r0]
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 _0807A27A:
 	adds r0, r6, #0
 	bl MU_End
@@ -781,9 +781,9 @@ _0807A27A:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0807A290: .4byte gBmMapUnit
+_0807A290: .4byte gMapUnit
 
-	THUMB_FUNC_END sub_807A1FC
+	THUMB_FUNC_END MuCtr_OnEnd
 
 	THUMB_FUNC_START sub_807A294
 sub_807A294: @ 0x0807A294
@@ -890,8 +890,8 @@ _0807A354: .4byte gUnknown_03001C34
 
 	THUMB_FUNC_END sub_807A324
 
-	THUMB_FUNC_START sub_807A358
-sub_807A358: @ 0x0807A358
+	THUMB_FUNC_START MuCtr_ExecREDA_807A358
+MuCtr_ExecREDA_807A358: @ 0x0807A358
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -910,7 +910,7 @@ sub_807A358: @ 0x0807A358
 	mov ip, r0
 	movs r1, #0
 	ldrsb r1, [r0, r1]
-	ldr r0, _0807A3C0  @ gBmMapUnk
+	ldr r0, _0807A3C0  @ gMapMovement2
 	ldr r0, [r0]
 	lsls r1, r1, #2
 	adds r1, r1, r0
@@ -945,7 +945,7 @@ sub_807A358: @ 0x0807A358
 	str r1, [sp]
 	b _0807A3E8
 	.align 2, 0
-_0807A3C0: .4byte gBmMapUnk
+_0807A3C0: .4byte gMapMovement2
 _0807A3C4: .4byte 0xFFFF0000
 _0807A3C8: .4byte 0x0000FFFF
 _0807A3CC:
@@ -979,7 +979,7 @@ _0807A3EC:
 	adds r0, #0x41
 	movs r1, #0
 	ldrsb r1, [r0, r1]
-	ldr r0, _0807A488  @ gBmMapUnk
+	ldr r0, _0807A488  @ gMapMovement2
 	ldr r0, [r0]
 	lsls r1, r1, #2
 	adds r1, r1, r0
@@ -1042,20 +1042,20 @@ _0807A46E:
 	b _0807A492
 	.align 2, 0
 _0807A484: .4byte 0x0000FFFE
-_0807A488: .4byte gBmMapUnk
+_0807A488: .4byte gMapMovement2
 _0807A48C:
 	adds r0, r4, #0
 	bl MU_DisableAttractCamera
 _0807A492:
 	adds r0, r6, #0
-	bl HideUnitSMS
+	bl HideUnitSprite
 	ldr r0, [r6, #0xc]
 	movs r1, #1
 	orrs r0, r1
 	str r0, [r6, #0xc]
 	movs r0, #0x11
 	ldrsb r0, [r6, r0]
-	ldr r1, _0807A4E4  @ gBmMapUnit
+	ldr r1, _0807A4E4  @ gMapUnit
 	ldr r1, [r1]
 	lsls r0, r0, #2
 	adds r0, r0, r1
@@ -1070,7 +1070,7 @@ _0807A492:
 	movs r0, #0
 	strb r0, [r1]
 _0807A4C0:
-	bl SMS_UpdateFromGameData
+	bl RefreshUnitSprites
 	mov r0, sp
 	ldrh r0, [r0]
 	ldr r3, [sp, #4]
@@ -1089,12 +1089,12 @@ _0807A4D4:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0807A4E4: .4byte gBmMapUnit
+_0807A4E4: .4byte gMapUnit
 
-	THUMB_FUNC_END sub_807A358
+	THUMB_FUNC_END MuCtr_ExecREDA_807A358
 
-	THUMB_FUNC_START GetAdjustedPositionForNewUnit
-GetAdjustedPositionForNewUnit: @ 0x0807A4E8
+	THUMB_FUNC_START AdjustNewUnitPosition
+AdjustNewUnitPosition: @ 0x0807A4E8
 	push {r4, r5, r6, r7, lr}
 	mov r7, sl
 	mov r6, r9
@@ -1122,7 +1122,7 @@ _0807A506:
 	adds r2, r0, #0
 	adds r0, r4, #0
 	adds r1, r5, #0
-	bl GenerateExtendedMovementMapOnRange
+	bl MapRangeFillMovementFromPosition
 	movs r2, #0xff
 	ldrb r3, [r6]
 	mov sl, r3
@@ -1153,7 +1153,7 @@ _0807A542:
 _0807A554:
 	mov r0, r9
 	asrs r4, r0, #0x18
-	ldr r0, _0807A5F4  @ gBmMapUnit
+	ldr r0, _0807A5F4  @ gMapUnit
 	ldr r1, [r0]
 	lsls r3, r4, #2
 	adds r1, r3, r1
@@ -1164,7 +1164,7 @@ _0807A554:
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _0807A5B6
-	ldr r0, _0807A5F8  @ gBmMapUnk
+	ldr r0, _0807A5F8  @ gMapMovement2
 	ldr r0, [r0]
 	adds r0, r3, r0
 	ldr r0, [r0]
@@ -1172,7 +1172,7 @@ _0807A554:
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _0807A5B6
-	ldr r0, _0807A5FC  @ gBmMapHidden
+	ldr r0, _0807A5FC  @ gMapHidden
 	ldr r0, [r0]
 	adds r0, r3, r0
 	ldr r0, [r0]
@@ -1180,7 +1180,7 @@ _0807A554:
 	ldrb r0, [r0]
 	cmp r0, #0
 	bne _0807A5B6
-	ldr r0, _0807A600  @ gBmMapRange
+	ldr r0, _0807A600  @ gMapRange
 	ldr r0, [r0]
 	adds r0, r3, r0
 	ldr r0, [r0]
@@ -1231,10 +1231,10 @@ _0807A5B6:
 	strh r0, [r6, #2]
 	b _0807A62E
 	.align 2, 0
-_0807A5F4: .4byte gBmMapUnit
-_0807A5F8: .4byte gBmMapUnk
-_0807A5FC: .4byte gBmMapHidden
-_0807A600: .4byte gBmMapRange
+_0807A5F4: .4byte gMapUnit
+_0807A5F8: .4byte gMapMovement2
+_0807A5FC: .4byte gMapHidden
+_0807A600: .4byte gMapRange
 _0807A604:
 	movs r0, #1
 	ands r0, r2
@@ -1242,7 +1242,7 @@ _0807A604:
 	beq _0807A62E
 	movs r2, #2
 	ldrsb r2, [r6, r2]
-	ldr r0, _0807A640  @ gBmMapTerrain
+	ldr r0, _0807A640  @ gMapTerrain
 	ldr r1, [r0]
 	lsls r0, r2, #2
 	adds r0, r0, r1
@@ -1255,7 +1255,7 @@ _0807A604:
 	beq _0807A62E
 	adds r0, r3, #0
 	adds r3, r6, #0
-	bl sub_803BDE0
+	bl FindUnitClosestValidPosition
 _0807A62E:
 	add sp, #0x24
 	pop {r3, r4, r5}
@@ -1266,9 +1266,9 @@ _0807A62E:
 	pop {r0}
 	bx r0
 	.align 2, 0
-_0807A640: .4byte gBmMapTerrain
+_0807A640: .4byte gMapTerrain
 
-	THUMB_FUNC_END GetAdjustedPositionForNewUnit
+	THUMB_FUNC_END AdjustNewUnitPosition
 
 	THUMB_FUNC_START sub_807A644
 sub_807A644: @ 0x0807A644
@@ -1288,21 +1288,21 @@ sub_807A644: @ 0x0807A644
 	ldrsb r1, [r4, r1]
 	ldr r2, [r4, #4]
 	ldr r2, [r2, #0x38]
-	bl GenerateExtendedMovementMapOnRange
+	bl MapRangeFillMovementFromPosition
 	lsls r0, r7, #0x18
 	asrs r0, r0, #0x18
 	lsls r1, r6, #0x18
 	asrs r1, r1, #0x18
-	ldr r2, _0807A678  @ gWorkingMovementScript
-	bl GenerateBestMovementScript
+	ldr r2, _0807A678  @ gUnitMoveBuffer
+	bl GenerateMovementInstructionsToPoint
 	b _0807A6F4
 	.align 2, 0
-_0807A678: .4byte gWorkingMovementScript
+_0807A678: .4byte gUnitMoveBuffer
 _0807A67C:
-	bl DisableAllLightRunes
+	bl BattleSomethingTrapChangeTerrain
 	lsls r0, r6, #0x18
 	asrs r2, r0, #0x18
-	ldr r0, _0807A6A4  @ gBmMapTerrain
+	ldr r0, _0807A6A4  @ gMapTerrain
 	ldr r1, [r0]
 	lsls r0, r2, #2
 	adds r0, r0, r1
@@ -1318,11 +1318,11 @@ _0807A67C:
 	movs r0, #1
 	b _0807A6B6
 	.align 2, 0
-_0807A6A4: .4byte gBmMapTerrain
+_0807A6A4: .4byte gMapTerrain
 _0807A6A8:
 	adds r0, r4, #0
 	adds r3, r5, #0
-	bl sub_803BDE0
+	bl FindUnitClosestValidPosition
 	ldrb r7, [r5]
 	ldrb r6, [r5, #2]
 	movs r0, #0
@@ -1334,19 +1334,19 @@ _0807A6B6:
 	ldrsb r1, [r4, r1]
 	ldr r2, [r4, #4]
 	ldr r2, [r2, #0x38]
-	bl GenerateExtendedMovementMapOnRange
+	bl MapRangeFillMovementFromPosition
 	lsls r0, r7, #0x18
 	asrs r5, r0, #0x18
 	lsls r0, r6, #0x18
 	asrs r4, r0, #0x18
-	ldr r2, _0807A700  @ gWorkingMovementScript
+	ldr r2, _0807A700  @ gUnitMoveBuffer
 	adds r0, r5, #0
 	adds r1, r4, #0
-	bl GenerateBestMovementScript
+	bl GenerateMovementInstructionsToPoint
 	mov r0, r8
 	cmp r0, #0
 	beq _0807A6F0
-	ldr r0, _0807A704  @ gBmMapTerrain
+	ldr r0, _0807A704  @ gMapTerrain
 	ldr r1, [r0]
 	lsls r0, r4, #2
 	adds r0, r0, r1
@@ -1355,17 +1355,17 @@ _0807A6B6:
 	movs r1, #0
 	strb r1, [r0]
 _0807A6F0:
-	bl EnableAllLightRunes
+	bl NullAllLightRunesTerrain
 _0807A6F4:
-	ldr r0, _0807A700  @ gWorkingMovementScript
+	ldr r0, _0807A700  @ gUnitMoveBuffer
 	pop {r3}
 	mov r8, r3
 	pop {r4, r5, r6, r7}
 	pop {r1}
 	bx r1
 	.align 2, 0
-_0807A700: .4byte gWorkingMovementScript
-_0807A704: .4byte gBmMapTerrain
+_0807A700: .4byte gUnitMoveBuffer
+_0807A704: .4byte gMapTerrain
 
 	THUMB_FUNC_END sub_807A644
 

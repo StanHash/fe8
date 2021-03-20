@@ -2,7 +2,7 @@
 
 #include "unit_icon_data.h"
 
-UnitIconWait unit_icon_wait_table[] = {
+UnitIconWait UnitSpriteTable[] = {
 	{2, UNIT_ICON_SIZE_16x32, unit_icon_wait_0_sheet}, // 0
 	{0, UNIT_ICON_SIZE_16x16, unit_icon_wait_1_sheet}, // 1
 	{2, UNIT_ICON_SIZE_16x32, unit_icon_wait_2_sheet}, // 2

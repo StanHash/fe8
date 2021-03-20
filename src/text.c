@@ -282,7 +282,7 @@ void GetStringTextBox(char const* str, int* outWidth, int* outHeight)
     *outWidth = 0;
     *outHeight = 0;
 
-    str = sub_800A2A4();
+    str = StrExpandNames();
 
     while (*str > 1)
     {

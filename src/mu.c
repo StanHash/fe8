@@ -1,7 +1,7 @@
 #include "global.h"
 
-#include "constants/items.h"
-#include "constants/classes.h"
+#include "constants/iids.h"
+#include "constants/jids.h"
 
 #include "dma.h"
 #include "oam.h"
@@ -11,7 +11,7 @@
 #include "sound.h"
 #include "hardware.h"
 #include "bmio.h"
-#include "bmunit.h"
+#include "unit.h"
 #include "bmmap.h"
 #include "bmtrick.h"
 #include "bmbattle.h"
@@ -67,7 +67,7 @@ struct MUFlashEffectProc {
 
 typedef void(*MUStateHandlerFunc)(struct MUProc*);
 
-static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 classIndex, int objTileId, unsigned palId);
+static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 jid, int objTileId, unsigned palId);
 
 static void MU_StepSound_OnInit(struct MUStepSoundProc* proc);
 static void MU_StepSound_OnFirstSound(struct MUStepSoundProc* proc);
@@ -108,7 +108,7 @@ static u16 MU_GetMovementSpeed(struct MUProc* proc);
 static void* MU_GetGfxBufferById(int muIndex);
 
 static const void* MU_GetSheetGfx(struct MUProc* proc);
-static const void* MU_GetAnimationByClassId(u16 classId);
+static const void* MU_GetAnimationByClassId(u16 jid);
 
 static void MU_DeathFade_OnLoop(struct MUEffectProc* proc);
 
@@ -567,66 +567,66 @@ static struct ProcScr CONST_DATA sProcScr_MUHitFlash[] = {
 
 // END CONST DATA
 
-void InitMus(void) {
+void MU_Init(void) {
     int i;
 
     for (i = 0; i < MU_MAX_COUNT; ++i)
         sMUConfigArray[i].muIndex = 0;
 }
 
-struct MUProc* MU_CreateExt(struct Unit* pUnit, unsigned classIndex, unsigned palId) {
+struct MUProc* MU_CreateExt(struct Unit* unit, unsigned jid, unsigned palId) {
     struct MUProc* proc = MU_CreateInternal(
-        pUnit->xPos,
-        pUnit->yPos,
+        unit->x,
+        unit->y,
 
-        classIndex,
+        jid,
 
         -1,
         palId
     );
 
-    proc->pUnit = pUnit;
+    proc->unit = unit;
     proc->boolAttractCamera = TRUE;
 
     return proc;
 }
 
-struct MUProc* MU_Create(struct Unit* pUnit) {
+struct MUProc* MU_Create(struct Unit* unit) {
     struct MUProc* proc;
 
-    unsigned classIndex = pUnit->pClassData->number;
+    unsigned jid = unit->jinfo->id;
 
-    if (pUnit->state & US_IN_BALLISTA) {
-        struct Trap* blst = GetTrap(pUnit->ballistaIndex);
+    if (unit->flags & UNIT_FLAG_IN_BALLISTA) {
+        struct Trap* blst = GetTrap(unit->ballistaId);
 
         switch (blst->extra) {
 
-        case ITEM_BALLISTA_REGULAR:
-            classIndex = CLASS_BLST_REGULAR_USED;
+        case IID_BALLISTA:
+            jid = JID_BLST_REGULAR_USED;
             break;
 
-        case ITEM_BALLISTA_LONG:
-            classIndex = CLASS_BLST_LONG_USED;
+        case IID_BALLISTA_LONG:
+            jid = JID_BLST_LONG_USED;
             break;
 
-        case ITEM_BALLISTA_KILLER:
-            classIndex = CLASS_BLST_KILLER_USED;
+        case IID_BALLISTA_KILLER:
+            jid = JID_BLST_KILLER_USED;
             break;
 
         } // switch (blst->extra)
     }
 
     proc = MU_CreateInternal(
-        pUnit->xPos,
-        pUnit->yPos,
+        unit->x,
+        unit->y,
 
-        classIndex,
+        jid,
 
         -1,
-        GetUnitMapSpritePaletteIndex(pUnit)
+        GetUnitSpritePalette(unit)
     );
 
-    proc->pUnit = pUnit;
+    proc->unit = unit;
     proc->boolAttractCamera = TRUE;
 
     return proc;
@@ -644,8 +644,8 @@ void MU_DisableAttractCamera(struct MUProc* proc) {
     proc->boolAttractCamera = FALSE;
 }
 
-struct MUProc* MU_CreateForUI(struct Unit* pUnit, int x, int y) {
-    struct MUProc* proc = MU_Create(pUnit);
+struct MUProc* MU_CreateForUI(struct Unit* unit, int x, int y) {
+    struct MUProc* proc = MU_Create(unit);
 
     if (!proc)
         return NULL;
@@ -660,12 +660,12 @@ struct MUProc* MU_CreateForUI(struct Unit* pUnit, int x, int y) {
 
 void MU_8078524(struct MUProc* proc) {
     SMS_80266F0(
-        GetClassSMSId(proc->displayedClassId),
+        GetUnitSpriteByJid(proc->displayedClassId),
         proc->muIndex
     );
 }
 
-static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 classIndex, int objTileId, unsigned palId) {
+static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 jid, int objTileId, unsigned palId) {
     struct MUConfig* config;
     struct MUProc* proc;
     struct APHandle* ap;
@@ -689,7 +689,7 @@ static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 classIndex, int objTil
     if (!proc)
         return NULL;
 
-    proc->pUnit = NULL;
+    proc->unit = NULL;
     proc->stateId = MU_STATE_NONACTIVE;
 
     proc->xSubPosition = (x * 16) << MU_SUBPIXEL_PRECISION;
@@ -703,7 +703,7 @@ static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 classIndex, int objTil
     proc->moveTimer = 0;
     proc->stepSoundTimer = soundTimer;
 
-    proc->displayedClassId = classIndex;
+    proc->displayedClassId = jid;
     proc->boolIsHidden = 0;
 
     proc->pGfxVRAM = OBJ_VRAM0 + (0x20 * objTileId);
@@ -717,7 +717,7 @@ static struct MUProc* MU_CreateInternal(u16 x, u16 y, u16 classIndex, int objTil
 
     config->paletteIndex = palId;
 
-    ap = StartAnim(MU_GetAnimationByClassId(classIndex), 10);
+    ap = StartAnim(MU_GetAnimationByClassId(jid), 10);
     Anim_SetAnimId(ap, MU_FACING_SELECTED);
 
     Decompress(
@@ -746,7 +746,7 @@ void MU_SetFacing(struct MUProc* proc, int facingId) {
 }
 
 void MU_SetDefaultFacing(struct MUProc* proc) {
-    if (GetClassData(proc->displayedClassId)->attributes & CA_MOUNTEDAID)
+    if (GetJInfo(proc->displayedClassId)->attributes & UNIT_ATTR_MOUNTED)
         MU_SetFacing(proc, 1);
     else
         MU_SetFacing(proc, 2);
@@ -854,8 +854,8 @@ void MU_StartMoveScript(struct MUProc* proc, const u8 commands[MU_COMMAND_MAX_CO
     MU_PlayStepSfx(proc);
 }
 
-struct MUProc* MU_CreateScripted(u16 x, u16 y, u16 classIndex, unsigned palId, const u8 commands[MU_COMMAND_MAX_COUNT]) {
-    struct MUProc* proc = MU_CreateInternal(x, y, classIndex, -1, palId);
+struct MUProc* MU_CreateScripted(u16 x, u16 y, u16 jid, unsigned palId, const u8 commands[MU_COMMAND_MAX_COUNT]) {
+    struct MUProc* proc = MU_CreateInternal(x, y, jid, -1, palId);
 
     if (!proc)
         return NULL;
@@ -873,12 +873,12 @@ static void MU_StepSound_OnInit(struct MUStepSoundProc* proc) {
 }
 
 static void MU_StepSound_OnFirstSound(struct MUStepSoundProc* proc) {
-    PlaySpacialSoundMaybe(proc->idSound1, proc->xSound1);
+    PlaySpacialSong(proc->idSound1, proc->xSound1);
 }
 
 static void MU_StepSound_OnSecondSound(struct MUStepSoundProc* proc) {
     if (proc->idSound2)
-        PlaySpacialSoundMaybe(proc->idSound2, proc->xSound2);
+        PlaySpacialSong(proc->idSound2, proc->xSound2);
 }
 
 void MU_StartStepSfx(int soundId, int b, int hPosition) {
@@ -922,8 +922,8 @@ static void MU_InterpretCommandScript(struct MUProc* proc) {
             proc->stateId = MU_STATE_BUMPING;
 
             MU_StartFogBumpFx(
-                (proc->xSubPosition >> MU_SUBPIXEL_PRECISION) - gUnknown_0202BCB0.camera.x,
-                (proc->ySubPosition >> MU_SUBPIXEL_PRECISION) - gUnknown_0202BCB0.camera.y
+                (proc->xSubPosition >> MU_SUBPIXEL_PRECISION) - gBmSt.camera.x,
+                (proc->ySubPosition >> MU_SUBPIXEL_PRECISION) - gBmSt.camera.y
             );
 
             return;
@@ -1104,8 +1104,8 @@ static void MU_State_DuringMovement(struct MUProc* proc) {
     }
 
     if (proc->boolAttractCamera && !FindProc(gUnknown_0859A548)) {
-        gUnknown_0202BCB0.camera.x = GetSomeAdjustedCameraX(proc->xSubPosition >> MU_SUBPIXEL_PRECISION);
-        gUnknown_0202BCB0.camera.y = GetSomeAdjustedCameraY(proc->ySubPosition >> MU_SUBPIXEL_PRECISION);
+        gBmSt.camera.x = GetSomeAdjustedCameraX(proc->xSubPosition >> MU_SUBPIXEL_PRECISION);
+        gBmSt.camera.y = GetSomeAdjustedCameraY(proc->ySubPosition >> MU_SUBPIXEL_PRECISION);
     }
 
     if (!(proc->moveConfig & 0x80))
@@ -1118,25 +1118,25 @@ static void MU_AdvanceStepSfx(struct MUProc* proc) {
     unsigned cursor;
     struct Vec2 position;
 
-    if (GetClassData(proc->displayedClassId)->attributes & CA_MOUNTEDAID) {
+    if (GetJInfo(proc->displayedClassId)->attributes & UNIT_ATTR_MOUNTED) {
         switch (proc->displayedClassId) {
 
-        case CLASS_WYVERN_RIDER:
-        case CLASS_WYVERN_RIDER_F:
-        case CLASS_WYVERN_LORD:
-        case CLASS_WYVERN_LORD_F:
-        case CLASS_WYVERN_KNIGHT:
-        case CLASS_WYVERN_KNIGHT_F:
+        case JID_WYVERN_RIDER:
+        case JID_WYVERN_RIDER_F:
+        case JID_WYVERN_LORD:
+        case JID_WYVERN_LORD_F:
+        case JID_WYVERN_KNIGHT:
+        case JID_WYVERN_KNIGHT_F:
             pStepSoundDefinition = gMUSfxDef_Wyvern;
             break;
 
-        case CLASS_MOGALL:
-        case CLASS_ARCH_MOGALL:
+        case JID_MOGALL:
+        case JID_ARCH_MOGALL:
             pStepSoundDefinition = gMUSfxDef_Mogall;
             break;
 
-        case CLASS_PEGASUS_KNIGHT:
-        case CLASS_FALCON_KNIGHT:
+        case JID_PEGASUS_KNIGHT:
+        case JID_FALCON_KNIGHT:
             pStepSoundDefinition = gMUSfxDef_Pegasus;
             break;
 
@@ -1148,71 +1148,71 @@ static void MU_AdvanceStepSfx(struct MUProc* proc) {
     } else {
         switch (proc->displayedClassId) {
 
-        case CLASS_REVENANT:
-        case CLASS_ENTOUMBED:
+        case JID_REVENANT:
+        case JID_ENTOUMBED:
             pStepSoundDefinition = gMUSfxDef_Zombie;
             break;
 
-        case CLASS_BONEWALKER:
-        case CLASS_BONEWALKER_BOW:
-        case CLASS_WIGHT:
-        case CLASS_WIGHT_BOW:
+        case JID_BONEWALKER:
+        case JID_BONEWALKER_BOW:
+        case JID_WIGHT:
+        case JID_WIGHT_BOW:
             pStepSoundDefinition = gMUSfxDef_Skeleton;
             break;
 
-        case CLASS_BAEL:
-        case CLASS_ELDER_BAEL:
+        case JID_BAEL:
+        case JID_ELDER_BAEL:
             pStepSoundDefinition = gMUSfxDef_Spider;
             break;
 
-        case CLASS_MAUTHEDOOG:
-        case CLASS_GWYLLGI:
+        case JID_MAUTHEDOOG:
+        case JID_GWYLLGI:
             pStepSoundDefinition = gMUSfxDef_Dog;
             break;
 
-        case CLASS_TARVOS:
-        case CLASS_MAELDUIN:
+        case JID_TARVOS:
+        case JID_MAELDUIN:
             pStepSoundDefinition = gMUSfxDef_Mounted;
             break;
 
-        case CLASS_MOGALL:
-        case CLASS_ARCH_MOGALL:
+        case JID_MOGALL:
+        case JID_ARCH_MOGALL:
             pStepSoundDefinition = gMUSfxDef_Mogall;
             break;
 
-        case CLASS_GORGON:
+        case JID_GORGON:
             pStepSoundDefinition = gMUSfxDef_Gorgon;
             break;
 
-        case CLASS_GARGOYLE:
-        case CLASS_DEATHGOYLE:
+        case JID_GARGOYLE:
+        case JID_DEATHGOYLE:
             pStepSoundDefinition = gMUSfxDef_Wyvern;
             break;
 
-        case CLASS_ARMOR_KNIGHT:
-        case CLASS_ARMOR_KNIGHT_F:
-        case CLASS_GENERAL:
-        case CLASS_GENERAL_F:
-        case CLASS_MANAKETE_2:
-        case CLASS_CYCLOPS:
-        case CLASS_DRACO_ZOMBIE:
-        case CLASS_DEMON_KING:
-        case CLASS_BLST_REGULAR_USED:
-        case CLASS_BLST_LONG_USED:
-        case CLASS_BLST_KILLER_USED:
+        case JID_ARMOR_KNIGHT:
+        case JID_ARMOR_KNIGHT_F:
+        case JID_GENERAL:
+        case JID_GENERAL_F:
+        case JID_MANAKETE_2:
+        case JID_CYCLOPS:
+        case JID_DRACO_ZOMBIE:
+        case JID_DEMON_KING:
+        case JID_BLST_REGULAR_USED:
+        case JID_BLST_LONG_USED:
+        case JID_BLST_KILLER_USED:
             pStepSoundDefinition = gMUSfxDef_Heavy;
             break;
 
-        case CLASS_FLEET:
+        case JID_FLEET:
             pStepSoundDefinition = gMUSfxDef_Boat;
             break;
 
-        case CLASS_MANAKETE_MYRRH:
+        case JID_MANAKETE_MYRRH:
             pStepSoundDefinition = gMUSfxDef_Myrrh;
             break;
 
-        case CLASS_FALLEN_PRINCE:
-        case CLASS_FALLEN_PEER:
+        case JID_FALLEN_PRINCE:
+        case JID_FALLEN_PEER:
             return; // no sounds
 
         default: // Any other non-mounted class
@@ -1375,8 +1375,8 @@ u8 MU_ComputeDisplayPosition(struct MUProc* proc, struct Vec2* out) {
         out->x = (proc->xSubPosition + proc->xSubOffset) >> MU_SUBPIXEL_PRECISION;
         out->y = (proc->ySubPosition + proc->ySubOffset) >> MU_SUBPIXEL_PRECISION;
     } else {
-        short x = ((proc->xSubPosition + proc->xSubOffset) >> MU_SUBPIXEL_PRECISION) - gUnknown_0202BCB0.camera.x + 8;
-        short y = ((proc->ySubPosition + proc->ySubOffset) >> MU_SUBPIXEL_PRECISION) - gUnknown_0202BCB0.camera.y + 8;
+        short x = ((proc->xSubPosition + proc->xSubOffset) >> MU_SUBPIXEL_PRECISION) - gBmSt.camera.x + 8;
+        short y = ((proc->ySubPosition + proc->ySubOffset) >> MU_SUBPIXEL_PRECISION) - gBmSt.camera.y + 8;
 
         out->x = x;
         out->y = y + 8;
@@ -1439,9 +1439,9 @@ static void MU_DisplayAsMMS(struct MUProc* proc) {
         position.y &= 0x00FF;
 
         if (proc->stateId != MU_STATE_UI_DISPLAY)
-            if (proc->pUnit && UNIT_FACTION(proc->pUnit) == FACTION_RED)
-                if (gRAMChapterData.chapterVisionRange != 0)
-                    if (!gBmMapFog[MU_GetDisplayYOrg(proc) >> 4][MU_GetDisplayXOrg(proc) >> 4])
+            if (proc->unit && UNIT_FACTION(proc->unit) == FACTION_RED)
+                if (gPlaySt.chapterVisionRange != 0)
+                    if (!gMapFog[MU_GetDisplayYOrg(proc) >> 4][MU_GetDisplayXOrg(proc) >> 4])
                         return; // whew
 
         if (proc->stateId == MU_STATE_DEATHFADE)
@@ -1471,7 +1471,7 @@ static u16 MU_GetMovementSpeed(struct MUProc* proc) {
 
             if (speed & 0x40)
                 speed ^= 0x40;
-            else if (gRAMChapterData.unk40_8 || (gKeySt->held & A_BUTTON))
+            else if (gPlaySt.configWalkSpeed || (gKeySt->held & A_BUTTON))
                 speed *= 4;
 
             if (speed > 0x80)
@@ -1483,11 +1483,11 @@ static u16 MU_GetMovementSpeed(struct MUProc* proc) {
         if (!IsFirstPlaythrough() && (gKeySt->held & A_BUTTON))
             return 0x80;
 
-        if (gRAMChapterData.unk40_8)
+        if (gPlaySt.configWalkSpeed)
             return 0x40;
     }
 
-    return 16 * sMUBaseMoveSpeedLookup[GetClassData(proc->displayedClassId)->slowWalking];
+    return 16 * sMUBaseMoveSpeedLookup[GetJInfo(proc->displayedClassId)->slowWalking];
 }
 
 void MU_SetMoveConfig(struct MUProc* proc, u16 config) {
@@ -1505,8 +1505,8 @@ static const void* MU_GetSheetGfx(struct MUProc* proc) {
     return gMMSDataTable[proc->displayedClassId - 1].pGraphics;
 }
 
-static const void* MU_GetAnimationByClassId(u16 classId) {
-    return gMMSDataTable[classId - 1].pAnimation;
+static const void* MU_GetAnimationByClassId(u16 jid) {
+    return gMMSDataTable[jid - 1].pAnimation;
 }
 
 void MU_StartDeathFade(struct MUProc* muProc) {
@@ -1530,9 +1530,9 @@ void MU_StartDeathFade(struct MUProc* muProc) {
 
     PlaySe(0xD6); // TODO: SOUND DEFINITIONS
 
-    if (muProc->pUnit->state & US_IN_BALLISTA) {
-        TryRemoveUnitFromBallista(muProc->pUnit);
-        HideUnitSMS(muProc->pUnit);
+    if (muProc->unit->flags & UNIT_FLAG_IN_BALLISTA) {
+        TryRemoveUnitFromBallista(muProc->unit);
+        HideUnitSprite(muProc->unit);
     }
 }
 
@@ -1718,12 +1718,12 @@ void MU_StartDelayedFaceTarget(struct MUProc* proc) {
 static void MU_EndRefaceApAnim(int argAp) {
     struct APHandle* ap = (struct APHandle*) argAp;
 
-    int actor1 = gUnknown_0203E1F0.subjectActorId;
+    int actor1 = gMapAnimData.subjectActorId;
     int actor2 = 1 - actor1;
 
-    SetBattleAnimFacing(
+    SetBattleAnimActorFacing(
         actor1, actor2,
-        GetSpellAssocFacing(gUnknown_0203E1F0.actors[0].pBattleUnit->weaponBefore)
+        GetSpellAssocFacing(gMapAnimData.actors[0].pBattleUnit->weaponBefore)
     );
 
     ap->frameTimer    = 0;
@@ -1875,7 +1875,7 @@ struct MUProc* MU_GetByUnit(struct Unit* unit) {
     for (i = 0; i < MU_MAX_COUNT; ++i) {
         struct MUProc* proc = MU_GetByIndex(i);
 
-        if (proc->pUnit == unit)
+        if (proc->unit == unit)
             return proc;
     }
 

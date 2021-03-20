@@ -35,8 +35,8 @@ _0801DBFC:
 
 	THUMB_FUNC_END GetSomeFacingDirection
 
-	THUMB_FUNC_START Make6CMOVEUNITForUnitBeingRescued
-Make6CMOVEUNITForUnitBeingRescued: @ 0x0801DC00
+	THUMB_FUNC_START NewMoveUnitForUnitBeingRescued
+NewMoveUnitForUnitBeingRescued: @ 0x0801DC00
 	push {lr}
 	adds r3, r0, #0
 	ldr r0, [r3]
@@ -70,7 +70,7 @@ _0801DC38:
 	pop {r1}
 	bx r1
 
-	THUMB_FUNC_END Make6CMOVEUNITForUnitBeingRescued
+	THUMB_FUNC_END NewMoveUnitForUnitBeingRescued
 
 	THUMB_FUNC_START Loop6C_KOIDO
 Loop6C_KOIDO: @ 0x0801DC3C
@@ -96,8 +96,8 @@ _0801DC5C:
 	cmp r0, #1
 	bne _0801DC76
 	bl RefreshEntityBmMaps
-	bl SMS_UpdateFromGameData
-	bl SMS_FlushIndirect
+	bl RefreshUnitSprites
+	bl ForceSyncUnitSpriteSheet
 _0801DC76:
 	pop {r4, r5}
 	pop {r0}
@@ -135,7 +135,7 @@ Make6CKOIDO: @ 0x0801DC7C
 	mov r1, r8
 	strb r1, [r0]
 	adds r0, r6, #0
-	bl Make6CMOVEUNITForUnitBeingRescued
+	bl NewMoveUnitForUnitBeingRescued
 	str r0, [r7, #0x34]
 	adds r1, r5, #0
 	bl MU_StartMoveScript
@@ -176,7 +176,7 @@ Make6CKOIDOAMM: @ 0x0801DCD0
 	adds r0, #0x3c
 	strb r1, [r0]
 	adds r0, r6, #0
-	bl Make6CMOVEUNITForUnitBeingRescued
+	bl NewMoveUnitForUnitBeingRescued
 	str r0, [r7, #0x34]
 	adds r1, r5, #0
 	bl MU_StartMoveScript
